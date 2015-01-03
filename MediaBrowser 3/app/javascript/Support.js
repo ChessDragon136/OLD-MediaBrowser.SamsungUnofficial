@@ -193,24 +193,59 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 	for (var index = startPos; index < endPos; index++) {
 		if (isResume == true) {
 			if (Array[index].Type == "Episode") {
+				alert ("Steve YAY")
 				var title;
+				var title2;
 				if (Array[index].ParentIndexNumber !== undefined && Array[index].IndexNumber !== undefined) {
+					var seasonNumber = Array[index].ParentIndexNumber;
+					var seasonString = "";
+					if (seasonNumber < 10){
+						seasonString = "0" + seasonNumber;
+					}
+					else{
+						seasonString = seasonNumber;
+					}
+					
+					var episodeNumber = Array[index].IndexNumber;
+					var episodeString = "";
+					if (episodeNumber < 10){
+						episodeString = "0" + episodeNumber;
+					}
+					else{
+						episodeString = episodeNumber;
+					}
 					title = Array[index].SeriesName + "<br>S" + Array[index].ParentIndexNumber + ",E" + Array[index].IndexNumber + " - " + Array[index].Name;		
+				    title2 = "S" + seasonString + "E" + episodeString + " - " + Array[index].Name;
 				} else {
-					title = Array[index].SeriesName + "<br>"+Array[index].Name;		
-				}	
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125);
+					title = Array[index].SeriesName + "<br>"+Array[index].Name;
+					title2  = Array[index].Name;
+				}
+				
+				if (Array[index].SeriesThumbImageTag) {	
+					alert ("Series Thumb");
+					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>" + title2 +"</div>" +
+							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
+				} else if (Array[index].ImageTags.Primary) {	
+					alert ("Episode Primary");
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,Array[index].UserData.PlayedPercentage);
+					alert (imgsrc);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div>" +
 							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
 				} else {
+					alert ("Collection");
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div>" +
 							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";
 				}
 			} else {
-				var title = Array[index].Name;		
-				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125);
+				var title = Array[index].Name;
+				if (Array[index].ImageTags.Thumb) {			
+					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem></div>" +
+							"<div class='menuItem_ProgressBar_Film'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
+				}
+				else if (Array[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div>" +
 							"<div class='menuItem_ProgressBar_Film'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
 				} else {
@@ -234,20 +269,41 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}
 				
 				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",96,160);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",96,160,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+itemCount+"</div></div>";
 				}
 			} else if (Array[index].Type == "Episode") {
 				var title;
+				var title2;
 				if (Array[index].ParentIndexNumber !== undefined && Array[index].IndexNumber !== undefined) {
+					var seasonNumber = Array[index].ParentIndexNumber;
+					var seasonString = "";
+					if (seasonNumber < 10){
+						seasonString = "0" + seasonNumber;
+					}
+					else{
+						seasonString = seasonNumber;
+					}
+					
+					var episodeNumber = Array[index].IndexNumber;
+					var episodeString = "";
+					if (episodeNumber < 10){
+						episodeString = "0" + episodeNumber;
+					}
+					else{
+						episodeString = episodeNumber;
+					}
 					title = Array[index].SeriesName + "<br>S" + Array[index].ParentIndexNumber + ",E" + Array[index].IndexNumber + " - " + Array[index].Name;		
+				    title2 = "S" + seasonString + "E" + episodeString + " - " + Array[index].Name;
 				} else {
-					title = Array[index].SeriesName + "<br>"+Array[index].Name;		
+					title = Array[index].SeriesName + "<br>"+Array[index].Name;
+					title2  = Array[index].Name;
 				}
+				
 				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125);	
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,Array[index].UserData.Played,0);	
 					if (Array[index].UserData.Played > 0) {
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";	
 					} else {
@@ -263,7 +319,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else if (Array[index].Type == "MusicAlbum"){
 				var title = Array[index].Name;		
 				if (Array[index].ImageTags.Primary) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125,Array[index].UserData.PlayCount,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
@@ -273,7 +329,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var count = (Array[index].RecursiveUnplayedItemCount) ? Array[index].RecursiveUnplayedItemCount : Array[index].SongCount;
 				
 				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
@@ -281,7 +337,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else if (Array[index].Type == "Audio"){
 				var title = Array[index].Name;		
 				if (Array[index].AlbumPrimaryImageTag) {	
-					var imgsrc = Server.getImageURL(Array[index].AlbumId,"Primary",125,125);
+					var imgsrc = Server.getImageURL(Array[index].AlbumId,"Primary",125,125,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
@@ -290,14 +346,14 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var title = Array[index].Name;	
 				if (showBackdrop == "yes") {
 					if (Array[index].BackdropImageTags.length > 0) {
-						var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125);
+						var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
 					} else {
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
 					}
 				} else {
 					if (Array[index].ImageTags.Primary) {
-						var imgsrc = Server.getImageURL(Array[index].Id,"Primary",96,160);
+						var imgsrc = Server.getImageURL(Array[index].Id,"Primary",96,160,0,false,0);
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";
 					} else {
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
@@ -306,7 +362,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else if (Array[index].Type == "TvChannel") {
 				var title = Array[index].Name;		
 				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
@@ -315,7 +371,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var title = Array[index].Name;	
 				
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";		
 				//} else if (Array[index].ImageTags.Primary) {			
 				//	var imgsrc = Server.getImageURL(Array[index].Id,"Primary",110,80);
@@ -325,7 +381,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				} 	
 			} else if (Array[index].Type == "Season") {
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",114,165);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",114,165,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);></div>";
@@ -333,7 +389,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else {
 				var title = Array[index].Name;		
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";

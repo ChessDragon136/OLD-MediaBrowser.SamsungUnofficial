@@ -87,7 +87,26 @@ GuiPlayer.startPlayback = function(MediaSource, resumeTicksSamsung) {
     //Set PageContent
     var fileInfo = this.PlayerData.Name;
     if (this.PlayerData.Type == "Episode") {
-    	fileInfo =  this.PlayerData.SeriesName + " S" + this.PlayerData.ParentIndexNumber + ", E" + this.PlayerData.IndexNumber + " - " + this.PlayerData.Name;
+    	
+    	var seasonNumber = this.PlayerData.ParentIndexNumber;
+		var seasonString = "";
+		if (seasonNumber < 10){
+			seasonString = "0" + seasonNumber;
+		}
+		else{
+			seasonString = seasonNumber;
+		}
+		
+		var episodeNumber = this.PlayerData.IndexNumber;
+		var episodeString = "";
+		if (episodeNumber < 10){
+			episodeString = "0" + episodeNumber;
+		}
+		else{
+			episodeString = episodeNumber;
+		}
+			
+    	fileInfo =  this.PlayerData.SeriesName + " S" + seasonString + "E" + episodeString + " - " + this.PlayerData.Name;
     }
 
     if (MediaSource[0].Protocol != "Http") {
@@ -108,47 +127,46 @@ GuiPlayer.startPlayback = function(MediaSource, resumeTicksSamsung) {
     }
     
     //Create Tools Menu Subtitle
-    var subtitleStreamCount = 0;
-    var audioStreamCount = 0;
-    this.subtitleIndexes.push(-1) //No Subtitles Option
-    for (var index = 0;index < MediaSource[0].MediaStreams.length;index++) {
-		var Stream = MediaSource[0].MediaStreams[index];
-		if (Stream.Type == "Audio") {
-			this.audioIndexes.push(index)
-			audioStreamCount++;
-		} 
-		if (Stream.Type == "Subtitle") {
-			this.subtitleIndexes.push(index)
-			subtitleStreamCount++;
-		} 
-    }
-    //Create Tools Menu Transcode
-    if (this.isBitrateOveride > -1) {this.videoToolsTranscodeOptions.push(-1);}
-    for (var index = 0; index < this.videoToolsTranscodeAllOptions.length; index++) {
-    	if (this.videoToolsTranscodeAllOptions[index] < this.MediaSource[0].MediaStreams[this.MediaSource[5]].BitRate) {
-    		this.videoToolsTranscodeOptions.push(this.videoToolsTranscodeAllOptions[index]);
-    	}
-    }
-    
     //Must reset tools menu here on each playback!
     document.getElementById("guiPlayer_Tools").innerHTML = "";
     this.videoToolsOptions = [];
-    
-    if (subtitleStreamCount > 0) {
-    	this.videoToolsOptions.push("videoOptionSubtitles");
-    	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionSubtitles" style="display:inline-block;">Subtitles</div>';
-    }
-    
-    //Hide if only 1 audio stream
-    if (audioStreamCount > 1) {
-    	this.videoToolsOptions.push("videoOptionAudio");
-    	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionAudio" style="display:inline-block;">Audio</div>';
-    }
-    
     if (MediaSource[0].Protocol != "Http") {
-    	this.videoToolsOptions.push("videoOptionTranscoding");
-    	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionTranscoding" style="display:inline-block;">Transcode</div>';
-    }
+	    var subtitleStreamCount = 0;
+	    var audioStreamCount = 0;
+	    this.subtitleIndexes.push(-1) //No Subtitles Option
+	    for (var index = 0;index < MediaSource[0].MediaStreams.length;index++) {
+			var Stream = MediaSource[0].MediaStreams[index];
+			if (Stream.Type == "Audio") {
+				this.audioIndexes.push(index)
+				audioStreamCount++;
+			} 
+			if (Stream.Type == "Subtitle") {
+				this.subtitleIndexes.push(index)
+				subtitleStreamCount++;
+			} 
+	    }
+	    //Create Tools Menu Transcode
+	    if (this.isBitrateOveride > -1) {this.videoToolsTranscodeOptions.push(-1);}
+	    for (var index = 0; index < this.videoToolsTranscodeAllOptions.length; index++) {
+	    	if (this.videoToolsTranscodeAllOptions[index] < this.MediaSource[0].MediaStreams[this.MediaSource[5]].BitRate) {
+	    		this.videoToolsTranscodeOptions.push(this.videoToolsTranscodeAllOptions[index]);
+	    	}
+	    }
+	    
+	    if (subtitleStreamCount > 0) {
+	    	this.videoToolsOptions.push("videoOptionSubtitles");
+	    	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionSubtitles" style="display:inline-block;">Subtitles</div>';
+	    }
+	    
+	    //Hide if only 1 audio stream
+	    if (audioStreamCount > 1) {
+	    	this.videoToolsOptions.push("videoOptionAudio");
+	    	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionAudio" style="display:inline-block;">Audio</div>';
+	    }
+	
+	    this.videoToolsOptions.push("videoOptionTranscoding");
+	    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionTranscoding" style="display:inline-block;">Transcode</div>';
+	}
     
     document.getElementById("pageContent").innerHTML = "";
     document.getElementById("page").style.visibility="hidden";

@@ -45,10 +45,10 @@ GuiTV_Episode.start = function(title,url,selectedItem) {
 	
 	//Get Page Backdrop (Episodes themselved don't have backdrops - check anyway
 	if (this.EpisodeData.BackdropImageTags.length > 0) {
-		var imgsrc = Server.getImageURL(this.EpisodeData.Id,"Backdrop",960,540);
+		var imgsrc = Server.getImageURL(this.EpisodeData.Id,"Backdrop",960,540,0,false,0);
 		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 	} else if (this.EpisodeData.ParentBackdropImageTags.length > 0) {
-		var imgsrc = Server.getImageURL(this.EpisodeData.ParentBackdropItemId,"Backdrop",960,540);
+		var imgsrc = Server.getImageURL(this.EpisodeData.ParentBackdropItemId,"Backdrop",960,540,0,false,0);
 		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 	} else {
 		document.getElementById("pageBackground").style.backgroundImage="url('images/NoBackdrop.png')";
@@ -56,7 +56,7 @@ GuiTV_Episode.start = function(title,url,selectedItem) {
 	
 	//If cover art use that else use text
 	if (this.EpisodeData.ParentLogoItemId) {
-		var imgsrc = Server.getImageURL(this.EpisodeData.ParentLogoItemId,"Logo",300,40);
+		var imgsrc = Server.getImageURL(this.EpisodeData.ParentLogoItemId,"Logo",300,40,0,false,0);
 		document.getElementById("EpisodesSeriesInfo").style.backgroundImage="url('"+imgsrc+"')";
 		document.getElementById("EpisodesSeriesInfo").className = 'EpisodesSeriesInfoLogo';	
 	} else {
@@ -66,7 +66,7 @@ GuiTV_Episode.start = function(title,url,selectedItem) {
 	
 	//Get Episode Poster	
 	if (this.EpisodeData.ImageTags.Primary) {
-		var imgsrc = Server.getImageURL(this.EpisodeData.Id,"Primary",220,125); 	
+		var imgsrc = Server.getImageURL(this.EpisodeData.Id,"Primary",220,125,0,false,0); 	
 		document.getElementById("guiTV_Episode_Poster").style.backgroundImage = "url("+imgsrc + ")";
 	} else {
 		document.getElementById("guiTV_Episode_Poster").style.backgroundImage = "url(images/collection.png)";

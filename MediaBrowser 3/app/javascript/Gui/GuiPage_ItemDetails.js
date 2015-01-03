@@ -42,7 +42,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			<div id='guiTV_Show_MediaAlternative' class='guiTV_Show_MediaAlternative'></div> \
 			<div id='InfoContainer' class='infoContainer'> \
 					<div id='guiTV_Show_Title' style='font-size:22px;'></div> \
-					<div id='guiTV_Show_Metadata' style='padding-top:2px;padding-left:20px;padding-bottom:5px;'></div> \
+					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div> \
 					<div id='guiTV_Show_Overview' class='guiFilm_Overview'></div> \
 			</div> \
 			<div id='guiTV_Show_Poster' class='guiFilm_Poster'></div>";
@@ -74,9 +74,9 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		this.AdjacentData = Server.getContent(Server.getAdjacentEpisodesURL(this.ItemData.SeriesId,this.ItemData.SeasonId,this.ItemData.Id));
 		
 		//Change gui layout 
-		document.getElementById("InfoContainer").style.width = "680px";
-		document.getElementById("guiTV_Show_Overview").className = "guiTV_Episode_Overview";
-		document.getElementById("guiTV_Show_Poster").className = "guiTV_Episode_Poster";
+		//document.getElementById("InfoContainer").style.width = "680px";
+		//document.getElementById("guiTV_Show_Overview").className = "guiTV_Episode_Overview";
+		//document.getElementById("guiTV_Show_Poster").className = "guiTV_Episode_Poster";
 		
 		//Set Poster
 		//if (this.ItemData.ImageTags.Primary) {
@@ -84,24 +84,35 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		//	document.getElementById("guiTV_Show_Poster").style.backgroundImage="url('" + imgsrc + "')";
 		//}
 		
-		//Set Backdrop
-		if (this.ItemData.ParentBackdropImageTags) {
-			var imgsrc = Server.getImageURL(this.ItemData.ParentBackdropItemId,"Backdrop",960,540); 
-			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-		}
-		
 		//Set Title
 		if (this.ItemData.ParentIndexNumber === undefined || this.ItemData.IndexNumber === undefined) {
 			document.getElementById("guiTV_Show_Title").innerHTML = this.ItemData.Name;
 		} else {
-			document.getElementById("guiTV_Show_Title").innerHTML = "S" +  this.ItemData.ParentIndexNumber + ",E" +  this.ItemData.IndexNumber + " - " + this.ItemData.Name;		
+			var seasonNumber = this.ItemData.ParentIndexNumber;
+			var seasonString = "";
+			if (seasonNumber < 10){
+				seasonString = "0" + seasonNumber;
+			}
+			else{
+				seasonString = seasonNumber;
+			}
+			
+			var episodeNumber = this.ItemData.IndexNumber;
+			var episodeString = "";
+			if (episodeNumber < 10){
+				episodeString = "0" + episodeNumber;
+			}
+			else{
+				episodeString = episodeNumber;
+			}
+			document.getElementById("guiTV_Show_Title").innerHTML = "S" +  seasonString + "E" +  episodeString + " - " + this.ItemData.Name;		
 		}
 		
 		//If cover art use that else use text
 		if (this.ItemData.ParentLogoImageTag) {
-			var imgsrc = Server.getImageURL(this.ItemData.SeriesId,"Logo",300,40);
+			var imgsrc = Server.getImageURL(this.ItemData.SeriesId,"Logo",500,100,0,false,0);
 			document.getElementById("Title").style.backgroundImage="url('"+imgsrc+"')";
-			document.getElementById("Title").className = 'EpisodesSeriesInfoLogo';			
+			document.getElementById("Title").className = 'FilmInfoLogo';			
 		} else {
 			if (this.ItemData.IndexNumber === undefined) {
 				document.getElementById("Title").innerHTML = this.ItemData.SeriesName + " | Season " +  this.ItemData.ParentIndexNumber + " |  Episode Unknown - " + this.ItemData.Name;
@@ -110,6 +121,21 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			}			
 			document.getElementById("Title").className = 'EpisodesSeriesInfo';
 		}
+		
+		
+		//Set Poster
+		if (this.ItemData.SeriesPrimaryImageTag != "") {
+			var imgsrc = Server.getImageURL(this.ItemData.SeriesId,"Primary",136,200,0,false,0);
+			document.getElementById("guiTV_Show_Poster").style.backgroundImage="url('" + imgsrc + "')";
+		}
+		
+		//Set Backdrop
+		if (this.ItemData.ParentBackdropImageTags) {
+			var imgsrc = Server.getImageURL(this.ItemData.ParentBackdropItemId,"Backdrop",960,540,0,false,0);
+			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+		}
+		
+		
 	} else {
 		//Add Remaining Menu Options
 		var url2 = Server.getCustomURL("/Movies/"+this.ItemData.Id+"/Similar?format=json&IncludeTrailers=false&Limit=5&UserId=" + Server.getUserID());
@@ -149,19 +175,19 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		
 		//Set Film Poster
 		if (this.ItemData.ImageTags.Primary) {
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Primary",136,200);
+			var imgsrc = Server.getImageURL(this.ItemData.Id,"Primary",136,200,0,false,0);
 			document.getElementById("guiTV_Show_Poster").style.backgroundImage="url('" + imgsrc + "')";
 		}
 		
 		//Set Film Backdrop
 		if (this.ItemData.BackdropImageTags.length > 0) {
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Backdrop",960,540); 
+			var imgsrc = Server.getImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0); 
 			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 		}
 		
 		//If cover art use that else use text
 		if (this.ItemData.ImageTags.Logo) {
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Logo",500,100);
+			var imgsrc = Server.getImageURL(this.ItemData.Id,"Logo",500,100,0,false,0);
 			document.getElementById("Title").style.backgroundImage="url('"+imgsrc+"')";
 			document.getElementById("Title").className = 'FilmInfoLogo';	
 		} else {
@@ -186,7 +212,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		htmlForMetaData += this.ItemData.ProductionYear + " | ";
 	}
 	if (this.ItemData.CommunityRating !== undefined) {
-		htmlForMetaData += "<img src='images/star.png'>" + this.ItemData.CommunityRating + " | ";
+		htmlForMetaData += "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating + " | ";
 	}
 	if (this.ItemData.OfficialRating !== undefined) {
 		htmlForMetaData += this.ItemData.OfficialRating + " | ";
@@ -538,7 +564,7 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Cast") {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 		var cast = this.subMenuItems[this.selectedItem2].Name.replace(/ /g, '+');
-		var url = Server.getCustomURL("/Persons/"+cast+"?format=json&userId=" + Server.getUserID());
+		var url = Server.getItemInfoURL(this.subMenuItems[this.selectedItem2].Id);
 		GuiPage_CastMember.start(this.subMenuItems[this.selectedItem2].Name,url,0,0);
 	}
 }

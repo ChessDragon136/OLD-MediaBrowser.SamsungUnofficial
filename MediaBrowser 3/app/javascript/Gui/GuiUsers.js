@@ -85,7 +85,7 @@ GuiUsers.updateDisplayedUsers = function() {
 	var htmltoadd = "";
 	for (var index = this.topLeftItem; index < (Math.min(this.topLeftItem + this.getMaxDisplay(),this.UserData.length)); index++) {
 		if (this.UserData[index].PrimaryImageTag) {			
-			var imgsrc = Server.getImageURL(this.UserData[index].Id,"UsersPrimary",200,200);
+			var imgsrc = Server.getImageURL(this.UserData[index].Id,"UsersPrimary",200,200,0,false,0);
 			htmltoadd += "<div id=" + this.UserData[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ this.UserData[index].Name + "</div></div>";
 		} else {
 			htmltoadd += "<div id=" + this.UserData[index].Id + " style=background-image:url(images/loginusernoimage.png)><div class=menuItem>"+ this.UserData[index].Name + "</div></div>";

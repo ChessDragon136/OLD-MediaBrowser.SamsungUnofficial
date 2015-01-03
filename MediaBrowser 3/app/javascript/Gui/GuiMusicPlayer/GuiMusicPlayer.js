@@ -312,7 +312,7 @@ GuiMusicPlayer.setCurrentTime = function(time){
 
 GuiMusicPlayer.OnStreamInfoReady = function() {
 	if (this.queuedItems[0].AlbumPrimaryImageTag) {
-		var imgsrc = Server.getImageURL(this.queuedItems[0].AlbumId,"Primary",60,60);
+		var imgsrc = Server.getImageURL(this.queuedItems[0].AlbumId,"Primary",60,60,0,false,0);
 		document.getElementById("guiMusicPlayerImage").style.backgroundImage = "url("+imgsrc+")";
 	} else {
 		document.getElementById("guiMusicPlayerImage").style.backgroundImage = "";

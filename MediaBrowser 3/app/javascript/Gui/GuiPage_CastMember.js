@@ -36,7 +36,7 @@ GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {
 	
 	if (this.CastData.ImageTags.Primary) {
 		document.getElementById("pageContent").innerHTML +=  "<div id='guiTV_Show_Poster' class='guiTV_Show_Poster'></div>";
-		var imgsrc = Server.getImageURL(this.CastData.Id,"Primary",136,200); 	
+		var imgsrc = Server.getImageURL(this.CastData.Id,"Primary",136,200,0,false,0); 	
 		document.getElementById("guiTV_Show_Poster").style.backgroundImage = "url("+imgsrc +")";
 	}
 	
@@ -72,20 +72,20 @@ GuiPage_CastMember.updateSelectedItems = function () {
 			switch (this.ItemData.Items[index].Type) {
 			case "Episode":
 				if (this.ItemData.Items[index].ParentBackdropItemId) {
-					var imgsrc = Server.getImageURL(this.ItemData.Items[index].ParentBackdropItemId,"Backdrop",960,540);
+					var imgsrc = Server.getImageURL(this.ItemData.Items[index].ParentBackdropItemId,"Backdrop",960,540,0,false,0);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 				}
 				break;
 			case "Movie":	
 			case "Series":
 				if (this.ItemData.Items[index].BackdropImageTags.length > 0) {
-					var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Backdrop",960,540);
+					var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Backdrop",960,540,0,false,0);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 				}
 				break;
 			case "Photo":
 				if (this.ItemData.Items[index].ImageTags.Primary.length > 0) {
-					var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",960,540);
+					var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",960,540,0,false,0);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 				}
 				break;

@@ -46,7 +46,7 @@ GuiMainMenu.start = function() {
 		
 		for (var index = 0; index < randomImageData.Items.length; index++) {
 			if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
-				var imgsrc = Server.getImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540);
+				var imgsrc = Server.getImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0);
 				//document.getElementById("page").style.backgroundImage="url(" + imgsrc + ")";
 				break;
 			}
@@ -150,7 +150,7 @@ GuiMainMenu.start = function() {
 	var UserData = Server.getContent(userURL);
 	
 	if (UserData.PrimaryImageTag) {
-		var imgsrc = Server.getImageURL(UserData.Id,"UsersPrimary",35,35);
+		var imgsrc = Server.getImageURL(UserData.Id,"UsersPrimary",35,35,0,false,0);
 		document.getElementById("headerUserImage").style.backgroundImage = "url(" + imgsrc + ")";	
 	} else {
 		document.getElementById("headerUserImage").style.backgroundImage = "url(images/usernoimage.png)";

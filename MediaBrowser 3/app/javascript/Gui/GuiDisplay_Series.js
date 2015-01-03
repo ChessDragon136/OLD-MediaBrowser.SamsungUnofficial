@@ -56,9 +56,9 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length > 0) {	
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='padding-left:10px;font-size:22px;'></div>" +
-			"<div id='SeriesSubData' style='padding-top:2px;padding-left:20px;'></div>" +
-			"<div id='SeriesOverview' style='margin-top:6px;padding-left:10px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
+			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='font-size:22px;'></div>" +
+			"<div id='SeriesSubData' style='padding-top:2px;color:#0099FF;'></div>" +
+			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
 			"<div id='SeriesImages'></div></div>";
 		
 		//Determine if display is for all tv / movies or just a folder
@@ -177,7 +177,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 		if (GuiDisplay_Series.selectedItem == currentSelectedItem) {
 			//Set Background
 			if (GuiDisplay_Series.ItemData.Items[currentSelectedItem].BackdropImageTags.length > 0) {
-				var imgsrc = Server.getImageURL(GuiDisplay_Series.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540);
+				var imgsrc = Server.getImageURL(GuiDisplay_Series.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540,0,false,0);
 				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 			}
 		}

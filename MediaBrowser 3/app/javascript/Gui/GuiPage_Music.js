@@ -48,7 +48,7 @@ GuiPage_Music.start = function(title,url) {
 		
 	//Get Episode Poster	
 	if (this.AlbumData.Items[0].AlbumPrimaryImageTag) {
-		var imgsrc = Server.getImageURL(this.AlbumData.Items[0].AlbumId,"Primary",325,325); 	
+		var imgsrc = Server.getImageURL(this.AlbumData.Items[0].AlbumId,"Primary",325,325,0,false,0); 	
 		document.getElementById("guiPage_Music_Poster").style.backgroundImage = "url("+imgsrc + ")";
 	} else {
 		document.getElementById("guiPage_Music_Poster").style.backgroundImage = "url(images/collection.png)";

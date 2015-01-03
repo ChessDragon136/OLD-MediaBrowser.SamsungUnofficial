@@ -26,7 +26,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem) {
 	//Order from starting selectedItem!
 	imageIdx = 0;
 	for (var index = 0; index < result.Items.length; index++) {
-		var temp = Server.getImageURL(this.newItemData.Items[index].Id,"Primary",1920,1080);
+		var temp = Server.getImageURL(this.newItemData.Items[index].Id,"Primary",1920,1080,0,false,0);
 		this.images.push(temp);
 		if (result.Items[index].Id == ItemData.Items[selectedItem].Id) {
 			this.imageIdx = index;

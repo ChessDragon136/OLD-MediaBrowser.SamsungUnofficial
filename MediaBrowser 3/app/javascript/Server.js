@@ -64,54 +64,74 @@ Server.getCustomURL = function(SortParams) {
 
 Server.getItemTypeURL = function(SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json&ImageTypeLimit=1" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json&ImageTypeLimit=1";
 	}	
 }
 
 Server.getChildItemsURL = function(ParentID, SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json&ImageTypeLimit=1" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json&ImageTypeLimit=1";
 	}	
 }
 
 Server.getItemInfoURL = function(ParentID, SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json&ImageTypeLimit=1" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json&ImageTypeLimit=1";
 	}		
 }
 
 Server.getAdjacentEpisodesURL = function(ShowID,SeasonID,EpisodeID) {
-	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&seasonId="+SeasonID+"&userId="+Server.getUserID() +"&AdjacentTo=" + EpisodeID;
+	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&ImageTypeLimit=1&seasonId="+SeasonID+"&userId="+Server.getUserID() +"&AdjacentTo=" + EpisodeID;
 }
 
-Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight) {
+Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,played,playedpercentage) {
+	var query = "";
 	switch (imagetype) {
 	case "Primary":
-		return Server.getServerAddr() + "/Items/"+ itemId +"/Images/Primary/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query =  Server.getServerAddr() + "/Items/"+ itemId +"/Images/Primary/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Banner":
-		return Server.getServerAddr() + "/Items/"+ itemId +"/Images/Banner/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Banner/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Backdrop":
-		return Server.getServerAddr() + "/Items/"+ itemId +"/Images/Backdrop/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Backdrop/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Thumb":
-		return Server.getServerAddr() + "/Items/"+ itemId +"/Images/Thumb/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Thumb/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;	
 	case "Logo":
-		return Server.getServerAddr() + "/Items/"+ itemId +"/Images/Logo/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Logo/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;		
 	case "UsersPrimary":
 		return Server.getServerAddr() + "/Users/" + itemId + "/Images/Primary?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	}
+	
+	//if (unplayedcount >0){
+		//query =  query + "&UnplayedCount=" + unplayedcount;
+	//}
+	
+	//if (played){
+		//query = query + "&AddPlayedIndicator=true";
+	//}
+	
+	//if (playedpercentage != 0 && playedpercentage !== undefined ){
+	//  if (playedpercentage != 100){
+	//	  query = query + "&PercentPlayed=" + playedpercentage;
+	//  }	
+	//}
+	
+	query = query + "&Quality=80"
+	
+	return query;
 }
+
 
 Server.setRequestHeaders = function (xmlHttp,UserId) {
 	if (this.UserID == null) {

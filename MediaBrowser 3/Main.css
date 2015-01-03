@@ -450,6 +450,15 @@
     background-color:rgba(0,0,0,0.7);
 }
 
+.menuItemWithProgress {
+	position:absolute;
+    bottom:9px;
+    width:100%;
+    text-align:left;
+    padding-left:2px;
+    background-color:rgba(0,0,0,0.7);
+}
+
 .genreItemCount {
 	position:absolute;
 	top:5px;
@@ -736,33 +745,6 @@
 	
 	border-bottom:1px solid black;
 }
-
-/* ---------------------------------------------------------------------------   */
-
-.menuItem_ProgressBar {
-	width:218px;
-	height:5px;
-	position:relative;
-	top:84px;
-    left:1px;
-    background-color:"#fff";
-}
-
-.menuItem_ProgressBar_Film {
-	width:218px;
-	height:5px;
-	position:relative;
-	top:100px;
-    left:1px;
-    background-color:"#fff";
-}
-
-.menuItem_ProgressBar_Current {
-	width:0px;
-	height:5px;
-    background-color:"#339933";
-}
-/* ---------------------------------------------------------------------------   */
 
 .videoVersions {
 	position:absolute;

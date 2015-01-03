@@ -193,7 +193,6 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 	for (var index = startPos; index < endPos; index++) {
 		if (isResume == true) {
 			if (Array[index].Type == "Episode") {
-				alert ("Steve YAY")
 				var title;
 				var title2;
 				if (Array[index].ParentIndexNumber !== undefined && Array[index].IndexNumber !== undefined) {
@@ -222,35 +221,27 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}
 				
 				if (Array[index].SeriesThumbImageTag) {	
-					alert ("Series Thumb");
 					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>" + title2 +"</div>" +
-							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>" + title2 +"</div></div>";	
 				} else if (Array[index].ImageTags.Primary) {	
-					alert ("Episode Primary");
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,Array[index].UserData.PlayedPercentage);
-					alert (imgsrc);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div>" +
-							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";
 				} else {
-					alert ("Collection");
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div>" +
-							"<div class='menuItem_ProgressBar'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItemWithProgress>"+ title + "</div></div>";
 				}
 			} else {
 				var title = Array[index].Name;
-				if (Array[index].ImageTags.Thumb) {			
+				alert ("STEVE" + Array[index].ImageTags.Thumb)
+				if (Array[index].ImageTags.Thumb) {		
+					alert ("1");
 					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem></div>" +
-							"<div class='menuItem_ProgressBar_Film'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
-				}
-				else if (Array[index].BackdropImageTags.length > 0) {			
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress></div></div>";	
+				} else if (Array[index].BackdropImageTags.length > 0) {	
+					alert ("2");
 					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div>" +
-							"<div class='menuItem_ProgressBar_Film'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";	
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div>" +
-							"<div class='menuItem_ProgressBar_Film'><div id=progress_"+ DivIdPrepend+Array[index].Id+" class='menuItem_ProgressBar_Current'></div></div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div></div>";
 				}
 			}			
 		} else {	
@@ -399,19 +390,6 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
     }
 	
 	document.getElementById(DivIdUpdate).innerHTML = htmlToAdd;
-	
-	if (isResume == true) {
-		for (var index = startPos; index < endPos; index++) {
-			//Divs Written on each loop to accomodate for the below to work!
-			var percentage = (Array[index].UserData.PlaybackPositionTicks / Array[index].RunTimeTicks);	
-			var pixelWidth = Math.round(218 * percentage);
-			if (pixelWidth > 218) {
-				pixelWidth = 218;
-			}
-
-			document.getElementById("progress_"+ DivIdPrepend+Array[index].Id).style.width = pixelWidth;
-		}
-	}
 }
 
 //ByPass Counter required for views that have 2 lists (Like Home Page) so I only display the counter of the active list

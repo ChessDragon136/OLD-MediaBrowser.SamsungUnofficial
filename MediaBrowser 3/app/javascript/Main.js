@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.517b",
+		version : "v0.517c",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5211",
 		

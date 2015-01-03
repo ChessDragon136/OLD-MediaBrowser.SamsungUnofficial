@@ -121,11 +121,11 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 		//query = query + "&AddPlayedIndicator=true";
 	//}
 	
-	//if (playedpercentage != 0 && playedpercentage !== undefined ){
-	//  if (playedpercentage != 100){
-	//	  query = query + "&PercentPlayed=" + playedpercentage;
-	//  }	
-	//}
+	if (playedpercentage != 0 && playedpercentage !== undefined ){
+	  if (playedpercentage != 100){
+		  query = query + "&PercentPlayed=" + playedpercentage;
+	  }	
+	}
 	
 	query = query + "&Quality=80"
 	

@@ -35,7 +35,7 @@ GuiPage_Settings.initiateViewValues = function() {
 	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=7&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
 	SuggestedMovies = Server.getCustomURL("/Movies/Recommendations?format=json&userId="+Server.getUserID()+"&categoryLimit=6&itemLimit=7&fields=SortName&CollapseBoxSetItems=false");
 	MediaFolders = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
-	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemType=Series&Limit=7&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
+	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&Limit=7&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
 	LatestMovies = Server.getItemTypeURL("&Limit=7&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=SortName&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");
 
 	

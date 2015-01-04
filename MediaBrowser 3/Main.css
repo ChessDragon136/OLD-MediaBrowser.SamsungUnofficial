@@ -248,7 +248,7 @@
 .EpisodeListSingle{
 	height:50px;
 	width:430px;
-	border-bottom: 1px solid green;
+	border-bottom: 1px solid #00b4ff;
 }
 
 .EpisodeListSingleImage{	
@@ -324,7 +324,7 @@
 }
 
 .GuiPage_Setting_SubSelected {
-	color:green;
+	color:#00b4ff;
 }
 
 .GuiPage_Setting_UnSelected {
@@ -458,7 +458,6 @@
     padding-left:2px;
     background-color:rgba(0,0,0,0.7);
 }
-
 .genreItemCount {
 	position:absolute;
 	top:5px;
@@ -474,7 +473,7 @@
 }
 
 .Selected {
-    border:4px solid #27a436;  
+    border:4px solid #00b4ff;  
 }
 /*----------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------*/
@@ -606,19 +605,19 @@
 .ShowListSingle{
 	height:50px;
 	width:250px;
-	border-bottom: 1px solid green;
+	border-bottom: 1px solid #00b4ff;
 }
 
 .FilmListSingle{
 	height:46px;
 	width:210px;
-	border-bottom: 1px solid green;
+	border-bottom: 1px solid #00b4ff;
 }
 
 .FilmListSubSingle{
 	height:46px;
 	width:170px;
-	border-bottom: 1px solid green;
+	border-bottom: 1px solid #00b4ff;
 }
 
 .FilmListSingleImage{
@@ -805,7 +804,7 @@
     text-overflow:ellipsis; 
     overflow: hidden; 
     
-    border-bottom: 2px solid green;
+    border-bottom: 2px solid #00b4ff;
 }
 
 /* ---------------------------------------------------------------------------   */
@@ -893,7 +892,7 @@
 }
 
 .red {
-	color:green;
+	color:#00b4ff;
 }
 
 .musicPlaylist {

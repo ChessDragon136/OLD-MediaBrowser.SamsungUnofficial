@@ -249,6 +249,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					imageData = "background-color:rgba(0,0,0,0.5)";
 				}
 				
+				//Change to use DrWatsons tick image!
 				if (Array[index].UserData.Played > 0) {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style="+imageData+"><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {

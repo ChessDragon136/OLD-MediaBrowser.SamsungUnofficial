@@ -9,8 +9,8 @@ var GuiDisplay_Series = {
 		MAXROWCOUNT : 2,
 		
 		bannerItems : [],
-		tvBannerItems : ["All", "Latest", "Genre"],
-		movieBannerItems : ["All", "Unwatched","Latest","Genre"],
+		tvBannerItems : ["All","Unwatched","Latest", "Genre"],
+		movieBannerItems : ["All","Unwatched","Latest","Genre"],
 		
 		indexSeekPos : -1,
 		isResume : false,
@@ -43,7 +43,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Latest Page Fix
 	this.isLatest = false;
-	if (title == "New TV") {
+	if (title == "New TV" || title == "New Movies") {
 		this.isLatest = true;
 		this.ItemData.Items = this.ItemData;
 	}
@@ -319,16 +319,19 @@ GuiDisplay_Series.processSelectedItem = function() {
 		break;
 		case "Unwatched":
 			if (this.isTvOrMovies == 1) {	
-				var url = Server.getItemTypeURL("&IncludeItemType=Movie&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true&Filters=IsUnPlayed");
 				GuiDisplay_Series.start("All Movies",url,0,0);
-			}	
+			}	else {
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
+				GuiDisplay_Series.start("All TV",url,0,0);
+			}
 		break;
 		case "Latest":		
 			if (this.isTvOrMovies == 1) {
-				var url = Server.getItemTypeURL("&Limit=18&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Movie&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("New Movies",url,0,0);
 			} else {
-				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemType=Series&Limit=18&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("New TV",url,0,0);
 			}			
 		break;

@@ -93,7 +93,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 GuiDisplay_Episodes.updateDisplayedItems = function() {
 	var htmlToAdd = "";
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++) {		
-		var title = "";
+		title = "";
 		var lineCountCSS = "EpisodeListTextOneLine";
 		if (this.ItemData.Items[index].IndexNumber === undefined) {
 			title = this.ItemData.Items[index].Name;
@@ -201,31 +201,9 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
 	}
 	
-	if (this.ItemData.Items[this.selectedItem].ParentIndexNumber !== undefined && this.ItemData.Items[this.selectedItem].IndexNumber !== undefined) {
-		var seasonNumber = this.ItemData.Items[this.selectedItem].ParentIndexNumber;
-		var seasonString = "";
-		if (seasonNumber < 10){
-			seasonString = "0" + seasonNumber;
-		}
-		else{
-			seasonString = seasonNumber;
-		}
-		
-		var episodeNumber =this.ItemData.Items[this.selectedItem].IndexNumber;
-		var episodeString = "";
-		if (episodeNumber < 10){
-			episodeString = "0" + episodeNumber;
-		}
-		else{
-			episodeString = episodeNumber;
-		}
-		
-		document.getElementById("SeriesTitle").innerHTML = "S" + seasonString + "E"+ episodeString + " - " +this.ItemData.Items[this.selectedItem].Name;
-		
-	} else {
-		document.getElementById("SeriesTitle").innerHTML = this.ItemData.Items[this.selectedItem].Name;
-	}
-	
+	var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+	document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
+
 	document.getElementById("SeriesSubData").innerHTML = htmlForTitle;
 	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
 				

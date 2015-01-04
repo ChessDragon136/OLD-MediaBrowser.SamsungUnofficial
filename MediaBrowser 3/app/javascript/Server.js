@@ -116,11 +116,7 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 	//if (unplayedcount >0){
 		//query =  query + "&UnplayedCount=" + unplayedcount;
 	//}
-	
-	//if (played){
-		//query = query + "&AddPlayedIndicator=true";
-	//}
-	
+		
 	if (playedpercentage != 0 && playedpercentage !== undefined ){
 	  if (playedpercentage != 100){
 		  query = query + "&PercentPlayed=" + playedpercentage;

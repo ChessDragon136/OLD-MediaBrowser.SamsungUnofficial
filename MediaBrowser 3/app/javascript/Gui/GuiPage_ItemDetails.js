@@ -85,28 +85,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		//}
 		
 		//Set Title
-		if (this.ItemData.ParentIndexNumber === undefined || this.ItemData.IndexNumber === undefined) {
-			document.getElementById("guiTV_Show_Title").innerHTML = this.ItemData.Name;
-		} else {
-			var seasonNumber = this.ItemData.ParentIndexNumber;
-			var seasonString = "";
-			if (seasonNumber < 10){
-				seasonString = "0" + seasonNumber;
-			}
-			else{
-				seasonString = seasonNumber;
-			}
-			
-			var episodeNumber = this.ItemData.IndexNumber;
-			var episodeString = "";
-			if (episodeNumber < 10){
-				episodeString = "0" + episodeNumber;
-			}
-			else{
-				episodeString = episodeNumber;
-			}
-			document.getElementById("guiTV_Show_Title").innerHTML = "S" +  seasonString + "E" +  episodeString + " - " + this.ItemData.Name;		
-		}
+		var title = Support.getNameFormat("", this.ItemData.ParentIndexNumber, this.ItemData.Name, this.ItemData.IndexNumber);
+		document.getElementById("guiTV_Show_Title").innerHTML = title;		
 		
 		//If cover art use that else use text
 		if (this.ItemData.ParentLogoImageTag) {

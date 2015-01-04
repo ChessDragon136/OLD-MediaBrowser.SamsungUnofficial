@@ -193,36 +193,10 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 	for (var index = startPos; index < endPos; index++) {
 		if (isResume == true) {
 			if (Array[index].Type == "Episode") {
-				var title;
-				var title2;
-				if (Array[index].ParentIndexNumber !== undefined && Array[index].IndexNumber !== undefined) {
-					var seasonNumber = Array[index].ParentIndexNumber;
-					var seasonString = "";
-					if (seasonNumber < 10){
-						seasonString = "0" + seasonNumber;
-					}
-					else{
-						seasonString = seasonNumber;
-					}
-					
-					var episodeNumber = Array[index].IndexNumber;
-					var episodeString = "";
-					if (episodeNumber < 10){
-						episodeString = "0" + episodeNumber;
-					}
-					else{
-						episodeString = episodeNumber;
-					}
-					title = Array[index].SeriesName + "<br>S" + Array[index].ParentIndexNumber + ",E" + Array[index].IndexNumber + " - " + Array[index].Name;		
-				    title2 = "S" + seasonString + "E" + episodeString + " - " + Array[index].Name;
-				} else {
-					title = Array[index].SeriesName + "<br>"+Array[index].Name;
-					title2  = Array[index].Name;
-				}
-				
+				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);			
 				if (Array[index].SeriesThumbImageTag) {	
-					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>" + title2 +"</div></div>";	
+					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false,Array[index].UserData.PlayedPercentage);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>" + title +"</div></div>";	
 				} else if (Array[index].ImageTags.Primary) {	
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";
@@ -231,13 +205,10 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}
 			} else {
 				var title = Array[index].Name;
-				alert ("STEVE" + Array[index].ImageTags.Thumb)
 				if (Array[index].ImageTags.Thumb) {		
-					alert ("1");
 					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress></div></div>";	
 				} else if (Array[index].BackdropImageTags.length > 0) {	
-					alert ("2");
 					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
@@ -266,47 +237,24 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+itemCount+"</div></div>";
 				}
 			} else if (Array[index].Type == "Episode") {
-				var title;
-				var title2;
-				if (Array[index].ParentIndexNumber !== undefined && Array[index].IndexNumber !== undefined) {
-					var seasonNumber = Array[index].ParentIndexNumber;
-					var seasonString = "";
-					if (seasonNumber < 10){
-						seasonString = "0" + seasonNumber;
-					}
-					else{
-						seasonString = seasonNumber;
-					}
-					
-					var episodeNumber = Array[index].IndexNumber;
-					var episodeString = "";
-					if (episodeNumber < 10){
-						episodeString = "0" + episodeNumber;
-					}
-					else{
-						episodeString = episodeNumber;
-					}
-					title = Array[index].SeriesName + "<br>S" + Array[index].ParentIndexNumber + ",E" + Array[index].IndexNumber + " - " + Array[index].Name;		
-				    title2 = "S" + seasonString + "E" + episodeString + " - " + Array[index].Name;
+				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);	
+				var imageData = "";	
+				if (Array[index].SeriesThumbImageTag) {	
+					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,Array[index].UserData.Played,0);
+					imageData = "background-image:url(" +imgsrc+ ")";
+				} else 	if (Array[index].ImageTags.Primary) {	
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,Array[index].UserData.Played,0);	
+					imageData = "background-image:url(" +imgsrc+ ")";
 				} else {
-					title = Array[index].SeriesName + "<br>"+Array[index].Name;
-					title2  = Array[index].Name;
+					imageData = "background-color:rgba(0,0,0,0.5)";
 				}
 				
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,Array[index].UserData.Played,0);	
-					if (Array[index].UserData.Played > 0) {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";	
-					} else {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
-					}
+				if (Array[index].UserData.Played > 0) {
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style="+imageData+"><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					if (Array[index].UserData.Played > 0) {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";
-					} else {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
-					}		
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style="+imageData+"><div class=menuItem>"+ title + "</div></div>";	
 				}
+				
 			} else if (Array[index].Type == "MusicAlbum"){
 				var title = Array[index].Name;		
 				if (Array[index].ImageTags.Primary) {		
@@ -391,6 +339,26 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 	
 	document.getElementById(DivIdUpdate).innerHTML = htmlToAdd;
 }
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
+	if (SeriesName == "" || SeriesName == null) {
+		if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+			return "S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
+		} else {
+			return EpisodeName;
+		}
+	} else {
+		if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+			return SeriesName + "<br>S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
+		} else {
+			return SeriesName + "<br>"+EpisodeName;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
 
 //ByPass Counter required for views that have 2 lists (Like Home Page) so I only display the counter of the active list
 Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter) {
@@ -482,7 +450,6 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			break;
 		case "Series":
 			//Is Latest Items Screen - If so skip to Episode view of latest episodes
-			alert (startParams[2]);
 			if (isLatest) {
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&Limit="+ItemData.Items[selectedItem].ChildCount+"&ParentId="+ItemData.Items[selectedItem].Id+"&isPlayed=false&IsFolder=false&GroupItems=false&fields=SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Episodes.start("New TV",url,0,0);

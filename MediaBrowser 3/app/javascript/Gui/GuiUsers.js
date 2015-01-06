@@ -77,7 +77,12 @@ GuiUsers.start = function(runAutoLogin) {
 		} else {
 			document.getElementById("guiUsers_allusers").innerHTML = "Sorry, you have no public users and this app currently does not offer manual user logon";
 			document.getElementById("GuiUsers").focus();
-		}	
+		}
+		
+		//Set Backdrop
+		imgsrc =  "images/hd-splash.jpg";
+		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+		
 	}
 }
 

@@ -64,25 +64,25 @@ Server.getCustomURL = function(SortParams) {
 
 Server.getItemTypeURL = function(SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json&ImageTypeLimit=1" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json&ImageTypeLimit=1";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?format=json";
 	}	
 }
 
 Server.getChildItemsURL = function(ParentID, SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json&ImageTypeLimit=1" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json&ImageTypeLimit=1";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json";
 	}	
 }
 
 Server.getItemInfoURL = function(ParentID, SortParams) {
 	if (SortParams != null){
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json&ImageTypeLimit=1" + SortParams;
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json" + SortParams;
 	} else {
-		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json&ImageTypeLimit=1";
+		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items/"+ParentID+"?format=json";
 	}		
 }
 
@@ -107,7 +107,10 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 		break;	
 	case "Logo":
 		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Logo/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
-		break;		
+		break;
+	case "Disc":
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Disc/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		break;
 	case "UsersPrimary":
 		return Server.getServerAddr() + "/Users/" + itemId + "/Images/Primary?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
@@ -121,6 +124,22 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 	  if (playedpercentage != 100){
 		  query = query + "&PercentPlayed=" + playedpercentage;
 	  }	
+	}
+	
+	query = query + "&Quality=80"
+	
+	return query;
+}
+
+Server.getBackgroundImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,played,playedpercentage,totalbackdrops) {
+	var query = "";
+	var index =  Math.floor((Math.random()*totalbackdrops)+0);
+	
+	switch (imagetype) {
+	
+	case "Backdrop":
+		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Backdrop/"+index+"?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		break;
 	}
 	
 	query = query + "&Quality=80"

@@ -690,6 +690,18 @@
     background-position:center;
 }
 
+.guiFilm_CDArt {
+	position:absolute;
+    bottom:157px;
+    right:25px;
+
+	width: 126px;
+    height: 126px;
+
+    background-repeat: no-repeat;
+    background-position:center;
+}
+
 .guiTV_Episode_Poster {
 	position:absolute;
     bottom:40px;

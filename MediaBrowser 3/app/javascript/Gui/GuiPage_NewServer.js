@@ -21,6 +21,11 @@ GuiPage_NewServer.start = function() {
 		</div>";
 		
 
+	
+	//Set Backdrop
+	imgsrc =  "images/hd-splash.jpg";
+	document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+
 	//Prepare all input elements for IME
 	GuiPage_NewServer.createInputObjects();
 	pluginAPI.registIMEKey();

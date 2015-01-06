@@ -45,6 +45,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div> \
 					<div id='guiTV_Show_Overview' class='guiFilm_Overview'></div> \
 			</div> \
+			<div id='guiTV_Show_CDArt' class='guiFilm_CDArt'></div> \
 			<div id='guiTV_Show_Poster' class='guiFilm_Poster'></div>";
 	
 	//Get Page Items
@@ -111,7 +112,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		
 		//Set Backdrop
 		if (this.ItemData.ParentBackdropImageTags) {
-			var imgsrc = Server.getImageURL(this.ItemData.ParentBackdropItemId,"Backdrop",960,540,0,false,0);
+			var imgsrc = Server.getBackgroundImageURL(this.ItemData.ParentBackdropItemId,"Backdrop",960,540,0,false,0,this.ItemData.ParentBackdropImageTags.length);
+			
 			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 		}
 		
@@ -153,15 +155,23 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		//Set Title 
 		document.getElementById("guiTV_Show_Title").innerHTML = this.ItemData.Name;
 		
+		//Set Film CD
+		if (this.ItemData.ImageTags.Disc) {
+			var imgsrc = Server.getImageURL(this.ItemData.Id,"Disc",126,126,0,false,0);
+			document.getElementById("guiTV_Show_CDArt").style.backgroundImage="url('" + imgsrc + "')";
+		}
+		
+		
 		//Set Film Poster
 		if (this.ItemData.ImageTags.Primary) {
 			var imgsrc = Server.getImageURL(this.ItemData.Id,"Primary",136,200,0,false,0);
 			document.getElementById("guiTV_Show_Poster").style.backgroundImage="url('" + imgsrc + "')";
 		}
 		
+	
 		//Set Film Backdrop
 		if (this.ItemData.BackdropImageTags.length > 0) {
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0); 
+			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0,this.ItemData.BackdropImageTags.length); 
 			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 		}
 		

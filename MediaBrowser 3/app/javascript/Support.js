@@ -194,7 +194,9 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 		if (isResume == true) {
 			if (Array[index].Type == "Episode") {
 				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);			
-				if (Array[index].SeriesThumbImageTag) {	
+				
+				if (Array[index].SeriesThumbImageTag) {
+					title = this.getNameFormat("", Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);
 					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>" + title +"</div></div>";	
 				} else if (Array[index].ImageTags.Primary) {	
@@ -209,7 +211,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress></div></div>";	
 				} else if (Array[index].BackdropImageTags.length > 0) {	
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
+					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage,Array[index].BackdropImageTags.length);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div></div>";
@@ -238,10 +240,12 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}
 			} else if (Array[index].Type == "Episode") {
 				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);	
+				
 				var imageData = "";	
 				if (Array[index].SeriesThumbImageTag) {	
 					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,Array[index].UserData.Played,0);
 					imageData = "background-image:url(" +imgsrc+ ")";
+					title = this.getNameFormat("", Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);
 				} else 	if (Array[index].ImageTags.Primary) {	
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,Array[index].UserData.Played,0);	
 					imageData = "background-image:url(" +imgsrc+ ")";
@@ -286,7 +290,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var title = Array[index].Name;	
 				if (showBackdrop == "yes") {
 					if (Array[index].BackdropImageTags.length > 0) {
-						var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
+						var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
 					} else {
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
@@ -311,7 +315,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var title = Array[index].Name;	
 				
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
+					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";		
 				//} else if (Array[index].ImageTags.Primary) {			
 				//	var imgsrc = Server.getImageURL(Array[index].Id,"Primary",110,80);
@@ -321,7 +325,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				} 	
 			} else if (Array[index].Type == "Season") {
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",114,165,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
+					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Primary",114,165,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage,Array[index].BackdropImageTags.length);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);></div>";
@@ -329,7 +333,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else {
 				var title = Array[index].Name;		
 				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,0,false,0);
+					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
@@ -344,19 +348,74 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
-	if (SeriesName == "" || SeriesName == null) {
-		if (SeriesNo !== undefined && EpisodeNo !== undefined) {
-			return "S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
-		} else {
-			return EpisodeName;
-		}
-	} else {
-		if (SeriesNo !== undefined && EpisodeNo !== undefined) {
-			return SeriesName + "<br>S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
-		} else {
-			return SeriesName + "<br>"+EpisodeName;
-		}
-	}
+	 if (File.getUserProperty("SeasonLabel")){
+		 if (SeriesName == "" || SeriesName == null) {
+				if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+					
+					var seasonNumber = SeriesNo;
+					var seasonString = "";
+					if (seasonNumber < 10){
+						seasonString = "0" + seasonNumber;
+					}
+					else{
+						seasonString = seasonNumber;
+					}
+					
+					var episodeNumber = EpisodeNo;
+					var episodeString = "";
+					if (episodeNumber < 10){
+						episodeString = "0" + episodeNumber;
+					}
+					else{
+						episodeString = episodeNumber;
+					}
+
+					return "S" + seasonString + "E" + episodeString + " - " + EpisodeName;		
+				} else {
+					return EpisodeName;
+				}
+			} else {
+				if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+					var seasonNumber = SeriesNo;
+					var seasonString = "";
+					if (seasonNumber < 10){
+						seasonString = "0" + seasonNumber;
+					}
+					else{
+						seasonString = seasonNumber;
+					}
+					
+					var episodeNumber = EpisodeNo;
+					var episodeString = "";
+					if (episodeNumber < 10){
+						episodeString = "0" + episodeNumber;
+					}
+					else{
+						episodeString = episodeNumber;
+					}
+
+					return SeriesName + "<br>S" + seasonString + "E" + episodeString + " - " + EpisodeName;		
+				} else {
+					return SeriesName + "<br>"+EpisodeName;
+				}
+			}
+	 }else{
+		 if (SeriesName == "" || SeriesName == null) {
+				if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+					return "S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
+				} else {
+					return EpisodeName;
+				}
+			} else {
+				if (SeriesNo !== undefined && EpisodeNo !== undefined) {
+					return SeriesName + "<br>S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
+				} else {
+					return SeriesName + "<br>"+EpisodeName;
+				}
+			}
+	 }
+	
+	
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------

@@ -36,6 +36,7 @@ GuiPage_Servers.start = function(runAutoLogin) {
 		this.updateDisplayedUsers();
 		this.updateSelectedUser();
 			
+		
 		//Set focus to element in Index that defines keydown method! This enables keys to work :D
 		document.getElementById("GuiPage_Servers").focus();	
 	}

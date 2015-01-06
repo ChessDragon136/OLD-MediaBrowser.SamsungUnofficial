@@ -72,14 +72,14 @@ GuiPage_CastMember.updateSelectedItems = function () {
 			switch (this.ItemData.Items[index].Type) {
 			case "Episode":
 				if (this.ItemData.Items[index].ParentBackdropItemId) {
-					var imgsrc = Server.getImageURL(this.ItemData.Items[index].ParentBackdropItemId,"Backdrop",960,540,0,false,0);
+					var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].ParentBackdropItemId,"Backdrop",960,540,0,false,0,this.ItemData.Items[index].ParentBackdropImageTags.length);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 				}
 				break;
 			case "Movie":	
 			case "Series":
 				if (this.ItemData.Items[index].BackdropImageTags.length > 0) {
-					var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Backdrop",960,540,0,false,0);
+					var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",960,540,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 				}
 				break;

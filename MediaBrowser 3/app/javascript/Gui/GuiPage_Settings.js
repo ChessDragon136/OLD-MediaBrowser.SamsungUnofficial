@@ -2,9 +2,9 @@ var GuiPage_Settings = {
 		AllData : null,
 		UserData : null,
 		
-		Settings : ["Default","View1","View2","SkipShow"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page"],
-		SettingsDefaults : [false,"ddddd","aaaaa",false],
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page","Use Alternate Season Label"],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false],
 		
 		TVSettings : ["TvConnection","Dolby","DTS"],
 		TVSettingsName : ["Network Connection Type: ","Enable Dolby Digital Playback: ","Enable DTS Playback : "],
@@ -88,6 +88,14 @@ GuiPage_Settings.generateSettings = function() {
 		switch (this.Settings[index]) {
 		case "Default":
 		case "SkipShow":
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.UserData[this.Settings[index]]) {
+					Setting = this.DefaultOptions[index2];
+					break;
+				}
+			}
+			break;
+		case "SeasonLabel":
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.UserData[this.Settings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -196,6 +204,9 @@ GuiPage_Settings.processSelectedItem = function() {
 	switch (this.Settings[this.selectedItem]) {
 	case "Default":
 	case "SkipShow":	
+		this.CurrentSubSettings = this.DefaultOptions;
+		break;
+	case "SeasonLabel":	
 		this.CurrentSubSettings = this.DefaultOptions;
 		break;
 	case "View1":
@@ -315,6 +326,10 @@ GuiPage_Settings.processSelectedSubItem = function() {
 				}
 				File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
 			}
+			break;
+		case "SeasonLabel":	
+			this.UserData[this.Settings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
+			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 			break;
 		case "View1":
 			this.UserData.View1Name = this.View1Options[this.selectedSubItem];
@@ -445,7 +460,11 @@ GuiPage_Settings.setOverview = function() {
 		case "SkipShow":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Skip TV Show Page";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "This option allows for the TV Show page to be skipped if there is only one season, taking you directly to the episodes page.";
-			break;			
+			break;
+		case "SeasonLabel":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Use Alternate Season Label";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use an alternative format for the season and episode label formats.";
+			break;
 		}
 	}
 	

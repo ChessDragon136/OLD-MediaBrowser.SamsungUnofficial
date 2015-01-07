@@ -43,8 +43,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		this.ItemData = Server.getContent(newURL);
 	}
 	
-	if (this.ItemData.Items.length > 0) {	
-		
+	if (this.ItemData.Items.length > 0) {		
 		//Latest Page Fix
 		this.isLatest = false;
 		if (title == "New TV") {
@@ -111,7 +110,21 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 			
 		//Update Selected Collection CSS
 		this.updateSelectedItems();	
+		
+		//Function to generate random backdrop
+		setTimeout(function(){
+			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
+			var randomImageData = Server.getContent(randomImageURL);
 			
+			for (var index = 0; index < randomImageData.Items.length; index++) {
+				if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
+					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+					break;
+				}
+			}
+		}, 1000);
+		
 		//Set Focus for Key Events
 		document.getElementById("GuiPage_HomeOneItem").focus();
 	} else {

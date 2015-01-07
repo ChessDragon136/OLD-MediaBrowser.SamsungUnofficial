@@ -18,20 +18,6 @@ GuiMainMenu.getSelectedMainMenuItem = function() {
 //Entry Point from User Menu - ONLY RUN ONCE PER USER LOGIN
 GuiMainMenu.start = function() {
 	
-	//Function to generate random backdrop
-	setTimeout(function(){
-		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
-		var randomImageData = Server.getContent(randomImageURL);
-		
-		for (var index = 0; index < randomImageData.Items.length; index++) {
-			if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
-				var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
-				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-				break;
-			}
-		}
-	}, 1000);
-	
 	//Generate Menu based on whethere there is any of (Folders, TV, Movies, .....)
 	this.menuItems.length = 0;
 	

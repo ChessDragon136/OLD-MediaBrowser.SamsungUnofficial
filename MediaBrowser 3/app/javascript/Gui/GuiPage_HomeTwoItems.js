@@ -80,6 +80,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 	
 	if (this.ItemData.Items.length > 0 && this.ItemData2.Items.length > 0) {
 		//Proceed as Normal
+		
 		//Set TopLeft
 		if (isTop == false) {
 			this.selectedItem = -1;
@@ -160,6 +161,19 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		var updateCounter2 = (isTop == true) ? true : false;
 		this.updateSelectedItems2(updateCounter2);
 		
+		//Function to generate random backdrop - Should I use a timeout?
+		//setTimeout(function(){
+			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
+			var randomImageData = Server.getContent(randomImageURL);
+			
+			for (var index = 0; index < randomImageData.Items.length; index++) {
+				if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
+					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+					break;
+				}
+			}
+		//}, 1000);
 		
 	} else if (this.ItemData.Items.length > 0 && this.ItemData2.Items.length == 0) {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);

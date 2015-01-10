@@ -519,28 +519,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 GuiPage_HomeTwoItems.processSelectedItem = function (array,isTop) {
 	if (this.selectedItem == -2) {
 		Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],0,0,true);
-		switch (this.menuItems[this.selectedBannerItem]) {
-		case "Media-Folders":
-			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");	
-			GuiDisplayOneItem.start("Media Folders", url,0,0);
-			break;
-		case "Channels":
-			var url = Server.getCustomURL("/Channels?userId="+Server.getUserID()+"&format=json");	
-			GuiDisplayOneItem.start("Channels", url,0,0);
-			break;
-		case "Collections":	
-			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=SortName");
-			GuiDisplayOneItem.start("Collections", url,0,0);
-			break;		
-		case "TV":
-			var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
-			GuiDisplay_Series.start("All Series",url,0,0);
-			break;	
-		case "Movies":
-			var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
-			GuiDisplay_Series.start("All Movies",url,0,0);
-			break;
-		}
+		Support.processHomePageMenu(this.menuItems[this.selectedBannerItem]);
 	} else {
 		var selectedItem = 0;
 		var topLeftItem = 0;
@@ -559,7 +538,6 @@ GuiPage_HomeTwoItems.processSelectedItem = function (array,isTop) {
 				isLatest = true;
 			}
 		}
-		
 		Support.processSelectedItem("GuiPage_HomeTwoItems",array,this.startParams,selectedItem,topLeftItem,isTop,null,isLatest); 
 	}
 }

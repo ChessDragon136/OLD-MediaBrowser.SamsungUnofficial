@@ -207,7 +207,7 @@ GuiMusicPlayer.handlePlayKey = function() {
 		    this.updateTimeCount = 0;
 			
 		    //Update Menu to show Music Icon
-		    GuiMainMenu.showMusicIcon();
+		    //GuiMainMenu.showMusicIcon();
 		    
 			//Calculate position in seconds
 		    this.pluginMusic.Play(this.videoURL);   
@@ -225,7 +225,7 @@ GuiMusicPlayer.handleStopKey = function() {
 	alert ("STOPPING PLAYBACK");
 
 	//Update Menu to hide Music Icon
-    GuiMainMenu.hideMusicIcon();
+    //GuiMainMenu.hideMusicIcon();
 	
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";

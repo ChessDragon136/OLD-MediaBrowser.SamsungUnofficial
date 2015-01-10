@@ -56,6 +56,19 @@ GuiMainMenu.start = function() {
 	this.updateSelectedItems();
 	this.selectedMainMenuItem = 0;
 	
+	//setTimeout(function(){
+	//var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
+	//var randomImageData = Server.getContent(randomImageURL);
+	
+	//for (var index = 0; index < randomImageData.Items.length; index++) {
+	//	if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
+	//		var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+	//		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+	//		break;
+	//	}
+	//}
+	//}, 1000);
+	
 	//Load Home Page
 	var url1 = File.getUserProperty("View1");
 	var title1 = File.getUserProperty("View1Name");
@@ -204,6 +217,11 @@ GuiMainMenu.processSelectedItems = function() {
 		var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
 		GuiDisplay_Series.start("All Movies",url,0,0);
 		break;
+	case "Music":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
+		GuiDisplay_Series.start("Album",url,0,0);
+		break;	
 	case "Settings":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		GuiPage_Settings.start();

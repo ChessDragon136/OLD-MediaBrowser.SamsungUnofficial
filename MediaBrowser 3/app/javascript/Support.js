@@ -263,7 +263,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 			} else if (Array[index].Type == "MusicAlbum"){
 				var title = Array[index].Name;		
 				if (Array[index].ImageTags.Primary) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125,Array[index].UserData.PlayCount,false,0);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,Array[index].UserData.PlayCount,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
@@ -273,7 +273,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var count = (Array[index].RecursiveUnplayedItemCount) ? Array[index].RecursiveUnplayedItemCount : Array[index].SongCount;
 				
 				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",125,125,0,false,0);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
@@ -423,20 +423,11 @@ Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
 //ByPass Counter required for views that have 2 lists (Like Home Page) so I only display the counter of the active list
 Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter) {
 	for (var index = startPos; index < endPos; index++){	
-		if (Array[index].Type == "MusicArtist" || Array[index].Type == "MusicAlbum" || Array[index].Type == "Audio") {
-			if (index == selectedItemID) {
-				document.getElementById(DivIdPrepend + Array[index].Id).className = "Music Selected";			
-			} else {	
-				document.getElementById(DivIdPrepend +  Array[index].Id).className = "Music";		
-			}
-		} else {
-			if (index == selectedItemID) {
-				document.getElementById(DivIdPrepend + Array[index].Id).className = strIfSelected;			
-			} else {	
-				document.getElementById(DivIdPrepend +  Array[index].Id).className = strIfNot;		
-			}
-		}
-			
+		if (index == selectedItemID) {
+			document.getElementById(DivIdPrepend + Array[index].Id).className = strIfSelected;			
+		} else {	
+			document.getElementById(DivIdPrepend +  Array[index].Id).className = strIfNot;		
+		}			
     }
 	
 	//Update Counter DIV
@@ -470,10 +461,9 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			GuiDisplay_Series.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;	
 		case "music" :
-			if (Main.isMusicEnabled()) {
-				var url1 = Server.getItemTypeURL("&SortBy=DateCreated&SortOrder=Descending&IncludeItemTypes=MusicAlbum&Limit=10&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
-				var url2 = Server.getItemTypeURL("&SortBy=PlayCount&SortOrder=Descending&IncludeItemTypes=Audio&Limit=10&Recursive=true&Filters=IsPlayed&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
-				GuiDisplayTwoItems.start("Latest Albums",url1,"Frequently Played",url2,0,0,true);
+			if (Main.isMusicEnabled()) {			
+				var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=ParentId,SortName&CollapseBoxSetItems=false");
+				GuiDisplay_Series.start("Album",url,0,0);
 			} else {
 				Support.removeLatestURL();
 			}
@@ -689,6 +679,36 @@ Support.generateMainMenu = function() {
 		menuItems.push("Collections");
 	}
 	return menuItems;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+Support.processHomePageMenu = function (menuItem) {
+	switch (menuItem) {
+	case "Media-Folders":
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");	
+		GuiDisplayOneItem.start("Media Folders", url,0,0);
+		break;
+	case "Channels":
+		var url = Server.getCustomURL("/Channels?userId="+Server.getUserID()+"&format=json");	
+		GuiDisplayOneItem.start("Channels", url,0,0);
+		break;
+	case "Collections":	
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=SortName");
+		GuiDisplayOneItem.start("Collections", url,0,0);
+		break;		
+	case "TV":
+		var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
+		GuiDisplay_Series.start("All Series",url,0,0);
+		break;	
+	case "Movies":
+		var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
+		GuiDisplay_Series.start("All Movies",url,0,0);
+		break;
+	case "Music":
+		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
+		GuiDisplay_Series.start("Album",url,0,0);
+		break;
+	}
 }
 
 

@@ -22,7 +22,6 @@ GuiDisplayOneItem.getMaxDisplay = function() {
 GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {	
 	//Save Start Params	
 	this.startParams = [title,url];
-	alert (url);
 	
 	//Reset Values
 	this.indexSeekPos = -1;

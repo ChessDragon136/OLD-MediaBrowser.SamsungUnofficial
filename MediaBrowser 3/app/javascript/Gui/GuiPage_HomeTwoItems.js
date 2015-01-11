@@ -337,8 +337,12 @@ GuiPage_HomeTwoItems.keyDown = function()
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);	
 			//Return added here - deleted in MainMenu if user does return
-			if (this.selectedItem == -2) {
-				document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem";
+			if (this.selectedItem == -2) {		
+				if (this.selectedBannerItem != this.menuItems.length-1) {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				} else {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
+				}
 				this.selectedItem = 0;
 				this.topLeftItem = 0;
 			}
@@ -366,6 +370,9 @@ GuiPage_HomeTwoItems.keyDown = function()
 		case tvKey.KEY_BLUE:	
 			Support.logout();
 			break;
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
+			break;	
 		case tvKey.KEY_INFO:
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
@@ -502,6 +509,9 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			break;	
 		case tvKey.KEY_BLUE:	
 			Support.logout();
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_INFO:
 			alert ("INFO KEY");

@@ -300,12 +300,19 @@ GuiDisplay_Series.keyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;		
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiDisplay_Series");
+			break;
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
-				document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem";
+				if (this.selectedBannerItem != this.menuItems.length-1) {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				} else {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
+				}
 				this.selectedItem = 0;
 				this.topLeftItem = 0;
 			}

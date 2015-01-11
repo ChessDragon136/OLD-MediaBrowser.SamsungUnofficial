@@ -4,11 +4,11 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.517g",
+		version : "v0.520",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5211",
 		
-		enableMusic : false,
+		enableMusic : true,
 		enableLiveTV : false,
 		enablePhoto : true,
 		enableCollections : true,

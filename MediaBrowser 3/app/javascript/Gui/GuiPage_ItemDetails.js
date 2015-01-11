@@ -344,6 +344,9 @@ GuiPage_ItemDetails.keyDown = function()
 		case tvKey.KEY_BLUE:	
 			Support.logout();
 			break;		
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_ItemDetails");
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -523,7 +526,7 @@ GuiPage_ItemDetails.subKeyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;	
+			break;		
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

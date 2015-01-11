@@ -170,7 +170,10 @@ GuiDisplayOneItem.keyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;		
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
+			break;	
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

@@ -223,7 +223,9 @@ GuiTV_Show.keyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;		
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiTV_Show");	
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

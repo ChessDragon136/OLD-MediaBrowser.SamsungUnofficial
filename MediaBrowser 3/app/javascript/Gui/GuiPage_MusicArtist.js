@@ -49,8 +49,12 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 		//Set PageContent
 		
 		//Update Padding on pageContent
-		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div class='Columns"+this.MAXCOLUMNCOUNT+" padding40'><div id=Content class='Rows"+this.MAXROWCOUNT+"'></div></div>" +
-				"<div class='Columns"+this.MAXCOLUMNCOUNT+"SecondRow padding30'><p id=pageTitle2 class=pageTitle></p><div id=Content2></div></div>";
+		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
+				"<div style='padding-top:260px;padding-left:4px;'><p id=pageTitle2 style='font-size:22px;'></p><div id=Content2></div></div>";
+		
+		//Set banner Styling
+		document.getElementById("bannerSelection").style.paddingTop="10px";
+		document.getElementById("bannerSelection").style.paddingBottom="5px";
 		
 		//Index Data
 		this.ItemIndexData = Support.processIndexing(this.ItemData.Items); 
@@ -91,13 +95,10 @@ GuiPage_MusicArtist.updateSelectedItems = function (bypassCounter) {
 	
 	//Prevent execution when selectedItem is set to -1 to hide selected item
 	if (this.selectedItem != -1) {	
-		//Set Title2
-		if (this.title1 != "Albums") {
-			document.getElementById("pageTitle2").innerHTML = "Albums by " + this.ItemData.Items[this.selectedItem].Name;
-		} else {
-			document.getElementById("pageTitle2").innerHTML = "Songs";
-		}
 		
+		//Set Title2
+		document.getElementById("pageTitle2").innerHTML = "Albums by " + this.ItemData.Items[this.selectedItem].Name;
+
 		//Load Data
 		var url2 = "";
 		artist = this.ItemData.Items[this.selectedItem].Name.replace(/ /g, '+');	 
@@ -173,8 +174,18 @@ GuiPage_MusicArtist.keyDown = function() {
 			this.processTopMenuUpKey();
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
+			//Return added here - deleted in MainMenu if user does return
+			if (this.selectedItem == -1) {		
+				if (this.selectedBannerItem != this.bannerItems.length-1) {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				} else {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
+				}
+				this.selectedItem = 0;
+				this.topLeftItem = 0;
+			}
 			Support.updateURLHistory("GuiPage_MusicArtist",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,true);
 			GuiMainMenu.requested("GuiPage_MusicArtist",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
 			break;
@@ -185,7 +196,10 @@ GuiPage_MusicArtist.keyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;		
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_MusicArtist");
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -403,8 +417,18 @@ GuiPage_MusicArtist.bottomKeyDown = function() {
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
+			//Return added here - deleted in MainMenu if user does return
+			if (this.selectedItem == -1) {		
+				if (this.selectedBannerItem != this.bannerItems.length-1) {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				} else {
+					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
+				}
+				this.selectedItem = 0;
+				this.topLeftItem = 0;
+			}
 			Support.updateURLHistory("GuiPage_MusicArtist",this.startParams[0],this.startParams[1],null,null,this.selectedItem2,this.topLeftItem2,false);
-			GuiMainMenu.requested("GuiPage_MusicArtistBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);
+			GuiMainMenu.requested("GuiPage_MusicArtistBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);				
 			break;
 		case tvKey.KEY_RETURN:
 			//In this instance handle return to go up to the top menu
@@ -423,6 +447,8 @@ GuiPage_MusicArtist.bottomKeyDown = function() {
 		case tvKey.KEY_BLUE:	
 			Support.logout();
 			break;		
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_MusicArtist");	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY BOTTOM");
 			widgetAPI.sendExitEvent();

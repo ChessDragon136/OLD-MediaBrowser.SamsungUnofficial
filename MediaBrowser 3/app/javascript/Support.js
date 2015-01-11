@@ -266,7 +266,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,Array[index].UserData.PlayCount,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
 				} 
 			}  else if (Array[index].Type == "MusicArtist"){
 				var title = Array[index].Name;		
@@ -276,15 +276,15 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/artist.png)><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
 				} 
 			} else if (Array[index].Type == "Audio"){
 				var title = Array[index].Name;		
 				if (Array[index].AlbumPrimaryImageTag) {	
-					var imgsrc = Server.getImageURL(Array[index].AlbumId,"Primary",125,125,0,false,0);
+					var imgsrc = Server.getImageURL(Array[index].AlbumId,"Primary",109,109,0,false,0);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=menuItem>"+ title + "</div></div>";
 				}
 			} else if (Array[index].Type == "Series" || Array[index].Type == "Movie") {
 				var title = Array[index].Name;	
@@ -524,11 +524,11 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			var artist = ItemData.Items[selectedItem].Name.replace(/ /g, '+');	 
 			artist = artist.replace(/&/g, '%26');	
 			var url = Server.getItemTypeURL("&SortBy=Album%2CSortName&SortOrder=Ascending&IncludeItemTypes=Audio&Recursive=true&CollapseBoxSetItems=false&Artists=" + artist);
-			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url);
+			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].Type);
 			break;	
-		case "MusicAlbum":		
+		case "MusicAlbum":	
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Audio&Recursive=true&CollapseBoxSetItems=false");
-			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url);
+			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].Type);
 			break;	
 		case "Folder":
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName,ParentId");

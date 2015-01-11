@@ -243,6 +243,9 @@ GuiPage_HomeOneItem.keyDown = function() {
 		case tvKey.KEY_BLUE:	
 			Support.logout();
 			break;		
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeOneItem");
+			break;
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

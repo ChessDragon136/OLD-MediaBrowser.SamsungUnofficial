@@ -23,11 +23,12 @@ GuiPage_Music.getMaxDisplay = function() {
 //      Episode Functions
 //------------------------------------------------------------
 
-GuiPage_Music.start = function(title,url) {
+GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
 	//Save Start Params
 	this.startParams = [title,url];
 	
 	//Reset Vars
+	this.topLeftItem = 0;
 	this.selectedItem = -1;
 	this.selectedItem2 = 0;
 
@@ -36,13 +37,15 @@ GuiPage_Music.start = function(title,url) {
 	
 	//Set PageContent
 	document.getElementById("pageContent").className = "";
-	document.getElementById("pageContent").innerHTML = "<div id='guiTV_Show_Title' class='guiTV_Show_Title'></div>\ \
-		<div id='GuiPage_Music_Globals' style='display:block;width:400px;text-align:center;'> \
+	document.getElementById("pageContent").innerHTML = "<div id='guiTV_Show_Title' style='font-size:22px;padding-top:20px;padding-left:20px'></div> \
+		   <div id='guiTV_Show_Subtitle' style='font-size:18px;padding-top:5px;padding-left:30px'></div> \
+		   <div style='margin-top:40px;margin-left:80px'> \
+		   <div id='GuiPage_Music_Globals' style='display:block;width:400px;text-align:center;'> \
 		   <div id='PlayAll' style='display:inline-block;padding:10px;'>Play All</div> \
 		   <div id='QueueAll' style='display:inline-block;padding:10px;'>Queue All</div> \
 		   <div id='ShuffleAll' style='display:inline-block;padding:10px;'>Shuffle</div> \
 		   <div id='InstantMix' style='display:inline-block;padding:10px;'>Instant Mix</div></div> \
-		<div id='GuiPage_Music_Options' class='guiPage_Music_Options'></div> \
+		<div id='GuiPage_Music_Options' style='padding-left:20px'padding-top:10px;'></div></div> \
 		<div id='guiPage_Music_Poster' class='guiPage_Music_Poster'></div>";
 	document.getElementById("Counter").innerHTML = "1/1";	
 		
@@ -55,7 +58,12 @@ GuiPage_Music.start = function(title,url) {
 	}
 	
 	//Set Page Title
-	document.getElementById("guiTV_Show_Title").innerHTML = this.AlbumData.Items[0].Artists + "<p class=guiTV_Show_SubTitle>" +  this.AlbumData.Items[0].Album + "</p>";
+	if (type == "MusicAlbum") {
+		document.getElementById("guiTV_Show_Title").innerHTML = this.AlbumData.Items[0].AlbumArtist;	
+		document.getElementById("guiTV_Show_Subtitle").innerHTML = this.AlbumData.Items[0].Album;
+	} else if (type == "MusicArtist") {
+		document.getElementById("guiTV_Show_Title").innerHTML = this.AlbumData.Items[0].Artists;	
+	}
 		
 	//Get Page Items
 	this.updateDisplayedItems();
@@ -174,7 +182,10 @@ GuiPage_Music.keyDown = function() {
 			break;
 		case tvKey.KEY_BLUE:	
 			Support.logout();
-			break;		
+			break;	
+		case tvKey.KEY_YELLOW:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

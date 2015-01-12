@@ -264,13 +264,13 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				var title = Array[index].Name;		
 				if (Array[index].ImageTags.Primary) {		
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,Array[index].UserData.PlayCount,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=genreItemCount>"+Array[index].RecursiveUnplayedItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=genreItemCount>"+Array[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
 				} 
 			}  else if (Array[index].Type == "MusicArtist"){
 				var title = Array[index].Name;		
-				var count = (Array[index].RecursiveUnplayedItemCount) ? Array[index].RecursiveUnplayedItemCount : Array[index].SongCount;
+				var count = Array[index].SongCount;
 				
 				if (Array[index].ImageTags.Primary) {			
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",109,109,0,false,0);

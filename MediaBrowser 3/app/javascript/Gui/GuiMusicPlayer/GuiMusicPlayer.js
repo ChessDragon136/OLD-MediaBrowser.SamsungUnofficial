@@ -58,7 +58,7 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue) {
 	this.ItemData = Server.getContent(url);
    
 	//See if item is to be added to playlist or not - if not reset playlist
-	if (isQueue == false) {
+	if (this.Status != "STOPPED" && isQueue == false) {
 		this.queuedItems.length = 0;
 		this.handleStopKey();
 	}
@@ -215,6 +215,7 @@ GuiMusicPlayer.handlePlayKey = function() {
 
 GuiMusicPlayer.handlePauseKey = function() {
 	this.pluginMusic.Pause();
+	Server.videoPaused(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.Status = "PAUSED";
 }
 
@@ -231,7 +232,7 @@ GuiMusicPlayer.handleStopKey = function() {
     pluginAPI.registKey(tvKey.KEY_VOL_DOWN);
     pluginAPI.registKey(tvKey.KEY_MUTE);
 	
-	//Server.videoStopped(this.showId,this.currentTime);
+	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	
     if (document.getElementById("guiMusicPlayerDiv").style.visibility == "") {
     	document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
@@ -330,6 +331,16 @@ GuiMusicPlayer.handleStreamNotFound = function() {
 GuiMusicPlayer.setCurrentTime = function(time){
 	this.currentTime = time;
 	this.updateTimeCount++;
+	
+	//Update Server every 8 ticks (Don't want to spam!
+	if (this.updateTimeCount == 8) {
+		this.updateTimeCount = 0;
+
+		//Update Server
+		Server.videoPaused(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
+		
+	}
+	
 	document.getElementById("guiMusicPlayerTime").innerHTML = Support.convertTicksToTime(this.currentTime, (this.queuedItems[this.currentPlayingItem].RunTimeTicks / 10000));
 }
 
@@ -342,6 +353,9 @@ GuiMusicPlayer.OnStreamInfoReady = function() {
 	}
 	document.getElementById("guiMusicPlayerTitle").innerHTML = this.queuedItems[this.currentPlayingItem].Artists + "<br>" + playingTitle + this.queuedItems[this.currentPlayingItem].Name;
 	document.getElementById("guiMusicPlayerTime").innerHTML = Support.convertTicksToTime(this.currentTime, (this.queuedItems[this.currentPlayingItem].RunTimeTicks / 10000));
+	
+	//Playback Checkin
+	Server.videoStarted(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,"DirectStream");
 	
     //Volume & Mute Control - Works!
 	NNaviPlugin = document.getElementById("pluginObjectNNavi");

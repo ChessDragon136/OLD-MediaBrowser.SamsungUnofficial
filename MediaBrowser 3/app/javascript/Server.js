@@ -198,8 +198,6 @@ Server.videoPaused = function(showId,MediaSourceID,ticks,PlayMethod) {
 }
 
 Server.videoTime = function(showId,MediaSourceID,ticks,PlayMethod) {
-	alert ("I Ran")
-	alert (ticks);
 	var url = this.serverAddr + "/Sessions/Playing/Progress";
 	xmlHttp = new XMLHttpRequest();
 	if (xmlHttp) {

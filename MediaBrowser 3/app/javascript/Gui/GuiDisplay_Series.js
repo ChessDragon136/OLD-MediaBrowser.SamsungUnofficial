@@ -163,7 +163,11 @@ GuiDisplay_Series.updateSelectedItems = function () {
 		htmlForTitle += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes" + " | ";
+		if (this.isTvOrMovies == 2) {
+			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";
+		} else {
+			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes" + " | ";
+		}	
 	}
 
 	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {

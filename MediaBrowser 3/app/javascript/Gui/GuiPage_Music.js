@@ -47,7 +47,7 @@ GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or 
 		   <div id='InstantMix' style='display:inline-block;padding:10px;'>Instant Mix</div></div> \
 		<div id='GuiPage_Music_Options' style='padding-left:20px'padding-top:10px;'></div></div> \
 		<div id='guiPage_Music_Poster' class='guiPage_Music_Poster'></div>";
-	document.getElementById("Counter").innerHTML = "1/1";	
+	document.getElementById("Counter").innerHTML = "1/" + this.topMenuItems.length;	
 		
 	//Get Episode Poster	
 	if (this.AlbumData.Items[0].AlbumPrimaryImageTag) {
@@ -137,7 +137,7 @@ GuiPage_Music.updateSelectedItems = function () {
 	
 	//Set Counter to be album count or x/3 for top part
 	if (this.selectedItem == -1) {
-		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/3";
+		document.getElementById("Counter").innerHTML = (this.selectedItem2 + 1) + "/" + this.topMenuItems.length;
 	} else {
 		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.AlbumData.Items.length;
 	}

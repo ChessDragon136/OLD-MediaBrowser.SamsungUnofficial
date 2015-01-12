@@ -117,7 +117,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 			var randomImageData = Server.getContent(randomImageURL);
 			
 			for (var index = 0; index < randomImageData.Items.length; index++) {
-				if (randomImageData.Items[index ].BackdropImageTags) {
+				if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
 					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
 					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 					break;

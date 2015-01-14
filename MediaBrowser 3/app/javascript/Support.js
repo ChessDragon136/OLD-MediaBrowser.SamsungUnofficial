@@ -822,7 +822,6 @@ Support.convertTicksToTimeSingle = function (currentTime) {
    return timeHTML;
 }
 
-
 Support.convertTicksToMinutes = function (currentTime) {
 	timeMinute = Math.floor((currentTime / 3600000) * 60);
 	return timeMinute + " mins";

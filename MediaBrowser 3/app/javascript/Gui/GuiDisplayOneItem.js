@@ -201,6 +201,11 @@ GuiDisplayOneItem.playSelectedItem = function () {
 		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
 		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
 	}
+	else if (this.ItemData.Items[this.selectedItem].MediaType == "ChannelVideoItem") {
+		Support.updateURLHistory("GuiDisplayOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
+		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
+	}
 }
 
 GuiDisplayOneItem.processLeftKey = function() {

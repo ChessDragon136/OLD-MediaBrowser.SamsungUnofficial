@@ -14,6 +14,7 @@ var GuiPage_HomeOneItem = {
 		isLatest : false,
 		
 		startParams : [],
+		backdropTimeout : null
 }
 
 GuiPage_HomeOneItem.getMaxDisplay = function() {
@@ -112,7 +113,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		this.updateSelectedItems();	
 		
 		//Function to generate random backdrop
-		setTimeout(function(){
+		this.backdropTimeout = setTimeout(function(){
 			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
 			var randomImageData = Server.getContent(randomImageURL);
 			
@@ -123,7 +124,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 					break;
 				}
 			}
-		}, 1000);
+		}, 500);
 		
 		//Set Focus for Key Events
 		document.getElementById("GuiPage_HomeOneItem").focus();
@@ -273,6 +274,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 }
 
 GuiPage_HomeOneItem.processSelectedItem = function() {
+	clearTimeout(this.backdropTimeout);
 	if (this.selectedItem == -1) {
 		Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],0,0,true);
 		Support.processHomePageMenu(this.menuItems[this.selectedBannerItem]);

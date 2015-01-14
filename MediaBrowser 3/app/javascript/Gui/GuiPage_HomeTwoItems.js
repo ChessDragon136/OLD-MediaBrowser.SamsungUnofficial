@@ -21,7 +21,8 @@ var GuiPage_HomeTwoItems = {
 		divprepend1 : "",
 		divprepend2 : "bottom_",
 		
-		startParams : []
+		startParams : [],
+		backdropTimeout : null
 }
 
 GuiPage_HomeTwoItems.getMaxDisplay = function() {
@@ -162,10 +163,10 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		this.updateSelectedItems2(updateCounter2);
 		
 		//Function to generate random backdrop - Should I use a timeout?
-		//setTimeout(function(){
+		this.backdropTimeout  = setTimeout(function(){
 			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
 			var randomImageData = Server.getContent(randomImageURL);
-			
+				
 			for (var index = 0; index < randomImageData.Items.length; index++) {
 				if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
@@ -173,7 +174,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 					break;
 				}
 			}
-		//}, 1000);
+		}, 500);
 		
 	} else if (this.ItemData.Items.length > 0 && this.ItemData2.Items.length == 0) {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);
@@ -527,6 +528,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 //--------------------------------------------------------------------------------------------------------
 
 GuiPage_HomeTwoItems.processSelectedItem = function (array,isTop) {
+	clearTimeout(this.backdropTimeout);
 	if (this.selectedItem == -2) {
 		Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],0,0,true);
 		Support.processHomePageMenu(this.menuItems[this.selectedBannerItem]);

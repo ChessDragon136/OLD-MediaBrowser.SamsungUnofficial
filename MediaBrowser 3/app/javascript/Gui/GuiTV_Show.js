@@ -135,7 +135,7 @@ GuiTV_Show.updateDisplayedItems = function() {
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",100,46,0,false,0);	
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ItemData.Items[index].BackdropImageTags.length > 0) {			
-				var imgsrc = Server.getBackgrouundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);
+				var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ShowData.ImageTags.Thumb) {			
 				var imgsrc = Server.getImageURL(this.ShowData.Id,"Thumb",100,46,0,false,0);	

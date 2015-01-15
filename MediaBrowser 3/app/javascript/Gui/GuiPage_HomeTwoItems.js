@@ -238,6 +238,21 @@ GuiPage_HomeTwoItems.keyDown = function()
 		keyCode = "VOID";
 	}
 	
+	//Update Screensaver Timer
+	Support.screensaver();
+	
+	//If screensaver is running 
+	if (Main.getIsScreensaverRunning()) {
+		//Update Main.js isScreensaverRunning - Sets to True
+		Main.setIsScreensaverRunning();
+		
+		//End Screensaver
+		GuiImagePlayer_Screensaver.stopScreensaver();
+		
+		//Change keycode so it does nothing!
+		keyCode = "VOID";
+	}
+	
 	switch(keyCode)
 	{
 		case tvKey.KEY_LEFT:
@@ -416,6 +431,21 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
+		
+		//Change keycode so it does nothing!
+		keyCode = "VOID";
+	}
+	
+	//Update Screensaver Timer
+	Support.screensaver();
+	
+	//If screensaver is running 
+	if (Main.getIsScreensaverRunning()) {
+		//Update Main.js isScreensaverRunning - Sets to True
+		Main.setIsScreensaverRunning();
+		
+		//End Screensaver
+		GuiImagePlayer_Screensaver.stopScreensaver();
 		
 		//Change keycode so it does nothing!
 		keyCode = "VOID";

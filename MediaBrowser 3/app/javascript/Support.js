@@ -9,10 +9,17 @@ var Support = {
 		startScroll : null,
 		scroller : null,
 		scrollpos : 0,
-		resetToTop : null
+		resetToTop : null,
+		
+		//Screensaver
+		screensaverVar : null,
+		screensaverTime : 10000
 }
 
 Support.logout = function() {
+	//Turn off screensaver
+	Support.screensaverOff();
+	
 	document.getElementById("headerUser").style.visibility = "hidden";
 	document.getElementById("headerUserImage").style.backgroundImage = "";
 	document.getElementById("headerTypes").innerHTML = "";
@@ -744,6 +751,21 @@ Support.processHomePageMenu = function (menuItem) {
 	}
 }
 
+//-----------------------------------------------------------------------------------------------------------------------------------------
+Support.screensaver = function () {
+	if (Main.isScreensaverEnabled()) {
+		clearTimeout(this.screensaverVar);
+		this.screensaverVar  = setTimeout(function(){
+			GuiImagePlayer_Screensaver.start();
+		}, this.screensaverTime);
+	}
+}
+
+Support.screensaverOff = function () {
+	if (Main.isScreensaverEnabled()) {
+		clearTimeout(this.screensaverVar);
+	}
+}
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 Support.convertTicksToTime = function (currentTime, duration) {

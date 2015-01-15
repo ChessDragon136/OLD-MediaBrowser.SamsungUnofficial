@@ -58,18 +58,8 @@ GuiMainMenu.start = function() {
 	this.updateSelectedItems();
 	this.selectedMainMenuItem = 0;
 	
-	//setTimeout(function(){
-	//var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
-	//var randomImageData = Server.getContent(randomImageURL);
-	
-	//for (var index = 0; index < randomImageData.Items.length; index++) {
-	//	if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
-	//		var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
-	//		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-	//		break;
-	//	}
-	//}
-	//}, 1000);
+	//Turn On Screensaver
+	Support.screensaver();
 	
 	//Load Home Page
 	var url1 = File.getUserProperty("View1");
@@ -140,6 +130,21 @@ GuiMainMenu.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
+		
+		//Change keycode so it does nothing!
+		keyCode = "VOID";
+	}
+	
+	//Update Screensaver Timer
+	Support.screensaver();
+	
+	//If screensaver is running 
+	if (Main.getIsScreensaverRunning()) {
+		//Update Main.js isScreensaverRunning - Sets to True
+		Main.setIsScreensaverRunning();
+		
+		//End Screensaver
+		GuiImagePlayer_Screensaver.stopScreensaver();
 		
 		//Change keycode so it does nothing!
 		keyCode = "VOID";

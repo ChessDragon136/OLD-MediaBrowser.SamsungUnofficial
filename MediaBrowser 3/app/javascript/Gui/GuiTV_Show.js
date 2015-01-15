@@ -191,6 +191,21 @@ GuiTV_Show.keyDown = function() {
 		keyCode = "VOID";
 	}
 	
+	//Update Screensaver Timer
+	Support.screensaver();
+	
+	//If screensaver is running 
+	if (Main.getIsScreensaverRunning()) {
+		//Update Main.js isScreensaverRunning - Sets to True
+		Main.setIsScreensaverRunning();
+		
+		//End Screensaver
+		GuiImagePlayer_Screensaver.stopScreensaver();
+		
+		//Change keycode so it does nothing!
+		keyCode = "VOID";
+	}
+	
 	switch(keyCode) {	
 		case tvKey.KEY_UP:
 			alert("UP");

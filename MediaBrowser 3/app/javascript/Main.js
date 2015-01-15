@@ -14,7 +14,11 @@ var Main =
 		enableCollections : true,
 		enableChannels : false,
 		
-		testMode : false
+		enableScreensaver : false,
+		
+		testMode : false,
+		
+		isScreensaverRunning : false
 };
 
 Main.isMusicEnabled = function() {
@@ -37,6 +41,10 @@ Main.isChannelsEnabled = function() {
 	return this.enableChannels;
 }
 
+Main.isScreensaverEnabled = function() {
+	return this.enableScreensaver;
+}
+
 Main.getRequiredServerVersion = function() {
 	return this.requiredServerVersion;
 }
@@ -54,6 +62,18 @@ Main.setTestMode = function() {
 		this.testMode = true;
 	} else {
 		this.testMode = false;
+	}
+}
+
+Main.getIsScreensaverRunning = function() {
+	return this.isScreensaverRunning;
+}
+
+Main.setIsScreensaverRunning = function() {
+	if (this.isScreensaverRunning == false) {
+		this.isScreensaverRunning = true;
+	} else {
+		this.isScreensaverRunning = false;
 	}
 }
 

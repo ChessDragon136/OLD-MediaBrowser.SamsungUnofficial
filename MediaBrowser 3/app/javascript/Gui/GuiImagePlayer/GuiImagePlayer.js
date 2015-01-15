@@ -14,10 +14,10 @@ GuiImagePlayer.kill = function() {
 	this.ImageViewer.destroy();	
 }
 
-
-//WAITING FOR SERVER TO BE RELEASE AS STABLE FOR IMAGE ENHANCEMENTS
-
 GuiImagePlayer.start = function(ItemData,selectedItem) {
+	//Turn off screensaver
+	Support.screensaverOff();
+	
 	var url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");
 	var result = Server.getContent(url);
 	this.newItemData = result; //Misleading I know!
@@ -114,6 +114,10 @@ GuiImagePlayer.keyDown = function() {
 			this.ImageViewer.hide();
 			widgetAPI.blockNavigation(event);
 			GuiImagePlayer.kill();
+			
+			//Turn On Screensaver
+			Support.screensaver();
+			
 			Support.processReturnURLHistory();
 			break;
 	}

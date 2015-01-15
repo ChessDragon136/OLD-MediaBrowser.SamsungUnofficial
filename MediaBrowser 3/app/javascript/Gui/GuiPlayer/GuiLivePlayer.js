@@ -29,6 +29,9 @@ GuiLivePlayer.init = function() {
 }
 
 GuiLivePlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
+	//Turn off screensaver
+	Support.screensaverOff();
+	
     //Get Item Data (Media Streams)
     this.PlayerData = Server.getContent(url);
     alert (url);  
@@ -77,6 +80,9 @@ GuiLivePlayer.restorePreviousMenu = function() {
     pluginAPI.registKey(tvKey.KEY_VOL_UP);
     pluginAPI.registKey(tvKey.KEY_VOL_DOWN);
     pluginAPI.registKey(tvKey.KEY_MUTE);
+    
+    //Turn On Screensaver
+	Support.screensaver();
 
 	//Return to correct Page
 	Support.processReturnURLHistory();

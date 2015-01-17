@@ -71,6 +71,7 @@
 		<a href='javascript:void(0);' id='ServerVersion' onkeydown='ServerVersion.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_Servers' onkeydown='GuiPage_Servers.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiUsers' onkeydown='GuiUsers.keyDown();'></a>
+		<a href='javascript:void(0);' id='GuiHelper' onkeydown='GuiHelper.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiMainMenu' onkeydown='GuiMainMenu.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiMainMenuSubMenu' onkeydown='GuiMainMenu.keyDownSubMenu();'></a>
 		<a href='javascript:void(0);' id='GuiTV_Show' onkeydown='GuiTV_Show.keyDown();'></a>
@@ -111,46 +112,50 @@
 		
 		<!-- TODO: your code here -->
 		
-		<div id="pageBackground" class="pageBackground"></div>
-		<div id="pageBackgroundFade" class="pageBackgroundFade"></div>
-		
-		<div id="page" class="page">
-			<div id="pageContent"></div>		
-					
-			<div id="Counter" class="counter"></div>
-			<div id="Version" class="version"></div>
-			<div id="Help" class="help" style="visibility:hidden"></div>	
+		<div id="everything">	
+			<div id="pageBackground" class="pageBackground"></div>
+			<div id="pageBackgroundFade" class="pageBackgroundFade"></div>
 			
-			<div id='guiMusicPlayerDiv' class='musicDiv' style='visibility:hidden;height:60px'>
-				<div id='guiMusicPlayerTitle' style='display:inline-block;margin-left:10px;width:250px;'></div>
-				<div id='guiMusicPlayerTime'  style='display:inline-block;width:130px;'></div>	
-					<div id='guiMusicPlayerPause' style='display:inline-block;'> Pause </div>
-					<div id='guiMusicPlayerPlay' style='display:inline-block;'> Play </div>
-					<div id='guiMusicPlayerStop' style='display:inline-block;'> Stop </div>
-					<div id='guiMusicPlayerPrevious' style='display:inline-block;'> Previous </div>
-					<div id='guiMusicPlayerNext' style='display:inline-block;'> Next </div>
-					<!--  <div id='guiMusicPlayerPlaylist' style='display:inline-block;'> Playlist </div>	
-					<div id='guiMusicPlayerShowPlaylist' class='musicPlaylist' style='visibility:hidden'>
-				<div id='guiMusicPlayerShowPlaylistContent'></div> -->
-				</div>					
+			<div id="page" class="page">
+				<div id="pageContent"></div>		
+						
+				<div id="Counter" class="counter"></div>
+				<div id="Version" class="version"></div>
+				<div id="Help" class="help" style="visibility:hidden">
+					<div id="HelpTitle" style='font-size:18px'></div>
+					<div id="HelpContent"></div>
+				</div>	
+				
+				<div id='guiMusicPlayerDiv' class='musicDiv' style='visibility:hidden;height:60px'>
+					<div id='guiMusicPlayerTitle' style='display:inline-block;margin-left:10px;width:250px;'></div>
+					<div id='guiMusicPlayerTime'  style='display:inline-block;width:130px;'></div>	
+						<div id='guiMusicPlayerPause' style='display:inline-block;'> Pause </div>
+						<div id='guiMusicPlayerPlay' style='display:inline-block;'> Play </div>
+						<div id='guiMusicPlayerStop' style='display:inline-block;'> Stop </div>
+						<div id='guiMusicPlayerPrevious' style='display:inline-block;'> Previous </div>
+						<div id='guiMusicPlayerNext' style='display:inline-block;'> Next </div>
+						<!--  <div id='guiMusicPlayerPlaylist' style='display:inline-block;'> Playlist </div>	
+						<div id='guiMusicPlayerShowPlaylist' class='musicPlaylist' style='visibility:hidden'>
+							<div id='guiMusicPlayerShowPlaylistContent'></div>
+						</div>	 -->				
+				</div>	
 			</div>	
-		</div>	
-		<!-- MUST KEEP OUTSIDE OF page div else its hidden during video playback -->	
-		<div id="Notifications" class="notification" style="visibility:hidden">
-			<div id="NotificationText" class="notificationText"></div>
-		</div>
-		<div id='guiPlayer_Versions_Playables' class='videoVersions' style='visibility:hidden'></div>
-		<div id='guiPlayer_Loading' class='videoLoading' style='visibility:hidden'>Loading</div>
-		<div id='guiPlayer_Info' class='videoInfo' style='visibility:hidden'>
-			<div id='guiPlayer_Info_Time'  class='videoInfo_Time'></div>	
-			<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'></div>
-			<div id='guiPlayer_Info_ProgressBar_Current'  class='videoInfo_ProgressBar_Current'></div>				
-			<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
-		</div>
-		<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
-		<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
-
-		<!--  Menu -->
+			<!-- MUST KEEP OUTSIDE OF page div else its hidden during video playback -->	
+			<div id="Notifications" class="notification" style="visibility:hidden">
+				<div id="NotificationText" class="notificationText"></div>
+			</div>
+			<div id='guiPlayer_Versions_Playables' class='videoVersions' style='visibility:hidden'></div>
+			<div id='guiPlayer_Loading' class='videoLoading' style='visibility:hidden'>Loading</div>
+			<div id='guiPlayer_Info' class='videoInfo' style='visibility:hidden'>
+				<div id='guiPlayer_Info_Time'  class='videoInfo_Time'></div>	
+				<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'></div>
+				<div id='guiPlayer_Info_ProgressBar_Current'  class='videoInfo_ProgressBar_Current'></div>				
+				<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
+			</div>
+			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
+			<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
+	
+			<!--  Menu -->
 			<div id="header" class ="header" style="visibility:hidden">
 				<div class="headerLogo">
 					<div class="headerLogoImage"></div>	
@@ -161,6 +166,6 @@
 				</div>	
 				<div id='headerClock' style='padding-left:75px; width:100%; font-size:15px; position:absolute;bottom:10px;'></div>	  
 			</div>
-		
+		</div> <!-- Everything Div -->
 	</body>
 </html>

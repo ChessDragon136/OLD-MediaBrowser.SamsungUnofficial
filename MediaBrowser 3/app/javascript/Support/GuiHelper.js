@@ -6,17 +6,26 @@ var GuiHelper = {
 //GUIHelper isn't its own window, it just controls the help contents at the bottom of the screen
 //------------------------------------------------------------------------------------------------
 GuiHelper.toggleHelp = function(helpPage) {
-	
+	this.helpPage = helpPage;
 	alert ("Selected page: " + helpPage + "  -  Set page: " + this.helpPage);
 	
-	if (helpPage != this.helpPage) {
-		this.helpPage = helpPage;
-		GuiHelper.setHelpPage(helpPage);
-	}
-	if (document.getElementById("Help").style.visibility == "hidden") {
-		document.getElementById("Help").style.visibility = "";
-	} else {
+	GuiHelper.setHelpPage(helpPage);
+	
+	//Unhide help window
+	document.getElementById("Help").style.visibility = "";
+	
+	//Set focus
+	document.getElementById("GuiHelper").focus();
+}
+
+GuiHelper.keyDown = function() {
+	//If required for Screensaver call in GuiImagePlayer_Screensaver
+	if (document.getElementById("Help").style.visibility == "") {
+		//Hide help window
 		document.getElementById("Help").style.visibility = "hidden";
+		
+		//Set focus back to original page
+		document.getElementById(this.helpPage).focus();
 	}
 }
 
@@ -33,7 +42,8 @@ GuiHelper.setHelpPage = function(helpPage) {
 		//	break;
 		//default:
 			//document.getElementById("Help").innerHTML = "Welcome to a page with no help written!";
-			document.getElementById("Help").innerHTML = this.generateDisplayOneItemHelp();
+			document.getElementById("HelpTitle").innerHTML = "Help Page";
+			document.getElementById("HelpContent").innerHTML = this.generateDisplayOneItemHelp();
 		//	break;
 	//}
 }

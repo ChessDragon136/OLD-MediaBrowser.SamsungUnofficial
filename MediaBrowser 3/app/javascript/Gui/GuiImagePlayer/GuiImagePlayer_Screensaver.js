@@ -21,6 +21,9 @@ GuiImagePlayer_Screensaver.start = function() {
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();
 	
+	//Hide helper page if shown
+	GuiHelper.keyDown();
+	
 	var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=200");
 	var randomImageData = Server.getContent(randomImageURL);
 		
@@ -30,6 +33,12 @@ GuiImagePlayer_Screensaver.start = function() {
 			this.images.push(imgsrc);
 		}
 	}
+	
+	this.images.push("images/music.jpg");
+	this.images.push("images/hd-splash.jpg");
+	
+	//Hide Page Contents
+	document.getElementById("everything").style.visibility="hidden";
 
 	
 	//Initialte new instance, set Frame Area & Set Notifications
@@ -86,4 +95,7 @@ GuiImagePlayer_Screensaver.stopScreensaver = function() {
 	this.ImageViewer.hide();
 	widgetAPI.blockNavigation(event);
 	GuiImagePlayer_Screensaver.kill()
+	
+	//Show Page Contents
+	document.getElementById("everything").style.visibility="";
 }

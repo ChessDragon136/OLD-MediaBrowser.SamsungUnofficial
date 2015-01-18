@@ -7,7 +7,6 @@ var GuiPage_NewServer = {
 
 GuiPage_NewServer.start = function() {
 	//Insert html into page
-	document.getElementById("pageContent").className = "";
 	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
 		<p style='padding-bottom:5px;'>Please enter the IP address & port number below</p> \
 		<form><input id='1' type='text' size='5'  maxlength='3' value=''/>. \
@@ -19,8 +18,6 @@ GuiPage_NewServer.start = function() {
 		<p style='padding-bottom:5px'>Enter in your host name here without 'http://' and including ':' and Port No.</p> \
 		<form><input id='host' style='z-index:10;' type='text' size='50' value=''/></form> \
 		</div>";
-		
-
 	
 	//Set Backdrop
 	imgsrc =  "images/hd-splash.jpg";

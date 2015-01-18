@@ -283,7 +283,7 @@ Server.Authenticate = function(UserId, UserName, Password) {
     
     var xmlHttp = new XMLHttpRequest();	
     xmlHttp.open( "POST", url , false ); //Authenticate must be false - need response before continuing!
-    xmlHttp = this.setRequestHeaders(xmlHttp,UserId);
+    xmlHttp = this.setRequestHeaders(xmlHttp);
         
     xmlHttp.send(params);
     
@@ -292,6 +292,7 @@ Server.Authenticate = function(UserId, UserName, Password) {
     } else {
     	var session = JSON.parse(xmlHttp.responseText);
     	this.AuthenticationToken = session.AccessToken;
+    	this.setUserID(session.User.Id);
     	this.setUserName(UserName);
     	return true;
     }

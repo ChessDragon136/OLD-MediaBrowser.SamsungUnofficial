@@ -1,6 +1,8 @@
 var GuiUsers = {
 	UserData : null,
 	
+	isManualEntry : false,
+	
 	selectedUser : 0,
 	topLeftItem : 0, 
 	MAXCOLUMNCOUNT : 3,
@@ -15,6 +17,7 @@ GuiUsers.start = function(runAutoLogin) {
 	//Reset Properties
 	this.selectedUser = 0;
 	this.topLeftItem = 0; 
+	this.isManualEntry = false;
 	Support.destroyURLHistory();
 	document.getElementById("NotificationText").innerHTML = "";
 	document.getElementById("Notifications").style.visibility = "hidden";
@@ -43,8 +46,6 @@ GuiUsers.start = function(runAutoLogin) {
 							autoLogin = true;
 							//Set File User Entry
 							File.setUserEntry(index);
-							//Set Server UserId
-							Server.setUserID(userId);
 							//Change Focus and call function in GuiMain to initiate the page!
 							GuiMainMenu.start();
 						} else {
@@ -67,7 +68,8 @@ GuiUsers.start = function(runAutoLogin) {
 			<div id='guiUsers_pwd' style='visibility:hidden'> \
 	    	Password: <br><input id='guiUsers_Password' type='text' size='20'/> \
 	    	</div>	\
-			<div>Pressing the Info button will bring up Help on all pages<br>Pressing the Tools button will select the menu bar once logged in</div> \
+			<div id='ManualLogin'>Manual Login</div> \
+			<div><br>Pressing the Info button will bring up Help on all pages<br>Pressing the Tools button will select the menu bar once logged in</div> \
 			</div>";
 		
 		if (this.UserData.length != 0) {
@@ -75,7 +77,7 @@ GuiUsers.start = function(runAutoLogin) {
 			GuiUsers.updateSelectedUser();
 			document.getElementById("GuiUsers").focus();
 		} else {
-			document.getElementById("guiUsers_allusers").innerHTML = "Sorry, you have no public users and this app currently does not offer manual user logon";
+			//Probably need some padding here to make it look nice!
 			document.getElementById("GuiUsers").focus();
 		}
 		
@@ -127,8 +129,6 @@ GuiUsers.processSelectedUser = function () {
 				if (authenticateSuccess) {
 					//Set File User Entry
 					File.setUserEntry(index);
-					//Set Server UserId
-					Server.setUserID(UserId);
 					//Change Focus and call function in GuiMain to initiate the page!
 					GuiMainMenu.start();
 				} else {
@@ -153,8 +153,6 @@ GuiUsers.processSelectedUser = function () {
 				//Reset GUI to as new - Not Required as it already is!!
 				//Add Username & Password to DB
 				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
-				//Set Server UserId
-				Server.setUserID(this.UserData[this.selectedUser].Id);
 				//Change Focus and call function in GuiMain to initiate the page!
 				GuiMainMenu.start();
 			} else {
@@ -188,47 +186,69 @@ GuiUsers.keyDown = function()
 			alert("RETURN");
 			widgetAPI.sendReturnEvent();
 			break;
+		case tvKey.KEY_UP:
+			if (this.isManualEntry == true) {
+				this.isManualEntry = false;
+				document.getElementById("ManualLogin").style.color = "#f9f9f9";
+				GuiUsers.updateSelectedUser();
+			}
+			break;
+		case tvKey.KEY_DOWN:
+			if (this.isManualEntry == false) {
+				this.isManualEntry = true;
+				document.getElementById("ManualLogin").style.color = "red";
+				document.getElementById(this.UserData[this.selectedUser].Id).className = "User"; 
+			}
+			break;	
 		case tvKey.KEY_LEFT:
-			alert("LEFT");	
-			this.selectedUser--;
-			if (this.selectedUser < 0) {
-				this.selectedUser = this.UserData.length - 1;
-				if(this.UserData.length > this.MAXCOLUMNCOUNT) {
-					this.topLeftItem = (this.selectedUser-2);
-					GuiUsers.updateDisplayedUsers();
-				} else {
-					this.topLeftItem = 0;
-				}
-			} else {
-				if (this.selectedUser < this.topLeftItem) {
-					this.topLeftItem--;
-					if (this.topLeftItem < 0) {
+			alert("LEFT");
+			if (this.isManualEntry == false) {
+				this.selectedUser--;
+				if (this.selectedUser < 0) {
+					this.selectedUser = this.UserData.length - 1;
+					if(this.UserData.length > this.MAXCOLUMNCOUNT) {
+						this.topLeftItem = (this.selectedUser-2);
+						GuiUsers.updateDisplayedUsers();
+					} else {
 						this.topLeftItem = 0;
 					}
-					GuiUsers.updateDisplayedUsers();
+				} else {
+					if (this.selectedUser < this.topLeftItem) {
+						this.topLeftItem--;
+						if (this.topLeftItem < 0) {
+							this.topLeftItem = 0;
+						}
+						GuiUsers.updateDisplayedUsers();
+					}
 				}
+				GuiUsers.updateSelectedUser();
 			}
-			GuiUsers.updateSelectedUser();
 			break;
 		case tvKey.KEY_RIGHT:
 			alert("RIGHT");	
-			this.selectedUser++;
-			if (this.selectedUser >= this.UserData.length) {
-				this.selectedUser = 0;
-				this.topLeftItem = 0;
-				GuiUsers.updateDisplayedUsers();
-			} else {
-				if (this.selectedUser >= this.topLeftItem+this.getMaxDisplay() ) {
-					this.topLeftItem++;
+			if (this.isManualEntry == false) {
+				this.selectedUser++;
+				if (this.selectedUser >= this.UserData.length) {
+					this.selectedUser = 0;
+					this.topLeftItem = 0;
 					GuiUsers.updateDisplayedUsers();
+				} else {
+					if (this.selectedUser >= this.topLeftItem+this.getMaxDisplay() ) {
+						this.topLeftItem++;
+						GuiUsers.updateDisplayedUsers();
+					}
 				}
+				GuiUsers.updateSelectedUser();
 			}
-			GuiUsers.updateSelectedUser();
 			break;
 		case tvKey.KEY_ENTER:
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");
-			GuiUsers.processSelectedUser();
+			if (this.isManualEntry == false) {
+				GuiUsers.processSelectedUser();
+			} else {
+				GuiUsers_Manual.start();
+			}	
 			break;	
 		case tvKey.KEY_BLUE:
 			Server.setServerAddr("");
@@ -304,9 +324,6 @@ GuiUsers.IMEAuthenticate = function(password) {
 
 		//Add Username & Password to DB
 		File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
-
-		//Set UserID in Server
-		Server.setUserID(this.UserData[this.selectedUser].Id);
 		
 		//Change Focus and call function in GuiMain to initiate the page!
 		GuiMainMenu.start();

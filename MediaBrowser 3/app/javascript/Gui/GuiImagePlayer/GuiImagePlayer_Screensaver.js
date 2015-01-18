@@ -15,8 +15,6 @@ GuiImagePlayer_Screensaver.kill = function() {
 }
 
 
-//WAITING FOR SERVER TO BE RELEASE AS STABLE FOR IMAGE ENHANCEMENTS
-
 GuiImagePlayer_Screensaver.start = function() {
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();

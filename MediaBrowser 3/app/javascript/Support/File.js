@@ -36,7 +36,7 @@ File.loadFile = function() {
 	if (!bValid) {  
 		fileSystemObj.createCommonDir(curWidget.id); 
 		var fileObj = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
-		var contentToWrite = '{"Servers":[],"TV":{}}';
+		var contentToWrite = '{"Version":"'+Main.getVersion()+'","Servers":[],"TV":{}}';
 		fileObj.writeLine(contentToWrite); 
 		fileSystemObj.closeCommonFile(fileObj); 
 	}
@@ -45,7 +45,7 @@ File.loadFile = function() {
 	if (!openRead) {
 		fileSystemObj.createCommonDir(curWidget.id); 
 		var fileObj = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
-		var contentToWrite = '{"Servers":[],"TV":{}}';
+		var contentToWrite = '{"Version":"'+Main.getVersion()+'","Servers":[],"TV":{}}';
 		fileObj.writeLine(contentToWrite); 
 		fileSystemObj.closeCommonFile(fileObj); 
 		return contentToWrite;
@@ -55,6 +55,14 @@ File.loadFile = function() {
 		return fileContents;
 	}
 };
+
+File.checkVersion = function(fileContent) {
+	if (fileContent.Version === undefined) {
+		return "Undefined"
+	} else {
+		return fileContent.Version;
+	}
+}
 
 File.saveServerToFile = function(Id,Name,ServerIP) {
 	var fileSystemObj = new FileSystem();

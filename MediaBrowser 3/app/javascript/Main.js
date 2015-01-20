@@ -8,6 +8,8 @@ var Main =
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5211",
 		
+		forceDeleteSettings : false,
+		
 		enableMusic : true,
 		enableLiveTV : false,
 		enablePhoto : true,
@@ -113,8 +115,25 @@ Main.onLoad = function()
 		Server.setDevice ("Samsung " + pluginTV.GetProductCode(0));
 		Server.setDeviceID(NNaviPlugin.GetDUID(MAC));
 		
-	    //Load Settings File
-	    var fileJson = JSON.parse(File.loadFile());    
+	    //Load Settings File - Check if file needs to be deleted due to development
+	    var fileJson = JSON.parse(File.loadFile()); 
+	    var version = File.checkVersion(fileJson);
+	    if (version == "Undefined" ) {
+	    	//Delete Settings file and reload
+	    	File.deleteSettingsFile();
+	    	fileJson = JSON.parse(File.loadFile());
+	    } else if (version != this.version) {
+	    	if (this.forceDeleteSettings == true) {
+	    		//Delete Settings file and reload
+	    		File.deleteSettingsFile();
+		    	fileJson = JSON.parse(File.loadFile());
+	    	} else {
+	    		//Update version in settings file to current version
+	    		fileJson.Version = this.version;
+	    	} 	File.writeAll(fileJson);
+	    }
+	    
+	    //Check if Server exists
 	    if (fileJson.Servers.length > 1) {
 	    	//If no default show user Servers page (Can set default on that page)
 	    	var foundDefault = false;

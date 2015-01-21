@@ -44,14 +44,6 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
-	alert (url1);
-	alert (url2);
-	
-	//If Music alter MaxColumnCount
-	this.MAXCOLUMNCOUNT = 3;
-	if (title1 == "Latest Albums") {
-		this.MAXCOLUMNCOUNT = 5;
-	}
 	
 	//Load Data
 	this.ItemData = Server.getContent(url1);

@@ -319,15 +319,17 @@ Server.getContent = function(url) {
 		xmlHttp.send(null);
 		    
 		if (xmlHttp.status != 200) {
-			alert ("Error1")
-			Server.Logout;
+			alert ("Server NOT 200 - Logout");
+			Server.Logout();
+			GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
 			GuiUsers.start(true);
 		} else {
 			return JSON.parse(xmlHttp.responseText);
 		}
 	} else {
-		alert ("Error")
-		Server.Logout;
+		alert ("Bad xmlHTTP Request");
+		Server.Logout();
+		GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
 		GuiUsers.start(true);
 	}
 }

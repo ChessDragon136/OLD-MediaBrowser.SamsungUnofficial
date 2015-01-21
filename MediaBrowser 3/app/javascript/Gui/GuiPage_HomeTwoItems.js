@@ -44,10 +44,14 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
+	alert (url1)
 	
 	//Load Data
 	this.ItemData = Server.getContent(url1);
+	if (this.ItemData == null) { return; }
+	
 	this.ItemData2 = Server.getContent(url2);	
+	if (this.ItemData2 == null) { return; }
 	
 	//If array like MoviesRecommended alter 
 	if (title1 == "Suggested For You") {

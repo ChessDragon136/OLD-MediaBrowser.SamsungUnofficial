@@ -323,13 +323,15 @@ Server.getContent = function(url) {
 			Server.Logout();
 			GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
 			GuiUsers.start(true);
+			return null;
 		} else {
 			return JSON.parse(xmlHttp.responseText);
 		}
 	} else {
 		alert ("Bad xmlHTTP Request");
 		Server.Logout();
-		GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
+		GuiNotifications.setNotification("Bad xmlHTTP Request<br>Token: " + Server.getAuthToken(),"Server Error",false);
 		GuiUsers.start(true);
+		return null;
 	}
 }

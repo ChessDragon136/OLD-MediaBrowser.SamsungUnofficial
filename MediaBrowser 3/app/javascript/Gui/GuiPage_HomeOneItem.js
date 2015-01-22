@@ -36,12 +36,14 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Load Data
 	this.ItemData = Server.getContent(url);
+	if (this.ItemData == null) { return; }
 	
 	//If all user selected homepages are blank try media items
 	if (this.ItemData.Items.length == 0) {
 		title = "Media Folders"
 		var newURL = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
 		this.ItemData = Server.getContent(newURL);
+		if (this.ItemData == null) { return; }
 	}
 	
 	if (this.ItemData.Items.length > 0) {		
@@ -116,6 +118,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		this.backdropTimeout = setTimeout(function(){
 			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
 			var randomImageData = Server.getContent(randomImageURL);
+			if (randomImageData == null) { return; }
 			
 			for (var index = 0; index < randomImageData.Items.length; index++) {
 				if (randomImageData.Items[index ].BackdropImageTags.length > 0) {

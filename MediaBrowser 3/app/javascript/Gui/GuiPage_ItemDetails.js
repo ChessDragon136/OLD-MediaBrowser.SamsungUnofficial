@@ -33,6 +33,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	
 	//Get Server Data
 	this.ItemData = Server.getContent(url);
+	if (this.ItemData == null) { return; }
 	
 	//Set PageContent
 	document.getElementById("pageContent").className = "";
@@ -73,6 +74,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		
 		//Get Adjacent Data 
 		this.AdjacentData = Server.getContent(Server.getAdjacentEpisodesURL(this.ItemData.SeriesId,this.ItemData.SeasonId,this.ItemData.Id));
+		if (this.AdjacentData == null) { return; }
 		
 		//Change gui layout 
 		//document.getElementById("InfoContainer").style.width = "680px";
@@ -122,6 +124,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		//Add Remaining Menu Options
 		var url2 = Server.getCustomURL("/Movies/"+this.ItemData.Id+"/Similar?format=json&IncludeTrailers=false&Limit=5&UserId=" + Server.getUserID());
 		this.SimilarFilms = Server.getContent(url2);
+		if (this.SimilarFilms == null) { return; }
 			
 		//Add Remaining Menu Options
 		if (this.ItemData.LocalTrailerCount > 0) {
@@ -129,6 +132,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			var url3 = Server.getCustomURL("/Users/"+Server.getUserID()+"/Items/"+this.ItemData.Id+"/LocalTrailers?format=json");
 			alert (url3);
 			this.trailerItems = Server.getContent(url3);
+			if (this.trailerItems == null) { return; }
 			
 			//Add Menu Elements
 			this.menuItems.push("guiTV_Episode_Trailer"); 

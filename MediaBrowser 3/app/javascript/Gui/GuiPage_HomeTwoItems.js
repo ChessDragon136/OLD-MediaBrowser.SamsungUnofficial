@@ -158,11 +158,12 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		var updateCounter2 = (isTop == true) ? true : false;
 		this.updateSelectedItems2(updateCounter2);
 		
-		//Function to generate random backdrop - Should I use a timeout?
+		//Function to generate random backdrop
 		this.backdropTimeout  = setTimeout(function(){
 			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
 			var randomImageData = Server.getContent(randomImageURL);
-				
+			if (randomImageData == null) { return; }
+			
 			for (var index = 0; index < randomImageData.Items.length; index++) {
 				if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);

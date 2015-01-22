@@ -12,6 +12,7 @@ ServerVersion.start = function() {
 ServerVersion.checkServerVersion = function() {
 	var url = Server.getCustomURL("/System/Info/Public?format=json");
 	this.ServerInfo = Server.getContent(url);
+	if (this.ServerInfo == null) { return; }
 	
 	var requiredServerVersion = Main.getRequiredServerVersion();
 	var currentServerVersion = this.ServerInfo.Version;

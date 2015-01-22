@@ -23,9 +23,11 @@ GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {
 	//Load Data
 	alert (url);
 	this.CastData = Server.getContent(url);
+	if (this.CastData == null) { return; }
 	var Itemurl = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Recursive=true&Limit=100&fields=ParentId&Person=" + this.CastData.Name.replace(/ /g, '+'));
 	alert (Itemurl);
 	this.ItemData = Server.getContent(Itemurl);
+	if (this.ItemData == null) { return; }
 	
 	document.getElementById("pageContent").className = "";	
 	document.getElementById("pageContent").innerHTML = "<div id='Title' class='EpisodesSeriesInfo'></div> \

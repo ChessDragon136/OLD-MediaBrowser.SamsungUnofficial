@@ -31,6 +31,7 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Load Data
 	this.ItemData = Server.getContent(url);
+	if (this.ItemData == null) { return; }
 
 	if (this.ItemData.Items.length > 0) {
 		

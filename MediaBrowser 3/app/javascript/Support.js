@@ -639,6 +639,7 @@ Support.generateMainMenu = function() {
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");
 	var hasMediaFolders = Server.getContent(urlMF);
+	if (hasMediaFolders == null) { return; }
 		
 	if (hasMediaFolders.TotalRecordCount > 0) {
 		menuItems.push("Media-Folders");
@@ -647,6 +648,7 @@ Support.generateMainMenu = function() {
 	//Check TV
 	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
 	var hasTV = Server.getContent(urlTV);
+	if (hasTV == null) { return; }
 		
 	if (hasTV.TotalRecordCount > 0) {
 		menuItems.push("TV");
@@ -655,6 +657,7 @@ Support.generateMainMenu = function() {
 	//Check Movies
 	var urlMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&Recursive=true&Limit=0");
 	var hasMovies = Server.getContent(urlMovies);
+	if (hasMovies == null) { return; }
 		
 	if (hasMovies.TotalRecordCount > 0) {
 		menuItems.push("Movies");
@@ -662,10 +665,12 @@ Support.generateMainMenu = function() {
 	//Check Music
 	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
 	var hasMusic = Server.getContent(urlMusic);
+	if (hasMusic == null) { return; }
 	
 	if (hasMusic.TotalRecordCount == 0) {
 		var urlMusic2 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&Limit=0");
 		var hasMusic2 = Server.getContent(urlMusic2);
+		if (hasMusic2 == null) { return; }
 		
 		if (hasMusic2.TotalRecordCount > 0) {
 			if (Main.isMusicEnabled()) {
@@ -678,20 +683,10 @@ Support.generateMainMenu = function() {
 		}
 	}
 	
-	
-	//Check Images - DOES NOT WORK - NOT IMPLEMENTED TO PROCESS 
-	/*
-	var urlImages = Server.getItemTypeURL("&CollectionType=photos&Limit=0");
-	var hasImages = Server.getContent(urlImages);
-		
-	if (hasImages.TotalRecordCount > 0) {
-		menuItems.push("Images");
-	}
-	*/
-
 	//Check Live TV
 	var urlLiveTV = Server.getCustomURL("/LiveTV/Info?format=json");
 	var hasLiveTV = Server.getContent(urlLiveTV);
+	if (hasLiveTV == null) { return; }
 	if (Main.isLiveTVEnabled() && hasLiveTV.IsEnabled) {
 		for (var index = 0; index < hasLiveTV.EnabledUsers.length; index++) {
 			if (Server.getUserID() == hasLiveTV.EnabledUsers[index]) {
@@ -705,6 +700,7 @@ Support.generateMainMenu = function() {
 	if (Main.isChannelsEnabled()) {
 		var urlChannels = Server.getCustomURL("/Channels?userId="+Server.getUserID()+"&format=json");
 		var hasChannels = Server.getContent(urlChannels);
+		if (hasChannels == null) { return; }
 		
 		if (hasChannels.Items.length > 0) {
 			menuItems.push("Channels");
@@ -714,6 +710,7 @@ Support.generateMainMenu = function() {
 	//Check Collection
 	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
 	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
 
 	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
 		menuItems.push("Collections");

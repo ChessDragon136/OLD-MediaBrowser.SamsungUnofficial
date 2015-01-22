@@ -41,6 +41,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Load Data
 	this.ItemData = Server.getContent(url);
+	if (this.ItemData == null) { return; }
 	
 	//Latest Page Fix
 	this.isLatest = false;
@@ -217,6 +218,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (GuiDisplay_Series.genreType != null) {
 		var urlGenre = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes="+GuiDisplay_Series.genreType+"&Recursive=true&CollapseBoxSetItems=false&fields=&Genres=" + GuiDisplay_Series.ItemData.Items[GuiDisplay_Series.selectedItem].Name);
 		var GenreData = Server.getContent(urlGenre);
+		if (GenreData == null) { return; }
 		
 		document.getElementById("SeriesOverview").innerHTML = "";
 		for (var index = 0; index < GenreData.Items.length; index++) {

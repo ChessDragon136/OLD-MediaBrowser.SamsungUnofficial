@@ -17,10 +17,9 @@ var Main =
 		enableChannels : false,
 		
 		enableScreensaver : false,
+		isScreensaverRunning : false,
 		
-		testMode : false,
-		
-		isScreensaverRunning : false
+		testMode : false
 };
 
 Main.isMusicEnabled = function() {

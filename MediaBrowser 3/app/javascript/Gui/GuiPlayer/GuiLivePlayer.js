@@ -34,6 +34,7 @@ GuiLivePlayer.start = function(title,url,startingPlaybackTick,playedFromPage) {
 	
     //Get Item Data (Media Streams)
     this.PlayerData = Server.getContent(url);
+    if (this.PlayerData == null) { return; }
     alert (url);  
 }
 

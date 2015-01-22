@@ -34,6 +34,7 @@ GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or 
 
 	//Load Data
 	this.AlbumData = Server.getContent(url);
+	if (this.AlbumData == null) { return; }
 	
 	//Set PageContent
 	document.getElementById("pageContent").className = "";

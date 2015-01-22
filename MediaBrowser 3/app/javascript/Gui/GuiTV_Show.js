@@ -31,9 +31,11 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Load Data
 	this.ShowData = Server.getContent(url);
+	if (this.ShowData == null) { return; }
 	
 	var url2 = Server.getChildItemsURL(this.ShowData.Id,"&IncludeItemTypes=Season");
 	this.ItemData = Server.getContent(url2);
+	if (this.ItemData == null) { return; }
 	alert (url2);
 	
 	if (this.ItemData.Items.length == 1 && File.getUserProperty("SkipShow")) {

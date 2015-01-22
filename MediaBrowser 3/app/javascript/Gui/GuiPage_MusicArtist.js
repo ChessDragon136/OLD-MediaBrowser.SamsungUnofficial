@@ -43,6 +43,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	//Load Data
 	this.title1 = title1;
 	this.ItemData = Server.getContent(url1);
+	if (this.ItemData == null) { return; }
 	
 	if (this.ItemData.Items.length > 0) {
 		//Proceed as Normal
@@ -126,6 +127,7 @@ GuiPage_MusicArtist.updateSelectedItems = function (bypassCounter) {
 		setTimeout(function(){	
 			if (GuiPage_MusicArtist.selectedItem == currentArtistSelected) {
 				GuiPage_MusicArtist.ItemData2 = Server.getContent(url2);
+				if (GuiPage_MusicArtist.ItemData2 == null) { return; }
 
 				//Display first XX series
 				GuiPage_MusicArtist.updateDisplayedItems2();

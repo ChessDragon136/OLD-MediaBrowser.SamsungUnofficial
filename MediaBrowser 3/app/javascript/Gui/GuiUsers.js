@@ -25,6 +25,7 @@ GuiUsers.start = function(runAutoLogin) {
 	//Load Data
 	var url = Server.getServerAddr() + "/Users/Public?format=json";
 	this.UserData = Server.getContent(url);
+	if (this.UserData == null) { return; }
 	
 	//Check for Default User
 	var autoLogin = false;

@@ -20,6 +20,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem) {
 	
 	var url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");
 	var result = Server.getContent(url);
+	if (result == null) { return; }
 	this.newItemData = result; //Misleading I know!
 	
 	//Create ARRAY of all URL's!

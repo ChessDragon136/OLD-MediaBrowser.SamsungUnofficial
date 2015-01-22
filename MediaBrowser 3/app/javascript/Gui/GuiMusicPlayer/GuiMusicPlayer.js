@@ -56,6 +56,7 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue) {
 	
 	//get info from URL
 	this.ItemData = Server.getContent(url);
+	if (this.ItemData == null) { return; }
    
 	//See if item is to be added to playlist or not - if not reset playlist
 	if (this.Status != "STOPPED" && isQueue == false) {

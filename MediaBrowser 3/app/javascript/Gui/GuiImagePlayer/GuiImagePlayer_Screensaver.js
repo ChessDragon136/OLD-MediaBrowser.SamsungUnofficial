@@ -24,6 +24,7 @@ GuiImagePlayer_Screensaver.start = function() {
 	
 	var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=200");
 	var randomImageData = Server.getContent(randomImageURL);
+	if (randomImageData == null) { return; }
 		
 	for (var index = 0; index < randomImageData.Items.length; index++) {
 		if (randomImageData.Items[index].BackdropImageTags.length > 0) {

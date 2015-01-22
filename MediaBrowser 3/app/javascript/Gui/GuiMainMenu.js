@@ -45,6 +45,7 @@ GuiMainMenu.start = function() {
 	document.getElementById("headerUser").style.visibility = "";
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json&Fields=PrimaryImageTag";
 	var UserData = Server.getContent(userURL);
+	if (UserData == null) { return; }
 	
 	if (UserData.PrimaryImageTag) {
 		var imgsrc = Server.getImageURL(UserData.Id,"UsersPrimary",60,60,0,false,0);

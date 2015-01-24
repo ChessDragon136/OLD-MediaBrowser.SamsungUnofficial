@@ -216,6 +216,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		htmlForMetaData += Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000) + " | ";
 	}
 	
+	if (this.ItemData.PremiereData !== undefined) {
+		htmlForMetaData += this.ItemData.PremiereData + " | ";
+	}
+	
 	htmlForMetaData = htmlForMetaData.substring(0,htmlForMetaData.length-2);
 	document.getElementById("guiTV_Show_Metadata").innerHTML = htmlForMetaData;
 	

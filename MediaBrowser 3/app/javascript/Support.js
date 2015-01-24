@@ -765,6 +765,37 @@ Support.screensaverOff = function () {
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
+
+Support.formatDateTime = function(apiDate, formatOption) {
+	//Below based on date serialisation 2006-04-07T23:00:00.0000000Z
+	//formatOption 0 = Date Only (Default) 1 = Date & Time
+	var year = apiDate.substring(0,4);
+	alert (year);
+	
+	var month = apiDate.substring(5,7);
+	alert (month);
+	
+	var day = apiDate.substring(8,10);
+	alert (day);
+	
+	var time = apiDate.substring(11,16);
+	alert (time);
+	
+	switch (formatOption) {
+	default:
+	case 0:
+		return day + "/" + month + "/" + year;
+	break;
+	case 1:
+		return day + "/" + month + "/" + year + " : " + time;
+		break;
+	}
+	
+	//Should never get here!!!!!
+	return day + "/" + month + "/" + year;
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
 Support.convertTicksToTime = function (currentTime, duration) {
 	 totalTimeHour = Math.floor(duration / 3600000);
     timeHour = Math.floor(currentTime / 3600000);

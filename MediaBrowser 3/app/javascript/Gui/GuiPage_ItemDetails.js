@@ -202,9 +202,11 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	
 	//Update MetaData
 	var htmlForMetaData = "";
-	if (this.ItemData.ProductionYear !== undefined) {
-		htmlForMetaData += this.ItemData.ProductionYear + " | ";
-	}
+	
+	//Looks odd with both production year and release date
+	//if (this.ItemData.ProductionYear !== undefined) {
+	//	htmlForMetaData += this.ItemData.ProductionYear + " | ";
+	//}
 	if (this.ItemData.CommunityRating !== undefined) {
 		htmlForMetaData += "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating + " | ";
 	}
@@ -215,9 +217,9 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	if (this.ItemData.RunTimeTicks !== undefined) {
 		htmlForMetaData += Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000) + " | ";
 	}
-	
-	if (this.ItemData.PremiereData !== undefined) {
-		htmlForMetaData += this.ItemData.PremiereData + " | ";
+
+	if (this.ItemData.PremiereDate !== undefined) {
+		htmlForMetaData += Support.formatDateTime(this.ItemData.PremiereDate,0) + " | ";
 	}
 	
 	htmlForMetaData = htmlForMetaData.substring(0,htmlForMetaData.length-2);

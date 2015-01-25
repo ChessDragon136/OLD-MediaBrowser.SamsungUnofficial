@@ -318,10 +318,10 @@ GuiDisplay_Series.keyDown = function() {
 			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
 				if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
 					Server.deleteWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = false
+					this.ItemData.Items[this.selectedItem].UserData.Played = false;
 				} else {
 					Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = true
+					this.ItemData.Items[this.selectedItem].UserData.Played = true;
 				}
 				this.updateDisplayedItems();
 				this.updateSelectedItems();

@@ -238,9 +238,14 @@ GuiMusicPlayer.handlePauseKey = function() {
 GuiMusicPlayer.handleStopKey = function() {
 	alert ("STOPPING PLAYBACK");
 	
+	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
 	
+	this.returnToPage();
+}
+
+GuiMusicPlayer.returnToPage = function() {
 	//Reset NAVI - Works
 	NNaviPlugin = document.getElementById("pluginObjectNNavi");
     NNaviPlugin.SetBannerState(PL_NNAVI_STATE_BANNER_NONE);
@@ -248,26 +253,27 @@ GuiMusicPlayer.handleStopKey = function() {
     pluginAPI.registKey(tvKey.KEY_VOL_DOWN);
     pluginAPI.registKey(tvKey.KEY_MUTE);
 	
-	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
+	
+	//Set queued Items to 0
+	this.queuedItems.length = 0;
 	
     if (document.getElementById("guiMusicPlayerDiv").style.visibility == "") {
     	document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
     	document.getElementById(this.playedFromPage).focus();	
-    }	
+    }		
 }
 
 GuiMusicPlayer.handleNextKey = function() {
+	
 	//Stop Any Playback
+	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
 	
 	this.currentPlayingItem++;
 	
-	alert ("Queue Length : " + this.queuedItems.length)
-	alert ("Current Playing ID : " + this.currentPlayingItem)
-	
 	if (this.queuedItems.length <= this.currentPlayingItem) {	
-		this.handleStopKey();
+		this.returnToPage();
 	} else {
 		//Play Next Item
 		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.'+this.queuedItems[this.currentPlayingItem].MediaSources[0].MediaStreams[0].Codec+'?DeviceId='+Server.getDeviceID();
@@ -281,6 +287,7 @@ GuiMusicPlayer.handlePreviousKey = function() {
 	//Stop Any Playback
 	var timeOfStoppedSong = Math.floor((this.currentTime % 60000) / 1000);
 	
+	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
 	
@@ -291,7 +298,7 @@ GuiMusicPlayer.handlePreviousKey = function() {
 	alert ("Current Playing ID : " + this.currentPlayingItem);
 	
 	if (this.queuedItems.length <= this.currentPlayingItem) {	
-		this.handleStopKey();
+		this.returnToPage();
 	} else {
 		//Play Next Item
 		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.'+this.queuedItems[this.currentPlayingItem].MediaSources[0].MediaStreams[0].Codec+'?DeviceId='+Server.getDeviceID();

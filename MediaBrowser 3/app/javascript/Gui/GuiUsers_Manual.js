@@ -36,7 +36,7 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
 		}
     	
 		if (userInFile == false) {
-			File.addUser(Server.getUserID(),user,"");
+			File.addUser(Server.getUserID(),user,Sha1.hash("",true));
 		}
 			
     	//Change Focus and call function in GuiMain to initiate the page!
@@ -110,12 +110,6 @@ var GuiUsers_Manual_Input  = function(id) {
         //Keycode to abort login from password screen      
         ime.setKeyFunc(tvKey.KEY_INFO, function (keyCode) {
         	GuiHelper.toggleHelp("GuiUsers_Manual");	
-        });
-        
-        ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
-        	document.getElementById("NoKeyInput").focus();
-        	widgetAPI.blockNavigation(event);
-    		GuiUsers.start(false);
         });
         
         ime.setKeyFunc(tvKey.KEY_EXIT, function (keyCode) {

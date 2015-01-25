@@ -141,12 +141,25 @@ File.addUser = function (UserId, Name, Password) {
 		var fileJson = JSON.parse(openRead.readLine()); //Read line as only 1 and skips line break!
 		fileSystemObj.closeCommonFile(openRead);	
 
-		this.UserEntry = fileJson.Servers[this.ServerEntry].Users.length;
-		
-		view1 = Server.getServerAddr() + "/Users/"+UserId+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=12&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1";
-		view2 = Server.getServerAddr() + "/Shows/NextUp?format=json&IncludeItemTypes=Episode&UserId="+UserId+"&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1"
-		
-		fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name,"Password":Password,"Default":false,"View1":view1,View1Name:"Resume All Items","View2":view2,View2Name:"TV Next Up"};
+		//Check if user doesn't already exist - if does, alter password and save!
+		var userFound = false;
+		for (var index = 0; index < fileJson.Servers[this.ServerEntry].Users.length; index++) {
+			if (fileJson.Servers[this.ServerEntry].Users[index].UserId == UserId) {
+				userFound = true;
+				this.UserEntry = index;
+				fileJson.Servers[this.ServerEntry].Users[index].Password = Password;
+				break;
+			}
+		}
+		if (userFound == false) {
+			this.UserEntry = fileJson.Servers[this.ServerEntry].Users.length;
+			
+			view1 = Server.getServerAddr() + "/Users/"+UserId+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=12&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1";
+			view2 = Server.getServerAddr() + "/Shows/NextUp?format=json&IncludeItemTypes=Episode&UserId="+UserId+"&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1"
+			
+			fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name,"Password":Password,"Default":false,"View1":view1,View1Name:"Resume All Items","View2":view2,View2Name:"TV Next Up"};
+			
+		}
 		
 		var openWrite = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
 		if (openWrite) {
@@ -164,6 +177,42 @@ File.deleteUser = function (index) {
 		fileSystemObj.closeCommonFile(openRead);	
 
 		fileJson.Servers[this.ServerEntry].Users.splice(index);
+		
+		var openWrite = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
+		if (openWrite) {
+			openWrite.writeLine(JSON.stringify(fileJson)); 
+			fileSystemObj.closeCommonFile(openWrite); 
+		}
+	}
+}
+
+File.deleteAllUsers = function (index) {
+	var fileSystemObj = new FileSystem();
+	var openRead = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'r');
+	if (openRead) {
+		var fileJson = JSON.parse(openRead.readLine()); //Read line as only 1 and skips line break!
+		fileSystemObj.closeCommonFile(openRead);	
+
+		fileJson.Servers[this.ServerEntry].Users = [];
+		
+		var openWrite = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
+		if (openWrite) {
+			openWrite.writeLine(JSON.stringify(fileJson)); 
+			fileSystemObj.closeCommonFile(openWrite); 
+		}
+	}
+}
+
+File.deleteUserPasswords = function (index) {
+	var fileSystemObj = new FileSystem();
+	var openRead = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'r');
+	if (openRead) {
+		var fileJson = JSON.parse(openRead.readLine()); //Read line as only 1 and skips line break!
+		fileSystemObj.closeCommonFile(openRead);	
+
+		for (var index = 0; index < fileJson.Servers[this.ServerEntry].Users.length; index++) {
+			fileJson.Servers[this.ServerEntry].Users[index].Password = Sha1.hash("",true); // Do this so that users with no password are unaffected! 
+		}
 		
 		var openWrite = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'w');
 		if (openWrite) {

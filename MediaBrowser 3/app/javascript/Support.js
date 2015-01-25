@@ -523,6 +523,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			break;
 		}
 	} else {
+		alert (ItemData.Items[selectedItem].Type);
 		switch (ItemData.Items[selectedItem].Type) {
 		case "CollectionFolder":
 		case "BoxSet":	
@@ -571,6 +572,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].Type);
 			break;	
 		case "Folder":
+		case "PhotoAlbum":	
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName,ParentId");
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;	
@@ -683,6 +685,8 @@ Support.generateMainMenu = function() {
 		}
 	}
 	
+	//Check Images No API Support Currently
+	
 	//Check Live TV
 	var urlLiveTV = Server.getCustomURL("/LiveTV/Info?format=json");
 	var hasLiveTV = Server.getContent(urlLiveTV);
@@ -745,6 +749,9 @@ Support.processHomePageMenu = function (menuItem) {
 		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
 		GuiDisplay_Series.start("Album",url,0,0);
 		break;
+	case "Images":	
+		//No API Support Currently
+		break;		
 	}
 }
 

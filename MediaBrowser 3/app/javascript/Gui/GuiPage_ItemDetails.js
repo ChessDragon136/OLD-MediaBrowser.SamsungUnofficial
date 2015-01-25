@@ -367,6 +367,23 @@ GuiPage_ItemDetails.keyDown = function()
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiPage_ItemDetails");
 			break;
+		case tvKey.KEY_GREEN:
+			if (this.ItemData.MediaType == "Video") {
+				var addSpan = "";
+				if (this.ItemData.UserData.Played == true) {
+					Server.deleteWatchedStatus(this.ItemData.Id);
+					this.ItemData.UserData.Played = false;
+				} else {
+					addSpan = "<span class='itemPageWatched' style='padding-left:20px;'></span>";
+					Server.setWatchedStatus(this.ItemData.Id);
+					this.ItemData.UserData.Played = true;
+				}
+				
+				var title = Support.getNameFormat("", this.ItemData.ParentIndexNumber, this.ItemData.Name, this.ItemData.IndexNumber);
+				document.getElementById("guiTV_Show_Title").innerHTML = (this.ItemData.Type == "Episode") ? title : this.ItemData.Name;
+				document.getElementById("guiTV_Show_Title").innerHTML += addSpan;
+			}
+			break;	
 		case tvKey.KEY_BLUE:	
 			Support.logout();
 			break;		

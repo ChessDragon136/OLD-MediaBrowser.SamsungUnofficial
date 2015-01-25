@@ -3,6 +3,8 @@ var GuiUsers = {
 	
 	isManualEntry : false,
 	
+	rememberPassword : true,
+	
 	selectedUser : 0,
 	topLeftItem : 0, 
 	MAXCOLUMNCOUNT : 3,
@@ -18,6 +20,8 @@ GuiUsers.start = function(runAutoLogin) {
 	this.selectedUser = 0;
 	this.topLeftItem = 0; 
 	this.isManualEntry = false;
+	this.rememberPassword = true;
+	
 	Support.destroyURLHistory();
 	document.getElementById("NotificationText").innerHTML = "";
 	document.getElementById("Notifications").style.visibility = "hidden";
@@ -64,14 +68,15 @@ GuiUsers.start = function(runAutoLogin) {
 	if (autoLogin == false) {
 		//Change Display
 		document.getElementById("pageContent").className = "";
-		document.getElementById("pageContent").innerHTML = "<div style='padding-top:60px;text-align:center'> \
-			<div id=guiUsers_allusers></div> \
-			<div id='guiUsers_pwd' style='visibility:hidden'> \
-	    	Password: <br><input id='guiUsers_Password' type='text' size='20'/> \
-	    	</div>	\
-			<div id='ManualLogin'>Manual Login</div> \
-			<div><br>Pressing the Info button will bring up Help on all pages<br>Pressing the Tools button will select the menu bar once logged in</div> \
-			</div>";
+		document.getElementById("pageContent").innerHTML = "<div style='padding-top:60px;text-align:center'>" +
+			"<div id=guiUsers_allusers></div>" +
+			"<div id='guiUsers_pwd' style='visibility:hidden'>" +
+			"<br>Password:    <input id='guiUsers_Password' type='text' size='20'/>" +
+			"<br><span id='guiUsers_rempwd'>Remember Password </span> : <span id='guiUsers_rempwdvalue'>" + this.rememberPassword + "</span>" + 
+	    	"</div><br>" +
+	    	"<div id='ManualLogin'>Manual Login</div> " +
+	    	"<div><br>Pressing the Info button will bring up Help on all pages<br>Pressing the Tools button will select the menu bar once logged in</div>" +
+	    	"</div>";
 		
 		if (this.UserData.length != 0) {
 			GuiUsers.updateDisplayedUsers();
@@ -133,10 +138,9 @@ GuiUsers.processSelectedUser = function () {
 					//Change Focus and call function in GuiMain to initiate the page!
 					GuiMainMenu.start();
 				} else {
-					//Delete user from DB here - makes life much simpler to delete and read on success!!!
-					File.deleteUser(index);
+					//Doesn't delete, allows user to correct password for the user.
 					
-					//Saved password failed - likely due to a user changing their password
+					//Saved password failed - likely due to a user changing their password or user forgetting passwords!
 					new GuiUsers_Input("guiUsers_Password");				
 				}
 				break;
@@ -256,6 +260,12 @@ GuiUsers.keyDown = function()
 			File.setServerEntry(null);
 			GuiPage_Servers.start();
 			break;
+		case tvKey.KEY_YELLOW:
+			File.deleteUserPasswords();
+			break;			
+		case tvKey.KEY_GREEN:
+			File.deleteAllUsers();
+			break;		
 		case tvKey.KEY_INFO:
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiUsers");
@@ -301,9 +311,13 @@ var GuiUsers_Input  = function(id) {
         //Keycode to abort login from password screen
         ime.setKeyFunc(tvKey.KEY_RED, function (keyCode) {
         	document.getElementById("guiUsers_pwd").style.visibility="hidden";
-        	document.getElementById("GuiUsers").focus();
-        	
+        	document.getElementById("GuiUsers").focus();   	
         }); 
+        
+        ime.setKeyFunc(tvKey.KEY_DOWN, function (keyCode) {
+        	document.getElementById("guiUsers_rempwd").style.color = "red";
+        	document.getElementById("GuiUsers_Pwd").focus();
+        });
         
         ime.setKeyFunc(tvKey.KEY_INFO, function (keyCode) {
         	GuiHelper.toggleHelp("GuiUsers");	
@@ -323,9 +337,13 @@ GuiUsers.IMEAuthenticate = function(password) {
 		//Reset GUI to as new!
 		document.getElementById("guiUsers_pwd").style.visibility="hidden";
 
-		//Add Username & Password to DB
-		File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
-		
+		//Add Username & Password to DB - Save password only if rememberPassword = true
+		if (this.rememberPassword == true) {
+			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
+		} else {
+			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,"");
+		}
+			
 		//Change Focus and call function in GuiMain to initiate the page!
 		GuiMainMenu.start();
 	} else {
@@ -334,3 +352,76 @@ GuiUsers.IMEAuthenticate = function(password) {
 		GuiNotifications.setNotification("Wrong Password or Network Error");
 	}  
 }
+
+GuiUsers.keyDownPassword = function() {
+		var keyCode = event.keyCode;
+		alert("Key pressed: " + keyCode);
+
+		if (document.getElementById("Notifications").style.visibility == "") {
+			document.getElementById("Notifications").style.visibility = "hidden";
+			document.getElementById("NotificationText").innerHTML = "";
+			
+			//Change keycode so it does nothing!
+			keyCode = "VOID";
+		}
+		
+		switch(keyCode)
+		{
+			case tvKey.KEY_RETURN:
+			case tvKey.KEY_PANEL_RETURN:
+				alert("RETURN");
+				widgetAPI.sendReturnEvent();
+				break;
+			case tvKey.KEY_UP:
+				if (document.getElementById("guiUsers_rempwd").style.color == "red") {
+					document.getElementById("guiUsers_rempwd").style.color = "#f9f9f9";
+					document.getElementById("guiUsers_Password").focus();  
+				} else {
+					this.rememberPassword = (this.rememberPassword == false) ? true : false;
+					document.getElementById("guiUsers_rempwdvalue").innerHTML = this.rememberPassword;
+				}
+				break;	
+			case tvKey.KEY_DOWN:
+				if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+					this.rememberPassword = (this.rememberPassword == false) ? true : false;
+					document.getElementById("guiUsers_rempwdvalue").innerHTML = this.rememberPassword;
+				}
+				break;	
+			case tvKey.KEY_RIGHT:
+				alert("RIGHT");
+				if (document.getElementById("guiUsers_rempwd").style.color == "red") {
+					document.getElementById("guiUsers_rempwd").style.color = "green";
+					document.getElementById("guiUsers_rempwdvalue").style.color = "red";
+				}
+				break;
+			case tvKey.KEY_LEFT:
+				alert("LEFT");
+				if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+					document.getElementById("guiUsers_rempwd").style.color = "red";
+					document.getElementById("guiUsers_rempwdvalue").style.color = "#f9f9f9";
+				}
+				break;
+			case tvKey.KEY_ENTER:
+			case tvKey.KEY_PANEL_ENTER:
+				alert("ENTER");
+				if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+					document.getElementById("guiUsers_rempwd").style.color = "red";
+					document.getElementById("guiUsers_rempwdvalue").style.color = "#f9f9f9";
+				} else {
+					document.getElementById("guiUsers_rempwd").style.color = "green";
+					document.getElementById("guiUsers_rempwdvalue").style.color = "red";
+				}
+				break;	
+			case tvKey.KEY_INFO:
+				alert ("INFO KEY");
+				GuiHelper.toggleHelp("GuiUsers");
+				break;
+			case tvKey.KEY_EXIT:
+				alert ("EXIT KEY");
+				widgetAPI.sendExitEvent();
+				break;
+			default:
+				alert("Unhandled key");
+				break;
+		}
+	};

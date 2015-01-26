@@ -16,7 +16,7 @@ var Main =
 		enableCollections : true,
 		enableChannels : false,
 		
-		enableScreensaver : false,
+		enableScreensaver : true,
 		isScreensaverRunning : false,
 		
 		testMode : false

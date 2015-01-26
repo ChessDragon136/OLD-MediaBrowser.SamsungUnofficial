@@ -72,7 +72,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
 			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
-		}, 5000);	
+		}, 10000);	
     });
 	
 	this.ImageViewer.stop();

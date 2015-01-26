@@ -13,7 +13,7 @@ var Support = {
 		
 		//Screensaver
 		screensaverVar : null,
-		screensaverTime : 10000
+		screensaverTime : 300000
 }
 
 Support.logout = function() {

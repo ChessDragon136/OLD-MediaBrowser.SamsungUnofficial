@@ -237,12 +237,19 @@
 	overflow-y:hidden;
 }
 
-
 .EpisodesList{
 	position:absolute;
-	top:60px;
+	top:85px;
 	left:510px;
 	height:420px;
+}
+
+.EpisodesAllOptions{
+	position:absolute;
+	width:430px;
+	text-align:center;
+	top:55px;
+	left:510px;
 }
 
 .EpisodeListSingle{

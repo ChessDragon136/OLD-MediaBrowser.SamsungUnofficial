@@ -3,6 +3,7 @@ var GuiDisplay_Episodes = {
 		ItemIndexData : null,
 		
 		selectedItem : 0,
+		selectedBannerItem : 0,
 		topLeftItem : 0,
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 8,
@@ -26,6 +27,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 	//Reset Values
 	this.indexSeekPos = -1;
 	this.selectedItem = selectedItem;
+	this.selectedBannerItem = 0;
 	this.topLeftItem = topLeftItem;
 	this.genreType = null;
 	
@@ -42,7 +44,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 	
 	if (this.ItemData.Items.length > 0) {
 		
-		document.getElementById("pageContent").innerHTML = "<div id=Content class='EpisodesList'></div>" +
+		document.getElementById("pageContent").innerHTML = "<div id=allOptions class='EpisodesAllOptions'><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content class='EpisodesList'></div>" +
 		"<div id='EpisodesSeriesInfo' class='EpisodesSeriesInfo'></div>" + 
 		"<div id='EpisodesImage' class='EpisodesImage'></div>" + 
 		"<div id='EpisodesInfo' class='EpisodesInfo'>" +
@@ -166,62 +168,82 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 	document.getElementById("Content").innerHTML = htmlToAdd;
 }
 
+
+
 //Function sets CSS Properties so show which user is selected
 GuiDisplay_Episodes.updateSelectedItems = function () {
 	Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
 			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"EpisodeListSingle EpisodeListSelected","EpisodeListSingle","");
 	
-	//Update Displayed Image
-	if (this.ItemData.Items[this.selectedItem].ImageTags.Primary) {			
-		var imgsrc = Server.getImageURL(this.ItemData.Items[this.selectedItem].Id,"Primary",470,180,0,false,0);
-		document.getElementById("EpisodesImage").style.backgroundImage="url('" + imgsrc + "')";
-	}
-				
-	//Set Metadata
-	var htmlForTitle = "";
-	if (this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].ProductionYear + " | ";
-	}
-	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
-	}
-	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
-	}
-	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes";
-	}
-
-	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-			htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
-	}
-	htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-2);
-								
-	htmlForOverview = "";
-	if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
-		htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
-	}
-	
-	var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
-	document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
-
-	document.getElementById("SeriesSubData").innerHTML = htmlForTitle;
-	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
-				
-	Support.scrollingText("SeriesOverview");
-		
-	//Background Image
-	//Blocking code to skip getting data for items where the user has just gone past it
-	var currentSelectedItem = this.selectedItem;
-	setTimeout(function(){	
-		if (GuiDisplay_Episodes.selectedItem == currentSelectedItem) {
-			//Set Background
-			if (GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length > 0) {
-				var imgsrc = Server.getBackgroundImageURL(GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540,0,false,0,GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length);
-				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-			}
+	if (this.selectedItem > -1) {
+		//Update Displayed Image
+		if (this.ItemData.Items[this.selectedItem].ImageTags.Primary) {			
+			var imgsrc = Server.getImageURL(this.ItemData.Items[this.selectedItem].Id,"Primary",470,180,0,false,0);
+			document.getElementById("EpisodesImage").style.backgroundImage="url('" + imgsrc + "')";
 		}
-	}, 500);
+					
+		//Set Metadata
+		var htmlForTitle = "";
+		if (this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
+			htmlForTitle += this.ItemData.Items[this.selectedItem].ProductionYear + " | ";
+		}
+		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
+			htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
+		}
+		if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
+			htmlForTitle += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
+		}
+		if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
+			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes";
+		}
+
+		if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
+				htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
+		}
+		htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-2);
+									
+		htmlForOverview = "";
+		if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
+			htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
+		}
+		
+		var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+		document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
+
+		document.getElementById("SeriesSubData").innerHTML = htmlForTitle;
+		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+					
+		Support.scrollingText("SeriesOverview");
+			
+		//Background Image
+		//Blocking code to skip getting data for items where the user has just gone past it
+		var currentSelectedItem = this.selectedItem;
+		setTimeout(function(){	
+			if (GuiDisplay_Episodes.selectedItem == currentSelectedItem) {
+				//Set Background
+				if (GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length > 0) {
+					var imgsrc = Server.getBackgroundImageURL(GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540,0,false,0,GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length);
+					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+				}
+			}
+		}, 500);
+	}	
+}
+
+
+GuiDisplay_Episodes.updateSelectedBannerItems = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == 0) {
+			document.getElementById("playAll").style.color = "red";
+			document.getElementById("shuffleAll").style.color = "#f9f9f9";
+		} else {
+			document.getElementById("playAll").style.color = "#f9f9f9";
+			document.getElementById("shuffleAll").style.color = "red";
+		}
+	} else {
+		document.getElementById("playAll").style.color = "#f9f9f9";
+		document.getElementById("shuffleAll").style.color = "#f9f9f9";
+	}
 }
 
 GuiDisplay_Episodes.keyDown = function() {
@@ -259,6 +281,14 @@ GuiDisplay_Episodes.keyDown = function() {
 		case tvKey.KEY_DOWN:
 			alert("DOWN");
 			this.processDownKey();
+			break;	
+		case tvKey.KEY_LEFT:
+			alert("LEFT");
+			this.processLeftKey();
+			break;
+		case tvKey.KEY_RIGHT:
+			alert("RIGHT");
+			this.processRightKey();
 			break;	
 		case tvKey.KEY_PANEL_CH_UP: 
 		case tvKey.KEY_CH_UP: 
@@ -321,7 +351,27 @@ GuiDisplay_Episodes.keyDown = function() {
 }
 
 GuiDisplay_Episodes.processSelectedItem = function() {
-	Support.processSelectedItem("GuiDisplay_Episodes",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null,this.genreType,this.isLatest); 
+	if (this.selectedItem == -1) {
+		//Fix for return!
+		Support.updateURLHistory("GuiDisplay_Episodes",this.startParams[0],this.startParams[1],null,null,0,this.topLeftItem,null);
+	} else {
+		Support.updateURLHistory("GuiDisplay_Episodes",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	}
+	
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == 0) {
+			//Play All Episodes in Show
+			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiDisplay_Episodes");	
+		} else if (this.selectedBannerItem == 1) {
+			//Shuffle All Episodes in Show
+			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&IncludeItemTypes=Episode&Recursive=true&SortBy=Random&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiDisplay_Episodes");	
+		}
+	} else {
+		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id,null);
+		GuiPage_ItemDetails.start(this.ItemData.Items[this.selectedItem].Name,url,0);
+	}	
 }
 
 GuiDisplay_Episodes.playSelectedItem = function () {
@@ -334,8 +384,11 @@ GuiDisplay_Episodes.playSelectedItem = function () {
 
 GuiDisplay_Episodes.processUpKey = function() {
 	this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT;
-	if (this.selectedItem < 0) {
-		this.selectedItem = 0;
+	if (this.selectedItem < -1) {
+		this.selectedItem = -1;
+	} if (this.selectedItem == -1) {
+		this.updateSelectedBannerItems();
+		this.updateSelectedItems();
 	} else {
 		if (this.selectedItem < this.topLeftItem) {
 			if (this.topLeftItem - this.MAXCOLUMNCOUNT < 0) {
@@ -345,12 +398,16 @@ GuiDisplay_Episodes.processUpKey = function() {
 			}
 			this.updateDisplayedItems();
 		}
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
 
 GuiDisplay_Episodes.processDownKey = function() {
 	this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
+		
+	//If now 0, was -1, update banner selection
+	if (this.selectedItem == 0) { this.selectedBannerItem = 0; this.updateSelectedBannerItems(); }
+
 	if (this.selectedItem >= this.ItemData.Items.length) {
 		this.selectedItem = (this.ItemData.Items.length-1);
 		if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
@@ -366,22 +423,45 @@ GuiDisplay_Episodes.processDownKey = function() {
 	this.updateSelectedItems();
 }
 
+
+
 GuiDisplay_Episodes.processChannelUpKey = function() {
-	this.selectedItem = this.selectedItem - this.getMaxDisplay();
-	if (this.selectedItem < 0) {
-		this.selectedItem = 0;
-		this.topLeftItem = 0;
-		this.updateDisplayedItems();
-	} else {
-		if (this.topLeftItem - this.getMaxDisplay() < 0) {
+	if (this.selectedItem > -1) {
+		this.selectedItem = this.selectedItem - this.getMaxDisplay();
+		if (this.selectedItem < 0) {
+			this.selectedItem = 0;
 			this.topLeftItem = 0;
+			this.updateDisplayedItems();
 		} else {
-			this.topLeftItem = this.topLeftItem - this.getMaxDisplay();
+			if (this.topLeftItem - this.getMaxDisplay() < 0) {
+				this.topLeftItem = 0;
+			} else {
+				this.topLeftItem = this.topLeftItem - this.getMaxDisplay();
+			}
+			this.updateDisplayedItems();
 		}
-		this.updateDisplayedItems();
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
+
+GuiDisplay_Episodes.processLeftKey = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == 1) {
+			this.selectedBannerItem = 0;
+			this.updateSelectedBannerItems();
+		}
+	}	
+}
+
+GuiDisplay_Episodes.processRightKey = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == 0) {
+			this.selectedBannerItem = 1;
+			this.updateSelectedBannerItems();
+		}
+	}
+}
+
 
 GuiDisplay_Episodes.processChannelDownKey = function() {
 	this.selectedItem = this.selectedItem + this.getMaxDisplay();

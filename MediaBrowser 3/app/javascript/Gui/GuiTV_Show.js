@@ -198,7 +198,6 @@ GuiTV_Show.updateSelectedBannerItems = function() {
 		document.getElementById("playAll").style.color = "#f9f9f9";
 		document.getElementById("shuffleAll").style.color = "#f9f9f9";
 	}
-
 }
 
 GuiTV_Show.keyDown = function() {
@@ -343,9 +342,9 @@ GuiTV_Show.processUpKey = function() {
 
 GuiTV_Show.processDownKey = function() {
 	this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
-	
+		
 	//If now 0, was -1, update banner selection
-	if (this.selectedItem == 0) { this.updateSelectedBannerItems(); }
+	if (this.selectedItem == 0) { this.selectedBannerItem = 0; this.updateSelectedBannerItems(); }
 
 	if (this.selectedItem >= this.ItemData.Items.length) {
 		this.selectedItem = (this.ItemData.Items.length-1);
@@ -365,20 +364,22 @@ GuiTV_Show.processDownKey = function() {
 
 
 GuiTV_Show.processChannelUpKey = function() {
-	this.selectedItem = this.selectedItem - this.getMaxDisplay();
-	if (this.selectedItem < 0) {
-		this.selectedItem = 0;
-		this.topLeftItem = 0;
-		this.updateDisplayedItems();
-	} else {
-		if (this.topLeftItem - this.getMaxDisplay() < 0) {
+	if (this.selectedItem > -1) {
+		this.selectedItem = this.selectedItem - this.getMaxDisplay();
+		if (this.selectedItem < 0) {
+			this.selectedItem = 0;
 			this.topLeftItem = 0;
+			this.updateDisplayedItems();
 		} else {
-			this.topLeftItem = this.topLeftItem - this.getMaxDisplay();
+			if (this.topLeftItem - this.getMaxDisplay() < 0) {
+				this.topLeftItem = 0;
+			} else {
+				this.topLeftItem = this.topLeftItem - this.getMaxDisplay();
+			}
+			this.updateDisplayedItems();
 		}
-		this.updateDisplayedItems();
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
 
 GuiTV_Show.processLeftKey = function() {

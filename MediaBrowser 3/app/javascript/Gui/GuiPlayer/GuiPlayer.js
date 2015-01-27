@@ -26,7 +26,6 @@ var GuiPlayer = {
 		videoToolsTranscodeAllOptions : ["20971520","10485760","8388608","6291456","4194304","3145728","2097152","1572864","1048576"],
 		
 		VideoData : null,
-		isMultipleVideos : false,
 		PlayerData : null,
 		PlayerIndex : null,
 		MediaSource : null,
@@ -72,9 +71,8 @@ GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) {
     if (this.VideoData == null) { return; }
     
     this.PlayerIndex = 0; // Play All  - Default
-    this.isMultipleVideos = false;
     if (title == "PlayAll") {
-    	this.isMultipleVideos = true;
+    	alert ("Number of Videos: "+this.VideoData.Items.length);
     	this.PlayerData = this.VideoData.Items[this.PlayerIndex];
     } else {
     	this.PlayerData = this.VideoData;
@@ -407,6 +405,14 @@ GuiPlayer.keyDown = function()
 			this.stopPlayback();
             GuiPlayer.restorePreviousMenu();
 			break;	
+		case tvKey.KEY_RIGHT:
+			alert("RIGHT");
+			this.handleRightKey();
+			break;
+		case tvKey.KEY_LEFT:
+			alert("LEFT");
+			this.handleLeftKey();
+			break;		
 		case tvKey.KEY_PLAY:
 			this.handlePlayKey();
 			break;
@@ -445,6 +451,36 @@ GuiPlayer.keyDown = function()
 }
 
 //-------------------------------------------------------------------------------------------------------------
+
+GuiPlayer.handleRightKey = function() {
+	if (this.startParams[0] == "PlayAll") {
+		this.PlayerIndex++;
+		if (this.VideoData.Items.length > this.PlayerIndex) {	
+			this.stopPlayback();
+			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+			GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
+		} else {
+			//Reset PlayerData to correct index!!
+			this.PlayerIndex--;
+			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+		}
+	}
+}
+
+GuiPlayer.handleLeftKey = function() {
+	if (this.startParams[0] == "PlayAll") {
+		this.PlayerIndex--;
+		if (this.PlayerIndex >= 0) {	
+			this.stopPlayback();
+			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+			GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
+		} else {
+			//Reset PlayerData to correct index!!
+			this.PlayerIndex++;
+			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+		}
+	}
+}
 
 GuiPlayer.handlePlayKey = function() {
 	if (this.Status == "PAUSED") {

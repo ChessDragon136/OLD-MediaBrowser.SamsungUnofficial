@@ -423,10 +423,15 @@ GuiDisplay_Series.processSelectedItem = function() {
 }
 
 GuiDisplay_Series.playSelectedItem = function () {
-	if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
+	if (this.ItemData.Items[this.selectedItem].Type == "Series") {
+		Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+		var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[this.selectedItem].Id,"&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+		GuiPlayer.start("PlayAll",urlToPlay,0,"GuiDisplay_Series");	
+		//Server.getCustomURL("/Shows/" + this.ItemData.Items[this.selectedItem].Id +  "/Episodes?format=json&Fields=ParentId,SortName,MediaSources");
+	} else if (this.ItemData.Items[this.selectedItem].Type == "Movie") {
 		Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
-		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
+		GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
 	}
 }
 

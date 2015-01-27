@@ -8,7 +8,7 @@ var Main =
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5211",
 		
-		forceDeleteSettings : true,
+		forceDeleteSettings : false,
 		
 		enableMusic : true,
 		enableLiveTV : false,

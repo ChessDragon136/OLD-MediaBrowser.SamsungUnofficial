@@ -33,14 +33,9 @@ GuiImagePlayer_Screensaver.start = function() {
 		}
 	}
 	
-	//Dont think this works
-	this.images.push("images/music.jpg");
-	this.images.push("images/hd-splash.jpg");
-	
 	//Hide Page Contents
 	document.getElementById("everything").style.visibility="hidden";
 
-	
 	//Initialte new instance, set Frame Area & Set Notifications
 	this.ImageViewer = new CImageViewer('Common ImageViewer');
 	this.ImageViewer.setFrameArea(0, 0, 960, 540); 

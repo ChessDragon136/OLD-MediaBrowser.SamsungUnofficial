@@ -25,8 +25,13 @@ var GuiPlayer = {
 		videoToolsTranscodeOptions : [],
 		videoToolsTranscodeAllOptions : ["20971520","10485760","8388608","6291456","4194304","3145728","2097152","1572864","1048576"],
 		
+		VideoData : null,
+		isMultipleVideos : false,
 		PlayerData : null,
-		MediaSource : null
+		PlayerIndex : null,
+		MediaSource : null,
+		
+		startParams : []
 }
 
 
@@ -55,15 +60,26 @@ GuiPlayer.init = function() {
 }
 
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
+	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
+	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
+	
 	//Turn off screensaver
 	Support.screensaverOff();
 	
     //Get Item Data (Media Streams)
-    this.PlayerData = Server.getContent(url);
-    if (this.PlayerData == null) { return; }
-    alert (url);
+	alert (url);
+    this.VideoData = Server.getContent(url);
+    if (this.VideoData == null) { return; }
     
-    //Call Resume Option
+    this.PlayerIndex = 0; // Play All  - Default
+    this.isMultipleVideos = false;
+    if (title == "PlayAll") {
+    	this.isMultipleVideos = true;
+    	this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+    } else {
+    	this.PlayerData = this.VideoData;
+    }
+    
     GuiPlayer_Versions.start(this.PlayerData,startingPlaybackTick,playedFromPage);
 }
 
@@ -84,6 +100,8 @@ GuiPlayer.startPlayback = function(MediaSource, resumeTicksSamsung) {
     this.updateTimeCount = 0;
     this.MediaSource = MediaSource;
     this.setThreeD = false;
+    
+    //If group of videos set playerdata to current video
     
     //If bitrateOvveride
     this.isBitrateOveride = (MediaSource[8] === undefined ? -1 : MediaSource[8]);
@@ -195,7 +213,6 @@ GuiPlayer.startPlayback = function(MediaSource, resumeTicksSamsung) {
 
 GuiPlayer.stopPlayback = function() {
 	alert ("STOPPING PLAYBACK");
-	pluginAPI.setOnScreenSaver();
 	this.plugin.Stop();
 	this.Status = "STOPPED";
 	Server.videoStopped(this.PlayerData.Id,this.MediaSource[0].Id,this.currentTime,this.PlayMethod);
@@ -259,7 +276,20 @@ GuiPlayer.setDisplaySize = function(MediaSource,videoIndex) {
 GuiPlayer.handleOnRenderingComplete = function() {
 	//May alter to load the next file in series
 	GuiPlayer.stopPlayback();
-	GuiPlayer.restorePreviousMenu();
+	
+	////Call Resume Option
+	if (this.startParams[0] == "PlayAll") {
+		this.PlayerIndex++;
+		if (this.VideoData.Items.length < this.PlayerIndex) {	
+			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
+			GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
+		} else {
+			this.PlayerIndex = 0;
+			GuiPlayer.restorePreviousMenu();
+		}
+	} else {
+		GuiPlayer.restorePreviousMenu();
+	}
 }
 
 GuiPlayer.handleOnNetworkDisconnected = function() {

@@ -29,10 +29,11 @@ GuiImagePlayer_Screensaver.start = function() {
 	for (var index = 0; index < randomImageData.Items.length; index++) {
 		if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 			var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",1920,1080,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
-			//this.images.push(imgsrc);
+			this.images.push(imgsrc);
 		}
 	}
 	
+	//Dont think this works
 	this.images.push("images/music.jpg");
 	this.images.push("images/hd-splash.jpg");
 	

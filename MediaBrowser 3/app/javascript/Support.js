@@ -883,3 +883,22 @@ Support.convertTicksToMinutes = function (currentTime) {
 	timeMinute = Math.floor((currentTime / 3600000) * 60);
 	return timeMinute + " mins";
 }
+
+Support.SeriesRun = function(type, prodyear, status, enddate) {
+	var output = "";
+	if (type != "Series") {
+		return prodyear;
+	} else if (prodyear) {
+		output += prodyear;
+		if (status == "Continuing") {
+			output += "-Present";
+		} else if (enddate) {
+			var endyear = new Date(enddate);
+			var yyyy = endyear.getFullYear();
+			if (yyyy != prodyear) {
+				output += "-" + yyyy;
+			}
+		}
+		return output;
+	}
+}

@@ -154,8 +154,14 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	}
 			
 	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'>";
-	if (this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].ProductionYear + " | ";
+	if (this.ItemData.Items[this.selectedItem].Type !== undefined
+			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
+		htmlForTitle += Support.SeriesRun(
+				this.ItemData.Items[this.selectedItem].Type,
+				this.ItemData.Items[this.selectedItem].ProductionYear,
+				this.ItemData.Items[this.selectedItem].Status,
+				this.ItemData.Items[this.selectedItem].EndDate)
+				+ " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
 		htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
@@ -165,9 +171,18 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isTvOrMovies == 2) {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";
+			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
+				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" + " | ";	
+			} else {
+				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";	
+			}
 		} else {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes" + " | ";
+			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
+				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" + " | ";					
+			} else {
+				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" + " | ";
+			}
+			
 		}	
 	}
 

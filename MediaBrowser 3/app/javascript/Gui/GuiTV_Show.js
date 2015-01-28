@@ -50,7 +50,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			"<div id='ShowImage'></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
 				"<div id='ShowTitle' style='font-size:22px;'></div>" +
-				"<div id='ShowMetadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
+				"<div id='ShowMetadata' style='padding-top:2px;color:#2ad;padding-bottom:5px;'></div>" +
 				"<div id='ShowOverview' class='ShowOverview'></div>" + 
 			"</div>";
 			

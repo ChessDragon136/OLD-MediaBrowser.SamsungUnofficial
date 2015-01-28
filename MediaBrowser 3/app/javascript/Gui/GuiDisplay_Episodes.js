@@ -49,7 +49,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		"<div id='EpisodesImage' class='EpisodesImage'></div>" + 
 		"<div id='EpisodesInfo' class='EpisodesInfo'>" +
 		"<div id='SeriesTitle' style='font-size:22px;'></div>" +
-		"<div id='SeriesSubData' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
+		"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;padding-bottom:5px;'></div>" +
 		"<div id='SeriesOverview' class='EpisodesOverview'></div>" +
 		"</div>";
 		

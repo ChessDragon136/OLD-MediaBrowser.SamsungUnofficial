@@ -43,7 +43,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			<div id='guiTV_Show_MediaAlternative' class='guiTV_Show_MediaAlternative'></div> \
 			<div id='InfoContainer' class='infoContainer'> \
 					<div id='guiTV_Show_Title' style='font-size:22px;'></div> \
-					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div> \
+					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#2ad;padding-bottom:5px;'></div> \
 					<div id='guiTV_Show_Overview' class='guiFilm_Overview'></div> \
 			</div> \
 			<div id='guiTV_Show_CDArt' class='guiFilm_CDArt'></div> \

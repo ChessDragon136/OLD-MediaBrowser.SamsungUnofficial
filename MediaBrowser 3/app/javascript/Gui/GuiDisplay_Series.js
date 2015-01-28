@@ -59,8 +59,9 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
 			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='font-size:22px;'></div>" +
-			"<div id='SeriesSubData' style='padding-top:2px;color:#0099FF;'></div>" +
-			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
+			"<div id='SeriesMiscInfo' style='padding-top:2px;color:#ddd;'></div>" +
+			"<div id='SeriesGenreData' style='padding-top:2px;color:#2ad;'></div>" +
+			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;color:#fff;'></div>" +
 			"</div>";
 		
 		//Determine if display is for all tv / movies or just a folder
@@ -153,10 +154,11 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
 	}
 			
-	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'>";
+	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'></span>";
+	var htmlForMiscInfo = "<span style='font-size:14px;'>"
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForTitle += Support.SeriesRun(
+		htmlForMiscInfo += Support.SeriesRun(
 				this.ItemData.Items[this.selectedItem].Type,
 				this.ItemData.Items[this.selectedItem].ProductionYear,
 				this.ItemData.Items[this.selectedItem].Status,
@@ -164,37 +166,40 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				+ " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
+		htmlForMiscInfo += "<img src='images/star.png'>" + " " + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
+		htmlForMiscInfo += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isTvOrMovies == 2) {
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" + " | ";	
+				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" + " | ";	
 			} else {
-				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";	
+				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";	
 			}
 		} else {
 			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" + " | ";					
+				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" + " | ";					
 			} else {
-				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" + " | ";
+				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" + " | ";
 			}
 			
 		}	
 	}
 
 	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-			htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
+		htmlForMiscInfo += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
 	}
-	htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-2);
-	htmlForTitle += "</span>";
+	htmlForMiscInfo = htmlForMiscInfo.substring(0,htmlForMiscInfo.length-2);
+	htmlForMiscInfo += "</span>";
 				
-	htmlForSubData = "";
+	htmlForGenreData = "";
 	if (this.ItemData.Items[this.selectedItem].Genres !== undefined) {
-		htmlForSubData = this.ItemData.Items[this.selectedItem].Genres;
+		//var genres = this.ItemData.Items[this.selectedItem].Genres
+		//htmlForGenreData = genres.join(" / ");
+		htmlForGenreData = this.ItemData.Items[this.selectedItem].Genres.join(" / ");
+			//this.ItemData.Items[this.selectedItem].Genres;
 	}
 				
 	htmlForOverview = "";
@@ -203,7 +208,8 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	}
 				
 	document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
-	document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
+	document.getElementById("SeriesMiscInfo").innerHTML = htmlForMiscInfo;
+	document.getElementById("SeriesGenreData").innerHTML = htmlForGenreData;
 	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
 				
 	Support.scrollingText("SeriesOverview");

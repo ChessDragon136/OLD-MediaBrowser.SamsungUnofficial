@@ -2,9 +2,9 @@ var GuiPage_Settings = {
 		AllData : null,
 		UserData : null,
 		
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page","Use Alternate Season Label"],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false],
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page","Use Alternate Season Label","Auto Play Next Episode"],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false],
 		
 		TVSettings : ["TvConnection","Dolby","DTS"],
 		TVSettingsName : ["Network Connection Type: ","Enable Dolby Digital Playback: ","Enable DTS Playback : "],
@@ -88,14 +88,8 @@ GuiPage_Settings.generateSettings = function() {
 		switch (this.Settings[index]) {
 		case "Default":
 		case "SkipShow":
-			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
-				if (this.DefaultValues[index2] == this.UserData[this.Settings[index]]) {
-					Setting = this.DefaultOptions[index2];
-					break;
-				}
-			}
-			break;
 		case "SeasonLabel":
+		case "AutoPlay":	
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.UserData[this.Settings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -204,9 +198,8 @@ GuiPage_Settings.processSelectedItem = function() {
 	switch (this.Settings[this.selectedItem]) {
 	case "Default":
 	case "SkipShow":	
-		this.CurrentSubSettings = this.DefaultOptions;
-		break;
 	case "SeasonLabel":	
+	case "AutoPlay":	
 		this.CurrentSubSettings = this.DefaultOptions;
 		break;
 	case "View1":
@@ -328,8 +321,7 @@ GuiPage_Settings.keyDown = function() {
 GuiPage_Settings.processSelectedSubItem = function() {
 	if (this.selectedItem < this.Settings.length){
 		switch (this.Settings[this.selectedItem]) {
-		case "Default":
-		case "SkipShow":	
+		case "Default":	
 			this.UserData[this.Settings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		
@@ -342,7 +334,9 @@ GuiPage_Settings.processSelectedSubItem = function() {
 				File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
 			}
 			break;
+		case "SkipShow":	
 		case "SeasonLabel":	
+		case "AutoPlay":	
 			this.UserData[this.Settings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 			break;
@@ -495,6 +489,10 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Use Alternate Season Label";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use an alternative format for the season and episode label formats.";
 			break;
+		case "AutoPlay":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Auto Play Next Episode";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "If enabled, when a playing episode has finished, the next episode will automatically load.";
+			break;	
 		}
 	}
 	

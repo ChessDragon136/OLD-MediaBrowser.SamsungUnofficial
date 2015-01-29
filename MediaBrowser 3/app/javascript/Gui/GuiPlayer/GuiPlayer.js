@@ -62,6 +62,9 @@ GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) {
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
 	
+	//Take focus to no input
+	document.getElementById("NoKeyInput").focus();
+	
 	//Turn off screensaver
 	Support.screensaverOff();
 	
@@ -275,15 +278,39 @@ GuiPlayer.handleOnRenderingComplete = function() {
 	//May alter to load the next file in series
 	GuiPlayer.stopPlayback();
 	
-	////Call Resume Option
+	////Call Resume Option - Check playlist first, then AutoPlay property, then return
 	if (this.startParams[0] == "PlayAll") {
 		this.PlayerIndex++;
 		if (this.VideoData.Items.length < this.PlayerIndex) {	
+			//Take focus to no input
+			document.getElementById("NoKeyInput").focus();
+			
 			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
 			GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
 		} else {
 			this.PlayerIndex = 0;
 			GuiPlayer.restorePreviousMenu();
+		}
+	} else if (File.getUserProperty("AutoPlay")){
+		if (this.PlayerData.Type == "Episode") {
+			this.AdjacentData = Server.getContent(Server.getAdjacentEpisodesURL(this.PlayerData.SeriesId,this.PlayerData.SeasonId,this.PlayerData.Id));
+			if (this.AdjacentData == null) { return; }
+			
+			if (this.AdjacentData.Items.length == 2 && (this.AdjacentData.Items[1].IndexNumber > this.ItemData.IndexNumber)) {
+				var url = Server.getItemInfoURL(this.AdjacentData.Items[1].Id);
+				//Take focus to no input
+				document.getElementById("NoKeyInput").focus();
+				this.PlayerData = Server.getContent(url);
+				if (this.PlayerData == null) { return; }
+				GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
+			} else if (this.AdjacentData.Items.length > 2) {
+				//Take focus to no input
+				document.getElementById("NoKeyInput").focus();
+				var url = Server.getItemInfoURL(this.AdjacentData.Items[2].Id);
+				this.PlayerData = Server.getContent(url);
+				if (this.PlayerData == null) { return; }
+				GuiPlayer_Versions.start(this.PlayerData,0,this.startParams[3]);
+			}
 		}
 	} else {
 		GuiPlayer.restorePreviousMenu();

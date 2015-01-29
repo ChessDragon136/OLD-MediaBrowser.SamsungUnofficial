@@ -7,7 +7,7 @@ var GuiPage_Playlist = {
 		selectedItem2 : 0,
 		
 		MAXCOLUMNCOUNT : 1,
-		MAXROWCOUNT : 15,
+		MAXROWCOUNT : 12, //Max = 12, causes graphical jump due to large html element, couldn't find issue,
 		
 		startParams : [],
 		
@@ -41,12 +41,12 @@ GuiPage_Playlist.start = function(title,url,type,playlistId) { //Type is either 
 		document.getElementById("pageContent").className = "";
 		document.getElementById("pageContent").innerHTML = "<div id='guiTV_Show_Title' style='font-size:22px;padding-top:20px;padding-left:20px'></div> \
 			   <div id='guiTV_Show_Subtitle' style='font-size:16px;padding-top:5px;padding-left:30px'></div> \
-			   <div style='margin-top:40px;margin-left:80px'> \
+			   <div style='margin-top:30px;margin-left:80px;'> \
 			   <div id='GuiPage_Playlist_Globals' style='display:block;width:400px;text-align:center;'> \
 			   <div id='PlayAll' style='display:inline-block;padding:10px;'>Play All</div> \
 			   <div id='ShuffleAll' style='display:inline-block;padding:10px;'>Shuffle All</div> \
 			   <div id='Delete' style='display:inline-block;padding:10px;'>Delete</div></div> \
-			<div id='GuiPage_Playlist_Options' style='padding-left:20px'padding-top:10px;'></div></div>";
+			<div id='GuiPage_Playlist_Options' style='padding-left:20px;padding-top:10px;'></div></div>";
 		document.getElementById("Counter").innerHTML = "1/" + this.topMenuItems.length;	
 				
 		//Set Page Title
@@ -67,12 +67,12 @@ GuiPage_Playlist.start = function(title,url,type,playlistId) { //Type is either 
 		document.getElementById("pageContent").className = "";
 		document.getElementById("pageContent").innerHTML = "<div id='guiTV_Show_Title' style='font-size:22px;padding-top:20px;padding-left:20px'></div> \
 			   <div id='guiTV_Show_Subtitle' style='font-size:16px;padding-top:5px;padding-left:30px'></div> \
-			   <div style='margin-top:40px;margin-left:80px'> \
+			   <div style='margin-top:30px;margin-left:80px;'> \
 			   <div id='GuiPage_Playlist_Globals' style='display:block;width:400px;text-align:center;'> \
 			   <div id='PlayAll' style='display:inline-block;padding:10px;'>Play All</div> \
 			   <div id='ShuffleAll' style='display:inline-block;padding:10px;'>Shuffle All</div> \
 			   <div id='Delete' style='display:inline-block;padding:10px;'>Delete</div></div> \
-			<div id='GuiPage_Playlist_Options' style='padding-left:20px'padding-top:10px;'>There are no items in this playlist</div></div>";
+			<div id='GuiPage_Playlist_Options' style='padding-left:20px;padding-top:10px;max-height:400px;'>There are no items in this playlist</div></div>";
 		document.getElementById("Counter").innerHTML = "0/0";	
 				
 		//Set Page Title
@@ -90,7 +90,7 @@ GuiPage_Playlist.start = function(title,url,type,playlistId) { //Type is either 
 GuiPage_Playlist.updateDisplayedItems = function() {
 	var htmlToAdd = "";
 	if (this.startParams[2] == "Audio") {
-		htmlToAdd = "<table class=table><th style='width:90px'></th><th style='width:33px'></th><th style='width:36px'></th><th style='width:60px'></th><th style='width:33px'></th><th style='width:250px'></th><th style='width:65px'></th>";
+		htmlToAdd = "<table><th style='width:100px'></th><th style='width:33px'></th><th style='width:36px'></th><th style='width:60px'></th><th style='width:33px'></th><th style='width:250px'></th><th style='width:65px'></th>";
 		for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.AlbumData.Items.length); index++){			
 			if (this.AlbumData.Items[index].ParentIndexNumber === undefined || this.AlbumData.Items[index].IndexNumber === undefined) {
 				TrackDetails = "?";
@@ -103,7 +103,7 @@ GuiPage_Playlist.updateDisplayedItems = function() {
 							"<td class='musicTableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";	
 		}
 	} else {
-		htmlToAdd = "<table class=table><th style='width:90px'></th><th style='width:33px'></th><th style='width:36px'></th><th style='width:60px'></th><th style='width:150px'></th><th style='width:50px'></th><th style='width:250px'></th><th style='width:65px'></th>";
+		htmlToAdd = "<table><th style='width:100px'></th><th style='width:33px'></th><th style='width:36px'></th><th style='width:60px'></th><th style='width:150px'></th><th style='width:50px'></th><th style='width:250px'></th><th style='width:65px'></th>";
 		for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.AlbumData.Items.length); index++){	
 			
 			if (this.AlbumData.Items[index].Type == "Episode") {

@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.530",
+		version : "v0.540",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5211",
 		
@@ -163,6 +163,7 @@ Main.onLoad = function()
 
 Main.onUnload = function()
 {
+	Support.screensaverOff();
 	GuiImagePlayer.kill();
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();

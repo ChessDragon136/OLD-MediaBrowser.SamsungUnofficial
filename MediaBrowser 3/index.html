@@ -50,6 +50,8 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_PhotoNavigation.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiImagePlayer/GuiImagePlayer.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiImagePlayer/GuiImagePlayer_Screensaver.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Playlist.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_AddToPlaylist.js"></script>
 		
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
         <object id="pluginObjectAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
@@ -103,6 +105,8 @@
 		<a href='javascript:void(0);' id='GuiPage_TvChannel' onkeydown='GuiPage_TvChannel.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_TvGuide' onkeydown='GuiPage_TvGuide.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_PhotoNavigation' onkeydown='GuiPage_PhotoNavigation.keyDown();'></a>	
+		<a href='javascript:void(0);' id='GuiPage_Playlist' onkeydown='GuiPage_Playlist.keyDown();'></a>
+		<a href='javascript:void(0);' id='GuiPage_AddToPlaylist' onkeydown='GuiPage_AddToPlaylist.keyDown();'></a>
 		
 		
 		<script language="javascript" type="text/javascript" src="$MANAGER_WIDGET/Common/IME/ime2.js"></script>
@@ -128,6 +132,13 @@
 					<div id="HelpTitle" style="font-size:18px"></div>
 					<div id="HelpContent"></div>
 				</div>	
+				
+				<div id='guiPlayListContainer' style='visibility:hidden'>
+				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Add to Playlist</div>
+				 <div id='guiPlayListExisting'></div>
+				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Create New Playlist</div>
+				 <form style='padding-top:10px;padding-left:40px;'><input id='guiPlayListNew' style='z-index:10;' type='text' size='50' value=''/></form>
+				</div>
 				
 				<div id='guiMusicPlayerDiv' class='musicDiv' style='visibility:hidden;height:60px'>
 					<div id='guiMusicPlayerTitle' style='display:inline-block;margin-left:10px;width:250px;'></div>

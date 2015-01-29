@@ -236,6 +236,11 @@ GuiMainMenu.processSelectedItems = function() {
 		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
 		GuiDisplay_Series.start("Album",url,0,0);
 		break;	
+	case "Playlists":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
+		GuiDisplayOneItem.start("Playlists", url,0,0);
+		break;			
 	case "Settings":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		GuiPage_Settings.start();

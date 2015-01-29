@@ -233,6 +233,51 @@ Server.deleteWatchedStatus = function(id) {
 }
 
 //------------------------------------------------------------
+//GuiIP Functions
+//------------------------------------------------------------
+Server.createPlaylist = function(name, ids, mediaType) {
+	var url = this.serverAddr + "/Playlists?Name=" + name + "&Ids=" + ids + "&userId="+Server.getUserID() + "&MediaType=" + mediaType;
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("POST", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+
+Server.deletePlaylist = function(playlistId) {
+	var url = this.serverAddr + "/Items/"+playlistId;
+	alert (url);
+	http://192.168.1.108:8096/Items/d85957fd88b68eb725ee10055a9d520b
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("DELETE", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+
+Server.addToPlaylist = function(playlistId, ids) {
+	var url = this.serverAddr + "/Playlists/"+ playlistId + "/Items?Ids=" + ids + "&userId="+Server.getUserID();
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("POST", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+
+Server.removeFromPlaylist = function(playlistId, ids) {
+	var url = this.serverAddr + "/Playlists/"+ playlistId + "/Items?EntryIds=" + ids + "&userId="+Server.getUserID();
+	alert(url)
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("DELETE", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+//------------------------------------------------------------
 //      GuiIP Functions
 //------------------------------------------------------------
 Server.testConnectionSettings = function (server,fromFile) {	

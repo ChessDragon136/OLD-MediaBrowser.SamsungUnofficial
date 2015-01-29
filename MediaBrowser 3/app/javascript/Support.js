@@ -70,7 +70,7 @@ Support.updateURLHistory = function(page,title,url,title2,url2,selectedItem,topL
 	}
 }
 
-//Below method used for Main Menu
+//Below method used for Main Menu & Playlist Deletion
 Support.removeLatestURL = function() {
 	this.previousPageDetails.pop();
 	alert ("Removed item: " + this.previousPageDetails.length);
@@ -84,7 +84,6 @@ Support.processReturnURLHistory = function() {
 	alert ("Just before removing item" + this.previousPageDetails.length);
 	
 	//Reset Help 
-	document.getElementById("Help").innerHTML = "";
 	document.getElementById("Help").style.visibility = "hidden";
 
 	if (this.previousPageDetails.length > 0) {
@@ -136,6 +135,9 @@ Support.processReturnURLHistory = function() {
 			case "GuiPage_PhotoNavigation":
 				GuiPage_PhotoNavigation.start(title,url,selectedItem,topLeftItem);
 				break;	
+			case "GuiPage_Playlist": //Params 3 = type, saved in url2, Param 4 = playlistid, saved as title2
+				GuiPage_Playlist.start(title,url,title2,url2);
+				break;		
 			default:
 				break;
 		}
@@ -409,8 +411,12 @@ Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
 					else{
 						episodeString = episodeNumber;
 					}
-
-					return "S" + seasonString + "E" + episodeString + " - " + EpisodeName;		
+					
+					if (EpisodeName == "" || EpisodeName == null) {
+						return "S" + seasonString + "E" + episodeString;	
+					} else {
+						return "S" + seasonString + "E" + episodeString + " - " + EpisodeName;	
+					}	
 				} else {
 					return EpisodeName;
 				}
@@ -441,8 +447,12 @@ Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
 			}
 	 }else{
 		 if (SeriesName == "" || SeriesName == null) {
-				if (SeriesNo !== undefined && EpisodeNo !== undefined) {
-					return "S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;		
+				if (SeriesNo !== undefined && EpisodeNo !== undefined) {					
+					if (EpisodeName == "" || EpisodeName == null) {
+						return "S" + SeriesNo + ",E" + EpisodeNo;	
+					} else {
+						return "S" + SeriesNo + ",E" + EpisodeNo + " - " + EpisodeName;	
+					}	
 				} else {
 					return EpisodeName;
 				}
@@ -490,6 +500,9 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 	}
 	
+	alert (ItemData.Items[selectedItem].CollectionType);
+	alert (ItemData.Items[selectedItem].Type)
+	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
 		switch (ItemData.Items[selectedItem].CollectionType) {
 		case "tvshows" :	
@@ -516,6 +529,10 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			} else {
 				Support.removeLatestURL();
 			}
+			break;
+		case "playlists":
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
+			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;	
 		default:
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
@@ -584,6 +601,10 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			var url = Server.getCustomURL("/Channels/"+ItemData.Items[selectedItem].ChannelId+"/Items?userId="+Server.getUserID()+"&folderId="+ItemData.Items[selectedItem].Id+"&fields=SortName&format=json");	
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;	
+		case "Playlist":
+			var url = Server.getCustomURL("/Playlists/"+ItemData.Items[selectedItem].Id+"/Items?userId="+Server.getUserID()+"&fields=SortName&SortBy=SortName&SortOrder=Ascending&format=json");	
+			GuiPage_Playlist.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].MediaType,ItemData.Items[selectedItem].Id);
+			break;		
 		default:
 			switch (ItemData.Items[selectedItem].MediaType) {
 			case "Photo":
@@ -687,6 +708,15 @@ Support.generateMainMenu = function() {
 	
 	//Check Images No API Support Currently
 	
+	//Check Server Playlists
+	var urlPlaylists = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Playlist&Recursive=true&Limit=0");
+	var hasPlaylists = Server.getContent(urlPlaylists);
+	if (hasPlaylists == null) { return; }
+	
+	if (hasPlaylists.TotalRecordCount > 0) {
+		menuItems.push("Playlists");
+	}
+	
 	//Check Live TV
 	var urlLiveTV = Server.getCustomURL("/LiveTV/Info?format=json");
 	var hasLiveTV = Server.getContent(urlLiveTV);
@@ -749,6 +779,10 @@ Support.processHomePageMenu = function (menuItem) {
 		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
 		GuiDisplay_Series.start("Album",url,0,0);
 		break;
+	case "Playlists":
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
+		GuiDisplayOneItem.start("Playlists", url,0,0);
+		break;		
 	case "Images":	
 		//No API Support Currently
 		break;		

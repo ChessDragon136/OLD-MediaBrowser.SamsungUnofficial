@@ -208,7 +208,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		}
 	} else {
 		if (this.ItemData.PremiereDate !== undefined) {
-			htmlForMetaData += Support.formatDateTime(this.ItemData.PremiereDate,0) + " | ";
+			htmlForMetaData += Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type) + " | ";
 		}
 	}
 

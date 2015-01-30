@@ -147,14 +147,20 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 				title = title.substring(0,40) + "<br>" + line2;	
 			}		
 		}
-		
-		
+
 		if (this.ItemData.Items[index].UserData.Played == true) {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else {
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
+			}
+		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
+			if (this.ItemData.Items[index].ImageTags.Primary) {			
+				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>Missing</div></div>";
+			} else {
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>Missing</div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			

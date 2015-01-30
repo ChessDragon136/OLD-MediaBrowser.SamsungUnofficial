@@ -47,7 +47,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			
 			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content></div>" + 
 			"<div id='ShowSeriesInfo'></div>" + 
-			"<div id='ShowImage'></div>" + 
+			"<div id='ShowImage'><div id='UnwatchedOverlay'></div></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
 				"<div id='ShowTitle' style='font-size:22px;'></div>" +
 				"<div id='ShowMetadata' style='padding-top:2px;color:#2ad;padding-bottom:5px;'></div>" +
@@ -175,15 +175,27 @@ GuiTV_Show.updateDisplayedItems = function() {
 GuiTV_Show.updateSelectedItems = function () {
 	Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
 			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"ShowListSingle EpisodeListSelected","ShowListSingle","");
-	
+
 	//Update Displayed Image - Prevent code running on banner items with if below!
 	if (this.selectedItem >= 0) {
 		if (this.ItemData.Items[this.selectedItem].ImageTags.Primary) {			
 			var imgsrc = Server.getImageURL(this.ItemData.Items[this.selectedItem].Id,"Primary",140,200,0,false,0);
 			document.getElementById("ShowImage").style.backgroundImage="url('" + imgsrc + "')";
+			
+				if (this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount){
+					document.getElementById("UnwatchedOverlay").className = 'playedOverlayCount';
+					document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;
+				} else if (this.ItemData.Items[this.selectedItem].UserData.Played){
+					document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheck';
+					document.getElementById("UnwatchedOverlay").innerHTML = "";	
+				} else {
+					document.getElementById("UnwatchedOverlay").className = "";
+					document.getElementById("UnwatchedOverlay").innerHTML = "";
+				}
+					
 		}
 	}
-}
+};
 
 GuiTV_Show.updateSelectedBannerItems = function() {
 	if (this.selectedItem == -1) {

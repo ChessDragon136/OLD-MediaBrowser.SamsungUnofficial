@@ -20,6 +20,11 @@ GuiTV_Show.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
+GuiTV_Show.GetDetail = function(itemid) {
+	var url3 = Server.getItemInfoURL(itemid);
+	this.seasondata = Server.getContent(url3);
+}
+
 GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -50,11 +55,28 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			"<div id='ShowImage'><div id='UnwatchedOverlay'></div></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
 				"<div id='ShowTitle' style='font-size:22px;'></div>" +
-				"<div id='ShowMetadata' style='padding-top:2px;color:#2ad;padding-bottom:5px;'></div>" +
+				"<div id='ShowMetadata' style='padding-top:2px;color:#ddd;padding-bottom:5px;'></div>" +
 				"<div id='ShowOverview' class='ShowOverview'></div>" + 
 			"</div>";
 			
-			document.getElementById("ShowTitle").innerHTML = this.ShowData.Name;
+			var htmlforSeries = "";
+			htmlforSeries += this.ShowData.Name + " | ";
+			if (this.ShowData.CommunityRating !== undefined) {
+				htmlforSeries += "<img src='images/star - copy.png'>"
+						+ this.ShowData.CommunityRating + " | ";
+			}
+			if (this.ShowData.OfficialRating !== undefined) {
+				htmlforSeries += this.ShowData.OfficialRating + " | ";
+			}
+			if (this.ShowData.RunTimeTicks !== undefined) {
+				htmlforSeries += Support
+						.convertTicksToMinutes(this.ShowData.RunTimeTicks / 10000)
+						+ " | ";
+			}
+
+			htmlforSeries = htmlforSeries.substring(0, htmlforSeries.length - 2);
+			
+			document.getElementById("ShowTitle").innerHTML = htmlforSeries;
 			
 			if (this.ItemData.Items.length < 4) {
 				document.getElementById("allOptions").className = 'ShowAllOptionsShort';	
@@ -195,6 +217,34 @@ GuiTV_Show.updateSelectedItems = function () {
 					
 		}
 	}
+	var htmlForSeason = "";
+	if (this.ItemData.Items[this.selectedItem].Name !== undefined) {
+		htmlForSeason += this.ItemData.Items[this.selectedItem].Name + " | ";
+	}
+	if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
+		htmlForSeason += Support.AirDate(
+				this.ItemData.Items[this.selectedItem].PremiereDate,
+				this.ItemData.Items[this.selectedItem].Type)
+				+ " | ";
+	}
+
+	if (this.ItemData.Items[this.selectedItem].ChildCount !== undefined) {
+
+		htmlForSeason += this.ItemData.Items[this.selectedItem].ChildCount
+				+ " Episodes" + " | ";
+	}
+
+	htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
+	document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
+
+	var htmlForOverview = "";
+	GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
+	if (this.seasondata.Overview !== undefined) {
+		htmlForOverview = this.seasondata.Overview;
+	}
+	document.getElementById("ShowOverview").innerHTML = htmlForOverview;
+	Support.scrollingText("ShowOverview");
+
 };
 
 GuiTV_Show.updateSelectedBannerItems = function() {

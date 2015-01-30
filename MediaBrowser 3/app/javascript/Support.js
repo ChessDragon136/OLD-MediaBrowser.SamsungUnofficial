@@ -902,3 +902,19 @@ Support.SeriesRun = function(type, prodyear, status, enddate) {
 		return output;
 	}
 }
+
+Support.AirDate = function(inputdate, type) {
+	var d = new Date(inputdate);
+	if (type != "Episode") {
+		return d.getFullYear()
+	} else {
+		var dd = d.getDate()
+		if (dd < 10)
+			dd = '0' + dd
+		var mm = d.getMonth() + 1
+		if (mm < 10)
+			mm = '0' + mm
+		var yyyy = d.getFullYear()
+		return dd + '/' + mm + '/' + yyyy
+	}
+}

@@ -990,3 +990,44 @@
   background: rgba(82,181,75,.8);
   background-image:url('images/watched.png');
 }
+
+.MetaDataCell {
+  display:table-cell;
+  text-align: center;
+  font-size: 14px;
+  vertical-align: middle;
+ }
+ 
+.MetaDataTitleTable {
+ display: inline-table;
+ vertical-align: middle;
+ border-collapse: separate;
+ border-spacing: 5px 0px;
+ font-size:22px
+
+ }
+ 
+.MetaDataSeasonTable {
+ display: table;
+ vertical-align: middle;
+ border-collapse: separate;
+ border-spacing: 5px 0px;
+ font-size:22px;
+ }
+
+.MetaDataCellContent{
+	background: -webkit-linear-gradient(rgba(72,72,72,.84), rgba(34,34,34,.65));
+	background-repeat: no-repeat;
+    background-position:center;
+    text-align: center;
+    border-radius: 3px;
+    margin: 0 0 3px 0;
+    padding: 1px 3px 1px 3px
+}
+
+.ShowOverviewContent {
+	font-size:15px;
+	max-height:150px;
+	overflow-y:hidden;
+}
+

@@ -43,7 +43,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			<div id='guiTV_Show_MediaAlternative' class='guiTV_Show_MediaAlternative'></div> \
 			<div id='InfoContainer' class='infoContainer'> \
 					<div id='guiTV_Show_Title' style='font-size:22px;'></div> \
-					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#ddd;padding-bottom:5px;'></div> \
+					<div id='guiTV_Show_Metadata' style='margin-left:-5px;'class='MetaDataSeasonTable'>></div> \
 					<div id='guiTV_Show_Overview' class='guiFilm_Overview'></div> \
 			</div> \
 			<div id='guiTV_Show_CDArt' class='guiFilm_CDArt'></div> \
@@ -204,26 +204,41 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	var htmlForMetaData = "";
 	if (this.ItemData.Type != "Episode") {
 		if (this.ItemData.ProductionYear !== undefined) {
-			htmlForMetaData += this.ItemData.ProductionYear + " | ";
+			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				this.ItemData.ProductionYear 
+				+ "</div></div>";
 		}
 	} else {
 		if (this.ItemData.PremiereDate !== undefined) {
-			htmlForMetaData += Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type) + " | ";
-		}
+			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type)
+				+ "</div></div>";
+			}
 	}
 
 	if (this.ItemData.CommunityRating !== undefined) {
-		htmlForMetaData += "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating + " | ";
+		htmlForMetaData += "<div id='CommunityRating' class='MetaDataCell'>" 
+			+ "<div class='MetaDataCellContent'>"
+			+ "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating 
+			+ "</div></div>";
 	}
 	if (this.ItemData.OfficialRating !== undefined) {
-		htmlForMetaData += this.ItemData.OfficialRating + " | ";
+		htmlForMetaData += "<div id='OfficialRating' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+			+ this.ItemData.OfficialRating
+			+ "</div></div>";
 	}
 
 	if (this.ItemData.RunTimeTicks !== undefined) {
-		htmlForMetaData += Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000) + " | ";
+		htmlForMetaData += "<div id='Runtime' class='MetaDataCell'>" 
+			+ "<div class='MetaDataCellContent'>"
+			+ Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000)
+			+ "</div></div>";
 	}
 	
-	htmlForMetaData = htmlForMetaData.substring(0,htmlForMetaData.length-2);
+	
 	document.getElementById("guiTV_Show_Metadata").innerHTML = htmlForMetaData;
 	
 	//Set Overview Scroller

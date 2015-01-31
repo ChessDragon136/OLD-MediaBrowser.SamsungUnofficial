@@ -58,10 +58,9 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length > 0) {	
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='font-size:22px;'></div>" +
-			"<div id='SeriesMiscInfo' style='padding-top:2px;color:#ddd;'></div>" +
-			"<div id='SeriesGenreData' style='padding-top:2px;color:#2ad;'></div>" +
-			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;color:#fff;'></div>" +
+			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='margin-left:-5px;' class='MetaDataTitleTable'></div>" +
+			"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;'></div>" +
+			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
 			"</div>";
 		
 		//Determine if display is for all tv / movies or just a folder
@@ -154,52 +153,72 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
 	}
 			
-	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'></span>";
-	var htmlForMiscInfo = "<span style='font-size:14px;'>"
+	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name;
+	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForMiscInfo += Support.SeriesRun(
-				this.ItemData.Items[this.selectedItem].Type,
-				this.ItemData.Items[this.selectedItem].ProductionYear,
-				this.ItemData.Items[this.selectedItem].Status,
-				this.ItemData.Items[this.selectedItem].EndDate)
-				+ " | ";
+		htmlForTitle += "<div id='ProductionYear' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+			+ Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate)
+			+ "</div></div>";
 	}
 	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlForMiscInfo += "<img src='images/star.png'>" + " " + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
+		htmlForTitle += "<div id='CommunityRating' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+			+ "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
+			+ "</div></div>";
 	}
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForMiscInfo += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
+		htmlForTitle += "<div id='Official Rating' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+			+ this.ItemData.Items[this.selectedItem].OfficialRating 
+			+ "</div></div>";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isTvOrMovies == 2) {
+			htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
+				+ "</div></div>";
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" + " | ";	
+				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>"
+				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
+				+ "</div></div>";	
 			} else {
-				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" + " | ";	
+				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>" 
+				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
+				+ "</div></div>";	
 			}
 		} else {
+			htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes" 
+				+ "</div></div>";
 			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" + " | ";					
+				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>"
+				+ this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
+				+ "</div></div>";					
 			} else {
-				htmlForMiscInfo += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" + " | ";
+				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>"
+				+ this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
+				+ "</div></div>";
 			}
 			
 		}	
 	}
 
-	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-		htmlForMiscInfo += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
-	}
-	htmlForMiscInfo = htmlForMiscInfo.substring(0,htmlForMiscInfo.length-2);
-	htmlForMiscInfo += "</span>";
+//	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
+//			htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
+//	}
+
 				
-	htmlForGenreData = "";
+	htmlForSubData = "";
 	if (this.ItemData.Items[this.selectedItem].Genres !== undefined) {
-		//var genres = this.ItemData.Items[this.selectedItem].Genres
-		//htmlForGenreData = genres.join(" / ");
-		htmlForGenreData = this.ItemData.Items[this.selectedItem].Genres.join(" / ");
-			//this.ItemData.Items[this.selectedItem].Genres;
+		htmlForSubData = this.ItemData.Items[this.selectedItem].Genres.join(" / ");
 	}
 				
 	htmlForOverview = "";
@@ -208,8 +227,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	}
 				
 	document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
-	document.getElementById("SeriesMiscInfo").innerHTML = htmlForMiscInfo;
-	document.getElementById("SeriesGenreData").innerHTML = htmlForGenreData;
+	document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
 	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
 				
 	Support.scrollingText("SeriesOverview");

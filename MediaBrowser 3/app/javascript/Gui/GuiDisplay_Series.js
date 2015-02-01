@@ -185,17 +185,8 @@ GuiDisplay_Series.updateSelectedItems = function () {
 					+ "<div class='MetaDataCellContent'>"
 				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
 				+ "</div></div>";	
-			} else {
-				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>" 
-				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
-				+ "</div></div>";	
 			}
 		} else {
-			htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes" 
-				+ "</div></div>";
 			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
 				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
 					+ "<div class='MetaDataCellContent'>"

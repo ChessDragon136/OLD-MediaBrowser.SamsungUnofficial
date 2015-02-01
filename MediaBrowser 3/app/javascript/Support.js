@@ -891,3 +891,13 @@ Support.AirDate = function(inputdate, type) {
 		return dd + '/' + mm + '/' + yyyy
 	}
 }
+
+Support.FutureDate = function(inputdate) {
+	var airdate = new Date(inputdate)
+	var now = new Date()
+	if (now < airdate){
+		return true;
+	} else {
+		return false;
+	}
+}

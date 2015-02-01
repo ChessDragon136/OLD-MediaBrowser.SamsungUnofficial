@@ -13,19 +13,17 @@ var Support = {
 		
 		//Screensaver
 		screensaverVar : null,
-		screensaverTime : 300000
 }
 
 Support.logout = function() {
+
 	//Turn off screensaver
 	Support.screensaverOff();
 	
-	document.getElementById("headerUser").style.visibility = "hidden";
 	document.getElementById("headerUserImage").style.backgroundImage = "";
 	document.getElementById("headerTypes").innerHTML = "";
 	Server.setUserID("");
 	Server.setUserName("");
-	File.setUserEntry(null);
 	Server.Logout();
 	GuiUsers.start(false);
 }
@@ -795,7 +793,7 @@ Support.screensaver = function () {
 		clearTimeout(this.screensaverVar);
 		this.screensaverVar  = setTimeout(function(){
 			GuiImagePlayer_Screensaver.start();
-		}, this.screensaverTime);
+		}, File.getUserProperty("ScreensaverTimeout"));
 	}
 }
 

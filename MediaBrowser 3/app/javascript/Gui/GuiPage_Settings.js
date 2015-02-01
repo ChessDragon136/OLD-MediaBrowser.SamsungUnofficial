@@ -1,20 +1,40 @@
 var GuiPage_Settings = {
 		AllData : null,
 		UserData : null,
+		ServerUserData : null,
+
+		selectedItem : 0,
+		selectedBannerItem : 0,
+		selectedSubItem : 0,
+		topLeftItem : 0,
+		MAXCOLUMNCOUNT : 1,
+		MAXROWCOUNT : 10,
 		
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page","Use Alternate Season Label","Auto Play Next Episode"],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false],
-		
-		TVSettings : ["TvConnection","Dolby","DTS"],
-		TVSettingsName : ["Network Connection Type: ","Enable Dolby Digital Playback: ","Enable DTS Playback : "],
-		TVSettingsDefaults : ["Wired",false,false],
+		bannerItems : ["User Settings","Server Settings","TV Settings"],
+		currentView : null,
+		currentViewSettings : null,
+		currentViewSettingsName : null,
+		currentViewSettingsDefaults : null,
 		
 		CurrentSubSettings : [],
 		CurrentSettingValue : null,
 		
-		DefaultOptions : ["True","False"], //Also used by the two tv settings and experimental
-		DefaultValues : [true,false], //Also used by the two tv settings and experimental
+		//Per Setting Type List of settings, names & defaults
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","ScreensaverImages","ScreensaverTimeout"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ", "Screensaver Image Source: ", "Screensaver Timeout: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"Media",300000],
+		
+		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
+		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
+		TVSettingsDefaults : [60,false,false,false],
+		
+		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes"], //Add back in SubtitleMode when ready
+		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: "], //Subtitle Mode:  
+		ServerSettingsDefaults : [false,false], //Not actually Used but implemented for clean code!!! Values read from Server so no default needed!
+		
+		//Per Setting Options & Values
+		DefaultOptions : ["True","False"],
+		DefaultValues : [true,false], 
 		
 		View1Options : [], 
 		View1Values : [], 
@@ -22,15 +42,24 @@ var GuiPage_Settings = {
 		View2Options : [], 
 		View2Values : [], 
 
-		TvConnectionOptions : ["Wired","Wireless","Mobile"], 
-		TvConnectionValues : ["Wired","Wireless","Mobile"], 
+		TvConnectionOptions : ["120MB/s","100MB/s","80MB/s","60MB/s","40MB/s","30MB/s","20MB/s","15MB/s","10MB/s","8MB/s","6MB/s","5MB/s","4MB/s","3MB/s","2MB/s","1MB/s","0.5MB/s"], 
+		TvConnectionValues : [120,100,80,60,40,30,20,15,10,8,6,5,4,3,2,1,0.5], 
 		
-		selectedItem : 0,
-		selectedSubItem : 0
+		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
+		ScreensaverImagesValues : ["Media","Metadata"],
+		
+		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
+		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
+		
+		SubtitleModeOptions : ["Default","Only Forced Subtitles", "Always Play Subtitles", "None"],
+		SubtitleModeValues : ["Default","OnlyForced", "Always", "None"]
+}
+
+GuiPage_Settings.getMaxDisplay = function() {
+	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiPage_Settings.initiateViewValues = function() {
-	alert ("Server value: " + Server.getServerAddr());
 	ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=7&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName";
 	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=7&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
 	SuggestedMovies = Server.getCustomURL("/Movies/Recommendations?format=json&userId="+Server.getUserID()+"&categoryLimit=6&itemLimit=7&fields=SortName&CollapseBoxSetItems=false");
@@ -38,18 +67,22 @@ GuiPage_Settings.initiateViewValues = function() {
 	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&Limit=7&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
 	LatestMovies = Server.getItemTypeURL("&Limit=7&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=SortName&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");
 
-	
 	this.View1Options = ["Resume All Items","TV Next Up","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View1Values = [ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies]
+	this.View1Values = [ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
 	this.View2Options = ["None","Resume All Items","TV Next Up","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View2Values = [null,ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies]
+	this.View2Values = [null,ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
+	
+	this.SettingsDefaults[1] = ResumeAllItemsURL;
+	this.SettingsDefaults[2] = TVNextUp;
 }
 
 GuiPage_Settings.start = function() {	
 	//Reset Vars
 	this.selectedItem = 0;
+	this.selectedBannerItem = 0;
 	this.selectedSubItem = 0;
 	
+	//Get View Vaules - Specific per user due to Id!
 	this.initiateViewValues();
 	
 	//Load Data
@@ -57,41 +90,92 @@ GuiPage_Settings.start = function() {
 	this.AllData = fileJson;
 	this.UserData = fileJson.Servers[File.getServerEntry()].Users[File.getUserEntry()];
 	
+	//Check settings in file - If not write defaults
+	this.checkSettingsInFile();
+	
+	//Load Server Data for User
+	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json";
+	this.ServerUserData = Server.getContent(userURL);
+	if (this.ServerUserData == null) { return; }
+	
 	document.getElementById("pageContent").className = "";
-	document.getElementById("pageContent").innerHTML = "<div id='guiTV_Show_Title' class='EpisodesSeriesInfo'>Settings for "+this.UserData.UserName +" </div>\ \
+	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id='guiTV_Show_Title' class='guiPage_Settings_Title'>Client Settings for "+this.UserData.UserName +" </div>\ \
 		<div id='guiPage_Settings_Settings' class='guiPage_Settings_Settings'></div>" +
 		"<div id='guiPage_Settings_Overview' class='guiPage_Settings_Overview'>" +
 			"<div id=guiPage_Settings_Overview_Title></div>" +
 			"<div id=guiPage_Settings_Overview_Content></div>" +
 		"</div>";
+	
+	//Create Banner Items
+	for (var index = 0; index < this.bannerItems.length; index++) {
+		if (index != this.bannerItems.length-1) {
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";			
+		} else {
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";					
+		}
+	}
 
-	this.generateSettings();
+	//Set default view as the User Settings Page
+	this.currentView = "User Settings";
+	this.currentViewSettings = this.Settings;
+	this.currentViewSettingsName = this.SettingsName;
+	this.currentViewSettingsDefaults = this.SettingsDefaults;
+	
+	//Update Displayed & Updates Settings
+	this.updateDisplayedItems();
 	this.updateSelectedItems();
 	
 	document.getElementById("GuiPage_Settings").focus();
 }
 
-GuiPage_Settings.generateSettings = function() {
-	var htmlToAdd = "<table class=guiSettingsTable>";
+GuiPage_Settings.checkSettingsInFile = function() {
 	var changed = false;
+	
 	for (var index = 0; index < this.Settings.length;index++) {
-		//Catches new settings created and will write them to file
-		//Also sets the default value
 		if (this.UserData[this.Settings[index]] === undefined) {
 			this.UserData[this.Settings[index]] = this.SettingsDefaults[index];
 			changed = true; 
 		}
+	}
+	
+	if (changed == true) {
+		File.updateUserSettings(this.UserData);
+		changed = false;
+	}
+	
+	//Check TV Settings
+	changed = false;
+	if (this.AllData.TV === undefined) {
+		this.AllData.TV = {};
+		File.writeAll (this.AllData);
+	}
+	
+	for (var index = 0; index < this.TVSettings.length;index++) {
+		if (this.AllData.TV[this.TVSettings[index]] === undefined) {
+			this.AllData.TV[this.TVSettings[index]] = this.TVSettingsDefaults[index];
+			changed = true; 
+		}
+	}
+	
+	if (changed == true) {
+		File.writeAll(this.AllData);
+		changed = false;
+	}
+};
 
+GuiPage_Settings.updateDisplayedItems = function() {
+	var htmlToAdd = "<table class=guiSettingsTable>";
+	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.currentViewSettings.length); index++) {
 		//Finds the setting in the file and generates the correct current set value
 		//Only needs new entries here if they have differing settings (true false is top so works for many settings)
 		var Setting = "";
-		switch (this.Settings[index]) {
+		switch (this.currentViewSettings[index]) {
 		case "Default":
 		case "SkipShow":
 		case "SeasonLabel":
 		case "AutoPlay":	
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
-				if (this.DefaultValues[index2] == this.UserData[this.Settings[index]]) {
+				if (this.DefaultValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.DefaultOptions[index2];
 					break;
 				}
@@ -99,7 +183,7 @@ GuiPage_Settings.generateSettings = function() {
 			break;
 		case "View1":
 			for (var index2 = 0; index2 < this.View1Values.length; index2++) {
-				if (this.View1Values[index2] == this.UserData[this.Settings[index]]) {
+				if (this.View1Values[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.View1Options[index2];
 					break;
 				}
@@ -107,71 +191,78 @@ GuiPage_Settings.generateSettings = function() {
 			break;
 		case "View2":
 			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
-				if (this.View2Values[index2] == this.UserData[this.Settings[index]]) {
+				if (this.View2Values[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.View2Options[index2];
+					break;
+				}
+			}
+			break;
+		case "ScreensaverImages":
+			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+				if (this.ScreensaverImagesValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.ScreensaverImagesOptions[index2];
+					break;
+				}
+			}
+			break;
+		case "ScreensaverTimeout":
+			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+				if (this.ScreensaverTimeoutValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.ScreensaverTimeoutOptions[index2];
+					break;
+				}
+			}
+			break;	
+		case "Dolby":
+		case "DTS":	
+		case "TranscodeDSeries":
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
+					Setting = this.DefaultOptions[index2];
+					break;
+				}
+			}
+			break;	
+		case "Bitrate":
+			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+				if (this.TvConnectionValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
+					Setting = this.TvConnectionOptions[index2];
+					break;
+				}
+			}
+			break;	
+		case "SubtitleMode":
+			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+				if (this.SubtitleModeValues[index2] == this.ServerUserData.Configuration.SubtitleMode) {
+					Setting = this.SubtitleModeOptions[index2];
+					break;
+				}
+			}
+			break;
+		case "DisplayMissingEpisodes":
+			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.DisplayMissingEpisodes) {
+					Setting = this.DefaultOptions[index2];
+					break;
+				}
+			}
+			break;
+		case "DisplayUnairedEpisodes":
+			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.DisplayUnairedEpisodes) {
+					Setting = this.DefaultOptions[index2];
 					break;
 				}
 			}
 			break;	
 		}
-		htmlToAdd += "<tr class=guiSettingsRow><td id="+index+">" + this.SettingsName[index] + "</td><td id=Value"+index+" class=guiSettingsTD>"+Setting+"</td></tr>";
-	}
-	
-	if (changed == true) {
-		//Write to file
-		File.updateUserSettings(this.UserData);
-		changed = false;
+		htmlToAdd += "<tr class=guiSettingsRow><td id="+index+">" + this.currentViewSettingsName[index] + "</td><td id=Value"+index+" class=guiSettingsTD>"+Setting+"</td></tr>";
 	}
 	document.getElementById("guiPage_Settings_Settings").innerHTML = htmlToAdd + "</table>";
-	
-	
-	//TV Settings - Same as above again!
-	htmlToAdd = "<div class=guiSettingsTVSettings>TV Settings</div><table class=guiSettingsTable>"; //
-	if (this.AllData.TV === undefined) {
-		this.AllData.TV = {};
-		File.writeAll (this.AllData);
-	}
-	for (var index = 0; index < this.TVSettings.length;index++) {
-		if (this.AllData.TV[this.TVSettings[index]] === undefined) {
-			this.AllData.TV[this.TVSettings[index]] = this.TVSettingsDefaults[index];
-			changed = true; 
-		}
-		
-		var Setting = "";
-		switch (this.TVSettings[index]) {
-		case "Dolby":
-		case "DTS":
-			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
-				if (this.DefaultValues[index2] == this.AllData.TV[this.TVSettings[index]]) {
-					Setting = this.DefaultOptions[index2];
-					break;
-				}
-			}
-			break;		
-		case "TvConnection":
-			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
-				if (this.TvConnectionValues[index2] == this.AllData.TV[this.TVSettings[index]]) {
-					Setting = this.TvConnectionOptions[index2];
-					break;
-				}
-			}
-			break;
-		}
-		//For ease of use id's just count on from the Settings array
-		htmlToAdd += "<tr class=guiSettingsRow><td id="+(this.Settings.length +index)+">" + this.TVSettingsName[index] + "</td><td id=Value"+(this.Settings.length +index)+" class=guiSettingsTD>"+Setting+"</td></tr>";
-	}
-
-	if (changed == true) {
-		//Write to file
-		File.writeAll(this.AllData);
-		changed = false;
-	}
-	
-	document.getElementById("guiPage_Settings_Settings").innerHTML += htmlToAdd + "</table>";
 }
 
 GuiPage_Settings.updateSelectedItems = function() {
-	for (var index = 0; index < this.SettingsName.length; index++) {
+	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.currentViewSettings.length); index++) {
 		if (index == this.selectedItem) {
 			document.getElementById(index).className = "guiSettingsTD GuiPage_Setting_Selected";
 		} else {
@@ -179,62 +270,121 @@ GuiPage_Settings.updateSelectedItems = function() {
 		}
 	}
 	
-	for (var index = 0; index < this.TVSettingsName.length; index++) {
-		if ((index+this.Settings.length) == this.selectedItem) {
-			document.getElementById(index+this.Settings.length).className = "guiSettingsTD GuiPage_Setting_Selected";
-		} else {
-			document.getElementById(index+this.Settings.length).className = "guiSettingsTD GuiPage_Setting_UnSelected";
-		}
-	}
-	
-	this.setOverview();
-	document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + (this.Settings.length + this.TVSettings.length);	
+	if (this.selectedItem == -1) {
+		document.getElementById("Counter").innerHTML = (this.selectedBannerItem + 1) + "/" + (this.bannerItems.length);
+	} else {
+		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + (this.currentViewSettingsName.length);
+		this.setOverview();
+	}		
 }
 
-GuiPage_Settings.processSelectedItem = function() {
-	document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_SubSelected";
-	document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_Selected";
-	
-	switch (this.Settings[this.selectedItem]) {
-	case "Default":
-	case "SkipShow":	
-	case "SeasonLabel":	
-	case "AutoPlay":	
-		this.CurrentSubSettings = this.DefaultOptions;
-		break;
-	case "View1":
-		this.CurrentSubSettings = this.View1Options;
-		break;
-	case "View2":
-		this.CurrentSubSettings = this.View2Options;
-		break;
+GuiPage_Settings.updateSelectedBannerItems = function() {
+	for (var index = 0; index < this.bannerItems.length; index++) {
+		if (index == this.selectedBannerItem) {
+			if (index != this.bannerItems.length-1) {
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+			} else {
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+			}		
+		} else {
+			if (index != this.bannerItems.length-1) {
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+			} else {
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+			}
+		}
 	}
-	
-	if (this.selectedItem >= this.Settings.length){
-		switch (this.TVSettings[this.selectedItem - this.Settings.length]) {
+	if (this.selectedItem == -1) {
+		document.getElementById("Counter").innerHTML = (this.selectedBannerItem + 1) + "/" + (this.bannerItems.length);
+	} else {
+		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + (this.currentViewSettingsName.length);
+		this.setOverview();
+	}
+}
+
+GuiPage_Settings.processSelectedItem = function() {	
+	if (this.selectedItem == -1) {
+		switch (this.bannerItems[this.selectedBannerItem]) {
+		case "User Settings":
+			//Set default view as the User Settings Page
+			this.currentViewSettings = this.Settings;
+			this.currentViewSettingsName = this.SettingsName;
+			this.currentViewSettingsDefaults = this.SettingsDefaults;
+			document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
+			break;
+		case "TV Settings":
+			//Set default view as the User Settings Page
+			this.currentViewSettings = this.TVSettings;
+			this.currentViewSettingsName = this.TVSettingsName;
+			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
+			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings";
+			break;
+		case "Server Settings":
+			//Set default view as the User Settings Page
+			this.currentViewSettings = this.ServerSettings;
+			this.currentViewSettingsName = this.ServerSettingsName;
+			this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
+			document.getElementById("guiTV_Show_Title").innerHTML = "Server Settings for "+this.UserData.UserName;
+			break;	
+		}
+		//Set Current View - needed to write to file
+		this.currentView = this.bannerItems[this.selectedBannerItem];
+		
+		//Update Displayed & Updates Settings
+		this.selectedItem = 0;
+		this.selectedBannerItem = -1;
+		this.updateDisplayedItems();
+		this.updateSelectedItems();
+		this.updateSelectedBannerItems();
+	} else {
+		document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_SubSelected";
+		document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_Selected";
+		
+		switch (this.currentViewSettings[this.selectedItem]) {
+		case "Default":
+		case "SkipShow":	
+		case "SeasonLabel":	
+		case "AutoPlay":
 		case "Dolby":
-		case "DTS":
+		case "DTS":	
+		case "DisplayMissingEpisodes":
+		case "DisplayUnairedEpisodes":	
+		case "TranscodeDSeries":	
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
-		case "TvConnection":
+		case "View1":
+			this.CurrentSubSettings = this.View1Options;
+			break;
+		case "View2":
+			this.CurrentSubSettings = this.View2Options;
+			break;
+		case "ScreensaverImages":
+			this.CurrentSubSettings = this.ScreensaverImagesOptions;
+			break;
+		case "ScreensaverTimeout":
+			this.CurrentSubSettings = this.ScreensaverTimeoutOptions;
+			break;	
+		case "Bitrate":
 			this.CurrentSubSettings = this.TvConnectionOptions;
 			break;
+		case "SubtitleMode":
+			this.CurrentSubSettings = this.SubtitleModeOptions;
+			break;	
 		}
+		
+		//Set the selectedSubItem to the existing setting
+		this.selectedSubItem = 0;
+		this.CurrentSettingValue = document.getElementById("Value"+this.selectedItem).innerHTML;
+		
+		for (var index = 0; index < this.CurrentSubSettings.length; index++) {
+			if (this.CurrentSubSettings[index] == this.CurrentSettingValue) {
+				this.selectedSubItem = index;
+				break;
+			}
+		}		
+		document.getElementById("GuiPage_SettingsBottom").focus();
 	}
-	
-	//Set the selectedSubItem to the existing setting
-	this.selectedSubItem = 0;
-	this.CurrentSettingValue = document.getElementById("Value"+this.selectedItem).innerHTML;
-	
-	for (var index = 0; index < this.CurrentSubSettings.length; index++) {
-		if (this.CurrentSubSettings[index] == this.CurrentSettingValue) {
-			this.selectedSubItem = index;
-			break;
-		}
-	}
-	
-	document.getElementById("GuiPage_SettingsBottom").focus();
-}
+};
  
 
 GuiPage_Settings.keyDown = function() {
@@ -268,29 +418,25 @@ GuiPage_Settings.keyDown = function() {
 		//Need Logout Key
 		case tvKey.KEY_UP:
 			alert("UP");	
-			this.selectedItem--;
-			if (this.selectedItem < 0) {
-				this.selectedItem = 0;
-				document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
-				GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
-			} else {
-				this.updateSelectedItems();
-			}
+			this.processUpKey();
 			break;
 		case tvKey.KEY_DOWN:
 			alert("DOWN");	
-			this.selectedItem++;
-			if (this.selectedItem >= this.SettingsName.length + this.TVSettingsName.length) {
-				this.selectedItem--;
-			}
-			this.updateSelectedItems();
-			break;				
+			this.processDownKey();
+			break;	
+		case tvKey.KEY_LEFT:
+			alert("LEFT");	
+			this.processLeftKey();
+			break;
+		case tvKey.KEY_RIGHT:
+			alert("RIGHT");	
+			this.processRightKey();
+			break;	
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;	
-		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_ENTER:
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");
@@ -316,63 +462,161 @@ GuiPage_Settings.keyDown = function() {
 	}
 }
 
+GuiPage_Settings.processUpKey = function() {
+	this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT;
+	if (this.selectedItem == -2) {
+		this.selectedItem = -1;
+	} else if (this.selectedItem == -1) {
+		this.selectedBannerItem = 0;
+		this.updateSelectedItems();
+		this.updateSelectedBannerItems();
+	} else {
+		if (this.selectedItem < this.topLeftItem) {
+			if (this.topLeftItem - this.MAXCOLUMNCOUNT < 0) {
+				this.topLeftItem = 0;
+			} else {
+				this.topLeftItem = this.topLeftItem - this.MAXCOLUMNCOUNT;
+			}
+			this.updateDisplayedItems();
+		}
+		this.updateSelectedItems();
+	}	
+}
+
+GuiPage_Settings.processDownKey = function() {
+	if (this.selectedItem == -1) {
+		this.selectedItem = 0;
+		this.selectedBannerItem = -1;
+		this.updateSelectedBannerItems();
+	} else {
+		this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
+		if (this.selectedItem >= this.currentViewSettings.length) {
+			this.selectedItem = (this.currentViewSettings.length-1);
+			if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
+				this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
+				this.updateDisplayedItems();
+			}
+		} else {
+			if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
+				this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
+				this.updateDisplayedItems();
+			}
+		}
+	}
+	this.updateSelectedItems();
+}
+
+GuiPage_Settings.processLeftKey = function() {
+	if (this.selectedItem == -1) {
+		this.selectedBannerItem--;
+		if (this.selectedBannerItem < 0) {
+			this.selectedBannerItem = 0;
+		} else {
+			this.updateSelectedBannerItems();	
+		}	
+	}
+}
+
+GuiPage_Settings.processRightKey = function() {
+	if (this.selectedItem == -1) {
+		this.selectedBannerItem++;
+		if (this.selectedBannerItem >= this.bannerItems.length) {
+			this.selectedBannerItem--;
+		} else {
+			this.updateSelectedBannerItems();	
+		}
+	} else {
+		this.processSelectedItem();
+	}
+}
+
 //------------------------------------------------------------------------------------------------------------------------
 
 GuiPage_Settings.processSelectedSubItem = function() {
-	if (this.selectedItem < this.Settings.length){
-		switch (this.Settings[this.selectedItem]) {
-		case "Default":	
-			this.UserData[this.Settings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
-			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+	switch (this.currentViewSettings[this.selectedItem]) {
+	case "Default":	
+		this.UserData.Default = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		
-			//Default User ONLY - Check All Other Users and set to false
-			if (this.Settings[this.selectedItem] == "Default") {
-				var fileJson = JSON.parse(File.loadFile());  
-				for (var index = 0; index < fileJson.Servers[File.getServerEntry()].Users.length; index++) {
-					fileJson.Servers[File.getServerEntry()].Users[index].Default = false;
-				}
-				File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
+		//Default User ONLY - Check All Other Users and set to false
+		if (this.currentViewSettings[this.selectedItem] == "Default") {
+			var fileJson = JSON.parse(File.loadFile());  
+			for (var index = 0; index < fileJson.Servers[File.getServerEntry()].Users.length; index++) {
+				fileJson.Servers[File.getServerEntry()].Users[index].Default = false;
 			}
-			break;
-		case "SkipShow":	
-		case "SeasonLabel":	
-		case "AutoPlay":	
-			this.UserData[this.Settings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
-			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
-			break;
-		case "View1":
-			this.UserData.View1Name = this.View1Options[this.selectedSubItem];
-			this.UserData.View1 = this.View1Values[this.selectedSubItem];
-			this.CurrentSettingValue = this.View1Options[this.selectedSubItem];
-		
-			Support.updateHomePageURLs(this.UserData.View1Name ,this.UserData.View1,this.UserData.View2Name,true);
-			break;
-		case "View2":
-			this.UserData.View2Name = this.View2Options[this.selectedSubItem];
-			this.UserData.View2 = this.View2Values[this.selectedSubItem];
-			this.CurrentSettingValue = this.View2Options[this.selectedSubItem];
-		
-			Support.updateHomePageURLs(this.UserData.View2Name ,this.UserData.View2,this.UserData.View2Name,false);
-			break;
+			File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
 		}
-		File.updateUserSettings(this.UserData);
-	}
+		break;
+	case "SkipShow":	
+	case "SeasonLabel":	
+	case "AutoPlay":	
+		this.UserData[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+		break;
+	case "View1":
+		this.UserData.View1Name = this.View1Options[this.selectedSubItem];
+		this.UserData.View1 = this.View1Values[this.selectedSubItem];
+		this.CurrentSettingValue = this.View1Options[this.selectedSubItem];
 	
-	if (this.selectedItem >= this.Settings.length){
-		switch (this.TVSettings[this.selectedItem - this.Settings.length]) {
-		case "Dolby":
-		case "DTS":
-			this.AllData.TV[this.TVSettings[this.selectedItem - this.Settings.length]] = this.DefaultValues[this.selectedSubItem];
-			this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
-			break;
-		case "TvConnection":
-			this.AllData.TV[this.TVSettings[this.selectedItem - this.Settings.length]] = this.TvConnectionValues[this.selectedSubItem];
-			this.CurrentSettingValue = this.TvConnectionOptions[this.selectedSubItem];
-			break;
-		}
-		File.writeAll(this.AllData);
-	}
+		Support.updateHomePageURLs(this.UserData.View1Name ,this.UserData.View1,this.UserData.View2Name,true);
+		break;
+	case "View2":
+		this.UserData.View2Name = this.View2Options[this.selectedSubItem];
+		this.UserData.View2 = this.View2Values[this.selectedSubItem];
+		this.CurrentSettingValue = this.View2Options[this.selectedSubItem];
 	
+		Support.updateHomePageURLs(this.UserData.View2Name ,this.UserData.View2,this.UserData.View2Name,false);
+		break;
+	case "ScreensaverImages":
+		this.UserData.ScreensaverImages = this.ScreensaverImagesValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ScreensaverImagesOptions[this.selectedSubItem];
+		break;	
+	case "ScreensaverTimeout":
+		this.UserData.ScreensaverTimeout = this.ScreensaverTimeoutValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ScreensaverTimeoutOptions[this.selectedSubItem];
+		break;			
+	case "Dolby":
+	case "DTS":
+	case "TranscodeDSeries":	
+		this.AllData.TV[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+		break;
+	case "Bitrate":
+		this.AllData.TV.Bitrate = this.TvConnectionValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.TvConnectionOptions[this.selectedSubItem];
+		break;
+	case "SubtitleMode":
+		this.ServerUserData.Configuration.SubtitleMode = this.SubtitleModeValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.SubtitleModeOptions[this.selectedSubItem];
+		
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;	
+	case "DisplayMissingEpisodes":
+		this.ServerUserData.Configuration.DisplayMissingEpisodes = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+			
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;	
+	case "DisplayUnairedEpisodes":
+		this.ServerUserData.Configuration.DisplayUnairedEpisodes = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+				
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;	
+	}
+		
+	switch (this.currentView) {
+		case "User Settings":
+			File.updateUserSettings(this.UserData);
+		break;
+		case "TV Settings":
+			File.writeAll(this.AllData);
+		break;
+	}
+		
 	document.getElementById("Value"+this.selectedItem).innerHTML = this.CurrentSettingValue;
 	document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 	document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_Selected";
@@ -462,8 +706,7 @@ GuiPage_Settings.bottomKeyDown = function() {
 }
 
 GuiPage_Settings.setOverview = function() {
-	if (this.selectedItem < this.Settings.length) {
-		switch (this.Settings[this.selectedItem]) {
+	switch (this.currentViewSettings[this.selectedItem]) {
 		case "Default":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Default User";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Setting the default user to True allows for the app to sign in the user automatically." +
@@ -493,16 +736,17 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Auto Play Next Episode";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "If enabled, when a playing episode has finished, the next episode will automatically load.";
 			break;	
-		}
-	}
-	
-	if (this.selectedItem >= this.Settings.length) {
-		switch (this.TVSettings[this.selectedItem - this.Settings.length]) {
-		case "TvConnection":
-			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Network Connection Type";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select how your TV is connected to the network" +
-			"<br><br>Available Choices<ul style='padding-left:22px'><li>Wired</li><li>Wireless</li><li>Mobile</li></ul>" +
-			"<br><br>The selected option will determine any transcoding bitrates used. I would highly suggest against using mobile, it is only there for people who connect to Servers accross the internet.";
+		case "ScreensaverImages":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Image Source";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The screensaver can use images wither from photo's you have added to your library or tv & movie images.";
+			break;
+		case "ScreensaverTimeout":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Timeout";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity until the screensaver kicks in.";
+			break;	
+		case "Bitrate":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Bitrate";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enter a maximum bitrate that your network can manage";
 			break;
 		case "Dolby":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Dolby Digital Playback";
@@ -511,8 +755,23 @@ GuiPage_Settings.setOverview = function() {
 		case "DTS":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable DTS Playback";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select this option if your receiver is capable of decoding DTS streams";
+			break;
+		case "TranscodeDSeries":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Transcoding on D Series TV's";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enable this if you want to transcode videos to your D Series TV<br><br>This is off by default as it is not reliable and may cause issues, and as such is unsupported.";
+			break;
+		case "SubtitleMode":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Mode";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
 			break;	
-		}
+		case "DisplayMissingEpisodes":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Missing Episodes within Seasons";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display missing episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;	
+		case "DisplayUnairedEpisodes":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Unaired Episodes within Seasons";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;		
 	}
 }
 

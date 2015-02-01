@@ -310,9 +310,16 @@
 	background-color:rgba(0,0,0,0.9);
 }
 
-.guiPage_Settings_Settings {
+.guiPage_Settings_Title{
+	font-size:18px;
 	position:absolute;
 	top:55px;
+	left:30px;
+}
+
+.guiPage_Settings_Settings {
+	position:absolute;
+	top:90px;
 	left: 50px;
 }
 
@@ -346,7 +353,7 @@
 
 .guiPage_Settings_Overview {
 	position:absolute;
-	top:50px;
+	top:65px;
 	left:600px;
 	width:300px;
 	height:400px;
@@ -600,7 +607,7 @@
 	position:absolute;
 	top:340px;
 	left:20px;
-	height:204px;
+	height:154px;
 }
 
 .ShowList{
@@ -662,7 +669,7 @@
 
 .ShowListSingleTitle{
 	display:inline-block;
-	width:110px;
+	width:130px;
 	height:50px;
 	position:absolute;
 }
@@ -859,6 +866,17 @@
     height:65px;
     width:100%;
     background-color:rgba(0,0,0,0.8);
+}
+
+.videoSubtitles1 {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0.2);
+	font-size:30px;
+	color:white;
+	text-align:center;
 }
 
 .videoTools {

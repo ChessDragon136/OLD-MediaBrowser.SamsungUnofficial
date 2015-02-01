@@ -17,6 +17,7 @@ GuiUsers.getMaxDisplay = function() {
 
 GuiUsers.start = function(runAutoLogin) {
 	//Reset Properties
+	File.setUserEntry(null);
 	this.selectedUser = 0;
 	this.topLeftItem = 0; 
 	this.isManualEntry = false;

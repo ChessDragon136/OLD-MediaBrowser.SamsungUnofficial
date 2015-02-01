@@ -41,7 +41,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length == 1 && File.getUserProperty("SkipShow")) {
 		//DO NOT UPDATE URL HISTORY AS SKIPPING THIS PAGE
 		var url = Server.getChildItemsURL(this.ItemData.Items[this.selectedItem].Id,"&IncludeItemTypes=Episode&fields=SortName,Overview");
-		GuiDisplayOneItem.start(this.ShowData.Name + " " + this.ItemData.Items[this.selectedItem].Name,url,0,0);
+		GuiDisplay_Episodes.start(this.ShowData.Name + " " + this.ItemData.Items[this.selectedItem].Name,url,0,0);
 	} else {
 		if (this.ItemData.Items.length > 0) {
 			

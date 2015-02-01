@@ -11,7 +11,9 @@ var GuiImagePlayer = {
 }
 
 GuiImagePlayer.kill = function() {
-	this.ImageViewer.destroy();	
+	if (this.ImageViewer != null) {
+		this.ImageViewer.destroy();	
+	}
 }
 
 GuiImagePlayer.start = function(ItemData,selectedItem) {

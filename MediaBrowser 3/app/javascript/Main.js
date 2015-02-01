@@ -4,11 +4,14 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.541",
+		version : "v0.545",
 		requiredServerVersion : "3.0.5211",
-		requiredDevServerVersion : "3.0.5211",
+		requiredDevServerVersion : "3.0.5507.2131",
 		
-		forceDeleteSettings : false,
+		//TV Series Version
+		modelYear : null,
+		
+		forceDeleteSettings : true,
 		
 		enableMusic : true,
 		enableLiveTV : false,
@@ -19,8 +22,18 @@ var Main =
 		enableScreensaver : true,
 		isScreensaverRunning : false,
 		
+		enableSubtitles : false,
+		
 		testMode : false
 };
+
+Main.getModelYear = function() {
+	return this.modelYear;
+}
+
+Main.isSubtitlesEnabled = function() {
+	return this.enableSubtitles;
+}
 
 Main.isMusicEnabled = function() {
 	return this.enableMusic;
@@ -104,6 +117,10 @@ Main.onLoad = function()
 	var phyConnection = pluginNetwork.CheckPhysicalConnection(ProductType); //returns -1
 	var http = pluginNetwork.CheckHTTP(ProductType); //returns -1
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
+	
+	//Get the model year - Used for transcoding
+	this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	alert ("Model Year: " + this.modelYear);
 	
 	if (phyConnection && http && gateway) {
 		var MAC = pluginNetwork.GetMAC(1);

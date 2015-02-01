@@ -63,7 +63,7 @@ var GuiUsers_Manual_Input  = function(id) {
     	document.getElementById(id).focus();
     }
     
-    var ime = new IMEShell(id, imeReady,'en');
+    var ime = new IMEShell(id, imeReady,'num');
     ime.setKeypadPos(680,90);
            
     var installFocusKeyCallbacks = function () {

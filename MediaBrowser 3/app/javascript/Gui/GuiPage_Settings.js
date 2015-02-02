@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","ScreensaverImages","ScreensaverTimeout"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ", "Screensaver Image Source: ", "Screensaver Timeout: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"Media",300000],
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
@@ -50,6 +50,9 @@ var GuiPage_Settings = {
 		
 		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
 		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
+		
+		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
+		ScreensaverImageTimeValues : [300000,120000,60000,30000,20000,10000,5000],
 		
 		SubtitleModeOptions : ["Default","Only Forced Subtitles", "Always Play Subtitles", "None"],
 		SubtitleModeValues : ["Default","OnlyForced", "Always", "None"]
@@ -213,6 +216,14 @@ GuiPage_Settings.updateDisplayedItems = function() {
 				}
 			}
 			break;	
+		case "ScreensaverImageTime":
+			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+				if (this.ScreensaverImageTimeValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.ScreensaverImageTimeOptions[index2];
+					break;
+				}
+			}
+			break;		
 		case "Dolby":
 		case "DTS":	
 		case "TranscodeDSeries":
@@ -363,6 +374,9 @@ GuiPage_Settings.processSelectedItem = function() {
 			break;
 		case "ScreensaverTimeout":
 			this.CurrentSubSettings = this.ScreensaverTimeoutOptions;
+			break;	
+		case "ScreensaverImageTime":
+			this.CurrentSubSettings = this.ScreensaverImageTimeOptions;
 			break;	
 		case "Bitrate":
 			this.CurrentSubSettings = this.TvConnectionOptions;
@@ -574,7 +588,11 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "ScreensaverTimeout":
 		this.UserData.ScreensaverTimeout = this.ScreensaverTimeoutValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ScreensaverTimeoutOptions[this.selectedSubItem];
-		break;			
+		break;
+	case "ScreensaverImageTime":
+		this.UserData.ScreensaverImageTime = this.ScreensaverImageTimeValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ScreensaverImageTimeOptions[this.selectedSubItem];
+		break;	
 	case "Dolby":
 	case "DTS":
 	case "TranscodeDSeries":	
@@ -744,6 +762,10 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Timeout";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity until the screensaver kicks in.";
 			break;	
+		case "ScreensaverImageTime":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Rotate Speed";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during screensaver playback until the next one is displayed.";
+			break;		
 		case "Bitrate":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Bitrate";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enter a maximum bitrate that your network can manage";

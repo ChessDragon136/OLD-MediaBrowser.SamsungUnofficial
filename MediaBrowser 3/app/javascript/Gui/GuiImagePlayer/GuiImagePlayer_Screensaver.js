@@ -25,19 +25,19 @@ GuiImagePlayer_Screensaver.start = function() {
 	
 	var imagesToUse = File.getUserProperty("ScreensaverImages");
 	if (imagesToUse == "Media") {
-		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&MediaTypes=Photo&Recursive=true&CollapseBoxSetItems=false&Limit=200");
+		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&MediaTypes=Photo&Recursive=true&CollapseBoxSetItems=false&Limit=500");
 		var randomImageData = Server.getContent(randomImageURL);
 		if (randomImageData == null) { return; }
 		
 		for (var index = 0; index < randomImageData.Items.length; index++) {
 			//Only add images with higher res
 			if (randomImageData.Items[index].Width >= 1920 && randomImageData.Items[index].Height >= 1080){
-				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index ].Id,"Primary",1920,1080);
+				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index].Id,"Primary",1920,1080);
 				this.images.push(imgsrc);
 			}
 		}
 	} else {
-		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=200");
+		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=500");
 		var randomImageData = Server.getContent(randomImageURL);
 		if (randomImageData == null) { return; }
 			
@@ -84,7 +84,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
 			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
-		}, 10000);	
+		}, File.getUserProperty("ScreensaverImageTime"));	
     });
 	
 	this.ImageViewer.stop();

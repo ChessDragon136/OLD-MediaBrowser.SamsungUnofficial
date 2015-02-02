@@ -76,60 +76,15 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 
 GuiPlayer_Transcoding.checkCodec = function() {
 	alert ("Checking Video Codec");
-	this.isCodec = true;
-	switch (this.MediaSource.MediaStreams[this.videoIndex].Codec.toLowerCase()) {
-		case "mpeg2video":
-			this.isContainer = this.checkContainer(["mpg","mkv","mpeg","vro","vob","ts"]);
-			this.isResolution = this.checkResolution(1920,1080);
-			this.isBitRate = this.checkBitRate(30720000);
-			this.isFrameRate = this.checkFrameRate(30);
-			this.isLevel = true;
-			this.isProfile = true;
-			break;
-		case "mpeg4":
-			this.isContainer = this.checkContainer(["asf","avi","mkv","mp4","3gpp"]);
-			this.isResolution = this.checkResolution(1920,1080);
-			this.isBitRate = this.checkBitRate(8192000);
-			this.isFrameRate = this.checkFrameRate(30);
-			this.isLevel = true;
-			this.isProfile = true;
-			break;
-		case "h264":
-			this.isContainer = this.checkContainer(["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v"]);
-			this.isResolution = this.checkResolution(1920,1080);
-			this.isBitRate = this.checkBitRate(37500000);
-			this.isFrameRate = this.checkFrameRate(30);
-			this.isLevel = this.checkLevel(51); //DLNA uses 41
-			this.isProfile = this.checkProfile(["Base","Constrained Baseline","Baseline","Main","High"]);
-			break;
-		case "wmv2":
-		case "wmv3":
-			this.isContainer = this.checkContainer(["asf"]);
-			this.isResolution = this.checkResolution(1920,1080);
-			this.isBitRate = this.checkBitRate(25600000);
-			this.isFrameRate = this.checkFrameRate(30);
-			this.isLevel = true;
-			this.isProfile = true;
-			break;
-		case "vc1":
-			this.isContainer = this.checkContainer(["ts"]);
-			this.isResolution = this.checkResolution(1920,1080);
-			this.isBitRate = this.checkBitRate(25600000);
-			this.isFrameRate = this.checkFrameRate(30);
-			this.isLevel = true;
-			this.isProfile = true;
-			break;	
-		default:
-			//Will Transcode
-			this.isCodec = false;
-			this.isContainer = null;
-			this.isResolution = null;
-			this.isBitRate = this.checkBitRate(37500000); //As transcode to H264 check against h264
-			this.isFrameRate = null;
-			this.isLevel = null;
-			this.isProfile = null;
-			break;
-	}
+	var codec = this.MediaSource.MediaStreams[this.videoIndex].Codec.toLowerCase();
+	
+	this.isCodec = GuiPlayer_TranscodeParams.getCodec(codec);
+	this.isContainer = this.checkContainer(GuiPlayer_TranscodeParams.getContainer(codec));
+	this.isResolution = this.checkResolution(GuiPlayer_TranscodeParams.getResolution(codec));
+	this.isBitRate = this.checkBitRate(GuiPlayer_TranscodeParams.getBitrate(codec));
+	this.isFrameRate = this.checkFrameRate(GuiPlayer_TranscodeParams.getFrameRate(codec));
+	this.isLevel = this.checkLevel(GuiPlayer_TranscodeParams.getLevel(codec));
+	this.isProfile = this.checkProfile(GuiPlayer_TranscodeParams.getProfile(codec));
 	
 	//Results
 	alert ("-----------------------------------------------------");
@@ -137,8 +92,7 @@ GuiPlayer_Transcoding.checkCodec = function() {
 	alert (" Codec Compatibility: " + this.isCodec + " : " + this.MediaSource.MediaStreams[this.videoIndex].Codec);
 	alert (" Container Compatibility: " + this.isContainer + " : " + this.MediaSource.Container);
 	alert (" Resolution Compatibility: " + this.isResolution + " : " +this.MediaSource.MediaStreams[this.videoIndex].Width + "x" + this.MediaSource.MediaStreams[this.videoIndex].Height);
-	alert (" BitRate Compatibility: " + this.isBitRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].BitRate);
-	alert (" BitRate Compatibility Transcode: " + this.isBitRate + " : " + this.bitRateToUse);
+	alert (" BitRate Compatibility: " + this.isBitRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].BitRate + " : " + this.bitRateToUse);
 	alert (" FrameRate Compatibility: " + this.isFrameRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].RealFrameRate);
 	alert (" Level Compatibility: " + this.isLevel + " : " + this.MediaSource.MediaStreams[this.videoIndex].Level);
 	alert (" Profile Compatibility: " + this.isProfile + " : " + this.MediaSource.MediaStreams[this.videoIndex].Profile);
@@ -154,41 +108,11 @@ GuiPlayer_Transcoding.checkCodec = function() {
 
 GuiPlayer_Transcoding.checkAudioCodec = function() {
 	alert ("Checking Audio Codec");
-	this.isAudioCodec = true;
-	switch (this.MediaSource.MediaStreams[this.audioIndex].Codec.toLowerCase()) { //Obviously need to read in Audio Codec!!
-		case "aac":
-			this.isAudioContainer = this.checkContainer(["mkv","mp4","3gpp","mpg","mpeg","ts"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		case "mp3":
-		case "mp2":	
-			this.isAudioContainer = this.checkContainer(["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		case "ac3":
-			this.isAudioContainer = this.checkContainer(["asf","avi","mkv","mpg","mpeg","vro","vob","ts"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		case "wmav2":
-		case "wmapro":
-		case "wmavoice":
-			this.isAudioContainer = this.checkContainer(["asf"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		case "dca":
-			this.isAudioContainer = this.checkContainer(["avi","mkv"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		case "eac3":	
-			this.isAudioContainer = this.checkContainer(["ts"]);
-			this.isAudioChannel = this.checkAudioChannels(6);		
-			break;
-		default:
-			this.isAudioCodec = false;
-			this.isAudioContainer = null;
-			this.isAudioChannel = null;
-			break;
-	}
+	var audiocodec = this.MediaSource.MediaStreams[this.audioIndex].Codec.toLowerCase();
+	
+	this.isAudioCodec = GuiPlayer_TranscodeParams.getAudioCodec(audiocodec);
+	this.isAudioContainer = this.checkContainer(GuiPlayer_TranscodeParams.getAudioContainer(audiocodec));
+	this.isAudioChannel = this.checkAudioChannels(GuiPlayer_TranscodeParams.getAudioChannels(audiocodec));		
 	
 	//Results
 	alert ("-----------------------------------------------------");
@@ -214,8 +138,10 @@ GuiPlayer_Transcoding.checkAudioChannels = function(maxChannels) {
 	}
 }
 
-GuiPlayer_Transcoding.checkResolution = function(maxSupportedWidth, maxSupportedHeight) {
-	if (this.MediaSource.MediaStreams[this.videoIndex].Width <= maxSupportedWidth && this.MediaSource.MediaStreams[this.videoIndex].Height <= maxSupportedHeight) {
+GuiPlayer_Transcoding.checkResolution = function(maxResolution) {
+	if (maxResolution == null) {
+		return false;
+	} else if (this.MediaSource.MediaStreams[this.videoIndex].Width <= maxResolution[0] && this.MediaSource.MediaStreams[this.videoIndex].Height <= maxResolution[1]) {
 		return true;
 	} else {
 		return false;
@@ -223,14 +149,18 @@ GuiPlayer_Transcoding.checkResolution = function(maxSupportedWidth, maxSupported
 }
 
 GuiPlayer_Transcoding.checkContainer = function(supportedContainers) {
-	var isContainer = false;
-	for (var index = 0; index < supportedContainers.length; index++) {
-		if (this.MediaSource.Container.toLowerCase() == supportedContainers[index]) {
-			isContainer =  true;
-			break;
+	if (supportedContainers == null) {
+		return false
+	} else {
+		var isContainer = false;
+		for (var index = 0; index < supportedContainers.length; index++) {
+			if (this.MediaSource.Container.toLowerCase() == supportedContainers[index]) {
+				isContainer =  true;
+				break;
+			}
 		}
+		return isContainer;
 	}
-	return isContainer;
 }
 
 GuiPlayer_Transcoding.checkBitRate = function(maxBitRate) {
@@ -246,7 +176,9 @@ GuiPlayer_Transcoding.checkBitRate = function(maxBitRate) {
 }
 
 GuiPlayer_Transcoding.checkFrameRate = function(maxFrameRate) {
-	if (this.MediaSource.MediaStreams[this.videoIndex].RealFrameRate <= maxFrameRate) {
+	if (maxFrameRate == null) {
+		return false;
+	} else if (this.MediaSource.MediaStreams[this.videoIndex].RealFrameRate <= maxFrameRate) {
 		return true;
 	} else {
 		return false;
@@ -254,23 +186,35 @@ GuiPlayer_Transcoding.checkFrameRate = function(maxFrameRate) {
 }
 
 GuiPlayer_Transcoding.checkLevel = function(maxLevel) {
-	var level = this.MediaSource.MediaStreams[this.videoIndex].Level;
-	level = (level.length == 1) ? level * 10 : level; //If only 1 long, multiply by 10 to make it correct!
-
-	if (level <= maxLevel && level >= 0) {
+	if (maxLevel == null) {
+		return false;
+	} if (maxLevel == true) {
 		return true;
 	} else {
-		return false;
+		var level = this.MediaSource.MediaStreams[this.videoIndex].Level;
+		level = (level.length == 1) ? level * 10 : level; //If only 1 long, multiply by 10 to make it correct!
+
+		if (level <= maxLevel && level >= 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 
 GuiPlayer_Transcoding.checkProfile = function(supportedProfiles) {
-	var profile = false;
-	for (var index = 0; index < supportedProfiles.length; index++) {
-		if (this.MediaSource.MediaStreams[this.videoIndex].Profile == supportedProfiles[index]) {
-			profile = true;
-			break;
+	if (supportedProfiles == null) {
+		return false;
+	} if (supportedProfiles == true) {
+		return true;
+	} else {
+		var profile = false;
+		for (var index = 0; index < supportedProfiles.length; index++) {
+			if (this.MediaSource.MediaStreams[this.videoIndex].Profile == supportedProfiles[index]) {
+				profile = true;
+				break;
+			}
 		}
+		return profile;
 	}
-	return profile;
 }

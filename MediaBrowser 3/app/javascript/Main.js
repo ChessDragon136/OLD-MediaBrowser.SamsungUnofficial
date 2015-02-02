@@ -11,7 +11,7 @@ var Main =
 		//TV Series Version
 		modelYear : null,
 		
-		forceDeleteSettings : true,
+		forceDeleteSettings : false,
 		
 		enableMusic : true,
 		enableLiveTV : false,

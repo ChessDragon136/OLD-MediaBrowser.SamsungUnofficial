@@ -33,7 +33,6 @@ var GuiPlayer = {
 		PlayerIndex : null,
 		
 		subtitleInterval : null,
-		
 		startParams : []
 }
 

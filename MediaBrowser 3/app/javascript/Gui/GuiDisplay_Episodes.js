@@ -48,9 +48,11 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		"<div id='EpisodesSeriesInfo' class='EpisodesSeriesInfo'></div>" + 
 		"<div id='EpisodesImage' class='EpisodesImage'></div>" + 
 		"<div id='EpisodesInfo' class='EpisodesInfo'>" +
-		"<div id='SeriesTitle' style='font-size:22px'></div>" +
-		"<div id='SeriesSubData' style='margin-left:-5px;' class='MetaDataSeasonTable'></div>" +
+		"<div id='SeasonName'></div>"+
+		"<div id='SeriesTitle' style='font-size:22px; margin:3px 0px' ></div>" +
+		"<div><hr /></div>"+
 		"<div id='SeriesOverview' class='EpisodesOverview'></div>" +
+		"<div id='SeriesSubData' style='margin-left:-5px;' class='MetaDataSeasonTable'></div>" +
 		"</div>";
 		
 		//Set backdrop
@@ -197,18 +199,19 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 					
 		//Set Metadata
 		var htmlSubData = "";
-		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
-			htmlSubData += "<div id='AirDate' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
-				+ "</div></div>";
-		}
 		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
 			htmlSubData += "<div id='Rating' class='MetaDataCell'>"
 				+ "<div class='MetaDataCellContent'>"
 				+ "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
 				+ "</div></div>";
 		}
+		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
+			htmlSubData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
+				+ "</div></div>";
+		}
+
 //		if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined && this.ItemData.Items[this.selectedItem].OfficialRating != "") {
 //			htmlSubData += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
 //		}
@@ -229,9 +232,11 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 			htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
 		}
 		
-		var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+		//var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+		var currentEpTitle = this.ItemData.Items[this.selectedItem].IndexNumber + " - " + this.ItemData.Items[this.selectedItem].Name;
+		var currentSeries = "Season " + this.ItemData.Items[this.selectedItem].ParentIndexNumber;
 		
-		
+		document.getElementById("SeasonName").innerHTML = currentSeries;
 		document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
 		document.getElementById("SeriesSubData").innerHTML = htmlSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;

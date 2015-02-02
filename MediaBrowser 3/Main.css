@@ -186,13 +186,13 @@
 	font-size:18px;
 	position:absolute;
 	top:22px;
-	left:30px;
+	left:10px;
 }
 
 .EpisodesSeriesInfoLogo{
 	position:absolute;
 	top:10px;
-	left:20px;
+	left:30px;
 	width:300px;
 	height:40px;
 	background-repeat: no-repeat;
@@ -212,29 +212,30 @@
 .EpisodesInfo {
 	font-size:15px;
 	position:absolute;
-	top:270px;
-	left:20px;
-	height:200px;
-	width:470px;
+	top:255px;
+	left:30px;
+	height:255px;
+	width:430px;
 	overflow-y:hidden;
 }
 
 .EpisodesImage {
 	position:absolute;
 	top:70px;
-	left:20px;
+	left:15px;
 	height:180px;
 	width:470px;
 	background-repeat: no-repeat;
-    background-position:center;
+    background-position:left;
 }
 
 .EpisodesOverview {
 	font-size:15px;
 	position:relative;
-	height:142px;
-	width:470px;
+	height:147px;
+	width:430px;
 	overflow-y:hidden;
+	margin: 10px 0px
 }
 
 .EpisodesList{
@@ -255,7 +256,7 @@
 .EpisodeListSingle{
 	height:50px;
 	width:430px;
-	border-bottom: 1px solid #00b4ff;
+	border-bottom: 1px solid grey;
 }
 
 .EpisodeListSingleImage{	
@@ -1028,3 +1029,8 @@
 	overflow-y:hidden;
 }
 
+hr {
+    height: 2px;
+    border: 0px solid grey; 
+    border-top-width: 1px;
+}

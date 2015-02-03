@@ -20,6 +20,11 @@ GuiTV_Show.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
+GuiTV_Show.GetDetail = function(itemid) {
+	var url3 = Server.getItemInfoURL(itemid);
+	this.seasondata = Server.getContent(url3);
+}
+
 GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -47,20 +52,43 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			
 			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content></div>" + 
 			"<div id='ShowSeriesInfo'></div>" + 
-			"<div id='ShowImage'></div>" + 
+			"<div id='ShowImage'><div id='UnwatchedOverlay'></div></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
-				"<div id='ShowTitle' style='font-size:22px;'></div>" +
-				"<div id='ShowMetadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
-				"<div id='ShowOverview' class='ShowOverview'></div>" + 
+				"<div id='ShowTitle' class='MetaDataTitleTable'></div>" +
+				//"<div id='ShowMetadata' style='padding-top:2px;color:#ddd;padding-bottom:5px;'></div>" +
+				"<div id='ShowMetadata' class='MetaDataSeasonTable'></div>" +
+				"<div style:'max-height:150px;'><div id='ShowOverview' class='MetaDataSeasonTable'></div></div>" + 
 			"</div>";
 			
-			document.getElementById("ShowTitle").innerHTML = this.ShowData.Name;
+			var htmlforTitle = "";
+			htmlforTitle += this.ShowData.Name;
+			if (this.ShowData.CommunityRating !== undefined) {
+				htmlforTitle += "<div id='CommunityRating' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>"
+					+ "<img src='images/star.png'>"
+					+ this.ShowData.CommunityRating + "</div></div>";
+			}
+			if (this.ShowData.OfficialRating !== undefined) {
+				htmlforTitle += "<div id='OfficialRating' class='MetaDataCell'>"
+					+ "<div class='MetaDataCellContent'>"
+					+ this.ShowData.OfficialRating + "</div></div>";
+			}
+//			if (this.ShowData.RunTimeTicks !== undefined) {
+//				htmlforSeries += Support
+//						.convertTicksToMinutes(this.ShowData.RunTimeTicks / 10000)
+//						+ " | ";
+//			}
+//
+//			htmlforSeries = htmlforSeries.substring(0, htmlforSeries.length - 2);
+//			
+			document.getElementById("ShowTitle").innerHTML = htmlforTitle;
 			
 			if (this.ItemData.Items.length < 4) {
 				document.getElementById("allOptions").className = 'ShowAllOptionsShort';	
 				document.getElementById("Content").className = 'ShowListShort';	
 				document.getElementById("InfoContainer").className = 'showItemContainerShort';	
-				document.getElementById("ShowImage").className = 'ShowImageShort';		
+				document.getElementById("ShowImage").className = 'ShowImageShort';
+				
 				this.MAXROWCOUNT = 3;
 			} else {
 				document.getElementById("allOptions").className = 'ShowAllOptions';
@@ -175,15 +203,75 @@ GuiTV_Show.updateDisplayedItems = function() {
 GuiTV_Show.updateSelectedItems = function () {
 	Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
 			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"ShowListSingle EpisodeListSelected","ShowListSingle","");
-	
+
 	//Update Displayed Image - Prevent code running on banner items with if below!
 	if (this.selectedItem >= 0) {
 		if (this.ItemData.Items[this.selectedItem].ImageTags.Primary) {			
 			var imgsrc = Server.getImageURL(this.ItemData.Items[this.selectedItem].Id,"Primary",140,200,0,false,0);
 			document.getElementById("ShowImage").style.backgroundImage="url('" + imgsrc + "')";
+			
+				if (this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount){
+					if (this.ItemData.Items.length < 4){
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCountShort';
+						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;
+					} else {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCount';
+						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;	
+					}
+				} else if (this.ItemData.Items[this.selectedItem].UserData.Played){
+					if (this.ItemData.Items.length < 4) {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheckShort';
+						document.getElementById("UnwatchedOverlay").innerHTML = "";	
+					} else {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheck';
+						document.getElementById("UnwatchedOverlay").innerHTML = "";	
+					}
+						
+				} else {
+					document.getElementById("UnwatchedOverlay").className = "";
+					document.getElementById("UnwatchedOverlay").innerHTML = "";
+				}
+					
 		}
 	}
-}
+	
+	var htmlForSeason = "";
+	if (this.ItemData.Items[this.selectedItem].Name !== undefined) {
+		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+		    + this.ItemData.Items[this.selectedItem].Name + "</div></div>";
+	}
+	if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
+		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+		    + Support.AirDate(
+				this.ItemData.Items[this.selectedItem].PremiereDate,
+				this.ItemData.Items[this.selectedItem].Type)
+				+ "</div></div>";
+	}
+
+	if (this.ItemData.Items[this.selectedItem].ChildCount !== undefined) {
+		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+		    + this.ItemData.Items[this.selectedItem].ChildCount
+			+ " Episodes" + "</div></div>";
+	}
+
+	//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
+	document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
+
+	var htmlForOverview = "";
+	htmlForOverview += "<div id='SeasonOverview' class='ShowOverviewContent'>"
+	GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
+	if (this.seasondata.Overview !== undefined) {
+		htmlForOverview += this.seasondata.Overview
+		
+	}
+	+ "</div>"
+	document.getElementById("ShowOverview").innerHTML = htmlForOverview;
+	Support.scrollingText("SeasonOverview");
+
+};
 
 GuiTV_Show.updateSelectedBannerItems = function() {
 	if (this.selectedItem == -1) {

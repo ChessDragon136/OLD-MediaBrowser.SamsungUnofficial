@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"30px","white",10000,"Media",300000,10000],
+		Settings : ["Default","View1","View2","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
@@ -184,6 +184,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		var Setting = "";
 		switch (this.currentViewSettings[index]) {
 		case "Default":
+		case "AudioTheme":
 		case "SkipShow":
 		case "SeasonLabel":
 		case "AutoPlay":	
@@ -410,6 +411,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		
 		switch (this.currentViewSettings[this.selectedItem]) {
 		case "Default":
+		case "AudioTheme":
 		case "SkipShow":	
 		case "SeasonLabel":	
 		case "AutoPlay":
@@ -630,6 +632,7 @@ GuiPage_Settings.processSelectedSubItem = function() {
 			File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
 		}
 		break;
+	case "AudioTheme":
 	case "SkipShow":	
 	case "SeasonLabel":	
 	case "AutoPlay":	
@@ -843,7 +846,12 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Sets the content of the first view of the Home page" +
 					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Resume All Items</li><li>TV Next Up</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
 					"<br><br>Setting this to None will show more content from Home View 1";
-			break;		
+			break;	
+		case "AudioTheme":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play Audio Theme";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "This option allows for audio themes to be played when viewing the details of an item." +
+					"<br><br>Default behaviour is to play the theme 3 times then stop.";
+			break;
 		case "SkipShow":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Skip TV Show Page";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "This option allows for the TV Show page to be skipped if there is only one season, taking you directly to the episodes page.";

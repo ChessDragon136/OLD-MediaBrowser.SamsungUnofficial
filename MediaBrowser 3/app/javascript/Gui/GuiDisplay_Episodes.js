@@ -48,9 +48,11 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		"<div id='EpisodesSeriesInfo' class='EpisodesSeriesInfo'></div>" + 
 		"<div id='EpisodesImage' class='EpisodesImage'></div>" + 
 		"<div id='EpisodesInfo' class='EpisodesInfo'>" +
-		"<div id='SeriesTitle' style='font-size:22px;'></div>" +
-		"<div id='SeriesSubData' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
+		"<div id='SeasonName'></div>"+
+		"<div id='SeriesTitle' style='font-size:22px; margin:3px 0px' ></div>" +
+		"<div><hr /></div>"+
 		"<div id='SeriesOverview' class='EpisodesOverview'></div>" +
+		"<div id='SeriesSubData' style='margin-left:-5px;' class='MetaDataSeasonTable'></div>" +
 		"</div>";
 		
 		//Set backdrop
@@ -147,14 +149,27 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 				title = title.substring(0,40) + "<br>" + line2;	
 			}		
 		}
-		
-		
+
 		if (this.ItemData.Items[index].UserData.Played == true) {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else {
 				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
+			}
+		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
+			var status = ""
+			if (Support.FutureDate(this.ItemData.Items[index].PremiereDate) == true) {
+				status = "UNAIRED"
+			} else {
+				status = "MISSING"
+			}
+				
+			if (this.ItemData.Items[index].ImageTags.Primary) {			
+				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>"+status+"</div></div>";
+			} else {
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>"+status+"</div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
@@ -183,34 +198,47 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		}
 					
 		//Set Metadata
-		var htmlForTitle = "";
-		if (this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].ProductionYear + " | ";
-		}
+		var htmlSubData = "";
 		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-			htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating + " | ";
+			htmlSubData += "<div id='Rating' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
+				+ "</div></div>";
 		}
-		if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
-		}
-		if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes";
+		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
+			htmlSubData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
+				+ "</div></div>";
 		}
 
+//		if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined && this.ItemData.Items[this.selectedItem].OfficialRating != "") {
+//			htmlSubData += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
+//		}
+//		if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
+//			htmlSubData += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes";
+//		}
+
 		if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-				htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
+			htmlSubData += "<div id='RunTime' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
+				+ "</div></div>";
 		}
-		htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-2);
+//		htmlSubData = htmlSubData.substring(0,htmlSubData.length-2);
 									
 		htmlForOverview = "";
 		if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
 			htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
 		}
 		
-		var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+		//var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
+		var currentEpTitle = this.ItemData.Items[this.selectedItem].IndexNumber + " - " + this.ItemData.Items[this.selectedItem].Name;
+		var currentSeries = "Season " + this.ItemData.Items[this.selectedItem].ParentIndexNumber;
+		
+		document.getElementById("SeasonName").innerHTML = currentSeries;
 		document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
-
-		document.getElementById("SeriesSubData").innerHTML = htmlForTitle;
+		document.getElementById("SeriesSubData").innerHTML = htmlSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
 					
 		Support.scrollingText("SeriesOverview");

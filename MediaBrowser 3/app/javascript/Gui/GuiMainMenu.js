@@ -308,9 +308,9 @@ GuiMainMenu.processDownKey = function() {
 
 GuiMainMenu.clock = function() {
 	    var today=new Date();
-	    var h=today.getHours();
-	    var m=today.getMinutes();
-	    var s=today.getSeconds();
+	    var h=today.getUTCHours();
+	    var m=today.getUTCMinutes();
+	    var s=today.getUTCSeconds();
 	    if (m<10) {m = "0" + m};
 	    if (s<10) {s = "0" + s};
 	    document.getElementById('headerClock').innerHTML = h+":"+m+":"+s;

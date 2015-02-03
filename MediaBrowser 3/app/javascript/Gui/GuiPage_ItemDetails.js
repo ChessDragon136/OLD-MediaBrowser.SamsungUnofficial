@@ -11,7 +11,12 @@ var GuiPage_ItemDetails = {
 		selectedItem2 : 0,
 		topLeftItem2 : 0,
 		MAXCOLUMNCOUNT2 : 1,
-		MAXROWCOUNT2 : 5
+		MAXROWCOUNT2 : 5,
+		
+		playerObj : null,
+		themeCount: 0,
+		themePlaying: false,
+		themeEscape: false
 }
 
 GuiPage_ItemDetails.getMaxDisplay2 = function() {
@@ -25,6 +30,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	//Save Start Params
 	this.startParams = [title,url];
 	alert (url);
+	
+	//Reset Theme
+	this.themeCount = 0
+	this.themeEscape = false
 	
 	//Reset Vars
 	this.trailerItems.length = 0;
@@ -43,7 +52,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			<div id='guiTV_Show_MediaAlternative' class='guiTV_Show_MediaAlternative'></div> \
 			<div id='InfoContainer' class='infoContainer'> \
 					<div id='guiTV_Show_Title' style='font-size:22px;'></div> \
-					<div id='guiTV_Show_Metadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div> \
+					<div id='guiTV_Show_Metadata' style='margin-left:-5px;'class='MetaDataSeasonTable'>></div> \
 					<div id='guiTV_Show_Overview' class='guiFilm_Overview'></div> \
 			</div> \
 			<div id='guiTV_Show_CDArt' class='guiFilm_CDArt'></div> \
@@ -202,26 +211,41 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	var htmlForMetaData = "";
 	if (this.ItemData.Type != "Episode") {
 		if (this.ItemData.ProductionYear !== undefined) {
-			htmlForMetaData += this.ItemData.ProductionYear + " | ";
+			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				this.ItemData.ProductionYear 
+				+ "</div></div>";
 		}
 	} else {
 		if (this.ItemData.PremiereDate !== undefined) {
-			htmlForMetaData += Support.formatDateTime(this.ItemData.PremiereDate,0) + " | ";
-		}
+			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+				+ Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type)
+				+ "</div></div>";
+			}
 	}
 
 	if (this.ItemData.CommunityRating !== undefined) {
-		htmlForMetaData += "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating + " | ";
+		htmlForMetaData += "<div id='CommunityRating' class='MetaDataCell'>" 
+			+ "<div class='MetaDataCellContent'>"
+			+ "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating 
+			+ "</div></div>";
 	}
 	if (this.ItemData.OfficialRating !== undefined) {
-		htmlForMetaData += this.ItemData.OfficialRating + " | ";
+		htmlForMetaData += "<div id='OfficialRating' class='MetaDataCell'>"
+			+ "<div class='MetaDataCellContent'>"
+			+ this.ItemData.OfficialRating
+			+ "</div></div>";
 	}
 
 	if (this.ItemData.RunTimeTicks !== undefined) {
-		htmlForMetaData += Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000) + " | ";
+		htmlForMetaData += "<div id='Runtime' class='MetaDataCell'>" 
+			+ "<div class='MetaDataCellContent'>"
+			+ Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000)
+			+ "</div></div>";
 	}
 	
-	htmlForMetaData = htmlForMetaData.substring(0,htmlForMetaData.length-2);
+	
 	document.getElementById("guiTV_Show_Metadata").innerHTML = htmlForMetaData;
 	
 	//Set Overview Scroller
@@ -244,6 +268,11 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 
 	//Set Focus for Key Events
 	document.getElementById("GuiPage_ItemDetails").focus();
+	
+	//Finally play audio theme
+	if (File.getUserProperty("AudioTheme") == true){
+		GuiPage_ItemDetails.PlayAudioTheme()	
+	}
 }
 
 //Function sets CSS Properties so show which user is selected
@@ -350,6 +379,10 @@ GuiPage_ItemDetails.keyDown = function()
 			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
+			if (this.themePlaying == true){
+				this.themeEscape = true
+				this.playerObj.Stop()
+			}
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;	
@@ -618,6 +651,60 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 	}
 }
 
+GuiPage_ItemDetails.PlayAudioTheme = function() {
+	ThemeData = Server.getContent(Server.getThemeMedia(this.ItemData.Id));
+	if (ThemeData.ThemeSongsResult.Items[0] !== undefined) {
+		themeURL = Server.getServerAddr() + '/Audio/'+ThemeData.ThemeSongsResult.Items[0].Id+'/Stream?AudioCodec='+ThemeData.ThemeSongsResult.Items[0].MediaSources[0].MediaStreams[0].Codec+'&DeviceId='+Server.getDeviceID() + '&Static=true';
+		this.playerObj = document.getElementById('ThemePlayer');
+		this.playerObj.OnConnectionFailed = 'GuiPage_ItemDetails.handleConnectionFailed';
+		this.playerObj.OnAuthenticationFailed = 'GuiPage_ItemDetails.handleAuthenticationFailed';
+		this.playerObj.OnNetworkDisconnected = 'GuiPage_ItemDetails.handleOnNetworkDisconnected';
+		this.playerObj.OnRenderError = 'GuiPage_ItemDetails.handleRenderError';
+		this.playerObj.OnStreamNotFound = 'GuiPage_ItemDetails.handleStreamNotFound';
+		this.playerObj.OnRenderingComplete = 'GuiPage_ItemDetails.OnRenderingComplete';
+		this.playerObj.InitPlayer(themeURL);
+		this.playerObj.StartPlayback();
+		this.themePlaying = true;	
+	};
+};
+
+GuiPage_ItemDetails.OnRenderingComplete = function() {
+	this.themeCount = this.themeCount + 1;
+	if (this.themeEscape == false){
+		if (this.themeCount < 3){
+			this.playerObj.Stop();
+			this.themePlaying = false;
+			GuiPage_ItemDetails.PlayAudioTheme();
+		} else {
+			this.playerObj.Stop();
+			this.themePlaying = false;
+		}	
+	} else {
+		this.playerObj.Stop();
+		this.themePlaying = false;
+	}
+	
+};
+
+GuiPage_ItemDetails.handleOnNetworkDisconnected = function() {
+	alert ("Network Disconnect");
+};
+
+GuiPage_ItemDetails.handleConnectionFailed = function() {
+	alert ("Connection Failed");
+};
+
+GuiPage_ItemDetails.handleAuthenticationFailed = function() {
+	alert ("Authentication Failed");
+};
+
+GuiPage_ItemDetails.handleRenderError = function(RenderErrorType) {
+	alert ("Render Error");
+};
+
+GuiPage_ItemDetails.handleStreamNotFound = function() {
+	alert ("Stream not found");
+};
 
 GuiPage_ItemDetails.getMediaInfo = function() {
 	var is3D = (this.ItemData.MediaSources[0].Video3DFormat != null ? "3D" : "Not3D");

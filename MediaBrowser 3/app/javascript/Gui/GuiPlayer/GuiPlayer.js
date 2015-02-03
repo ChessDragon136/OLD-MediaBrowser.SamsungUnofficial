@@ -471,14 +471,11 @@ GuiPlayer.setCurrentTime = function(time) {
 		}
 		
 		//Update GUIs
-		percentage = (this.currentTime / (this.PlayerData.RunTimeTicks / 10000));	
-		var pixelWidth = Math.round(400 * percentage);
-		if (pixelWidth > 400) {
-			pixelWidth = 400;
-		}
-		document.getElementById("guiPlayer_Info_ProgressBar_Current").style.width = pixelWidth;	
-		document.getElementById("guiPlayer_Info_Time").innerHTML = Support.convertTicksToTime(this.currentTime, (this.PlayerData.RunTimeTicks / 10000));
-		
+			percentage = (100 * this.currentTime / (this.PlayerData.RunTimeTicks / 10000));
+
+	document.getElementById("guiPlayer_Info_ProgressBar_Current").style.width = percentage + "%";	
+	document.getElementById("guiPlayer_Info_Time").innerHTML = Support.convertTicksToTime(this.currentTime, (this.PlayerData.RunTimeTicks / 10000));
+	
 		//Update Server every 8 ticks (Don't want to spam!
 		if (this.updateTimeCount == 8) {
 			this.updateTimeCount = 0;

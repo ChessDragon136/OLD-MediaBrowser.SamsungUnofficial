@@ -70,6 +70,14 @@ Server.getItemTypeURL = function(SortParams) {
 	}	
 }
 
+Server.getThemeMedia = function(ItemID) {
+	if (ItemID != null){
+		return  Server.getServerAddr() + "/Items/" + ItemID + "/ThemeMedia?userId=" + Server.getUserID() + "&InheritFromParent=true"
+	} else {
+		return  
+	}	
+}
+
 Server.getChildItemsURL = function(ParentID, SortParams) {
 	if (SortParams != null){
 		return  Server.getServerAddr() + "/Users/" + Server.getUserID() + "/Items?ParentId="+ParentID+"&format=json" + SortParams;

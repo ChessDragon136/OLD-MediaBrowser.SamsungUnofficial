@@ -150,11 +150,16 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.setDisplaySize();
 	
 	//Subtitles
+	
 	if (Main.isSubtitlesEnabled()) {
 		this.getSubtitles(-1);
-		this.createToolsMenu();
+		//If resuming find the correct index to start from!
+		this.updateSubtitleTime(resumeTicksSamsung,"NewSubs");
 	}
 
+	//Create Tools Menu
+	this.createToolsMenu();
+	
 	//Update Server content is playing * update time
 	Server.videoStarted(this.PlayerData.Id,this.playingMediaSource.Id,this.PlayMethod);
     
@@ -245,6 +250,10 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 	if (selectedSubtitleIndex > -1) {
 		var Stream = this.playingMediaSource.MediaStreams[selectedSubtitleIndex];
 		if (Stream.IsTextSubtitleStream) {
+			//Set Colour & Size from User Settings
+			document.getElementById("guiPlayer_Subtitles").style.color = File.getUserProperty("SubtitleColour");
+			document.getElementById("guiPlayer_Subtitles").style.fontSize = File.getUserProperty("SubtitleSize");
+			
 		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt");
 		    var PlayerDataSubtitles = Server.getSubtitles(url);
 		    if (PlayerDataSubtitles == null) { return; }
@@ -300,6 +309,10 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 		}	
 
 		if (this.playingSubtitleIndex != null) {
+			//Set Colour & Size from User Settings
+			document.getElementById("guiPlayer_Subtitles").style.color = File.getUserProperty("SubtitleColour");
+			document.getElementById("guiPlayer_Subtitles").style.fontSize = File.getUserProperty("SubtitleSize");
+			
 		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+this.playingSubtitleIndex+"/Stream.srt");
 		    var PlayerDataSubtitles = Server.getSubtitles(url);
 		    if (PlayerDataSubtitles == null) { return; }
@@ -337,8 +350,8 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 			}	
 		} else if (direction == "NewSubs") {
 			this.subtitleShowingIndex = 0;
-			for (var index = 0; index <= this.PlayerDataSubtitle.length; index++) {
-				if (newTime >= this.PlayerDataSubtitle[index].startTime) {
+			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {
+				if (newTime >= this.PlayerDataSubtitle[index].startTime && newTime < this.PlayerDataSubtitle[index].endTime) {
 					this.subtitleShowingIndex = index;
 					break;
 				}

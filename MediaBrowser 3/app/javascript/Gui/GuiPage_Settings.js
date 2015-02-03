@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"Media",300000,10000],
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"30px","white","Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
@@ -44,6 +44,12 @@ var GuiPage_Settings = {
 
 		TvConnectionOptions : ["120MB/s","100MB/s","80MB/s","60MB/s","40MB/s","30MB/s","20MB/s","15MB/s","10MB/s","8MB/s","6MB/s","5MB/s","4MB/s","3MB/s","2MB/s","1MB/s","0.5MB/s"], 
 		TvConnectionValues : [120,100,80,60,40,30,20,15,10,8,6,5,4,3,2,1,0.5], 
+		
+		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
+		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
+		
+		SubtitleColourOptions: ["White","Red","Green","Blue"],
+		SubtitleColourValues: ["white","red","green","blue"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],
@@ -203,8 +209,24 @@ GuiPage_Settings.updateDisplayedItems = function() {
 				}
 			}
 			break;
+		case "SubtitleSize":
+			for (var index2 = 0; index2 < this.SubtitleSizeValues.length; index2++) {
+				if (this.SubtitleSizeValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.SubtitleSizeOptions[index2];
+					break;
+				}
+			}
+			break;
+		case "SubtitleColour":
+			for (var index2 = 0; index2 < this.SubtitleColourValues.length; index2++) {
+				if (this.SubtitleColourValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.SubtitleColourOptions[index2];
+					break;
+				}
+			}
+			break;	
 		case "ScreensaverImages":
-			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+			for (var index2 = 0; index2 < this.ScreensaverImagesValues.length; index2++) {
 				if (this.ScreensaverImagesValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.ScreensaverImagesOptions[index2];
 					break;
@@ -212,7 +234,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;
 		case "ScreensaverTimeout":
-			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+			for (var index2 = 0; index2 < this.ScreensaverTimeoutValues.length; index2++) {
 				if (this.ScreensaverTimeoutValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.ScreensaverTimeoutOptions[index2];
 					break;
@@ -220,7 +242,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;	
 		case "ScreensaverImageTime":
-			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
+			for (var index2 = 0; index2 < this.ScreensaverImageTimeValues.length; index2++) {
 				if (this.ScreensaverImageTimeValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.ScreensaverImageTimeOptions[index2];
 					break;
@@ -403,6 +425,12 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "View2":
 			this.CurrentSubSettings = this.View2Options;
 			break;
+		case "SubtitleSize":
+			this.CurrentSubSettings = this.SubtitleSizeOptions;
+			break;	
+		case "SubtitleColour":
+			this.CurrentSubSettings = this.SubtitleColourOptions;
+			break;	
 		case "ScreensaverImages":
 			this.CurrentSubSettings = this.ScreensaverImagesOptions;
 			break;
@@ -619,6 +647,14 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	
 		Support.updateHomePageURLs(this.UserData.View2Name ,this.UserData.View2,this.UserData.View2Name,false);
 		break;
+	case "SubtitleSize":
+		this.UserData.SubtitleSize = this.SubtitleSizeValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.SubtitleSizeOptions[this.selectedSubItem];
+		break;
+	case "SubtitleColour":
+		this.UserData.SubtitleColour = this.SubtitleColourValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.SubtitleColourOptions[this.selectedSubItem];
+		break;	
 	case "ScreensaverImages":
 		this.UserData.ScreensaverImages = this.ScreensaverImagesValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ScreensaverImagesOptions[this.selectedSubItem];
@@ -812,6 +848,14 @@ GuiPage_Settings.setOverview = function() {
 		case "AutoPlay":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Auto Play Next Episode";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "If enabled, when a playing episode has finished, the next episode will automatically load.";
+			break;
+		case "SubtitleSize":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Size";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font size for displayed subtitles.";
+			break;
+		case "SubtitleColour":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Colour";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.";
 			break;	
 		case "ScreensaverImages":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Image Source";

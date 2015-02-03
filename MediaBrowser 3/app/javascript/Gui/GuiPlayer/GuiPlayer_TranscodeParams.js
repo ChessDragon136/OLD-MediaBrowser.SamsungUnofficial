@@ -1,428 +1,444 @@
-var GuiPlayer_TranscodeParams = {} // Is required!
+var GuiPlayer_TranscodeParams = {
+		codec : null,
+		container : null,
+		resolution : null,
+		bitrate : null,
+		framerate : null,
+		level : null,
+		profile : null,
+		audiocodec : null,
+		audiocontainer : null,
+		audiochannels : null
+} 
 
-GuiPlayer_TranscodeParams.getCodec = function(codec) {
+// Special Thanks to gbone8106 for providing the H series Transcode Settings!
+
+
+GuiPlayer_TranscodeParams.getParameters = function(codec) {
 	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
-		case "mpeg2video":
-		case "mpeg4":
-		case "h264":	
-		case "wmv2":
-		case "wmv3":
-		case "vc1":	
-			return true;
-			break;
-		default:
-			return false;
-			break;
-		}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-		case "mpeg4":
-		case "h264":	
-		case "wmv2":
-		case "wmv3":
-		case "vc1":	
-			return true;
-			break;
-		default:
-			return false;
-			break;
-		}
-		break;
-	}
-}
-
-
-GuiPlayer_TranscodeParams.getContainer = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
+        case "H":
+    		switch (codec) {
+    		case "mpeg2video":
+    			this.codec = true;
+    			this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    			this.resolution = [1920,1080];
+    			this.bitrate = 30720000;
+    			this.framerate = 30;
+    			this.level = true;
+    			this.profile = true;
+    			break;
+    		case "mpeg4":
+    			this.codec = true;
+    			this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    			this.resolution = [1920,1080];
+    			this.bitrate = 30720000;
+    			this.framerate = 30;
+    			this.level = true;
+    			this.profile = true;
+    			break;
+    		case "h264":
+    			this.codec = true;
+    			this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    			this.resolution = [1920,1080];
+    			this.bitrate = 50720000;
+    			this.framerate = 30;
+    			this.level = 51;
+    			this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+    			break;
+    	    case "h265":
+    	    	this.codec = true;
+    	    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    	    	this.resolution = [1920,1080];
+    	    	this.bitrate = 50720000;
+    	    	this.framerate = 30;
+    	    	this.level = 51;
+    	    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+    	    	break;
+    	    case "mvc":	
+    	    	this.codec = true;
+    	    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    	    	this.resolution = [1920,1080];
+    	    	this.bitrate = 60720000;
+    	    	this.framerate = 30;
+    	    	this.level = 51;
+    	    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+    	    	break;
+    		case "wmv2":
+    			this.codec = true;
+    			this.container = ["asf"];
+    			this.resolution = [1920,1080];
+    			this.resolution = 25600000;
+    			this.framerate = 30;
+    			this.level = true;
+    			this.profile = true;
+    			break;
+    		case "wmv3":
+    			this.codec = true;
+    			this.container = ["asf"];
+    			this.resolution = [1920,1080];
+    			this.resolution = 25600000;
+    			this.framerate = 30;
+    			this.level = true;
+    			this.profile = true;
+    			break;
+    		case "vc1":	
+    			this.codec = true;
+    			this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    			this.resolution = [1920,1080];
+    			this.bitrate = 30720000;
+    			this.framerate = 30;
+    			this.level = true;
+    			this.profile = true;
+    			break;
+    		default:
+    			this.codec = null;
+    			this.container = null;
+    			this.resolution = null;
+    			this.bitrate = 50720000;
+    			this.framerate = null;
+    			this.level = null;
+    			this.profile = null;
+    			break;
+    		}
+    		break;	
+        case "F":
+    		switch (codec) {
 			case "mpeg2video":
-				return ["mpg","mkv","mpeg","vro","vob","ts"];
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
 				break;
 			case "mpeg4":
-				return ["asf","avi","mkv","mp4","3gpp"];
-				break;
-			case "h264":	
-				return ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v"];
-				break;
-			case "wmv2":
-			case "wmv3":
-				return ["asf"];
-				break;
-			case "vc1":	
-				return ["ts"];
-				break;
-			default:
-				return null;
-				break;
-			}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-			return ["mpg","mkv","mpeg","vro","vob","ts"];
-			break;
-		case "mpeg4":
-			return ["asf","avi","mkv","mp4","3gpp"];
-			break;
-		case "h264":	
-			return ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v"];
-			break;
-		case "wmv2":
-		case "wmv3":
-			return ["asf"];
-			break;
-		case "vc1":	
-			return ["ts"];
-			break;
-		default:
-			return null;
-			break;
-		}
-	break;
-	}
-}
-
-GuiPlayer_TranscodeParams.getResolution = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
-			case "mpeg2video":
-			case "mpeg4":
-			case "h264":	
-			case "wmv2":
-			case "wmv3":
-			case "vc1":	
-				return [1920,1080]
-			default:
-				return null;
-				break;
-			}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-		case "mpeg4":
-		case "h264":	
-		case "wmv2":
-		case "wmv3":
-		case "vc1":	
-			return [1920,1080];
-		default:
-			return null;
-			break;
-		}
-		break;
-	}
-}
-
-GuiPlayer_TranscodeParams.getBitrate = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
-			case "mpeg2video":
-				return 30720000;
-				break;
-			case "mpeg4":
-				return 8192000;
-				break;
-			case "h264":	
-				return 37500000;
-				break;
-			case "wmv2":
-			case "wmv3":
-				return 25600000;
-				break;
-			case "vc1":	
-				return 25600000;
-				break;
-			default:
-				return 37500000;
-				break;
-			}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-			return 30720000;
-			break;
-		case "mpeg4":
-			return 8192000;
-			break;
-		case "h264":	
-			return 37500000;
-			break;
-		case "wmv2":
-		case "wmv3":
-			return 25600000;
-			break;
-		case "vc1":	
-			return 25600000;
-			break;
-		default:
-			return 37500000;
-			break;
-		}
-		break;
-	}
-}
-
-
-GuiPlayer_TranscodeParams.getFrameRate = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
-			case "mpeg2video":
-			case "mpeg4":
-			case "h264":	
-			case "wmv2":
-			case "wmv3":
-			case "vc1":	
-				return 30
-			default:
-				return null;
-				break;
-			}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-		case "mpeg4":
-		case "h264":	
-		case "wmv2":
-		case "wmv3":
-		case "vc1":	
-			return 30;
-		default:
-			return null;
-			break;
-		}
-		break;
-	}
-}
-
-
-
-GuiPlayer_TranscodeParams.getLevel = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (codec) {
-			case "mpeg2video":
-			case "mpeg4":
-			case "wmv2":
-			case "wmv3":
-			case "vc1":	
-				return true;
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
 				break;
 			case "h264":
-				return 51;
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = 51;
+				this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+				break;
+		    case "mvc":	
+		    	this.codec = true;
+		    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+		    	this.resolution = [1920,1080];
+		    	this.bitrate = 62914560;
+		    	this.framerate = 30;
+		    	this.level = 51;
+		    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+		    	break;
+			case "wmv2":
+				this.codec = true;
+				this.container = ["asf"];
+				this.resolution = [1920,1080];
+				this.resolution = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
+				break;
+			case "wmv3":
+				this.codec = true;
+				this.container = ["asf"];
+				this.resolution = [1920,1080];
+				this.resolution = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
+				break;
+			case "vc1":	
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
 				break;
 			default:
-				return null;
-				break;	
+				this.codec = null;
+				this.container = null;
+				this.resolution = null;
+				this.bitrate = 50720000;
+				this.framerate = null;
+				this.level = null;
+				this.profile = null;
+				break;
 			}
-		break;
-	default:
-		switch (codec) {
-		case "mpeg2video":
-		case "mpeg4":
-		case "wmv2":
-		case "wmv3":
-		case "vc1":	
-			return true;
-			break;
-		case "h264":
-			return 51;
-			break;
-		default:
-			return null;
 			break;	
-		}
-	}
-}
-
-
-GuiPlayer_TranscodeParams.getProfile = function(codec) {
-	switch (Main.getModelYear()) {
-	case "D":
+        case "E":
 		switch (codec) {
 			case "mpeg2video":
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
+				break;
 			case "mpeg4":
-			case "wmv2":
-			case "wmv3":
-			case "vc1":	
-				return true;
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
 				break;
 			case "h264":
-				return ["Base","Constrained Baseline","Baseline","Main","High"];
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = 51;
+				this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+				break;
+		    case "mvc":	
+		    	this.codec = true;
+		    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+		    	this.resolution = [1920,1080];
+		    	this.bitrate = 41943040;
+		    	this.framerate = 30;
+		    	this.level = 51;
+		    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+		    	break;
+			case "wmv2":
+				this.codec = true;
+				this.container = ["asf"];
+				this.resolution = [1920,1080];
+				this.resolution = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
+				break;
+			case "wmv3":
+				this.codec = true;
+				this.container = ["asf"];
+				this.resolution = [1920,1080];
+				this.resolution = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
+				break;
+			case "vc1":	
+				this.codec = true;
+				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
+				this.resolution = [1920,1080];
+				this.bitrate = 30720000;
+				this.framerate = 30;
+				this.level = true;
+				this.profile = true;
 				break;
 			default:
-				return null;
-				break;	
+				this.codec = null;
+				this.container = null;
+				this.resolution = null;
+				this.bitrate = 50720000;
+				this.framerate = null;
+				this.level = null;
+				this.profile = null;
+				break;
 			}
-		break;
-	default:
+			break;	
+	case "D":
+	default:	
 		switch (codec) {
 		case "mpeg2video":
+			this.codec = true;
+			this.container = ["mpg","mkv","mpeg","vro","vob","ts"];
+			this.resolution = [1920,1080];
+			this.bitrate = 30720000;
+			this.framerate = 30;
+			this.level = true;
+			this.profile = true;
+			break;
 		case "mpeg4":
+			this.codec = true;
+			this.container = ["asf","avi","mkv","mp4","3gpp"];
+			this.resolution = [1920,1080];
+			this.bitrate = 8192000;
+			this.framerate = 30;
+			this.level = true;
+			this.profile = true;
+			break;
+		case "h264":	
+			this.codec = true;
+			this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v"];
+			this.resolution = [1920,1080];
+			this.bitrate = 37500000;
+			this.framerate = 30;
+			this.level = 51;
+			this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+			break;
 		case "wmv2":
+			this.codec = true;
+			this.container = ["asf"];
+			this.resolution = [1920,1080];
+			this.bitrate = 25600000;
+			this.framerate = 30;
+			this.level = true;
+			this.profile = true;
+			break;
 		case "wmv3":
+			this.codec = true;
+			this.container = ["asf"];
+			this.resolution = [1920,1080];
+			this.bitrate = 25600000;
+			this.framerate = 30;
+			this.level = true;
+			this.profile = true;
+			break;
 		case "vc1":	
-			return true;
-			break;
-		case "h264":
-			return ["Base","Constrained Baseline","Baseline","Main","High"];
+			this.codec = true;
+			this.container = ["ts"];
+			this.resolution = [1920,1080];
+			this.bitrate = 25600000;
+			this.framerate = 30;
+			this.level = true;
+			this.profile = true;
 			break;
 		default:
-			return null;
-			break;	
+			this.codec = null;
+			this.container = null;
+			this.resolution = null;
+			this.bitrate = 37500000;
+			this.framerate = null;
+			this.level = null;
+			this.profile = null;
+			break;
 		}
+		break;
 	}
+	return [this.codec,this.container,this.resolution,this.bitrate,this.framerate,this.level,this.profile];
 }
 
-GuiPlayer_TranscodeParams.getAudioCodec = function(audiocodec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (audiocodec) {
-		case "aac":
-		case "mp3":
-		case "mp2":	
-		case "ac3":
-		case "wmav2":
-		case "wmapro":
-		case "wmavoice":
-		case "dca":
-		case "eac3":	
-			return true;
-			break;
-		default:
-			return false;
-			break;
-		}
-		break;
-	default:
-		switch (audiocodec) {
-		case "aac":
-		case "mp3":
-		case "mp2":	
-		case "ac3":
-		case "wmav2":
-		case "wmapro":
-		case "wmavoice":
-		case "dca":
-		case "eac3":	
-			return true;
-			break;
-		default:
-			return false;
-			break;
-		}
-		break;
-	}
-}
 
-GuiPlayer_TranscodeParams.getAudioContainer = function(audiocodec) {
+GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 	switch (Main.getModelYear()) {
-	case "D":
+	case "H":
+    case "F":
+    case "E":
 		switch (audiocodec) {
 		case "aac":
-			return ["mkv","mp4","3gpp","mpg","mpeg","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		case "mp3":
-		case "mp2":	
-			return ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "mp2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		case "ac3":
-			return ["asf","avi","mkv","mpg","mpeg","vro","vob","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		case "wmav2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
 		case "wmapro":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
 		case "wmavoice":
-			return ["asf"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		case "dca":
-			return ["avi","mkv"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		case "eac3":	
-			return ["ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
 			break;
 		default:
-			return null;
+			this.audiocodec = false;
+			this.audiocontainer = null;
+			this.audiochannels = null;
 			break;
 		}
-		break;
-	default:
+		break;	
+	case "D":
+	default:	
 		switch (audiocodec) {
 		case "aac":
-			return ["mkv","mp4","3gpp","mpg","mpeg","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["mkv","mp4","3gpp","mpg","mpeg","ts"];
+			this.audiochannels = 6;
 			break;
 		case "mp3":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
+			this.audiochannels = 6;
+			break;
 		case "mp2":	
-			return ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
+			this.audiochannels = 6;
 			break;
 		case "ac3":
-			return ["asf","avi","mkv","mpg","mpeg","vro","vob","ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mpg","mpeg","vro","vob","ts"];
+			this.audiochannels = 6;
 			break;
 		case "wmav2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf"];
+			this.audiochannels = 6;
+			break;
 		case "wmapro":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf"];
+			this.audiochannels = 6;
+			break;
 		case "wmavoice":
-			return ["asf"];
+			this.audiocodec = true;
+			this.audiocontainer = ["asf"];
+			this.audiochannels = 6;
 			break;
 		case "dca":
-			return ["avi","mkv"];
+			this.audiocodec = true;
+			this.audiocontainer = ["avi","mkv"];
+			this.audiochannels = 6;
 			break;
 		case "eac3":	
-			return ["ts"];
+			this.audiocodec = true;
+			this.audiocontainer = ["ts"];
+			this.audiochannels = 6;
 			break;
 		default:
-			return null;
+			this.audiocodec = false;
+			this.audiocontainer = null;
+			this.audiochannels = null;
 			break;
 		}
 		break;
 	}
-}
-
-GuiPlayer_TranscodeParams.getAudioChannels = function(audiocodec) {
-	switch (Main.getModelYear()) {
-	case "D":
-		switch (audiocodec) {
-		case "aac":
-		case "mp3":
-		case "mp2":	
-		case "ac3":
-		case "wmav2":
-		case "wmapro":
-		case "wmavoice":
-		case "dca":
-		case "eac3":	
-			return 6;
-			break;
-		default:
-			return null;
-			break;
-		}
-		break;
-	default:
-		switch (audiocodec) {
-		case "aac":
-		case "mp3":
-		case "mp2":	
-		case "ac3":
-		case "wmav2":
-		case "wmapro":
-		case "wmavoice":
-		case "dca":
-		case "eac3":	
-			return 6;
-			break;
-		default:
-			return null;
-			break;
-		}
-		break;
-	}
+	return [this.audiocodec,this.audiocontainer,this.audiochannels];
 }

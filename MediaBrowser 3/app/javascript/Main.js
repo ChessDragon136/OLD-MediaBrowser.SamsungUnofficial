@@ -22,7 +22,7 @@ var Main =
 		enableScreensaver : true,
 		isScreensaverRunning : false,
 		
-		enableSubtitles : false,
+		enableSubtitles : true,
 		
 		testMode : false
 };

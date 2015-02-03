@@ -28,9 +28,9 @@ var GuiPage_Settings = {
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
 		TVSettingsDefaults : [60,false,false,false],
 		
-		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes"], //Add back in SubtitleMode when ready
-		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: "], //Subtitle Mode:  
-		ServerSettingsDefaults : [false,false], //Not actually Used but implemented for clean code!!! Values read from Server so no default needed!
+		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
+		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ", "Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
+		ServerSettingsDefaults : [false,false,"",true,"","default"], //Not actually Used but implemented for clean code!!! Values read from Server so no default needed!
 		
 		//Per Setting Options & Values
 		DefaultOptions : ["True","False"],
@@ -53,6 +53,9 @@ var GuiPage_Settings = {
 		
 		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
 		ScreensaverImageTimeValues : [300000,120000,60000,30000,20000,10000,5000],
+		
+		LanguageOptions : ["None","English","French","German","Spanish","Italian"],
+		LanguageValues : ["","eng","fre","ger","spa","ita"],
 		
 		SubtitleModeOptions : ["Default","Only Forced Subtitles", "Always Play Subtitles", "None"],
 		SubtitleModeValues : ["Default","OnlyForced", "Always", "None"]
@@ -185,8 +188,8 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;
 		case "View1":
-			for (var index2 = 0; index2 < this.View1Values.length; index2++) {
-				if (this.View1Values[index2] == this.UserData[this.currentViewSettings[index]]) {
+			for (var index2 = 0; index2 < this.View1Values.length; index2++) {				
+				if (this.View1Options[index2] == this.UserData.View1Name) {
 					Setting = this.View1Options[index2];
 					break;
 				}
@@ -194,7 +197,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			break;
 		case "View2":
 			for (var index2 = 0; index2 < this.View2Values.length; index2++) {
-				if (this.View2Values[index2] == this.UserData[this.currentViewSettings[index]]) {
+				if (this.View2Options[index2] == this.UserData.View2Name) {
 					Setting = this.View2Options[index2];
 					break;
 				}
@@ -242,8 +245,38 @@ GuiPage_Settings.updateDisplayedItems = function() {
 				}
 			}
 			break;	
+		case "DefaultAudioLang":
+			for (var index2 = 0; index2 < this.LanguageValues.length; index2++) {
+				if (this.LanguageValues[index2] == this.ServerUserData.Configuration.AudioLanguagePreference) {
+					Setting = this.LanguageOptions[index2];
+					break;
+				}
+			}
+			if (Setting == "") {
+				Setting = this.ServerUserData.Configuration.AudioLanguagePreference
+			}
+			break;
+		case "PlayDefaultAudioTrack":
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.PlayDefaultAudioTrack) {
+					Setting = this.DefaultOptions[index2];
+					break;
+				}
+			}
+			break;	
+		case "DefaultSubtitleLang":
+			for (var index2 = 0; index2 < this.LanguageValues.length; index2++) {
+				if (this.LanguageValues[index2] == this.ServerUserData.Configuration.SubtitleLanguagePreference) {
+					Setting = this.LanguageOptions[index2];
+					break;
+				}
+			}
+			if (Setting == "") {
+				Setting = this.ServerUserData.Configuration.SubtitleLanguagePreference
+			}
+			break;	
 		case "SubtitleMode":
-			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+			for (var index2 = 0; index2 < this.SubtitleModeValues.length; index2++) {
 				if (this.SubtitleModeValues[index2] == this.ServerUserData.Configuration.SubtitleMode) {
 					Setting = this.SubtitleModeOptions[index2];
 					break;
@@ -251,7 +284,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;
 		case "DisplayMissingEpisodes":
-			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.DisplayMissingEpisodes) {
 					Setting = this.DefaultOptions[index2];
 					break;
@@ -259,7 +292,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;
 		case "DisplayUnairedEpisodes":
-			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.DisplayUnairedEpisodes) {
 					Setting = this.DefaultOptions[index2];
 					break;
@@ -360,7 +393,8 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "DTS":	
 		case "DisplayMissingEpisodes":
 		case "DisplayUnairedEpisodes":	
-		case "TranscodeDSeries":	
+		case "TranscodeDSeries":
+		case "PlayDefaultAudioTrack":	
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
 		case "View1":
@@ -381,6 +415,10 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "Bitrate":
 			this.CurrentSubSettings = this.TvConnectionOptions;
 			break;
+		case "DefaultAudioLang":
+		case "DefaultSubtitleLang":	
+			this.CurrentSubSettings = this.LanguageOptions;
+			break;	
 		case "SubtitleMode":
 			this.CurrentSubSettings = this.SubtitleModeOptions;
 			break;	
@@ -603,6 +641,27 @@ GuiPage_Settings.processSelectedSubItem = function() {
 		this.AllData.TV.Bitrate = this.TvConnectionValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.TvConnectionOptions[this.selectedSubItem];
 		break;
+	case "DefaultAudioLang":
+		this.ServerUserData.Configuration.AudioLanguagePreference = this.LanguageValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.LanguageOptions[this.selectedSubItem];
+		
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;	
+	case "PlayDefaultAudioTrack":
+		this.ServerUserData.Configuration.PlayDefaultAudioTrack = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+		
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;	
+	case "DefaultSubtitleLang":
+		this.ServerUserData.Configuration.SubtitleLanguagePreference = this.LanguageValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.LanguageOptions[this.selectedSubItem];
+		
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;		
 	case "SubtitleMode":
 		this.ServerUserData.Configuration.SubtitleMode = this.SubtitleModeValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.SubtitleModeOptions[this.selectedSubItem];
@@ -782,6 +841,18 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Transcoding on D Series TV's";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enable this if you want to transcode videos to your D Series TV<br><br>This is off by default as it is not reliable and may cause issues, and as such is unsupported.";
 			break;
+		case "DefaultAudioLang":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Audio Language Preference";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;	
+		case "PlayDefaultAudioTrack":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play default audio track regardelss of language";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;	
+		case "DefaultSubtitleLang":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Language Preference";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred subtitle language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;		
 		case "SubtitleMode":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Mode";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your MediaBrowser experience on all clients";

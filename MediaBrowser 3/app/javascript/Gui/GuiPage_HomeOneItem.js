@@ -22,12 +22,8 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 }
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
-	//Cheap hack to increase limit count when using this view
-	url = url.replace("Limit=7","Limit=16");
-	
 	//Save Start Params	
 	this.startParams = [title,url];
-	alert (url);
 	
 	//Reset Values
 	this.indexSeekPos = -1;

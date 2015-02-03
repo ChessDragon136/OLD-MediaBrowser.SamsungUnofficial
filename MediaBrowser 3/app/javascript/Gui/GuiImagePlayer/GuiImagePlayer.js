@@ -119,6 +119,7 @@ GuiImagePlayer.keyDown = function() {
 			GuiImagePlayer.kill();
 			
 			//Turn On Screensaver
+			Support.screensaverOn();
 			Support.screensaver();
 			
 			Support.processReturnURLHistory();

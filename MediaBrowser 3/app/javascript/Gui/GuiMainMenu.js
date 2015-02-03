@@ -59,6 +59,7 @@ GuiMainMenu.start = function() {
 	this.selectedMainMenuItem = 0;
 	
 	//Turn On Screensaver
+	Support.screensaverOn();
 	Support.screensaver();
 	
 	//Load Home Page

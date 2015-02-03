@@ -77,14 +77,15 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 GuiPlayer_Transcoding.checkCodec = function() {
 	alert ("Checking Video Codec");
 	var codec = this.MediaSource.MediaStreams[this.videoIndex].Codec.toLowerCase();
+	var codecParams = GuiPlayer_TranscodeParams.getParameters(codec);
 	
-	this.isCodec = GuiPlayer_TranscodeParams.getCodec(codec);
-	this.isContainer = this.checkContainer(GuiPlayer_TranscodeParams.getContainer(codec));
-	this.isResolution = this.checkResolution(GuiPlayer_TranscodeParams.getResolution(codec));
-	this.isBitRate = this.checkBitRate(GuiPlayer_TranscodeParams.getBitrate(codec));
-	this.isFrameRate = this.checkFrameRate(GuiPlayer_TranscodeParams.getFrameRate(codec));
-	this.isLevel = this.checkLevel(GuiPlayer_TranscodeParams.getLevel(codec));
-	this.isProfile = this.checkProfile(GuiPlayer_TranscodeParams.getProfile(codec));
+	this.isCodec = codecParams[0];
+	this.isContainer = this.checkContainer(codecParams[1]);
+	this.isResolution = this.checkResolution(codecParams[2]);
+	this.isBitRate = this.checkBitRate(codecParams[3]);
+	this.isFrameRate = this.checkFrameRate(codecParams[4]);
+	this.isLevel = this.checkLevel(codecParams[5]);
+	this.isProfile = this.checkProfile(codecParams[6]);
 	
 	//Results
 	alert ("-----------------------------------------------------");
@@ -109,10 +110,11 @@ GuiPlayer_Transcoding.checkCodec = function() {
 GuiPlayer_Transcoding.checkAudioCodec = function() {
 	alert ("Checking Audio Codec");
 	var audiocodec = this.MediaSource.MediaStreams[this.audioIndex].Codec.toLowerCase();
+	var audiocodecParams = GuiPlayer_TranscodeParams.getAudioParameters(audiocodec);
 	
-	this.isAudioCodec = GuiPlayer_TranscodeParams.getAudioCodec(audiocodec);
-	this.isAudioContainer = this.checkContainer(GuiPlayer_TranscodeParams.getAudioContainer(audiocodec));
-	this.isAudioChannel = this.checkAudioChannels(GuiPlayer_TranscodeParams.getAudioChannels(audiocodec));		
+	this.isAudioCodec = audiocodecParams[0];
+	this.isAudioContainer = this.checkContainer(audiocodecParams[1]);
+	this.isAudioChannel = this.checkAudioChannels(audiocodecParams[2]);		
 	
 	//Results
 	alert ("-----------------------------------------------------");
@@ -131,10 +133,14 @@ GuiPlayer_Transcoding.checkAudioCodec = function() {
 }
 
 GuiPlayer_Transcoding.checkAudioChannels = function(maxChannels) {
-	if (this.MediaSource.MediaStreams[this.audioIndex].Channels <= maxChannels) {
-		return true;
-	} else {
+	if (maxChannels == null) {
 		return false;
+	} else {
+		if (this.MediaSource.MediaStreams[this.audioIndex].Channels <= maxChannels) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 

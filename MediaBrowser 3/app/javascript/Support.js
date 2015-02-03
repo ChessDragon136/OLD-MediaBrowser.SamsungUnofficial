@@ -13,6 +13,7 @@ var Support = {
 		
 		//Screensaver
 		screensaverVar : null,
+		isScreensaverOn : true,
 }
 
 Support.logout = function() {
@@ -792,14 +793,26 @@ Support.screensaver = function () {
 	if (Main.isScreensaverEnabled()) {
 		clearTimeout(this.screensaverVar);
 		this.screensaverVar  = setTimeout(function(){
-			GuiImagePlayer_Screensaver.start();
+			if (Support.isScreensaverOn == true) {
+				GuiImagePlayer_Screensaver.start();
+			}	
 		}, File.getUserProperty("ScreensaverTimeout"));
 	}
+}
+
+Support.screensaverOn = function () {
+	this.isScreensaverOn = true;
 }
 
 Support.screensaverOff = function () {
 	if (Main.isScreensaverEnabled()) {
 		clearTimeout(this.screensaverVar);
+		this.isScreensaverOn = false;
+		
+		if (Main.getIsScreensaverRunning()) {
+			Main.setIsScreensaverRunning(); //Sets to False
+			GuiImagePlayer_Screensaver.stopScreensaver(); //Kill Screensaver
+		}
 	}
 }
 

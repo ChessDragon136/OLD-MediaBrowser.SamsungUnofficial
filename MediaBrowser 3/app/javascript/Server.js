@@ -43,6 +43,11 @@ Server.setDevice = function(Device) {
 	this.Device = Device;
 }
 
+//Used in Settings
+Server.getDevice = function() {
+	return this.Device;
+}
+
 Server.setDeviceID = function(DeviceID) {
 	this.DeviceID = DeviceID;
 }

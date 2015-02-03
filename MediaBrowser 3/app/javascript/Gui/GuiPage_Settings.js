@@ -361,7 +361,7 @@ GuiPage_Settings.processSelectedItem = function() {
 			this.currentViewSettings = this.TVSettings;
 			this.currentViewSettingsName = this.TVSettingsName;
 			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
-			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings";
+			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
 			break;
 		case "Server Settings":
 			//Set default view as the User Settings Page

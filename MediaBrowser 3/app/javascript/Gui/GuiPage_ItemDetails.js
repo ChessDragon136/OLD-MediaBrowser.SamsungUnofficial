@@ -270,7 +270,9 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	document.getElementById("GuiPage_ItemDetails").focus();
 	
 	//Finally play audio theme
-	GuiPage_ItemDetails.PlayAudioTheme()
+	if (File.getUserProperty("AudioTheme") == true){
+		GuiPage_ItemDetails.PlayAudioTheme()	
+	}
 }
 
 //Function sets CSS Properties so show which user is selected
@@ -377,7 +379,7 @@ GuiPage_ItemDetails.keyDown = function()
 			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
-			if (this.themePlaying = true){
+			if (this.themePlaying == true){
 				this.themeEscape = true
 				this.playerObj.Stop()
 			}

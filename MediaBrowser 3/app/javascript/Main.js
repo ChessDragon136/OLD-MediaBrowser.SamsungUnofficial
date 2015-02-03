@@ -4,9 +4,12 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.530",
+		version : "v0.545",
 		requiredServerVersion : "3.0.5211",
-		requiredDevServerVersion : "3.0.5211",
+		requiredDevServerVersion : "3.0.5507.2131",
+		
+		//TV Series Version
+		modelYear : null,
 		
 		forceDeleteSettings : false,
 		
@@ -19,8 +22,18 @@ var Main =
 		enableScreensaver : true,
 		isScreensaverRunning : false,
 		
+		enableSubtitles : true,
+		
 		testMode : false
 };
+
+Main.getModelYear = function() {
+	return this.modelYear;
+}
+
+Main.isSubtitlesEnabled = function() {
+	return this.enableSubtitles;
+}
 
 Main.isMusicEnabled = function() {
 	return this.enableMusic;
@@ -105,6 +118,10 @@ Main.onLoad = function()
 	var http = pluginNetwork.CheckHTTP(ProductType); //returns -1
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
 	
+	//Get the model year - Used for transcoding
+	this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	alert ("Model Year: " + this.modelYear);
+	
 	if (phyConnection && http && gateway) {
 		var MAC = pluginNetwork.GetMAC(1);
 		if (MAC == false || MAC == null) { //Set mac to fake	
@@ -163,6 +180,7 @@ Main.onLoad = function()
 
 Main.onUnload = function()
 {
+	Support.screensaverOff();
 	GuiImagePlayer.kill();
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();

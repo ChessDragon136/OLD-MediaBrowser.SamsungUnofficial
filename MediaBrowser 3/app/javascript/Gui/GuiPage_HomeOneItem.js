@@ -22,12 +22,8 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 }
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
-	//Cheap hack to increase limit count when using this view
-	url = url.replace("Limit=7","Limit=16");
-	
 	//Save Start Params	
 	this.startParams = [title,url];
-	alert (url);
 	
 	//Reset Values
 	this.indexSeekPos = -1;
@@ -85,11 +81,14 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 			document.getElementById("Center").style.width = "760px";
 		}
 
-		//Generate Banner Items
+		//Generate Banner Items - Mreove Home Page
 		this.menuItems = GuiMainMenu.menuItems.slice(1); 
 		
 		//Remove Settings, Logout & Music-Player from the end!
 		if (this.menuItems[this.menuItems.length-1] == "Log-Out") {
+			this.menuItems.pop();
+		}
+		if (this.menuItems[this.menuItems.length-1] == "Contributors") {
 			this.menuItems.pop();
 		}
 		if (this.menuItems[this.menuItems.length-1] == "Settings") {
@@ -302,11 +301,7 @@ GuiPage_HomeOneItem.processSelectedItem = function() {
 }
 
 GuiPage_HomeOneItem.playSelectedItem = function () {
-	if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
-		Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
-		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
-	}
+	Support.playSelectedItem("GuiPage_HomeOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
 GuiPage_HomeOneItem.processLeftKey = function() {

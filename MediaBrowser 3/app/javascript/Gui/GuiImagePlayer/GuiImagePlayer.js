@@ -11,14 +11,22 @@ var GuiImagePlayer = {
 }
 
 GuiImagePlayer.kill = function() {
-	this.ImageViewer.destroy();	
+	if (this.ImageViewer != null) {
+		this.ImageViewer.destroy();	
+	}
 }
 
-GuiImagePlayer.start = function(ItemData,selectedItem) {
+GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	//Turn off screensaver
 	Support.screensaverOff();
+
+	var url = "";
+	if (isPhotoCollection) {
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+	} else {
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+	}
 	
-	var url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");
 	var result = Server.getContent(url);
 	if (result == null) { return; }
 	this.newItemData = result; //Misleading I know!
@@ -77,7 +85,7 @@ GuiImagePlayer.setSlideshowMode = function() {
 				GuiImagePlayer.imageIdx = 0;
 			}		
 			GuiImagePlayer.ImageViewer.prepareNext(GuiImagePlayer.images[GuiImagePlayer.imageIdx], GuiImagePlayer.ImageViewer.Effect.FADE1);
-		}, 10000);	
+		}, File.getUserProperty("ImagePlayerImageTime"));	
     });
 	
 	this.ImageViewer.stop();
@@ -117,6 +125,7 @@ GuiImagePlayer.keyDown = function() {
 			GuiImagePlayer.kill();
 			
 			//Turn On Screensaver
+			Support.screensaverOn();
 			Support.screensaver();
 			
 			Support.processReturnURLHistory();

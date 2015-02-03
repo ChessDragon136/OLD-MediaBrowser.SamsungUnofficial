@@ -75,7 +75,7 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue) {
 	
 	if (this.Status == "STOPPED") {
 		this.currentPlayingItem = 0;
-	    this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream?AudioCodec='+this.queuedItems[this.currentPlayingItem].MediaSources[0].MediaStreams[0].Codec+'&DeviceId='+Server.getDeviceID() + '&Static=true';
+	    this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
 	    
 	    //Update selected Item
 	    this.updateSelectedItem();

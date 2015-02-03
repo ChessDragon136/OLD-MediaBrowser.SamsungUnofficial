@@ -24,6 +24,7 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/GuiHelper.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/GuiNotifications.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/ServerVersion.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Support/srt-parser.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_NewServer.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Servers.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiUsers.js"></script>
@@ -34,11 +35,13 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiLivePlayer.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_Versions.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_Transcoding.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_TranscodeParams.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiMusicPlayer/GuiMusicPlayer.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_ItemDetails.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiDisplay_Series.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiDisplay_Episodes.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiDisplayOneItem.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Contributors.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_HomeOneItem.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_HomeTwoItems.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Music.js"></script>
@@ -50,6 +53,8 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_PhotoNavigation.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiImagePlayer/GuiImagePlayer.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiImagePlayer/GuiImagePlayer_Screensaver.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Playlist.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_AddToPlaylist.js"></script>
 		
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
 	    <object id='ThemePlayer' style='visibility: hidden; width: 0px; height: 0px; opacity: 0.0' classid='clsid:SAMSUNG-INFOLINK-PLAYER'></object>
@@ -92,6 +97,7 @@
 		<a href='javascript:void(0);' id='GuiDisplay_Series' onkeydown='GuiDisplay_Series.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiDisplay_Episodes' onkeydown='GuiDisplay_Episodes.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiDisplayOneItem' onkeydown='GuiDisplayOneItem.keyDown();'></a>
+		<a href='javascript:void(0);' id='GuiPage_Contributors' onkeydown='GuiPage_Contributors.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_HomeOneItem' onkeydown='GuiPage_HomeOneItem.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_HomeTwoItems' onkeydown='GuiPage_HomeTwoItems.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_HomeTwoItemsBottom' onkeydown='GuiPage_HomeTwoItems.bottomKeyDown();'></a>	
@@ -104,6 +110,8 @@
 		<a href='javascript:void(0);' id='GuiPage_TvChannel' onkeydown='GuiPage_TvChannel.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_TvGuide' onkeydown='GuiPage_TvGuide.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_PhotoNavigation' onkeydown='GuiPage_PhotoNavigation.keyDown();'></a>	
+		<a href='javascript:void(0);' id='GuiPage_Playlist' onkeydown='GuiPage_Playlist.keyDown();'></a>
+		<a href='javascript:void(0);' id='GuiPage_AddToPlaylist' onkeydown='GuiPage_AddToPlaylist.keyDown();'></a>
 		
 		
 		<script language="javascript" type="text/javascript" src="$MANAGER_WIDGET/Common/IME/ime2.js"></script>
@@ -130,6 +138,13 @@
 					<div id="HelpContent"></div>
 				</div>	
 				
+				<div id='guiPlayListContainer' style='visibility:hidden'>
+				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Add to Playlist</div>
+				 <div id='guiPlayListExisting'></div>
+				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Create New Playlist</div>
+				 <form style='padding-top:10px;padding-left:40px;'><input id='guiPlayListNew' style='z-index:10;' type='text' size='50' value=''/></form>
+				</div>
+				
 				<div id='guiMusicPlayerDiv' class='musicDiv' style='visibility:hidden;height:60px'>
 					<div id='guiMusicPlayerTitle' style='display:inline-block;margin-left:10px;width:250px;'></div>
 					<div id='guiMusicPlayerTime'  style='display:inline-block;width:130px;'></div>	
@@ -155,6 +170,7 @@
 				<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'><div id='guiPlayer_Info_ProgressBar_Current'></div></div>	
 				<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
 			</div>
+			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
 	

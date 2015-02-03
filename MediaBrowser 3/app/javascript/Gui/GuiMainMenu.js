@@ -18,8 +18,7 @@ GuiMainMenu.getSelectedMainMenuItem = function() {
 }
 
 //Entry Point from User Menu - ONLY RUN ONCE PER USER LOGIN
-GuiMainMenu.start = function() {
-	
+GuiMainMenu.start = function() {	
 	//Generate Menu based on whethere there is any of (Folders, TV, Movies, .....)
 	this.menuItems.length = 0;
 	
@@ -32,11 +31,18 @@ GuiMainMenu.start = function() {
 		htmlToAdd += "<div id=" + this.menuItems[index] + " style='padding-left:5px;'>" + this.menuItems[index].replace(/-/g, ' ').toUpperCase()+ "</div>";	
 	}	
 	document.getElementById("headerTypes").innerHTML = htmlToAdd;
+
+	//Show submenu dependant on selectedMainMenuItem
+	this.selectedMainMenuItem = -1;
+	this.updateSelectedItems();
+	this.selectedMainMenuItem = 0;
 	
 	//Add settings and logout
 	htmlToAdd = "<hr>";
 	this.menuItems.push("Settings");
-	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";	
+	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";
+	this.menuItems.push("Contributors");
+	htmlToAdd += "<div id=Contributors style='padding-left:5px;'>CONTRIBUTORS</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out style='padding-left:5px;'>LOG OUT</div>";	
 	document.getElementById("headerTypes").innerHTML += htmlToAdd;
@@ -54,12 +60,8 @@ GuiMainMenu.start = function() {
 		document.getElementById("headerUserImage").style.backgroundImage = "url(images/usernoimage.png)";
 	}
 	
-	//Show submenu dependant on selectedMainMenuItem
-	this.selectedMainMenuItem = -1;
-	this.updateSelectedItems();
-	this.selectedMainMenuItem = 0;
-	
 	//Turn On Screensaver
+	Support.screensaverOn();
 	Support.screensaver();
 	
 	//Load Home Page
@@ -236,10 +238,19 @@ GuiMainMenu.processSelectedItems = function() {
 		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
 		GuiDisplay_Series.start("Album",url,0,0);
 		break;	
+	case "Playlists":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
+		GuiDisplayOneItem.start("Playlists", url,0,0);
+		break;			
 	case "Settings":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		GuiPage_Settings.start();
 		break;	
+	case "Contributors":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		GuiPage_Contributors.start();
+		break;		
 	case "Log-Out":
 		Support.logout();
 		break;		

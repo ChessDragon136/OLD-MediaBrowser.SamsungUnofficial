@@ -62,6 +62,8 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 		GuiNotifications.setNotification("None of the MediaSources are playable","Unable To Play");
 		//Removes URL to fix Navigation
 		Support.removeLatestURL();
+		//Return Focus!
+		document.getElementById(this.playedFromPage).focus();
 	} else if (this.MediaPlayback.length == 1) { //Added in check to play only non transcoded stuff
 		//Play file 
 		GuiPlayer.startPlayback(this.MediaPlayback[0],resumeTicks); //Need to change

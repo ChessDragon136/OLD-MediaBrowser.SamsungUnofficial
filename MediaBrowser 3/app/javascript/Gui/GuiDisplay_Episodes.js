@@ -82,6 +82,9 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 			
 		//Set Focus for Key Events
 		document.getElementById("GuiDisplay_Episodes").focus();
+		
+		//Load theme music if any
+		GuiMusicPlayer.start("Theme", null, "GuiDisplay_Episodes",null,this.ItemData.Items[0].SeriesId,this.ItemData.Items[0].SeasonId);
 	} else {
 		//Set message to user
 		document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";

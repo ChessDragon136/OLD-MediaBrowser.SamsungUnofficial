@@ -48,14 +48,12 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 		var url = Server.getChildItemsURL(this.ItemData.Items[this.selectedItem].Id,"&IncludeItemTypes=Episode&fields=SortName,Overview");
 		GuiDisplay_Episodes.start(this.ShowData.Name + " " + this.ItemData.Items[this.selectedItem].Name,url,0,0);
 	} else {
-		if (this.ItemData.Items.length > 0) {
-			
+		if (this.ItemData.Items.length > 0) {				
 			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content></div>" + 
 			"<div id='ShowSeriesInfo'></div>" + 
 			"<div id='ShowImage'><div id='UnwatchedOverlay'></div></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
 				"<div id='ShowTitle' class='MetaDataTitleTable'></div>" +
-				//"<div id='ShowMetadata' style='padding-top:2px;color:#ddd;padding-bottom:5px;'></div>" +
 				"<div id='ShowMetadata' class='MetaDataSeasonTable'></div>" +
 				"<div style:'max-height:150px;'><div id='ShowOverview' class='MetaDataSeasonTable'></div></div>" + 
 			"</div>";
@@ -73,14 +71,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 					+ "<div class='MetaDataCellContent'>"
 					+ this.ShowData.OfficialRating + "</div></div>";
 			}
-//			if (this.ShowData.RunTimeTicks !== undefined) {
-//				htmlforSeries += Support
-//						.convertTicksToMinutes(this.ShowData.RunTimeTicks / 10000)
-//						+ " | ";
-//			}
-//
-//			htmlforSeries = htmlforSeries.substring(0, htmlforSeries.length - 2);
-//			
+			
 			document.getElementById("ShowTitle").innerHTML = htmlforTitle;
 			
 			if (this.ItemData.Items.length < 4) {
@@ -145,6 +136,9 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 				
 			//Set Focus for Key Events
 			document.getElementById("GuiTV_Show").focus();
+			
+			//Load theme music if any
+			GuiMusicPlayer.start("Theme", null, "GuiTV_Show",null,this.ShowData.Id,this.ShowData.Id);
 		} else {
 			//Set message to user
 			document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";
@@ -358,6 +352,7 @@ GuiTV_Show.keyDown = function() {
 			break;	
 		case tvKey.KEY_YELLOW:	
 			GuiMusicPlayer.showMusicPlayer("GuiTV_Show");	
+			break;
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

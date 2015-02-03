@@ -14,6 +14,9 @@ var GuiMusicPlayer = {
 		playedFromPage : null,
 		
 		queuedItems : [],
+		
+		isThemeMusicPlaying : false,
+		showThemeId : null,
 }
 
 GuiMusicPlayer.init = function() {
@@ -44,7 +47,7 @@ GuiMusicPlayer.showMusicPlayer = function(playedFromPage) {
 	}
 }
 
-GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue) { 
+GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,itemId) { 
 	this.selectedItem = 1;
 	this.playedFromPage = playedFromPage;
 	
@@ -54,40 +57,90 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue) {
 		this.init();
 	}
 	
-	//get info from URL
-	this.ItemData = Server.getContent(url);
-	if (this.ItemData == null) { return; }
-   
-	//See if item is to be added to playlist or not - if not reset playlist
-	if (this.Status != "STOPPED" && isQueue == false) {
-		this.queuedItems.length = 0;
-		this.handleStopKey();
-	}
-	
-	if (title != "Song") { 	
-    	for (var index = 0; index < this.ItemData.Items.length; index++) {
-    		this.queuedItems.push(this.ItemData.Items[index]);
-    	}
-    } else {
-    	//Is Individual Song
-        this.queuedItems.push(this.ItemData);
-    }
-	
-	if (this.Status == "STOPPED") {
-		this.currentPlayingItem = 0;
-	    this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
-	    
-	    //Update selected Item
-	    this.updateSelectedItem();
-	    
-		//Show Content
-		document.getElementById("guiMusicPlayerDiv").style.visibility = "";
-	    
-		//set focus
-		document.getElementById("GuiMusicPlayer").focus();
+	if (title == "Theme") {
+		//Only play music is no real music is playing!
+		alert (this.Status + " : " + this.isThemeMusicPlaying);
+		if (this.Status == "STOPPED" || this.isThemeMusicPlaying == true) {
+			//Check if Theme Playback is enabled
+			if (File.getUserProperty("AudioTheme")) {
+				//Check if show Id has changed
+				alert (showThemeId + " : " + this.showThemeId + " : " + itemId)
+				
+				
+				if (showThemeId == this.showThemeId) {
+					//Do Nothing - same show. If playing it will continue, if not there wasn't anything to play!
+				} else {		
+					var urlTheme = Server.getThemeMedia(itemId);
+					this.ItemData = Server.getContent(urlTheme);
+					if (this.ItemData == null) { return; }
+					
+					alert ("Theme Song Length: " + this.ItemData.ThemeSongsResult.Items.length);
+					
+					if (this.ItemData.ThemeSongsResult.Items.length > 0) {
+						//Play something
+						if (this.Status != "STOPPED") {
+							this.handleStopKey();
+						}
+						this.currentPlayingItem = 0;
+						this.showThemeId = showThemeId;
+						this.isThemeMusicPlaying = true;
+						
+						for (var index = 0; index < this.ItemData.ThemeSongsResult.Items.length; index++){
+							this.queuedItems.push(this.ItemData.ThemeSongsResult.Items[index]);
+						}
+						
+						this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?static=true&MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
+						this.updateSelectedItem();
+						//Start Playback
+						this.handlePlayKey();
+					} else {
+						this.showThemeId = null;
+						this.isThemeMusicPlaying = false;
+					}	
+				}
+			}	
+		}
+	} else {
+		//get info from URL
+		this.ItemData = Server.getContent(url);
+		if (this.ItemData == null) { return; }	
+			
+		//See if item is to be added to playlist or not - if not reset playlist
+		if (this.Status != "STOPPED" && this.isThemeMusicPlaying == true) {
+			this.queuedItems.length = 0;
+			this.handleStopKey();
+		}
 		
-		//Start Playback
-		this.handlePlayKey();
+		if (this.Status != "STOPPED" && isQueue == false) {
+			this.queuedItems.length = 0;
+			this.handleStopKey();
+		}
+		
+		if (title != "Song") { 	
+	    	for (var index = 0; index < this.ItemData.Items.length; index++) {
+	    		this.queuedItems.push(this.ItemData.Items[index]);
+	    	}
+	    } else {
+	    	//Is Individual Song
+	        this.queuedItems.push(this.ItemData);
+	    }
+		
+		if (this.Status == "STOPPED") {
+			this.currentPlayingItem = 0;
+		    this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?static=true&MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
+		    
+		    //Update selected Item
+		    this.updateSelectedItem();
+		    
+			//Show Content
+			document.getElementById("guiMusicPlayerDiv").style.visibility = "";
+		    
+			//set focus
+			document.getElementById("GuiMusicPlayer").focus();
+			
+			//Start Playback
+			this.handlePlayKey();
+		}
 	}
 }
 
@@ -238,6 +291,9 @@ GuiMusicPlayer.handlePauseKey = function() {
 GuiMusicPlayer.handleStopKey = function() {
 	alert ("STOPPING PLAYBACK");
 	
+	this.showThemeId = null;
+	this.isThemeMusicPlaying = false;
+	
 	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
@@ -255,6 +311,7 @@ GuiMusicPlayer.returnToPage = function() {
 	
 	
 	//Set queued Items to 0
+    this.isThemeMusicPlaying = false;
 	this.queuedItems.length = 0;
 	
     if (document.getElementById("guiMusicPlayerDiv").style.visibility == "") {
@@ -269,9 +326,9 @@ GuiMusicPlayer.handleNextKey = function() {
 	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
-	
+		
 	this.currentPlayingItem++;
-	
+		
 	if (this.queuedItems.length <= this.currentPlayingItem) {	
 		this.returnToPage();
 	} else {
@@ -280,23 +337,23 @@ GuiMusicPlayer.handleNextKey = function() {
 		alert ("Next " + this.videoURL);
 		//Start Playback
 		this.handlePlayKey();
-	}
+		}
 }
 
 GuiMusicPlayer.handlePreviousKey = function() {
 	//Stop Any Playback
 	var timeOfStoppedSong = Math.floor((this.currentTime % 60000) / 1000);
-	
+		
 	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.pluginMusic.Stop();
 	this.Status = "STOPPED";
-	
+		
 	//If song over 5 seconds long, previous song returns to start of current song, else go back to previous
 	this.currentPlayingItem = (timeOfStoppedSong > 5 ) ? this.currentPlayingItem : this.currentPlayingItem-1;
-	
+		
 	alert ("Queue Length : " + this.queuedItems.length);
 	alert ("Current Playing ID : " + this.currentPlayingItem);
-	
+		
 	if (this.queuedItems.length <= this.currentPlayingItem) {	
 		this.returnToPage();
 	} else {
@@ -352,29 +409,34 @@ GuiMusicPlayer.handleStreamNotFound = function() {
 }
 
 GuiMusicPlayer.setCurrentTime = function(time){
-	this.currentTime = time;
-	this.updateTimeCount++;
-	
-	//Update Server every 8 ticks (Don't want to spam!
-	if (this.updateTimeCount == 8) {
-		this.updateTimeCount = 0;
-
-		//Update Server
-		Server.videoPaused(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
+	if (this.Status == "PLAYING") {
+		this.currentTime = time;
+		this.updateTimeCount++;
 		
+		//Update Server every 8 ticks (Don't want to spam!
+		if (this.updateTimeCount == 8) {
+			this.updateTimeCount = 0;
+			//Update Server
+			Server.videoPaused(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
+			
+		}
+		document.getElementById("guiMusicPlayerTime").innerHTML = Support.convertTicksToTime(this.currentTime, (this.queuedItems[this.currentPlayingItem].RunTimeTicks / 10000));
 	}
-	
-	document.getElementById("guiMusicPlayerTime").innerHTML = Support.convertTicksToTime(this.currentTime, (this.queuedItems[this.currentPlayingItem].RunTimeTicks / 10000));
 }
 
 GuiMusicPlayer.OnStreamInfoReady = function() {
 	var playingTitle = "";
-	if (this.queuedItems[this.currentPlayingItem].IndexNumber < 10) {
-		playingTitle = "0"+this.queuedItems[this.currentPlayingItem].IndexNumber+" - ";
+	if (this.isThemeMusicPlaying == false) {
+		if (this.queuedItems[this.currentPlayingItem].IndexNumber < 10) {
+			playingTitle = "0"+this.queuedItems[this.currentPlayingItem].IndexNumber+" - ";
+		} else {
+			playingTitle = this.queuedItems[this.currentPlayingItem].IndexNumber+" - ";
+		}
+		document.getElementById("guiMusicPlayerTitle").innerHTML = this.queuedItems[this.currentPlayingItem].Artists + "<br>" + playingTitle + this.queuedItems[this.currentPlayingItem].Name;
 	} else {
-		playingTitle = this.queuedItems[this.currentPlayingItem].IndexNumber+" - ";
+		document.getElementById("guiMusicPlayerTitle").innerHTML = "Theme Music";	
 	}
-	document.getElementById("guiMusicPlayerTitle").innerHTML = this.queuedItems[this.currentPlayingItem].Artists + "<br>" + playingTitle + this.queuedItems[this.currentPlayingItem].Name;
+
 	document.getElementById("guiMusicPlayerTime").innerHTML = Support.convertTicksToTime(this.currentTime, (this.queuedItems[this.currentPlayingItem].RunTimeTicks / 10000));
 	
 	//Playback Checkin

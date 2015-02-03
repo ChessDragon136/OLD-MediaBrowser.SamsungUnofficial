@@ -499,9 +499,6 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 	}
 	
-	alert (ItemData.Items[selectedItem].CollectionType);
-	alert (ItemData.Items[selectedItem].Type)
-	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
 		switch (ItemData.Items[selectedItem].CollectionType) {
 		case "tvshows" :	
@@ -619,6 +616,27 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			}
 			break;
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLeftItem,isTop) {
+	startParams[2] = (startParams[2] === undefined) ? null : startParams[2];
+	startParams[3] = (startParams[3] === undefined) ? null : startParams[3];
+	if (ItemData.Items[selectedItem].MediaType == "Video") {
+		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id);
+		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000);	
+	}
+	if (ItemData.Items[selectedItem].MediaType == "ChannelVideoItem") {
+		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id);
+		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000);	
+	}
+	if (ItemData.Items[selectedItem].CollectionType == "photos") {
+		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		GuiImagePlayer.start(ItemData,selectedItem,true);	
 	}
 }
 

@@ -301,11 +301,7 @@ GuiPage_HomeOneItem.processSelectedItem = function() {
 }
 
 GuiPage_HomeOneItem.playSelectedItem = function () {
-	if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
-		Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
-		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
-	}
+	Support.playSelectedItem("GuiPage_HomeOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
 GuiPage_HomeOneItem.processLeftKey = function() {

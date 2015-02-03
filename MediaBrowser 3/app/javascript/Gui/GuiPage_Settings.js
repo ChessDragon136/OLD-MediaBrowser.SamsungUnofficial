@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"30px","white","Media",300000,10000],
+		Settings : ["Default","View1","View2","SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
@@ -57,6 +57,7 @@ var GuiPage_Settings = {
 		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
 		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
 		
+		//Also used for Image Player - Different setting!
 		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
 		ScreensaverImageTimeValues : [300000,120000,60000,30000,20000,10000,5000],
 		
@@ -242,6 +243,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;	
 		case "ScreensaverImageTime":
+		case "ImagePlayerImageTime":	
 			for (var index2 = 0; index2 < this.ScreensaverImageTimeValues.length; index2++) {
 				if (this.ScreensaverImageTimeValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.ScreensaverImageTimeOptions[index2];
@@ -438,6 +440,7 @@ GuiPage_Settings.processSelectedItem = function() {
 			this.CurrentSubSettings = this.ScreensaverTimeoutOptions;
 			break;	
 		case "ScreensaverImageTime":
+		case "ImagePlayerImageTime":		
 			this.CurrentSubSettings = this.ScreensaverImageTimeOptions;
 			break;	
 		case "Bitrate":
@@ -655,6 +658,10 @@ GuiPage_Settings.processSelectedSubItem = function() {
 		this.UserData.SubtitleColour = this.SubtitleColourValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.SubtitleColourOptions[this.selectedSubItem];
 		break;	
+	case "ImagePlayerImageTime":	
+		this.UserData.ImagePlayerImageTime = this.ScreensaverImageTimeValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ScreensaverImageTimeOptions[this.selectedSubItem];
+		break;
 	case "ScreensaverImages":
 		this.UserData.ScreensaverImages = this.ScreensaverImagesValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ScreensaverImagesOptions[this.selectedSubItem];
@@ -856,6 +863,10 @@ GuiPage_Settings.setOverview = function() {
 		case "SubtitleColour":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Colour";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.";
+			break;	
+		case "ImagePlayerImageTime":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Image Player Rotate Speed";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during image playback until the next one is displayed.";
 			break;	
 		case "ScreensaverImages":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Image Source";

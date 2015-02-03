@@ -595,10 +595,5 @@ GuiPage_HomeTwoItems.playSelectedItem = function (array,isTop) {
 		selectedItem = this.selectedItem2;
 		topLeftItem = this.topLeftItem2;
 	}
-	
-	if (array[selectedItem].MediaType == "Video") {
-		Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],selectedItem,topLeftItem,isTop);
-		var url = Server.getItemInfoURL(array[selectedItem].Id);
-		GuiPlayer.start("PLAY",url,array[selectedItem].UserData.PlaybackPositionTicks / 10000);
-	}	
+	Support.playSelectedItem("GuiPage_HomeTwoItem",this.ItemData,this.startParams,selectedItem,topLeftItem,isTop);	
 }

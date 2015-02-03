@@ -31,11 +31,18 @@ GuiMainMenu.start = function() {
 		htmlToAdd += "<div id=" + this.menuItems[index] + " style='padding-left:5px;'>" + this.menuItems[index].replace(/-/g, ' ').toUpperCase()+ "</div>";	
 	}	
 	document.getElementById("headerTypes").innerHTML = htmlToAdd;
+
+	//Show submenu dependant on selectedMainMenuItem
+	this.selectedMainMenuItem = -1;
+	this.updateSelectedItems();
+	this.selectedMainMenuItem = 0;
 	
 	//Add settings and logout
 	htmlToAdd = "<hr>";
 	this.menuItems.push("Settings");
-	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";	
+	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";
+	this.menuItems.push("Contributors");
+	htmlToAdd += "<div id=Contributors style='padding-left:5px;'>CONTRIBUTORS</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out style='padding-left:5px;'>LOG OUT</div>";	
 	document.getElementById("headerTypes").innerHTML += htmlToAdd;
@@ -52,11 +59,6 @@ GuiMainMenu.start = function() {
 	} else {
 		document.getElementById("headerUserImage").style.backgroundImage = "url(images/usernoimage.png)";
 	}
-	
-	//Show submenu dependant on selectedMainMenuItem
-	this.selectedMainMenuItem = -1;
-	this.updateSelectedItems();
-	this.selectedMainMenuItem = 0;
 	
 	//Turn On Screensaver
 	Support.screensaverOn();
@@ -245,6 +247,10 @@ GuiMainMenu.processSelectedItems = function() {
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		GuiPage_Settings.start();
 		break;	
+	case "Contributors":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		GuiPage_Contributors.start();
+		break;		
 	case "Log-Out":
 		Support.logout();
 		break;		

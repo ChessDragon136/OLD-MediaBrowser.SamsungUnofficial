@@ -125,6 +125,9 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		if (this.menuItems[this.menuItems.length-1] == "Log-Out") {
 			this.menuItems.pop();
 		}
+		if (this.menuItems[this.menuItems.length-1] == "Contributors") {
+			this.menuItems.pop();
+		}
 		if (this.menuItems[this.menuItems.length-1] == "Settings") {
 			this.menuItems.pop();
 		}

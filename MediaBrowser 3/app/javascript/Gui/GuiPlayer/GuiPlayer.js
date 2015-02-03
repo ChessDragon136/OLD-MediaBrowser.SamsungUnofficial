@@ -103,6 +103,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.videoStartTime = resumeTicksSamsung;
 	
 	//Expand TranscodeAlg to useful variables!!!
+	this.playingMediaSourceIndex = TranscodeAlg[0];
 	this.playingMediaSource = this.PlayerData.MediaSources[TranscodeAlg[0]];
 	this.playingURL = TranscodeAlg[1];
 	this.playingTranscodeStatus = TranscodeAlg[2];
@@ -219,17 +220,17 @@ GuiPlayer.setDisplaySize = function() {
 		this.plugin.SetDisplayArea(0, 0, 960, 540);
 	} else {
 		//Scale Video	
-		var ratioToShrinkX = 960 / MediaSource.MediaStreams[this.playingVideoIndex].Width;
-		var ratioToShrinkY = 540 / MediaSource.MediaStreams[this.playingVideoIndex].Height;
+		var ratioToShrinkX = 960 / this.playingMediaSource.MediaStreams[this.playingVideoIndex].Width;
+		var ratioToShrinkY = 540 / this.playingMediaSource.MediaStreams[this.playingVideoIndex].Height;
 			
 		if (ratioToShrinkX < ratioToShrinkY) {
 			var newResolutionX = 960;
-			var newResolutionY = Math.round(MediaSource.MediaStreams[this.playingVideoIndex].Height * ratioToShrinkX);
+			var newResolutionY = Math.round(this.playingMediaSource.MediaStreams[this.playingVideoIndex].Height * ratioToShrinkX);
 			var centering = Math.round((540-newResolutionY)/2);
 				
 			this.plugin.SetDisplayArea(parseInt(0), parseInt(centering), parseInt(newResolutionX), parseInt(newResolutionY));
 		} else {
-			var newResolutionX = Math.round(MediaSource.MediaStreams[this.playingVideoIndex].Width * ratioToShrinkY);
+			var newResolutionX = Math.round(this.playingMediaSource.MediaStreams[this.playingVideoIndex].Width * ratioToShrinkY);
 			var newResolutionY = 540;
 			var centering = Math.round((960-newResolutionX)/2);
 				
@@ -565,7 +566,7 @@ GuiPlayer.keyDown = function() {
         	GuiPlayer.setupThreeDConfiguration();
 			break;	
         case tvKey.KEY_TOOLS:
-        	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden") {
+        	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden" && (this.subtitleIndexes.length > 0 || this.audioIndexes.length > 1)) {
         		GuiPlayer.updateSelectedItems();
         		document.getElementById("guiPlayer_Tools").style.visibility = "";
         		document.getElementById("GuiPlayer_Tools").focus();
@@ -731,11 +732,10 @@ GuiPlayer.createToolsMenu = function() {
     //Must reset tools menu here on each playback!
     document.getElementById("guiPlayer_Tools").innerHTML = "";
     this.videoToolsOptions = [];
-	var audioStreamCount = 0;
 	for (var index = 0;index < this.playingMediaSource.MediaStreams.length;index++) {
 		var Stream = this.playingMediaSource.MediaStreams[index];
 		if (Stream.Type == "Audio") {
-			//this.audioIndexes.push(index); //Audio Disables temporarily
+			this.audioIndexes.push(index);
 		} 
 		
 		if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {
@@ -750,7 +750,7 @@ GuiPlayer.createToolsMenu = function() {
 	}
 	    
 	//Hide if only 1 audio stream given thats the one playing!
-	if (audioStreamCount > 1) {
+	if (this.audioIndexes.length > 1) {
 	    this.videoToolsOptions.push("videoOptionAudio");
 	   	document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionAudio" style="display:inline-block;">Audio</div>';
 	}
@@ -884,7 +884,7 @@ GuiPlayer.keyDownToolsSub = function() {
 						this.subtitleShowingIndex = 0;
 						
 						//Load New Subtitle File
-						GuiPlayer.getSubtitles(this.playingSubtitleIndex);
+						this.getSubtitles(this.playingSubtitleIndex);
 					    
 					    //Update subs index
 					    this.updateSubtitleTime(this.currentTime,"NewSubs");
@@ -898,6 +898,16 @@ GuiPlayer.keyDownToolsSub = function() {
 				}
 				break;
 			case "videoOptionAudio":
+				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] != this.playingAudioIndex) {
+					this.stopPlayback();
+					document.getElementById("GuiPlayer").focus();
+					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[this.videoToolsSelectedItemSub]);
+					var newTime = ((this.currentTime - 2000) < 0) ? 0 : this.currentTime - 2000; // Rewind a few seconds to ensure no gap loss
+					GuiPlayer.startPlayback(transcodeResult, newTime);
+				} else {
+					//Do Nothing!
+					document.getElementById("GuiPlayer").focus();
+				}
 				break;	
 			}	
 			break;	
@@ -945,15 +955,22 @@ GuiPlayer.updateDisplayedItemsSub = function() {
 			}	
 			break;
 		case "videoOptionAudio":
+			//Run option through transcoding algorithm - see if it plays natively
+			var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[index]);
+					
 			var Name = this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Codec + " - ";
 			if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language !== undefined) {
 				Name += this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language;
 			} else {
 				Name += "Unknown Language";
 			}
+			
+			var requireTranscode = (transcodeResult[2] == "Direct Stream") ? "Direct Play" : "Transcode";
+			Name += "<br>" + requireTranscode;
 			if (this.playingAudioIndex == this.videoToolsSubOptions[index]) {
-				Name += "<br>Currently Selected";
+				Name += " - Currently Playing";
 			}
+			
 			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+Name+"</div>";
 			break;	
 		}	

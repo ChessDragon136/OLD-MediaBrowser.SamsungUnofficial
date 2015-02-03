@@ -300,7 +300,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			}
 			break;	
 		}
-		htmlToAdd += "<tr class=guiSettingsRow><td id="+index+">" + this.currentViewSettingsName[index] + "</td><td id=Value"+index+" class=guiSettingsTD>"+Setting+"</td></tr>";
+		htmlToAdd += "<tr class=guiSettingsRow><td id="+index+">" + this.currentViewSettingsName[index] + "</td><td id=Value"+index+" class='guiSettingsTD'>"+Setting+"</td></tr>";
 	}
 	document.getElementById("guiPage_Settings_Settings").innerHTML = htmlToAdd + "</table>";
 }

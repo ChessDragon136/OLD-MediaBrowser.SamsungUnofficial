@@ -311,9 +311,16 @@
 	background-color:rgba(0,0,0,0.9);
 }
 
-.guiPage_Settings_Settings {
+.guiPage_Settings_Title{
+	font-size:18px;
 	position:absolute;
 	top:55px;
+	left:30px;
+}
+
+.guiPage_Settings_Settings {
+	position:absolute;
+	top:90px;
 	left: 50px;
 }
 
@@ -347,7 +354,7 @@
 
 .guiPage_Settings_Overview {
 	position:absolute;
-	top:50px;
+	top:65px;
 	left:600px;
 	width:300px;
 	height:400px;
@@ -863,6 +870,15 @@
     background-color:rgba(0,0,0,0.8);
 }
 
+.videoSubtitles1 {
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0.2);
+	text-align:center;
+}
+
 .videoTools {
 	position:absolute;
 	bottom:0px;
@@ -1096,4 +1112,54 @@ hr {
 
 	position: relative;
 	overflow: hidden;
+}
+/* ---------------------------------------------------------------------------- */
+.playlistContainerOne {
+	position: absolute;
+	top: 180px;
+	left:265px;
+	height: 200px;
+	width:430px;
+	background-color: #303030;
+	border: 2px solid #087B26;
+}
+
+.playlistContainerTwo {
+	position: absolute;
+	top: 170px;
+	left:265px;
+	height: 220px;
+	width:430px;
+	background-color: #303030;
+	border: 2px solid #087B26;
+}
+
+.playlistContainerThree {
+	position: absolute;
+	top: 160px;
+	left:265px;
+	height: 240px;
+	width:430px;
+	background-color: #303030;
+	border: 2px solid #087B26;
+}
+
+.playlistContainerFour {
+	position: absolute;
+	top: 150px;
+	left:265px;
+	height: 260px;
+	width:430px;
+	background-color: #303030;
+	border: 2px solid #087B26;
+}
+
+.playlistContainerFive {
+	position: absolute;
+	top: 140px;
+	left:265px;
+	height: 280px;
+	width:430px;
+	background-color: #303030;
+	border: 2px solid #087B26;
 }

@@ -87,7 +87,8 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 				document.getElementById("allOptions").className = 'ShowAllOptionsShort';	
 				document.getElementById("Content").className = 'ShowListShort';	
 				document.getElementById("InfoContainer").className = 'showItemContainerShort';	
-				document.getElementById("ShowImage").className = 'ShowImageShort';		
+				document.getElementById("ShowImage").className = 'ShowImageShort';
+				
 				this.MAXROWCOUNT = 3;
 			} else {
 				document.getElementById("allOptions").className = 'ShowAllOptions';
@@ -210,11 +211,22 @@ GuiTV_Show.updateSelectedItems = function () {
 			document.getElementById("ShowImage").style.backgroundImage="url('" + imgsrc + "')";
 			
 				if (this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount){
-					document.getElementById("UnwatchedOverlay").className = 'playedOverlayCount';
-					document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;
+					if (this.ItemData.Items.length < 4){
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCountShort';
+						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;
+					} else {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCount';
+						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;	
+					}
 				} else if (this.ItemData.Items[this.selectedItem].UserData.Played){
-					document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheck';
-					document.getElementById("UnwatchedOverlay").innerHTML = "";	
+					if (this.ItemData.Items.length < 4) {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheckShort';
+						document.getElementById("UnwatchedOverlay").innerHTML = "";	
+					} else {
+						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheck';
+						document.getElementById("UnwatchedOverlay").innerHTML = "";	
+					}
+						
 				} else {
 					document.getElementById("UnwatchedOverlay").className = "";
 					document.getElementById("UnwatchedOverlay").innerHTML = "";

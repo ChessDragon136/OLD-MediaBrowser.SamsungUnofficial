@@ -382,11 +382,11 @@ GuiTV_Show.processSelectedItem = function() {
 	if (this.selectedItem == -1) {
 		if (this.selectedBannerItem == 0) {
 			//Play All Episodes in Show
-			var urlToPlay= Server.getChildItemsURL(this.ShowData.Id,"&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			var urlToPlay= Server.getChildItemsURL(this.ShowData.Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiTV_Show");	
 		} else if (this.selectedBannerItem == 1) {
 			//Shuffle All Episodes in Show
-			var urlToPlay= Server.getChildItemsURL(this.ShowData.Id,"&IncludeItemTypes=Episode&Recursive=true&SortBy=Random&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			var urlToPlay= Server.getChildItemsURL(this.ShowData.Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=Random&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiTV_Show");	
 		}
 	} else {
@@ -396,11 +396,7 @@ GuiTV_Show.processSelectedItem = function() {
 }
 
 GuiTV_Show.playSelectedItem = function () {
-	if (this.selectedItem > -1) {
-		Support.updateURLHistory("GuiTV_Show",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[this.selectedItem].Id,"&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
-		GuiPlayer.start("PlayAll",urlToPlay,0,"GuiTV_Show");	
-	}
+	Support.playSelectedItem("GuiTV_Show",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
 GuiTV_Show.processUpKey = function() {

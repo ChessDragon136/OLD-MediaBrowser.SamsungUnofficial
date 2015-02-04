@@ -624,18 +624,28 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	startParams[2] = (startParams[2] === undefined) ? null : startParams[2];
 	startParams[3] = (startParams[3] === undefined) ? null : startParams[3];
 	if (ItemData.Items[selectedItem].MediaType == "Video") {
-		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
-		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id);
-		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000);	
-	}
-	if (ItemData.Items[selectedItem].MediaType == "ChannelVideoItem") {
-		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
-		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id);
-		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000);	
-	}
-	if (ItemData.Items[selectedItem].CollectionType == "photos") {
-		Support.updateURLHistory("GuiPage_HomeOneItem",startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
+		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000,page);	
+	} else if (ItemData.Items[selectedItem].MediaType == "ChannelVideoItem") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
+		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000,page);	
+	} else if (ItemData.Items[selectedItem].CollectionType == "photos") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 		GuiImagePlayer.start(ItemData,selectedItem,true);	
+	} else if (this.ItemData.Items[this.selectedItem].Type == "Series") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
+		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+		GuiPlayer.start("PlayAll",urlToPlay,0,page);
+	} else if (this.ItemData.Items[this.selectedItem].Type == "Season") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
+		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+		GuiPlayer.start("PlayAll",urlToPlay,0,page);	
+	} else if (this.ItemData.Items[selectedItem].Type == "Movie") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
+		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
+		GuiPlayer.start("PLAY",url,0,page);
 	}
 }
 

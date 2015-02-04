@@ -457,12 +457,12 @@ GuiPage_ItemDetails.processSelectedItem = function() {
 	switch (this.menuItems[this.selectedItem]) {
 	case "guiTV_Episode_Play":
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.ItemData.Id);
+		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
 		break;
 	case "guiTV_Episode_Resume":
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.ItemData.Id);
+		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,this.ItemData.UserData.PlaybackPositionTicks / 10000,"GuiPage_ItemDetails");
 		break;
 
@@ -473,7 +473,7 @@ GuiPage_ItemDetails.processSelectedItem = function() {
 			document.getElementById("GuiPage_ItemDetailsSub").focus();
 		} else {
 			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-			var url = Server.getItemInfoURL(this.trailerItems[0].Id);
+			var url = Server.getItemInfoURL(this.trailerItems[0].Id,"&ExcludeLocationTypes=Virtual");
 			GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
 		}
 		break;
@@ -625,7 +625,7 @@ GuiPage_ItemDetails.subKeyDown = function() {
 GuiPage_ItemDetails.processSelectedItem2 = function() {
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Chapters") {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.ItemData.Id);
+		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,this.subMenuItems[this.selectedItem2].StartPositionTicks / 10000,"GuiPage_ItemDetails");
 	}
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Suggested") {
@@ -635,7 +635,7 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 	}
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Trailer") {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.subMenuItems[this.selectedItem2].Id);
+		var url = Server.getItemInfoURL(this.subMenuItems[this.selectedItem2].Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
 	}
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Cast") {

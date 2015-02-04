@@ -65,24 +65,30 @@ GuiPlayer.init = function() {
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
-	
-	//Take focus to no input
-	document.getElementById("NoKeyInput").focus();
-	
-	//Turn off screensaver
-	Support.screensaverOff();
-	
+
     //Get Item Data (Media Streams)
     this.VideoData = Server.getContent(url);
     if (this.VideoData == null) { return; }
     
     this.PlayerIndex = 0; // Play All  - Default
     if (title == "PlayAll") {
+    	if (this.VideoData.TotalRecordCount == 0) {
+    		return;
+    	}
     	alert ("Number of Videos: "+this.VideoData.Items.length);
     	this.PlayerData = this.VideoData.Items[this.PlayerIndex];
     } else {
+    	if (this.VideoData.LocationType == "Virtual") {
+    		return
+    	}
     	this.PlayerData = this.VideoData;
     }
+    
+    //Turn off screensaver
+	Support.screensaverOff();
+    
+    //Take focus to no input
+	document.getElementById("NoKeyInput").focus();
     
     GuiPlayer_Versions.start(this.PlayerData,startingPlaybackTick,playedFromPage);
 }

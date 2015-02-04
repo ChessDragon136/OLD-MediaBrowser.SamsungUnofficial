@@ -392,11 +392,11 @@ GuiDisplay_Episodes.processSelectedItem = function() {
 	if (this.selectedItem == -1) {
 		if (this.selectedBannerItem == 0) {
 			//Play All Episodes in Show
-			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiDisplay_Episodes");	
 		} else if (this.selectedBannerItem == 1) {
 			//Shuffle All Episodes in Show
-			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&IncludeItemTypes=Episode&Recursive=true&SortBy=Random&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+			var urlToPlay= Server.getChildItemsURL(this.ItemData.Items[0].SeasonId,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=Random&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 			GuiPlayer.start("PlayAll",urlToPlay,0,"GuiDisplay_Episodes");	
 		}
 	} else {
@@ -406,11 +406,7 @@ GuiDisplay_Episodes.processSelectedItem = function() {
 }
 
 GuiDisplay_Episodes.playSelectedItem = function () {
-	if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
-		Support.updateURLHistory("GuiDisplay_Episodes",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		var url = Server.getItemInfoURL(this.ItemData.Items[this.selectedItem].Id);
-		GuiPlayer.start("PLAY",url,this.ItemData.Items[this.selectedItem].UserData.PlaybackPositionTicks / 10000);	
-	}
+	Support.playSelectedItem("GuiDisplay_Episodes",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
 GuiDisplay_Episodes.processUpKey = function() {

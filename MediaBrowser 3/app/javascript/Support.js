@@ -623,7 +623,13 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLeftItem,isTop) {
 	startParams[2] = (startParams[2] === undefined) ? null : startParams[2];
 	startParams[3] = (startParams[3] === undefined) ? null : startParams[3];
-	if (ItemData.Items[selectedItem].MediaType == "Video") {
+	
+	alert (ItemData.Items[selectedItem].CollectionType)
+	alert (ItemData.Items[selectedItem].MediaType)
+	alert (ItemData.Items[selectedItem].Type)
+	if (ItemData.Items[selectedItem].MediaType == "Folder") {
+		//Catch Folder - Do Nothing!
+	} else if (ItemData.Items[selectedItem].MediaType == "Video") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,ItemData.Items[selectedItem].UserData.PlaybackPositionTicks / 10000,page);	
@@ -634,15 +640,18 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	} else if (ItemData.Items[selectedItem].CollectionType == "photos") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 		GuiImagePlayer.start(ItemData,selectedItem,true);	
-	} else if (this.ItemData.Items[this.selectedItem].Type == "Series") {
+	} else if (ItemData.Items[selectedItem].Type == "PhotoAlbum") {
+		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+		GuiImagePlayer.start(ItemData,selectedItem,true);	
+	} else if (ItemData.Items[selectedItem].Type == "Series") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 		GuiPlayer.start("PlayAll",urlToPlay,0,page);
-	} else if (this.ItemData.Items[this.selectedItem].Type == "Season") {
+	} else if (ItemData.Items[selectedItem].Type == "Season") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 		GuiPlayer.start("PlayAll",urlToPlay,0,page);	
-	} else if (this.ItemData.Items[selectedItem].Type == "Movie") {
+	} else if (ItemData.Items[selectedItem].Type == "Movie") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,0,page);

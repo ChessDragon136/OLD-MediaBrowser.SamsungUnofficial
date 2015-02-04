@@ -135,6 +135,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     var fileInfo = "";
     if (this.PlayerData.Type == "Episode") {
     	fileInfo = Support.getNameFormat(this.PlayerData.SeriesName, this.PlayerData.ParentIndexNumber, this.PlayerData.Name, this.PlayerData.IndexNumber);
+    	fileInfo = fileInfo.replace("<br>", " ");
     } else {
     	fileInfo = this.PlayerData.Name;
     }

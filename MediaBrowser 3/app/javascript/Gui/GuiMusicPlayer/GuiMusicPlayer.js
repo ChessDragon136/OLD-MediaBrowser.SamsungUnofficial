@@ -59,27 +59,19 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,i
 	
 	if (title == "Theme") {
 		//Only play music is no real music is playing!
-		alert (this.Status + " : " + this.isThemeMusicPlaying);
 		if (this.Status == "STOPPED" || this.isThemeMusicPlaying == true) {
 			//Check if Theme Playback is enabled
 			if (File.getUserProperty("AudioTheme")) {
 				//Check if show Id has changed
-				alert (showThemeId + " : " + this.showThemeId + " : " + itemId)
-				
-				
-				if (showThemeId == this.showThemeId) {
-					//Do Nothing - same show. If playing it will continue, if not there wasn't anything to play!
-				} else {		
+				if (showThemeId != this.showThemeId) {		
 					var urlTheme = Server.getThemeMedia(itemId);
 					this.ItemData = Server.getContent(urlTheme);
 					if (this.ItemData == null) { return; }
 					
-					alert ("Theme Song Length: " + this.ItemData.ThemeSongsResult.Items.length);
-					
 					if (this.ItemData.ThemeSongsResult.Items.length > 0) {
 						//Play something
 						if (this.Status != "STOPPED") {
-							this.handleStopKey();
+							this.stopPlayback();
 						}
 						this.currentPlayingItem = 0;
 						this.showThemeId = showThemeId;
@@ -106,16 +98,10 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,i
 		if (this.ItemData == null) { return; }	
 			
 		//See if item is to be added to playlist or not - if not reset playlist
-		if (this.Status != "STOPPED" && this.isThemeMusicPlaying == true) {
-			this.queuedItems.length = 0;
-			this.handleStopKey();
+		if (this.Status != "STOPPED" && (this.isThemeMusicPlaying == true || isQueue == false)) {
+			this.stopPlayback();			
 		}
-		
-		if (this.Status != "STOPPED" && isQueue == false) {
-			this.queuedItems.length = 0;
-			this.handleStopKey();
-		}
-		
+
 		if (title != "Song") { 	
 	    	for (var index = 0; index < this.ItemData.Items.length; index++) {
 	    		this.queuedItems.push(this.ItemData.Items[index]);
@@ -125,6 +111,8 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,i
 	        this.queuedItems.push(this.ItemData);
 	    }
 		
+		//Only start if not already playing!
+		//If reset this will be true, if not it will be added to queued items
 		if (this.Status == "STOPPED") {
 			this.currentPlayingItem = 0;
 		    this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?static=true&MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
@@ -288,16 +276,21 @@ GuiMusicPlayer.handlePauseKey = function() {
 	this.Status = "PAUSED";
 }
 
-GuiMusicPlayer.handleStopKey = function() {
-	alert ("STOPPING PLAYBACK");
-	
+GuiMusicPlayer.stopPlayback = function() {
+	//Reset everything
+	this.Status = "STOPPED";
+	alert (this.currentPlayingItem);
+	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
 	this.showThemeId = null;
 	this.isThemeMusicPlaying = false;
-	
-	Server.videoStopped(this.queuedItems[this.currentPlayingItem].Id,this.queuedItems[this.currentPlayingItem].MediaSources[0].Id,this.currentTime,"DirectStream");
+	this.currentPlayingItem = 0;
+	this.queuedItems.length = 0;
 	this.pluginMusic.Stop();
-	this.Status = "STOPPED";
-	
+}
+
+GuiMusicPlayer.handleStopKey = function() {
+	alert ("STOPPING PLAYBACK");
+	this.stopPlayback();
 	this.returnToPage();
 }
 

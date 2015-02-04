@@ -82,21 +82,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		}
 
 		//Generate Banner Items - Mreove Home Page
-		this.menuItems = GuiMainMenu.menuItems.slice(1); 
-		
-		//Remove Settings, Logout & Music-Player from the end!
-		if (this.menuItems[this.menuItems.length-1] == "Log-Out") {
-			this.menuItems.pop();
-		}
-		if (this.menuItems[this.menuItems.length-1] == "Contributors") {
-			this.menuItems.pop();
-		}
-		if (this.menuItems[this.menuItems.length-1] == "Settings") {
-			this.menuItems.pop();
-		}
-		if (this.menuItems[this.menuItems.length-1] == "Music-Player") {
-			this.menuItems.pop();
-		}
+		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(1); 
 		
 		//Generate Banner display
 		for (var index = 0; index < this.menuItems.length; index++) {

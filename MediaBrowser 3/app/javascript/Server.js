@@ -95,6 +95,11 @@ Server.getItemInfoURL = function(ParentID, SortParams) {
 	}		
 }
 
+Server.getSearchURL = function(searchTermString) {
+	var parsedSearchTermString = Support.parseSearchTerm(searchTermString);
+	return Server.getServerAddr() + "/Search/Hints?format=json&UserId=" + Server.getUserID() + "&SearchTerm=" + parsedSearchTermString;
+}
+
 Server.getAdjacentEpisodesURL = function(ShowID,SeasonID,EpisodeID) {
 	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&ImageTypeLimit=1&seasonId="+SeasonID+"&userId="+Server.getUserID() +"&AdjacentTo=" + EpisodeID;
 }

@@ -156,31 +156,27 @@
 	line-height:30px;
 	text-align:center;
 }
-/*----------------------------------------------------------------------------------------------*/
-/*----------------------------------------------------------------------------------------------*/
 
-
-/*
-.Columns3SecondRow {
-	position:fixed;
-	padding-top:300px;
-	padding-left:105px;
+.SearchPageTitle{
+	font-size:18px;
+	position:absolute;
+	top:135px;
+	left:30px;
 }
 
-.Columns5SecondRow {
-	position:fixed;
-	padding-top:300px;
-	padding-left:120px;
+.SearchPageInput {
+	position:absolute;
+	top:90px;
+	left:40px;
+	width:600px;
+	text-align:center;
 }
-*/
 
-/*----------------------------------------------------------------------------------------------*/
-/*----------------------------------------------------------------------------------------------*/
-
-/*
-		"<div id='SeriesTitle' style='padding-left:10px;font-size:22px;'></div>" +
-		"<div id='SeriesSubData' style='padding-top:2px;padding-left:20px;'></div>" +
-*/
+.SearchPageResults {
+	position:absolute;
+	top:165px;
+	left:50px;
+}
 
 .EpisodesSeriesInfo{
 	font-size:18px;

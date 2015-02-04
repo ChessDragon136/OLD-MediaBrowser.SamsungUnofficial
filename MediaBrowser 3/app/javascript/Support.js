@@ -136,6 +136,9 @@ Support.processReturnURLHistory = function() {
 				break;	
 			case "GuiPage_Playlist": //Params 3 = type, saved in url2, Param 4 = playlistid, saved as title2
 				GuiPage_Playlist.start(title,url,title2,url2);
+				break;	
+			case "GuiPage_Search":
+				GuiPage_Search.start(title,url);
 				break;		
 			default:
 				break;
@@ -645,13 +648,13 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 		GuiImagePlayer.start(ItemData,selectedItem,true);	
 	} else if (ItemData.Items[selectedItem].Type == "Series") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
-		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
-		GuiPlayer.start("PlayAll",urlToPlay,0,page);
+		var url= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
+		GuiPlayer.start("PlayAll",url,0,page);
 	} else if (ItemData.Items[selectedItem].Type == "Season") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 		var urlToPlay= Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual&IncludeItemTypes=Episode&Recursive=true&SortBy=SortName&SortOrder=Ascending&Fields=ParentId,SortName,MediaSources")
 		GuiPlayer.start("PlayAll",urlToPlay,0,page);	
-	} else if (ItemData.Items[selectedItem].Type == "Movie") {
+	} else if (ItemData.Items[selectedItem].Type == "Movie" || ItemData.Items[selectedItem].Type == "Episode") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
 		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,0,page);
@@ -822,6 +825,12 @@ Support.processHomePageMenu = function (menuItem) {
 		//No API Support Currently
 		break;		
 	}
+}
+
+Support.parseSearchTerm = function(searchTermString) {
+	var parsedString = searchTermString.replace(/ /gi, "%20");
+	//Probably more chars to parse here!
+	return parsedString;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------

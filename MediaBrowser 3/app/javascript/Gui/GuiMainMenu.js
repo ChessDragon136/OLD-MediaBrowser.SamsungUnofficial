@@ -1,5 +1,6 @@
 var GuiMainMenu = {	
 		menuItems : [],
+		menuItemsHomePages : [],
 
 		pageSelected : "",
 		pageSelectedId : 0,
@@ -21,9 +22,11 @@ GuiMainMenu.getSelectedMainMenuItem = function() {
 GuiMainMenu.start = function() {	
 	//Generate Menu based on whethere there is any of (Folders, TV, Movies, .....)
 	this.menuItems.length = 0;
+	this.menuItemsHomePages.length = 0;
 	
 	//Generate main menu items
-	this.menuItems = Support.generateMainMenu(); 
+	this.menuItemsHomePages = Support.generateMainMenu(); 
+	this.menuItems = Support.generateMainMenu();
 	
 	//Add Header Types
 	var htmlToAdd = "<div id=headerUser style='text-align:center;padding-bottom:20px;'>"+Server.getUserName()+"</div>";	
@@ -31,14 +34,12 @@ GuiMainMenu.start = function() {
 		htmlToAdd += "<div id=" + this.menuItems[index] + " style='padding-left:5px;'>" + this.menuItems[index].replace(/-/g, ' ').toUpperCase()+ "</div>";	
 	}	
 	document.getElementById("headerTypes").innerHTML = htmlToAdd;
-
-	//Show submenu dependant on selectedMainMenuItem
-	this.selectedMainMenuItem = -1;
-	this.updateSelectedItems();
-	this.selectedMainMenuItem = 0;
 	
 	//Add settings and logout
-	htmlToAdd = "<hr>";
+	htmlToAdd = "";
+	this.menuItems.push("Search");
+	htmlToAdd += "<div id=Search style='padding-left:5px;'>SEARCH</div>";
+	htmlToAdd += "<hr>";
 	this.menuItems.push("Settings");
 	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";
 	this.menuItems.push("Contributors");
@@ -242,7 +243,11 @@ GuiMainMenu.processSelectedItems = function() {
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
 		GuiDisplayOneItem.start("Playlists", url,0,0);
-		break;			
+		break;		
+	case "Search":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		GuiPage_Search.start();
+		break;		
 	case "Settings":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		GuiPage_Settings.start();

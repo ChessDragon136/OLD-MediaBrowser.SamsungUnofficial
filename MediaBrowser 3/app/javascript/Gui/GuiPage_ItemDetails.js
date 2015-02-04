@@ -56,9 +56,12 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Resume' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>RESUME - "+Support.convertTicksToTimeSingle(this.resumeTicksSamsung)+"</div></div></div>";
 	}
 	
-	this.menuItems.push("guiTV_Episode_Play");
-	document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Play' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY</div></div></div>";
-	
+	if (this.ItemData.LocationType != "Virtual") {
+		this.menuItems.push("guiTV_Episode_Play");
+		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Play' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY</div></div></div>";
+		
+	}
+
 	if (this.ItemData.Chapters.length > 0) {
 		this.menuItems.push("guiTV_Episode_Chapters");
 		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Chapters' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/chapter.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>CHAPTERS</div></div></div>";
@@ -73,9 +76,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		}
 		
 		//Add to Playlist Option
-		this.menuItems.push("guiTV_Episode_Playlist");
-		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Playlist' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>ADD TO PLAYLIST</div></div></div>";
-		
+		if (this.ItemData.LocationType != "Virtual") {
+			this.menuItems.push("guiTV_Episode_Playlist");
+			document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Playlist' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>ADD TO PLAYLIST</div></div></div>";
+		}
 		
 		//Get Adjacent Data 
 		this.AdjacentData = Server.getContent(Server.getAdjacentEpisodesURL(this.ItemData.SeriesId,this.ItemData.SeasonId,this.ItemData.Id));
@@ -151,8 +155,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		}
 		
 		//Add to Playlist Option
-		this.menuItems.push("guiTV_Episode_Playlist");
-		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Playlist' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>ADD TO PLAYLIST</div></div></div>";
+		if (this.ItemData.LocationType != "Virtual") {
+			this.menuItems.push("guiTV_Episode_Playlist");
+			document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Playlist' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>ADD TO PLAYLIST</div></div></div>";
+		}
 		
 		//Set Title 
 		document.getElementById("guiTV_Show_Title").innerHTML = this.ItemData.Name;

@@ -834,10 +834,6 @@ Support.screensaverOff = function () {
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-
-//Replaced with AirDate Function
-
-//-----------------------------------------------------------------------------------------------------------------------------------------
 Support.convertTicksToTime = function (currentTime, duration) {
 	 totalTimeHour = Math.floor(duration / 3600000);
     timeHour = Math.floor(currentTime / 3600000);
@@ -919,6 +915,8 @@ Support.convertTicksToMinutes = function (currentTime) {
 	return timeMinute + " mins";
 }
 
+//-------------------------------------------------------------------------------------------------------------
+
 Support.SeriesRun = function(type, prodyear, status, enddate) {
 	var output = "";
 	if (type != "Series") {
@@ -927,8 +925,11 @@ Support.SeriesRun = function(type, prodyear, status, enddate) {
 		output += prodyear;
 		if (status == "Continuing") {
 			output += "-Present";
-		} else if (enddate) {
-			var endyear = new Date(enddate);
+		} else if (enddate) {		
+			var year = apiDate.substring(0,4);
+			var month = apiDate.substring(5,7);
+			var day = apiDate.substring(8,10);
+			var endyear = new Date(year,month-1,day);
 			var yyyy = endyear.getFullYear();
 			if (yyyy != prodyear) {
 				output += "-" + yyyy;
@@ -938,28 +939,55 @@ Support.SeriesRun = function(type, prodyear, status, enddate) {
 	}
 }
 
-Support.AirDate = function(inputdate, type) {
-	var d = new Date(inputdate);
+//Cannot parse the date from the API into a Date Object
+//Substring out relevant areas
+Support.AirDate = function(apiDate, type) {
+	var year = apiDate.substring(0,4);
+	var month = apiDate.substring(5,7);
+	var day = apiDate.substring(8,10);
+
 	if (type != "Episode") {
-		return d.getFullYear()
+		return year;
 	} else {
-		var dd = d.getDate()
-		if (dd < 10)
-			dd = '0' + dd
-		var mm = d.getMonth() + 1
-		if (mm < 10)
-			mm = '0' + mm
-		var yyyy = d.getFullYear()
-		return dd + '/' + mm + '/' + yyyy
+		return day + '/' + month + '/' + year;
 	}
 }
 
-Support.FutureDate = function(inputdate) {
-	var airdate = new Date(inputdate)
+Support.FutureDate = function(apiDate) {
+	var year = apiDate.substring(0,4);
+	var month = apiDate.substring(5,7);
+	var day = apiDate.substring(8,10);
+	
+	var airdate = new Date(year,month-1,day); //Month is stored in array starting at index 0!
 	var now = new Date()
+
 	if (now < airdate){
 		return true;
 	} else {
 		return false;
 	}
+}
+
+//
+//Replaced with AirDate Function
+Support.formatDateTime = function(apiDate, formatOption) {
+	//Below based on date serialisation 2006-04-07T23:00:00.0000000Z
+	//formatOption 0 = Date Only (Default) 1 = Date & Time
+	var year = apiDate.substring(0,4);
+	var month = apiDate.substring(5,7);
+	var day = apiDate.substring(8,10);
+	var time = apiDate.substring(11,16);
+
+	switch (formatOption) {
+	default:
+	case 0:
+		return day + "/" + month + "/" + year;
+	break;
+	case 1:
+		return day + "/" + month + "/" + year + " : " + time;
+		break;
+	}
+	
+	//Should never get here!!!!!
+	return day + "/" + month + "/" + year;
 }

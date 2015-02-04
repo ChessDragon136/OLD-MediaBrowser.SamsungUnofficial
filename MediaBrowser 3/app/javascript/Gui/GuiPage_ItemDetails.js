@@ -164,19 +164,19 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		document.getElementById("guiTV_Show_Title").innerHTML = this.ItemData.Name;
 		
 		//Set Film CD
-		if (this.ItemData.ImageTags.Disc) {
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Disc",126,126,0,false,0);
-			document.getElementById("guiTV_Show_CDArt").style.backgroundImage="url('" + imgsrc + "')";
+		if (File.getUserProperty("ShowDisc")) {
+			if (this.ItemData.ImageTags.Disc) {
+				var imgsrc = Server.getImageURL(this.ItemData.Id,"Disc",126,126,0,false,0);
+				document.getElementById("guiTV_Show_CDArt").style.backgroundImage="url('" + imgsrc + "')";
+			}
 		}
-		
-		
+			
 		//Set Film Poster
 		if (this.ItemData.ImageTags.Primary) {
 			var imgsrc = Server.getImageURL(this.ItemData.Id,"Primary",136,200,0,false,0);
 			document.getElementById("guiTV_Show_Poster").style.backgroundImage="url('" + imgsrc + "')";
 		}
 		
-	
 		//Set Film Backdrop
 		if (this.ItemData.BackdropImageTags.length > 0) {
 			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0,this.ItemData.BackdropImageTags.length); 

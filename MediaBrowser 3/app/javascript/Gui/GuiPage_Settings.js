@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,"30px","white",10000,"Media",300000,10000],
+		Settings : ["Default","View1","View2","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
@@ -187,7 +187,8 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		case "AudioTheme":
 		case "SkipShow":
 		case "SeasonLabel":
-		case "AutoPlay":	
+		case "AutoPlay":
+		case "ShowDisc":	
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -420,7 +421,8 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "DisplayMissingEpisodes":
 		case "DisplayUnairedEpisodes":	
 		case "TranscodeDSeries":
-		case "PlayDefaultAudioTrack":	
+		case "PlayDefaultAudioTrack":
+		case "ShowDisc":	
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
 		case "View1":
@@ -635,7 +637,8 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "AudioTheme":
 	case "SkipShow":	
 	case "SeasonLabel":	
-	case "AutoPlay":	
+	case "AutoPlay":
+	case "ShowDisc":	
 		this.UserData[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		break;
@@ -863,6 +866,10 @@ GuiPage_Settings.setOverview = function() {
 		case "AutoPlay":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Auto Play Next Episode";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "If enabled, when a playing episode has finished, the next episode will automatically load.";
+			break;
+		case "ShowDisc":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Show Disc Art";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enable or disable the disc art on episode & film pages.";
 			break;
 		case "SubtitleSize":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Size";

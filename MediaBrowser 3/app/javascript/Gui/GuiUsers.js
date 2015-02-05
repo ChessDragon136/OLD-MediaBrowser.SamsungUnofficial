@@ -90,7 +90,7 @@ GuiUsers.start = function(runAutoLogin) {
 		
 		//Set Backdrop
 		imgsrc =  "images/hd-splash.jpg";
-		document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+		document.getElementById("pageBackgroundHolder").style.backgroundImage="url(" + imgsrc + ")";
 		
 	}
 }

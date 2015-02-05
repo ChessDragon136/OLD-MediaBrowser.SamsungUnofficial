@@ -139,6 +139,7 @@ GuiMusicPlayer.updateSelectedItem = function() {
 	document.getElementById("guiMusicPlayerPrevious").style.color = "white";
 	document.getElementById("guiMusicPlayerNext").style.color = "white";
 	//document.getElementById("guiMusicPlayerPlaylist").style.color = "white";
+	document.getElementById("guiMusicPlayerScreenOff").style.color = "white";
 	
 	switch (this.selectedItem ) {
 		case 0:
@@ -155,8 +156,11 @@ GuiMusicPlayer.updateSelectedItem = function() {
 			break;
 		case 4:
 			document.getElementById("guiMusicPlayerNext").style.color = "red";
-			break;
+			break;	
 		case 5:
+			document.getElementById("guiMusicPlayerScreenOff").style.color = "red";
+			break;	
+		case 6:
 			//document.getElementById("guiMusicPlayerPlaylist").style.color = "red";
 			break;	
 		default:
@@ -170,6 +174,17 @@ GuiMusicPlayer.updateSelectedItem = function() {
 GuiMusicPlayer.keyDown = function() {
 	var keyCode = event.keyCode;
 	alert("Key pressed: " + keyCode);
+	
+	//Returning from blank screen
+	if (document.getElementById("everything").style.visibility=="hidden") {
+		document.getElementById("everything").style.visibility="";
+		
+		//Turn On Screensaver
+	    Support.screensaverOn();
+		Support.screensaver();
+		
+		keyCode = "VOID";
+	}
 	
 	//Update Screensaver Timer
 	Support.screensaver();
@@ -221,6 +236,9 @@ GuiMusicPlayer.keyDown = function() {
 					this.handleNextKey();
 					break;
 				case 5:
+					this.handleScreenKey();
+					break;	
+				case 6:
 					this.handlePlaylistKey();
 					break;	
 			}
@@ -356,6 +374,12 @@ GuiMusicPlayer.handlePreviousKey = function() {
 		//Start Playback
 		this.handlePlayKey();
 	}
+}
+GuiMusicPlayer.handleScreenKey = function() {
+	 //Turn off screensaver
+	Support.screensaverOff();
+	
+	document.getElementById("everything").style.visibility="hidden";
 }
 
 GuiMusicPlayer.handlePlaylistKey = function() {

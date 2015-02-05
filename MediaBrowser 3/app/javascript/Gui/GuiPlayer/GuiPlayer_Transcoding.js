@@ -49,23 +49,25 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 
 	var streamparams = "";
 	var transcodeStatus = "";
-	if (this.isVideo && this.isAudio) {
+	var convertAACtoDolby = (File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) ? true : false;
+	var audioCodec = (convertAACtoDolby) ? "ac3" : "aac";
+	
+	if (this.isVideo && this.isAudio && convertAACtoDolby) {
 		transcodeStatus = "Direct Stream";
 		streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id;
 	} else if (this.isVideo == false) {
 		transcodeStatus = "Transcoding Audio & Video";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=AAC&audioBitrate=360000&audiochannels=2&MediaSourceId='+this.MediaSource.Id;
-			
+			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec='+ audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;	
 		} else {
-			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=AAC&audioBitrate=360000&audiochannels=2&MediaSourceId='+this.MediaSource.Id;	
+			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=' + audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;	
 		}
 	} else if (this.isVideo == true && this.isAudio == false) {
 		transcodeStatus = "Transcoding Audio";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=AAC&audioBitrate=360000&audiochannels=2&MediaSourceId='+this.MediaSource.Id;
+			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;
 		} else {
-			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=AAC&audioBitrate=360000&audiochannels=2&MediaSourceId='+this.MediaSource.Id;
+			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;
 		}
 	}
 	var url = Server.getServerAddr() + '/Videos/' + showId + streamparams + '&DeviceId='+Server.getDeviceID();

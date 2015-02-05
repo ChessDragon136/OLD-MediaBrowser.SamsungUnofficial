@@ -179,14 +179,6 @@ var installFocusKeyCallbacks = function () {
     	GuiHelper.toggleHelp("GuiPage_Search");	
     });
     
-    ime.setKeyFunc(tvKey.KEY_TOOLS, function (keyCode) {
-    	if (GuiPage_Search.ItemData.TotalRecordCount > 0) {
-    		GuiPage_Search.handleTools(true);
-    	} else {
-    		GuiPage_Search.handleTools(false);
-    	}	
-    });
-    
     ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
     	widgetAPI.blockNavigation(event);
     	document.getElementById("NoKeyInput").focus();

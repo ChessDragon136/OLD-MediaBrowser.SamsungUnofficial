@@ -227,43 +227,43 @@ GuiTV_Show.updateSelectedItems = function () {
 				}
 					
 		}
-	}
 	
-	var htmlForSeason = "";
-	if (this.ItemData.Items[this.selectedItem].Name !== undefined) {
-		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-		    + this.ItemData.Items[this.selectedItem].Name + "</div></div>";
+		var htmlForSeason = "";
+		if (this.ItemData.Items[this.selectedItem].Name !== undefined) {
+			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+			    + this.ItemData.Items[this.selectedItem].Name + "</div></div>";
+		}
+		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
+			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+			    + Support.AirDate(
+					this.ItemData.Items[this.selectedItem].PremiereDate,
+					this.ItemData.Items[this.selectedItem].Type)
+					+ "</div></div>";
+		}
+	
+		if (this.ItemData.Items[this.selectedItem].ChildCount !== undefined) {
+			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
+				+ "<div class='MetaDataCellContent'>"
+			    + this.ItemData.Items[this.selectedItem].ChildCount
+				+ " Episodes" + "</div></div>";
+		}
+	
+		//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
+		document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
+	
+		var htmlForOverview = "";
+		htmlForOverview += "<div id='SeasonOverview' class='ShowOverviewContent'>"
+		GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
+		if (this.seasondata.Overview !== undefined) {
+			htmlForOverview += this.seasondata.Overview
+			
+		}
+		+ "</div>"
+		document.getElementById("ShowOverview").innerHTML = htmlForOverview;
+		Support.scrollingText("SeasonOverview");
 	}
-	if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
-		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-		    + Support.AirDate(
-				this.ItemData.Items[this.selectedItem].PremiereDate,
-				this.ItemData.Items[this.selectedItem].Type)
-				+ "</div></div>";
-	}
-
-	if (this.ItemData.Items[this.selectedItem].ChildCount !== undefined) {
-		htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-		    + this.ItemData.Items[this.selectedItem].ChildCount
-			+ " Episodes" + "</div></div>";
-	}
-
-	//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
-	document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
-
-	var htmlForOverview = "";
-	htmlForOverview += "<div id='SeasonOverview' class='ShowOverviewContent'>"
-	GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
-	if (this.seasondata.Overview !== undefined) {
-		htmlForOverview += this.seasondata.Overview
-		
-	}
-	+ "</div>"
-	document.getElementById("ShowOverview").innerHTML = htmlForOverview;
-	Support.scrollingText("SeasonOverview");
 
 };
 

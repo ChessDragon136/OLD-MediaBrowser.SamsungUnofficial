@@ -16,6 +16,14 @@
     background-color:rgba(59,59,59,1);
 }
 
+.pageBackgroundImg{ 
+	position:absolute;
+    top:0px;
+    left:0px;
+    height:540px;
+    width:960px;
+}
+
 .pageBackgroundFade{
 	position:absolute;
     top:0px;

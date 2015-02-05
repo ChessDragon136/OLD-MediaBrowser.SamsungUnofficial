@@ -97,11 +97,13 @@ Support.processReturnURLHistory = function() {
 		var isTop = array[7];
 		
 		//Handle Navigation?
+		alert (page);
 		switch (page) {
 			case "GuiPage_HomeOneItem":
 				GuiPage_HomeOneItem.start(title,url,selectedItem,topLeftItem);
 				break;
 			case "GuiPage_HomeTwoItems": 	
+				alert ("I ran")
 				GuiPage_HomeTwoItems.start(title,url,title2,url2,selectedItem,topLeftItem,isTop);
 				break;	
 			case "GuiDisplay_Series":
@@ -831,6 +833,46 @@ Support.parseSearchTerm = function(searchTermString) {
 	var parsedString = searchTermString.replace(/ /gi, "%20");
 	//Probably more chars to parse here!
 	return parsedString;
+}
+
+Support.fadeImage = function(imgsrc) {
+	var bg = $('#pageBackground').css('background-image');
+	if (bg != "none") { // catch initial entry from user page to app!
+		bg = bg.replace('url(','').replace(')','');
+		
+		//Do nothing!
+		if (bg != imgsrc) {
+			var imgHolder = new Image();  
+		    imgHolder.onload = function(){
+		    	$('#pageBackgroundHolder').css("background-image","url('"+bg+"')");
+		        
+		    	var img = new Image();  
+			    img.onload = function(){
+			      // image  has been loaded
+			    	$('#pageBackground').css("display","none");
+			    	$('#pageBackground').css("background-image","url('"+imgsrc+"')");
+			        $('#pageBackground').fadeIn(1500);	
+			        img = null;
+			    };
+			    img.src = imgsrc
+		    	
+			    imgHolder = null;
+		    };
+		    imgHolder.src = bg
+		}	
+	} else {
+		var img = new Image();  
+	    img.onload = function(){
+	      // image  has been loaded
+	    	$('#pageBackground').css("display","none");
+	    	$('#pageBackground').css("background-image","url('"+imgsrc+"')");
+	        $('#pageBackground').fadeIn(3000);	
+	        img = null;
+	    };
+	    img.src = imgsrc
+	}
+
+	
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------

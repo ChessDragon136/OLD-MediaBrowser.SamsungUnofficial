@@ -24,9 +24,9 @@ var GuiPage_Settings = {
 		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
 		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
-		TVSettings : ["Bitrate","Dolby","DTS","TranscodeDSeries"],
-		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable Transcoding on D Series"],
-		TVSettingsDefaults : [60,false,false,false],
+		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries"],
+		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series"],
+		TVSettingsDefaults : [60,false,false,false,false],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
 		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ", "Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
@@ -256,6 +256,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		case "Dolby":
 		case "DTS":	
 		case "TranscodeDSeries":
+		case "AACtoDolby":	
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -423,6 +424,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "TranscodeDSeries":
 		case "PlayDefaultAudioTrack":
 		case "ShowDisc":	
+		case "AACtoDolby":	
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
 		case "View1":
@@ -682,7 +684,8 @@ GuiPage_Settings.processSelectedSubItem = function() {
 		break;	
 	case "Dolby":
 	case "DTS":
-	case "TranscodeDSeries":	
+	case "TranscodeDSeries":
+	case "AACtoDolby":	
 		this.AllData.TV[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		break;
@@ -906,6 +909,10 @@ GuiPage_Settings.setOverview = function() {
 		case "DTS":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable DTS Playback";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select this option if your receiver is capable of decoding DTS streams";
+			break;
+		case "AACtoDolby":	
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable AAC Transcoding to Dolby";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Set this option only if you have an external reciever capable of recieving Dolby but not AAC<br><br>Will be ignored if Enable Dolby Digital Playback is false";
 			break;
 		case "TranscodeDSeries":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Transcoding on D Series TV's";

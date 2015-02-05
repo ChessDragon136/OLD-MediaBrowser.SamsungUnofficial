@@ -113,11 +113,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		//Set Backdrop
 		if (this.ItemData.ParentBackdropImageTags) {
 			var imgsrc = Server.getBackgroundImageURL(this.ItemData.ParentBackdropItemId,"Backdrop",960,540,0,false,0,this.ItemData.ParentBackdropImageTags.length);
-			
-			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-		}
-		
-		
+			Support.fadeImage(imgsrc);		
+		}	
 	} else {
 		//Add Remaining Menu Options
 		var url2 = Server.getCustomURL("/Movies/"+this.ItemData.Id+"/Similar?format=json&IncludeTrailers=false&Limit=5&UserId=" + Server.getUserID());
@@ -179,8 +176,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		
 		//Set Film Backdrop
 		if (this.ItemData.BackdropImageTags.length > 0) {
-			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0,this.ItemData.BackdropImageTags.length); 
-			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Id,"Backdrop",960,540,0,false,0,this.ItemData.BackdropImageTags.length);
+			Support.fadeImage(imgsrc);
 		}
 		
 		//If cover art use that else use text

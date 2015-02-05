@@ -58,7 +58,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		//Set backdrop
 		if (this.ItemData.Items[0].ParentBackdropImageTags.length > 0){
 			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[0].ParentBackdropItemId,"Backdrop",960,540,0,false,0,this.ItemData.Items[0].ParentBackdropImageTags.length);
-			document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+			Support.fadeImage(imgsrc);
 		}
 		
 		//If cover art use that else use text
@@ -254,7 +254,7 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 				//Set Background
 				if (GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length > 0) {
 					var imgsrc = Server.getBackgroundImageURL(GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540,0,false,0,GuiDisplay_Episodes.ItemData.Items[currentSelectedItem].BackdropImageTags.length);
-					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+					Support.fadeImage(imgsrc);
 				}
 			}
 		}, 500);

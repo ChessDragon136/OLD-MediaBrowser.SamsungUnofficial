@@ -231,15 +231,11 @@ GuiDisplay_Series.updateSelectedItems = function () {
 			//Set Background
 			if (GuiDisplay_Series.ItemData.Items[currentSelectedItem].BackdropImageTags.length > 0) {
 				var imgsrc = Server.getBackgroundImageURL(GuiDisplay_Series.ItemData.Items[currentSelectedItem].Id,"Backdrop",960,540,0,false,0,GuiDisplay_Series.ItemData.Items[currentSelectedItem].BackdropImageTags.length);
-				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+				Support.fadeImage(imgsrc);
 			}
 			else if (GuiDisplay_Series.ItemData.Items[currentSelectedItem].ParentBackdropImageTags) {
 				var imgsrc = Server.getBackgroundImageURL(GuiDisplay_Series.ItemData.Items[currentSelectedItem].ParentBackdropItemId,"Backdrop",960,540,0,false,0,GuiDisplay_Series.ItemData.Items[currentSelectedItem].ParentBackdropImageTags.length);
-				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-			}
-			else{
-				var imgsrc =  "images/music.jpg";
-				document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+				Support.fadeImage(imgsrc);
 			}
 		}
 	}, 500);

@@ -148,19 +148,17 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		this.updateSelectedItems2(updateCounter2);
 		
 		//Function to generate random backdrop
-		this.backdropTimeout  = setTimeout(function(){
-			var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
-			var randomImageData = Server.getContent(randomImageURL);
-			if (randomImageData == null) { return; }
+		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=10");
+		var randomImageData = Server.getContent(randomImageURL);
+		if (randomImageData == null) { return; }
 			
-			for (var index = 0; index < randomImageData.Items.length; index++) {
-				if (randomImageData.Items[index].BackdropImageTags.length > 0) {
-					var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
-					document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
-					break;
+		for (var index = 0; index < randomImageData.Items.length; index++) {
+			if (randomImageData.Items[index].BackdropImageTags.length > 0) {
+				var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+				Support.fadeImage(imgsrc);
+				break;
 				}
 			}
-		}, 500);
 		
 	} else if (this.ItemData.Items.length > 0 && this.ItemData2.Items.length == 0) {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);
@@ -308,12 +306,14 @@ GuiPage_HomeTwoItems.keyDown = function()
 				//1st row to 2nd row items
 				if (this.ItemData2.Items.length > 0) {
 					//Set to 0 and reset display, then set to -1 and update selected so none are selected, then reset to 0
-					this.selectedItem = 0;
-					this.topLeftItem = 0;
-					//Only update if there are items to show!!!
-					if (this.ItemData.Items.length > 0) {
-						this.updateDisplayedItems();
+					if (this.topLeftItem != 0) {
+						this.topLeftItem = 0;
+						//Only update if there are items to show!!!
+						if (this.ItemData.Items.length > 0) {
+							this.updateDisplayedItems();
+						}
 					}
+						
 					this.selectedItem = -1;
 					this.updateSelectedItems(true);		
 					this.selectedItem = 0;
@@ -472,12 +472,13 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			alert("UP BOTTOM");
 			if (this.ItemData.Items.length > 0) {
 				//Set to 0 and reset display, then set to -1 and update selected so none are selected, then reset to 0
-				this.selectedItem2 = 0;
-				this.topLeftItem2 = 0;
-				//Only update if there are items to show!!!
-				if (this.ItemData2.Items.length > 0) {
-					this.updateDisplayedItems2();
+				if (this.topLeftItem2 != 0) {
+					this.topLeftItem2 = 0;
+					if (this.ItemData2.Items.length > 0) {
+						this.updateDisplayedItems2();
+					}
 				}
+				
 				this.selectedItem2 = -1;
 				this.updateSelectedItems2(true);		
 				this.selectedItem2 = 0;
@@ -571,15 +572,10 @@ GuiPage_HomeTwoItems.processSelectedItem = function (array,isTop) {
 }
 
 GuiPage_HomeTwoItems.playSelectedItem = function (array,isTop) {
-	var selectedItem = 0;
-	var topLeftItem = 0;
-		
 	if (isTop == true) {
-		selectedItem = this.selectedItem;
-		topLeftItem = this.topLeftItem;
+		Support.playSelectedItem("GuiPage_HomeTwoItems",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,isTop);	
 	} else {
-		selectedItem = this.selectedItem2;
-		topLeftItem = this.topLeftItem2;
+		Support.playSelectedItem("GuiPage_HomeTwoItems",this.ItemData2,this.startParams,this.selectedItem2,this.topLeftItem2,isTop);	
 	}
-	Support.playSelectedItem("GuiPage_HomeTwoItem",this.ItemData,this.startParams,selectedItem,topLeftItem,isTop);	
+	
 }

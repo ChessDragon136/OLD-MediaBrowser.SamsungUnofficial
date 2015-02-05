@@ -128,6 +128,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     document.getElementById("pageContent").innerHTML = "";
     document.getElementById("page").style.visibility="hidden";
     document.getElementById("pageBackgroundFade").style.visibility="hidden";
+    document.getElementById("pageBackgroundHolder").style.visibility="hidden";
     document.getElementById("pageBackground").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = "";    
     
@@ -208,6 +209,7 @@ GuiPlayer.restorePreviousMenu = function() {
     document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
     
     document.getElementById("pageBackgroundFade").style.visibility="";
+    document.getElementById("pageBackgroundHolder").style.visibility="";
     document.getElementById("pageBackground").style.visibility="";
     document.getElementById("page").style.visibility="";
     
@@ -222,7 +224,7 @@ GuiPlayer.restorePreviousMenu = function() {
     //Turn On Screensaver
     Support.screensaverOn();
 	Support.screensaver();
-	
+
 	//Return to correct Page
 	Support.processReturnURLHistory();
 }
@@ -706,7 +708,7 @@ GuiPlayer.setupThreeDConfiguration = function() {
 GuiPlayer.setupAudioConfiguration = function() {
 
 	var audioInfoStream = this.playingMediaSource.MediaStreams[this.playingAudioIndex];
-	var codec = audioInfoStream.Codec.toLowerCase();
+	var codec = ((File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) && audioInfoStream.Codec.toLowerCase() == "aac") ? "ac3" : "aac";
 
 	switch (codec) {
 	case "dca":

@@ -20,37 +20,41 @@ GuiPage_Search.start = function(title, url) {
 	this.ItemData = null;
 	this.selectedItem = 0;
 	this.selectedItem2 = 0;
+	this.startParams = [],
 		
 	//Change Display
 	document.getElementById("pageContent").innerHTML = "<div id='title' class='EpisodesSeriesInfo'>Search</div><div class='SearchPageInput'> \
 		<form><input id='searchInput' type='text' size='50' value=''/></form> \
 		</div><div id='ResultsTitle' class='SearchPageTitle'></div><div id=Results class='SearchPageResults'></div>";
 	
-	//Create IME
-	new GuiPage_Search_Input();
-	
-	if (title !== undefined && url !== undefined && title != null && url != null) {
-		GuiPage_Search.ItemData = Server.getContent(url);
-    	if (GuiPage_Search.ItemData == null) { return; }
-    	
-    	document.getElementById("ResultsTitle").innerHTML = title;
-    	
-    	if (GuiPage_Search.ItemData.SearchHints.length > 0) {
-    		this.startParams[0] = title;
-    		this.startParams[1] = url;
-        	GuiPage_Search.updateDisplayedItems();
-        	GuiPage_Search.updateSelectedItems();
-        	document.getElementById("GuiPage_Search").focus();
-    	} else {
-    		//Must turn off as cannot catch keys during IME!
-    		Support.screensaverOff();
-    		document.getElementById("searchInput").focus();
-    	}
-	} else {
-		//Must turn off as cannot catch keys during IME!
-		Support.screensaverOff();
-		document.getElementById("searchInput").focus();
-	}
+	//Allows time for innerhtml to execute before creating ime
+	setTimeout(function () {
+		//Create IME
+		new GuiPage_Search_Input();
+		
+		if (title !== undefined && url !== undefined && title != null && url != null) {
+			GuiPage_Search.ItemData = Server.getContent(url);
+	    	if (GuiPage_Search.ItemData == null) { return; }
+	    	
+	    	document.getElementById("ResultsTitle").innerHTML = title;
+	    	
+	    	if (GuiPage_Search.ItemData.SearchHints.length > 0) {
+	    		GuiPage_Search.startParams[0] = title;
+	    		GuiPage_Search.startParams[1] = url;
+	        	GuiPage_Search.updateDisplayedItems();
+	        	GuiPage_Search.updateSelectedItems();
+	        	document.getElementById("GuiPage_Search").focus();
+	    	} else {
+	    		//Must turn off as cannot catch keys during IME!
+	    		Support.screensaverOff();
+	    		document.getElementById("searchInput").focus();
+	    	}
+		} else {
+			//Must turn off as cannot catch keys during IME!
+			Support.screensaverOff();
+			document.getElementById("searchInput").focus();
+		}
+	}, 500);	
 }
 
 GuiPage_Search.updateDisplayedItems = function() {
@@ -171,7 +175,11 @@ var installFocusKeyCallbacks = function () {
     		GuiPage_Search.selectedItem = 0;
     		GuiPage_Search.selectedItem2 = 0;
     		GuiPage_Search.updateSelectedItems();
-    		document.getElementById("GuiPage_Search").focus();
+    		
+    		setTimeout(function () {
+    			document.getElementById("GuiPage_Search").focus();
+    		},500)
+    		
     	}	
     });
     

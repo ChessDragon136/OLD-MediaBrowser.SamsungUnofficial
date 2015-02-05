@@ -846,12 +846,16 @@ Support.fadeImage = function(imgsrc) {
 		    imgHolder.onload = function(){
 		    	$('#pageBackgroundHolder').css("background-image","url('"+bg+"')");
 		        
+		    	if($('#pageBackground').is(':animated')) {
+		            $('#pageBackground').stop().animate({opacity:'100'});
+		         }
+		    	
 		    	var img = new Image();  
 			    img.onload = function(){
 			      // image  has been loaded
 			    	$('#pageBackground').css("display","none");
 			    	$('#pageBackground').css("background-image","url('"+imgsrc+"')");
-			        $('#pageBackground').fadeIn(1500);	
+			        $('#pageBackground').fadeIn(500);	
 			        img = null;
 			    };
 			    img.src = imgsrc
@@ -866,7 +870,7 @@ Support.fadeImage = function(imgsrc) {
 	      // image  has been loaded
 	    	$('#pageBackground').css("display","none");
 	    	$('#pageBackground').css("background-image","url('"+imgsrc+"')");
-	        $('#pageBackground').fadeIn(3000);	
+	        $('#pageBackground').fadeIn(500);	
 	        img = null;
 	    };
 	    img.src = imgsrc

@@ -437,17 +437,18 @@ GuiDisplay_Episodes.processDownKey = function() {
 
 	if (this.selectedItem >= this.ItemData.Items.length) {
 		this.selectedItem = (this.ItemData.Items.length-1);
-		if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
+	} else if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
 			this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
 			this.updateDisplayedItems();
-		}
+			this.updateSelectedItems();
 	} else {
 		if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
 			this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
 			this.updateDisplayedItems();
+			
 		}
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
 
 

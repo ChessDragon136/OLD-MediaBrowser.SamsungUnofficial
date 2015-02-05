@@ -103,7 +103,6 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.subtitleIndexes = [];
 	this.audioIndexes = [];
 	this.PlayerDataSubtitle = null;
-	this.subtitleInterval = null;
 	this.subtitleShowingIndex = 0;
 	this.subtitleSeeking = false;
 	this.videoStartTime = resumeTicksSamsung;
@@ -188,7 +187,6 @@ GuiPlayer.stopPlayback = function() {
 	alert ("STOPPING PLAYBACK");
 	
 	//Hide Subtitles Here
-	clearInterval(this.subtitleInterval);
 	document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 	document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
 	
@@ -328,13 +326,13 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 		    
 		    this.PlayerDataSubtitle = parser.fromSrt(PlayerDataSubtitles, true);
 		}
+		alert ("Subtitle Index: " + this.playingSubtitleIndex)
 	}
 }
 
 GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 	if (this.playingSubtitleIndex != null) {
 		//Clear Down Subtitles
-		clearInterval(this.subtitleInterval);
 		this.subtitleSeeking = true;
 		document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 		document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
@@ -359,9 +357,10 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 			}	
 		} else if (direction == "NewSubs") {
 			this.subtitleShowingIndex = 0;
-			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {
-				if (newTime >= this.PlayerDataSubtitle[index].startTime && newTime < this.PlayerDataSubtitle[index].endTime) {
+			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {				
+				if (newTime < this.PlayerDataSubtitle[index].startTime) {
 					this.subtitleShowingIndex = index;
+					alert (this.subtitleShowingIndex)
 					break;
 				}
 			}	
@@ -455,19 +454,16 @@ GuiPlayer.setCurrentTime = function(time) {
 
 		//Subtitle Update
 		if (this.playingSubtitleIndex != null && this.PlayerDataSubtitle != null && this.subtitleSeeking == false) {
-			clearInterval(this.subtitleInterval);
-			this.subtitleInterval = setInterval(function () {	
-				if (GuiPlayer.currentTime >= GuiPlayer.PlayerDataSubtitle[GuiPlayer.subtitleShowingIndex].endTime) {
-					document.getElementById("guiPlayer_Subtitles").innerHTML = "";
-					document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
-					GuiPlayer.subtitleShowingIndex++;
-				}
-				if (GuiPlayer.currentTime >= GuiPlayer.PlayerDataSubtitle[GuiPlayer.subtitleShowingIndex].startTime && GuiPlayer.currentTime < GuiPlayer.PlayerDataSubtitle[GuiPlayer.subtitleShowingIndex].endTime && document.getElementById("guiPlayer_Subtitles").innerHTML != GuiPlayer.PlayerDataSubtitle.text) {
-					document.getElementById("guiPlayer_Subtitles").innerHTML = GuiPlayer.PlayerDataSubtitle[GuiPlayer.subtitleShowingIndex].text; 
-					document.getElementById("guiPlayer_Subtitles").style.visibility = "";
-				}
-				GuiPlayer.currentTime = GuiPlayer.currentTime + 50;
-			}, 50);
+			alert ("Subtitle Update");
+			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime) {
+				document.getElementById("guiPlayer_Subtitles").innerHTML = "";
+				document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
+				this.subtitleShowingIndex++;
+			}
+			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].startTime && this.currentTime < this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime && document.getElementById("guiPlayer_Subtitles").innerHTML != this.PlayerDataSubtitle.text) {
+				document.getElementById("guiPlayer_Subtitles").innerHTML = this.PlayerDataSubtitle[this.subtitleShowingIndex].text; 
+				document.getElementById("guiPlayer_Subtitles").style.visibility = "";
+			}
 		}
 		
 		this.updateTimeCount++;
@@ -505,7 +501,6 @@ GuiPlayer.onBufferingStart = function() {
 	//Stop Subtitle Display - Mainly for Transcode pauses
 	if (this.playingSubtitleIndex != null) {
 		this.subtitleSeeking = true;
-		clearInterval(this.subtitleInterval);
 	}
 }
 
@@ -648,7 +643,6 @@ GuiPlayer.handlePauseKey = function() {
 	if(this.Status == "PLAYING") {
 		this.plugin.Pause();
 		this.Status = "PAUSED";
-		clearInterval(this.subtitleInterval);
 		Server.videoPaused(this.PlayerData.Id,this.playingMediaSource.Id,this.currentTime,this.PlayMethod);           	
 	} 
 }
@@ -886,7 +880,6 @@ GuiPlayer.keyDownToolsSub = function() {
 					this.playingSubtitleIndex = null;
 					this.subtitleShowingIndex = 0;
 					this.subtitleSeeking = false;
-					clearInterval(this.subtitleInterval);
 					document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 					document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
 					document.getElementById("GuiPlayer").focus();	

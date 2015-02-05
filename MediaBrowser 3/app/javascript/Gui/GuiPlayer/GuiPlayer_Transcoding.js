@@ -52,7 +52,7 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 	var convertAACtoDolby = (File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) ? true : false;
 	var audioCodec = (convertAACtoDolby) ? "ac3" : "aac";
 	
-	if (this.isVideo && this.isAudio && convertAACtoDolby) {
+	if (this.isVideo && this.isAudio && convertAACtoDolby == false) {
 		transcodeStatus = "Direct Stream";
 		streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id;
 	} else if (this.isVideo == false) {

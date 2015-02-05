@@ -287,12 +287,14 @@ GuiPage_HomeTwoItems.keyDown = function()
 			break;
 		case tvKey.KEY_UP:	
 			this.selectedBannerItem = 0;
-			this.topLeftItem = 0;
 			this.selectedItem = -2;
-			//Hide red
-			this.updateDisplayedItems();
+			if (this.topLeftItem != 0) {
+				this.topLeftItem = 0;
+				if (this.ItemData.Items.length > 0) {
+					this.updateDisplayedItems();
+				}
+			}	
 			this.updateSelectedItems(true);	
-			//update selected banner item
 			this.updateSelectedBannerItems();
 			break;	
 		case tvKey.KEY_DOWN:
@@ -471,7 +473,6 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 		case tvKey.KEY_UP:
 			alert("UP BOTTOM");
 			if (this.ItemData.Items.length > 0) {
-				//Set to 0 and reset display, then set to -1 and update selected so none are selected, then reset to 0
 				if (this.topLeftItem2 != 0) {
 					this.topLeftItem2 = 0;
 					if (this.ItemData2.Items.length > 0) {

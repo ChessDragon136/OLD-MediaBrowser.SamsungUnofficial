@@ -477,6 +477,24 @@
     padding-left:2px;
     background-color:rgba(0,0,0,0.7);
 }
+
+.menuProgressBar {
+	width:100%;
+	height:10px;
+	position:absolute;
+	bottom:1px;
+    left:0px;
+    background-color:rgba(0,0,0,0);
+}
+
+.menuProgressBar_Current {
+	height:10px;
+	position:absolute;
+	bottom:1px;
+    left:0px;
+    background-color:#5AAF48;
+}
+
 .genreItemCount {
   position: absolute;
   top: -5px;
@@ -495,6 +513,7 @@
 .Selected {
     border:4px solid #ffffff;  
 }
+
 /*----------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------*/
 .guiDisplay_Series-Banner {

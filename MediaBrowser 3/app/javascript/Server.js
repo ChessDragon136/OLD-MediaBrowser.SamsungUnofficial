@@ -108,38 +108,28 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 	var query = "";
 	switch (imagetype) {
 	case "Primary":
-		query =  Server.getServerAddr() + "/Items/"+ itemId +"/Images/Primary/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Primary/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Banner":
-		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Banner/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Banner/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Backdrop":
-		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Backdrop/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Backdrop/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Thumb":
-		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Thumb/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Thumb/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;	
 	case "Logo":
-		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Logo/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Logo/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "Disc":
-		query =   Server.getServerAddr() + "/Items/"+ itemId +"/Images/Disc/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Items/"+ itemId +"/Images/Disc/0?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	case "UsersPrimary":
-		return Server.getServerAddr() + "/Users/" + itemId + "/Images/Primary?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		query = Server.getServerAddr() + "/Users/" + itemId + "/Images/Primary?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
 	}
-	
-	//if (unplayedcount >0){
-		//query =  query + "&UnplayedCount=" + unplayedcount;
-	//}
-		
-	if (playedpercentage != 0 && playedpercentage !== undefined ){
-	  if (playedpercentage != 100){
-		  query = query + "&PercentPlayed=" + playedpercentage;
-	  }	
-	}
-	
+
 	query = query + "&Quality=80"
 	
 	return query;

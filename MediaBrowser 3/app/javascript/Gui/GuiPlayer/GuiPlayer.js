@@ -65,6 +65,9 @@ GuiPlayer.init = function() {
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
+	
+	//Display Loading 
+	document.getElementById("guiPlayer_Loading").style.visibility = "";
 
     //Get Item Data (Media Streams)
     this.VideoData = Server.getContent(url);

@@ -59,6 +59,7 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	//MediaSource,Url,hasVideo,hasAudio,hasSubtitle,videoIndex,audioIndex,subtitleIndex
 	if (this.MediaPlayback.length <= 0) {
 		//Error - No media playback options!
+		document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 		GuiNotifications.setNotification("None of the MediaSources are playable","Unable To Play");
 		//Removes URL to fix Navigation
 		Support.removeLatestURL();
@@ -256,6 +257,7 @@ GuiPlayer_Versions.keyDown = function() {
 			alert("RETURN");
 			widgetAPI.blockNavigation(event);
 			//Hide Menu
+			document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Versions_Playables").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Versions_Playables").innerHTML = "";
 			
@@ -279,11 +281,13 @@ GuiPlayer_Versions.keyDown = function() {
 			break;	
 		case tvKey.KEY_BLUE:
 			alert("BLUE");
+			document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 			File.deleteFile();
 			widgetAPI.sendExitEvent()
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
+			document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 			widgetAPI.sendExitEvent();
 			break;
 		default:

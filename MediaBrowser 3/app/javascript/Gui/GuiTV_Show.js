@@ -1,6 +1,7 @@
 var GuiTV_Show = {
 		ItemData : null,
 		ItemIndexData : null,
+		ShowData : null,
 		
 		selectedItem : 0,
 		selectedBannerItem : 0,
@@ -55,7 +56,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			"<div id='InfoContainer' class='showItemContainer'>" + 
 				"<div id='ShowTitle' class='MetaDataTitleTable'></div>" +
 				"<div id='ShowMetadata' class='MetaDataSeasonTable'></div>" +
-				"<div style:'max-height:150px;'><div id='ShowOverview' class='MetaDataSeasonTable'></div></div>" + 
+				"<div id='ShowOverview'></div>" + 
 			"</div>";
 			
 			var htmlforTitle = "";
@@ -253,16 +254,23 @@ GuiTV_Show.updateSelectedItems = function () {
 		//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
 		document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
 	
-		var htmlForOverview = "";
-		htmlForOverview += "<div id='SeasonOverview' class='ShowOverviewContent'>"
-		GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
-		if (this.seasondata.Overview !== undefined) {
-			htmlForOverview += this.seasondata.Overview
-			
-		}
-		+ "</div>"
-		document.getElementById("ShowOverview").innerHTML = htmlForOverview;
-		Support.scrollingText("SeasonOverview");
+		//Blocking code to skip getting data for items where the user has just gone past it
+		var currentSelectedItem = this.selectedItem;
+		setTimeout(function(){	
+			if (GuiDisplay_Series.selectedItem == currentSelectedItem) {
+				var htmlForOverview = "";
+				htmlForOverview += "<div id='ShowOverview' class='ShowOverview'>"
+				GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
+				if (this.seasondata.Overview !== undefined) {
+					htmlForOverview += this.seasondata.Overview;
+				} else {
+					htmlForOverview += this.ShowData.Overview;
+				}
+				+ "</div>"
+				document.getElementById("ShowOverview").innerHTML = htmlForOverview;
+				Support.scrollingText("ShowOverview");
+			}
+		},500);
 	}
 
 };

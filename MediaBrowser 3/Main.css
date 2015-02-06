@@ -1076,12 +1076,6 @@
     padding: 1px 3px 1px 3px
 }
 
-.ShowOverviewContent {
-	font-size:15px;
-	max-height:150px;
-	overflow-y:hidden;
-}
-
 hr {
     height: 2px;
     border: 0px solid grey; 

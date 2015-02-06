@@ -845,11 +845,6 @@ Support.fadeImage = function(imgsrc) {
 			var imgHolder = new Image();  
 		    imgHolder.onload = function(){
 		    	$('#pageBackgroundHolder').css("background-image","url('"+bg+"')");
-		        
-		    	if($('#pageBackground').is(':animated')) {
-		            $('#pageBackground').stop().animate({opacity:'100'});
-		         }
-		    	
 		    	var img = new Image();  
 			    img.onload = function(){
 			      // image  has been loaded

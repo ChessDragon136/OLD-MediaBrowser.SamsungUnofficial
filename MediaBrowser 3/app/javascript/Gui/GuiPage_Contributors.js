@@ -81,9 +81,6 @@ GuiPage_Contributors.keyDown = function() {
 			Support.processReturnURLHistory();
 			break;	
 		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
-		case tvKey.KEY_YELLOW:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Contributors");
 			break;	
 		case tvKey.KEY_TOOLS:

@@ -75,15 +75,19 @@ GuiPage_Settings.getMaxDisplay = function() {
 GuiPage_Settings.initiateViewValues = function() {
 	ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=7&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName";
 	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=7&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
+	Favourites = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+	FavouriteMovies = Server.getItemTypeURL("&IncludeItemTypes=Movies&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+	FavouriteSeries = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+	FavouriteEpisodes = Server.getItemTypeURL("&IncludeItemTypes=Episodes&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	SuggestedMovies = Server.getCustomURL("/Movies/Recommendations?format=json&userId="+Server.getUserID()+"&categoryLimit=6&itemLimit=7&fields=SortName&CollapseBoxSetItems=false");
 	MediaFolders = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
 	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&Limit=7&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
 	LatestMovies = Server.getItemTypeURL("&Limit=7&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=SortName&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");
 
-	this.View1Options = ["Resume All Items","TV Next Up","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View1Values = [ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
-	this.View2Options = ["None","Resume All Items","TV Next Up","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View2Values = [null,ResumeAllItemsURL,TVNextUp,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
+	this.View1Options = ["Resume All Items","TV Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","New TV","New Movies"];
+	this.View1Values = [ResumeAllItemsURL,TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
+	this.View2Options = ["None","Resume All Items","TV Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","New TV","New Movies"];
+	this.View2Values = [null,ResumeAllItemsURL,TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
 	
 	this.SettingsDefaults[1] = ResumeAllItemsURL;
 	this.SettingsDefaults[2] = TVNextUp;
@@ -531,8 +535,11 @@ GuiPage_Settings.keyDown = function() {
 			alert("ENTER");
 			this.processSelectedItem();
 			break;
+		case tvKey.KEY_YELLOW:	
+			//Favourites - Not needed on this page!
+			break;	
 		case tvKey.KEY_BLUE:	
-			Support.logout();
+			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
 			break;		
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
@@ -844,13 +851,13 @@ GuiPage_Settings.setOverview = function() {
 		case "View1":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Home View 1";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Sets the content of the first view of the Home page" +
-					"<br><br>Available Choices<ul style='padding-left:22px'><li>Resume All Items</li><li>TV Next Up</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
+					"<br><br>Available Choices<ul style='padding-left:22px'><li>Resume All Items</li><li>TV Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
 					"<br><br>Setting Home View 2 to None will show more content of this view";
-			break;
+			break; 
 		case "View2":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Home View 2";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Sets the content of the first view of the Home page" +
-					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Resume All Items</li><li>TV Next Up</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
+					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Resume All Items</li><li>TV Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
 					"<br><br>Setting this to None will show more content from Home View 1";
 			break;	
 		case "AudioTheme":

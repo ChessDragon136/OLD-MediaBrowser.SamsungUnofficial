@@ -211,10 +211,10 @@ GuiPage_MusicArtist.keyDown = function() {
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
+			//Favourites
+			break;		
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_MusicArtist");
 			break;	
 		case tvKey.KEY_EXIT:
@@ -476,11 +476,12 @@ GuiPage_MusicArtist.bottomKeyDown = function() {
 			document.getElementById("GuiPage_MusicArtist").focus();
 			this.updateSelectedItems(false);
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;		
 		case tvKey.KEY_YELLOW:	
+			//Favourites
+			break;			
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_MusicArtist");	
+			break;		
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY BOTTOM");
 			widgetAPI.sendExitEvent();

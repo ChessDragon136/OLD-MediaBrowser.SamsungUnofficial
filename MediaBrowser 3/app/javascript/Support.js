@@ -61,7 +61,13 @@ Support.updateURLHistory = function(page,title,url,title2,url2,selectedItem,topL
 			this.previousPageDetails.push([page,title,url,title2,url2,selectedItem,topLeftItem,isTop]);
 			alert ("Adding new item: " + this.previousPageDetails.length);
 		} else {
-			alert ("New Item not added - Is duplicate of previous page: " + this.previousPageDetails.length);
+			if (this.previousPageDetails[this.previousPageDetails.length-1][0] != page) {
+				//Required! Trust me dont remove this if!
+				this.previousPageDetails.push([page,title,url,title2,url2,selectedItem,topLeftItem,isTop]);
+				alert ("Adding new item: " + this.previousPageDetails.length);
+			} else {
+				alert ("New Item not added - Is duplicate of previous page: " + this.previousPageDetails.length);
+			}		
 		}
 	} else {
 		this.previousPageDetails.push([page,title,url,title2,url2,selectedItem,topLeftItem,isTop]);
@@ -216,7 +222,7 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItemWithProgress>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div></div>";
 				}
 			} else {
 				var title = Array[index].Name;
@@ -224,10 +230,10 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress></div></div>";	
 				} else if (Array[index].BackdropImageTags.length > 0) {	
-					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage,Array[index].BackdropImageTags.length);
+					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuItemWithProgress>"+ title + "</div></div>";
 				}
 			}			
 		} else {	
@@ -301,8 +307,11 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}
 			} else if (Array[index].Type == "Series" || Array[index].Type == "Movie") {
 				var title = Array[index].Name;	
-				if (showBackdrop == "yes") {
-					if (Array[index].BackdropImageTags.length > 0) {
+				if (showBackdrop == true) {
+					if (Array[index].ImageTags.Thumb) {		
+						var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
+						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";
+					} else if (Array[index].BackdropImageTags.length > 0) {
 						var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
 					} else {
@@ -698,6 +707,7 @@ Support.generateMainMenu = function() {
 	var menuItems = [];
 	
 	menuItems.push("Home");
+	menuItems.push("Favourites");
 	
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");
@@ -707,7 +717,8 @@ Support.generateMainMenu = function() {
 	if (hasMediaFolders.TotalRecordCount > 0) {
 		menuItems.push("Media-Folders");
 	}
-		
+	
+	
 	//Check TV
 	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
 	var hasTV = Server.getContent(urlTV);

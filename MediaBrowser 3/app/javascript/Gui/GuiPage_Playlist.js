@@ -232,10 +232,10 @@ GuiPage_Playlist.keyDown = function() {
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiPage_Playlist");
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
+			//Favourites - May not be needed on this page
+			break;			
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Playlist");
 			break;	
 		case tvKey.KEY_EXIT:

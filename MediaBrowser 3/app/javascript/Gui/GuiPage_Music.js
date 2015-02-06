@@ -196,12 +196,12 @@ GuiPage_Music.keyDown = function() {
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiPage_Music");
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
-			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			//Favourites - May not be needed on this page
 			break;	
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			break;		
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

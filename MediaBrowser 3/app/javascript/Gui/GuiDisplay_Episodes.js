@@ -346,22 +346,32 @@ GuiDisplay_Episodes.keyDown = function() {
 			this.processIndexing();
 			break;	
 		case tvKey.KEY_GREEN:
-			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
-				if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
-					Server.deleteWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = false
-				} else {
-					Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = true
+			if (this.selectedItem > -1) {
+				if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
+					if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
+						Server.deleteWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
+						this.ItemData.Items[this.selectedItem].UserData.Played = false
+					} else {
+						Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
+						this.ItemData.Items[this.selectedItem].UserData.Played = true
+					}
+					this.updateDisplayedItems();
+					this.updateSelectedItems();
 				}
-				this.updateDisplayedItems();
-				this.updateSelectedItems();
 			}
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
+			if (this.selectedItem > -1) {
+				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
+					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
+					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+				} else {
+					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
+					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+				}
+			}
+			break;		
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiDisplay_Episodes");
 			break;	
 		case tvKey.KEY_TOOLS:

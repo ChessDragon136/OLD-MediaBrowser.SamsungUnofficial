@@ -64,25 +64,13 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		//Set isResume based on title - used in UpdateDisplayedItems
 		this.isResume = (title == "Resume" ||  title == "Resume All Items" ) ? true : false;
 		
-		//Set MaxRow's Columns up
-		this.MAXCOLUMNCOUNT = 3;
-		if ((this.ItemData.Items[0].Type == "Series" || this.ItemData.Items[0].Type == "Movie") && this.isResume != true) {
-			this.MAXCOLUMNCOUNT = 8;
-		}
-		
 		//If to determine positioning of content
-		if ((this.ItemData.Items[0].Type == "Series" || this.ItemData.Items[0].Type == "Movie") && this.isResume != true) {
-			document.getElementById("Center").style.top = (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) ? "120px" : "70px";
-			document.getElementById("Center").style.left = "80px";
-			document.getElementById("Center").style.width = "800px";
-		} else {
-			document.getElementById("Center").style.top = (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) ? "130px" : "90px";
-			document.getElementById("Center").style.left = "100px";
-			document.getElementById("Center").style.width = "760px";
-		}
+		document.getElementById("Center").style.top = (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) ? "130px" : "90px";
+		document.getElementById("Center").style.left = "100px";
+		document.getElementById("Center").style.width = "760px";
 
 		//Generate Banner Items - Mreove Home Page
-		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(1); 
+		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(2); 
 		
 		//Generate Banner display
 		for (var index = 0; index < this.menuItems.length; index++) {
@@ -130,18 +118,13 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 
 GuiPage_HomeOneItem.updateDisplayedItems = function() {
 	Support.updateDisplayedItems(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Content","",this.isResume,null,this.isLatest);
+			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Content","",this.isResume,null,true);
 }
 
 //Function sets CSS Properties so show which user is selected
 GuiPage_HomeOneItem.updateSelectedItems = function (bypassCounter) {
-	if ((this.ItemData.Items[0].Type == "Series" || this.ItemData.Items[0].Type == "Movie") && this.isResume != true) {
-		Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","",bypassCounter);
-	} else {
-		Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Series Collection Selected","Series Collection","",bypassCounter);
-	}
+	Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
+			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Series Collection Selected","Series Collection","",bypassCounter);
 }
 
 GuiPage_HomeOneItem.updateSelectedBannerItems = function() {
@@ -244,12 +227,20 @@ GuiPage_HomeOneItem.keyDown = function() {
 				this.updateSelectedItems();
 			}
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;		
 		case tvKey.KEY_YELLOW:	
+			if (this.selectedItem > -1) {
+				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
+					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
+					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+				} else {
+					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
+					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+				}
+			}
+			break;	
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeOneItem");
-			break;
+			break;			
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

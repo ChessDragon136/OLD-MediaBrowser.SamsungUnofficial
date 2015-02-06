@@ -154,10 +154,10 @@ GuiPage_CastMember.keyDown = function()
 		case tvKey.KEY_PLAY:
 			this.playSelectedItem();
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
+			//Favourites
+			break;	
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_CastMember");
 			break;	
 		case tvKey.KEY_TOOLS:

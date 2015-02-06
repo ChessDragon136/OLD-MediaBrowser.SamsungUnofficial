@@ -59,6 +59,12 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 				"<div id='ShowOverview'></div>" + 
 			"</div>";
 			
+			//Load Background
+			if (this.ShowData.BackdropImageTags.length > 0){
+				var imgsrc = Server.getBackgroundImageURL(this.ShowData.Id,"Backdrop",960,540,0,false,0,this.ShowData.BackdropImageTags.length);
+				Support.fadeImage(imgsrc);
+			}
+			
 			var htmlforTitle = "";
 			htmlforTitle += this.ShowData.Name;
 			if (this.ShowData.CommunityRating !== undefined) {
@@ -253,24 +259,6 @@ GuiTV_Show.updateSelectedItems = function () {
 	
 		//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
 		document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
-	
-		//Blocking code to skip getting data for items where the user has just gone past it
-		var currentSelectedItem = this.selectedItem;
-		setTimeout(function(){	
-			if (GuiDisplay_Series.selectedItem == currentSelectedItem) {
-				var htmlForOverview = "";
-				htmlForOverview += "<div id='ShowOverview' class='ShowOverview'>"
-				GuiTV_Show.GetDetail(this.ItemData.Items[this.selectedItem].Id);
-				if (this.seasondata.Overview !== undefined) {
-					htmlForOverview += this.seasondata.Overview;
-				} else {
-					htmlForOverview += this.ShowData.Overview;
-				}
-				+ "</div>"
-				document.getElementById("ShowOverview").innerHTML = htmlForOverview;
-				Support.scrollingText("ShowOverview");
-			}
-		},500);
 	}
 
 };
@@ -355,12 +343,20 @@ GuiTV_Show.keyDown = function() {
 		case tvKey.KEY_PLAY:
 			this.playSelectedItem();
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
-			GuiMusicPlayer.showMusicPlayer("GuiTV_Show");	
-			break;
+			if (this.selectedItem > -1) {
+				if (this.ShowData.UserData.IsFavorite == true) {
+					Server.deleteFavourite(this.ShowData.Id);
+					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+				} else {
+					Server.setFavourite(this.ShowData.Id);
+					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+				}
+			}
+			break;	
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			break;	
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

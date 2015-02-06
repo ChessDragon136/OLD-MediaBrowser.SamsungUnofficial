@@ -178,10 +178,7 @@ GuiMainMenu.keyDown = function()
 			break;
 		case tvKey.KEY_RED:
 			this.toggleTestMode();
-			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;		
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
@@ -209,6 +206,11 @@ GuiMainMenu.processSelectedItems = function() {
 		}
 		
 		break;
+	case "Favourites":
+		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+		GuiDisplayOneItem.start("Favourites", url,0,0);
+		break;	
 	case "Media-Folders":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
 		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");	
@@ -298,7 +300,7 @@ GuiMainMenu.processReturnKey = function() {
 GuiMainMenu.processUpKey = function() {
 	this.selectedMainMenuItem--;
 	if (this.selectedMainMenuItem < 0) {
-		this.selectedMainMenuItem = 0;
+		this.selectedMainMenuItem = this.menuItems.length-1;
 	}
 	this.updateSelectedItems();
 }
@@ -306,7 +308,7 @@ GuiMainMenu.processUpKey = function() {
 GuiMainMenu.processDownKey = function() {
 	this.selectedMainMenuItem++;
 	if (this.selectedMainMenuItem >= this.menuItems.length) {
-		this.selectedMainMenuItem = this.menuItems.length-1;
+		this.selectedMainMenuItem = 0;
 	}	
 	this.updateSelectedItems();
 }

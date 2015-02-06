@@ -90,7 +90,7 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 
 GuiDisplayOneItem.updateDisplayedItems = function() {
 	Support.updateDisplayedItems(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Content","",this.isResume,this.genreType,"yes");
+			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Content","",this.isResume,this.genreType,true);
 }
 
 //Function sets CSS Properties so show which user is selected
@@ -172,24 +172,14 @@ GuiDisplayOneItem.keyDown = function() {
 			this.playSelectedItem();
 			break;	
 		case tvKey.KEY_GREEN:
-			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
-				if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
-					Server.deleteWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = false
-				} else {
-					Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
-					this.ItemData.Items[this.selectedItem].UserData.Played = true
-				}
-				this.updateDisplayedItems();
-				this.updateSelectedItems();
-			}
+			//Watched - May not be needed on this page
 			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;	
 		case tvKey.KEY_YELLOW:	
-			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
+			//Favourites - May not be needed on this page
 			break;	
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
+			break;		
 		case tvKey.KEY_TOOLS:
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);

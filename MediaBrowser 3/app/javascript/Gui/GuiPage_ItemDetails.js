@@ -411,12 +411,18 @@ GuiPage_ItemDetails.keyDown = function()
 				document.getElementById("guiTV_Show_Title").innerHTML += addSpan;
 			}
 			break;	
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;		
 		case tvKey.KEY_YELLOW:	
+			if (this.ItemData.UserData.IsFavorite == true) {
+				Server.deleteFavourite(this.ItemData.Id);
+				GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+			} else {
+				Server.setFavourite(this.ItemData.Id);
+				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+			}
+			break;				
+		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_ItemDetails");
-			break;	
+			break;		
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -608,10 +614,7 @@ GuiPage_ItemDetails.subKeyDown = function() {
 		case tvKey.KEY_INFO:
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiPage_ItemDetails");
-			break;
-		case tvKey.KEY_BLUE:	
-			Support.logout();
-			break;		
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

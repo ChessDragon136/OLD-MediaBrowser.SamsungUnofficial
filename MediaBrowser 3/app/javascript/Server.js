@@ -308,8 +308,33 @@ Server.deleteWatchedStatus = function(id) {
 	}
 }
 
+
 //------------------------------------------------------------
-//GuiIP Functions
+//       Item Watched Status Functions
+//------------------------------------------------------------
+
+Server.setFavourite = function(id) {
+	var url = this.serverAddr + "/Users/" + this.UserID + "/FavoriteItems/" + id;
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("POST", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+
+Server.deleteFavourite = function(id) {
+	var url = this.serverAddr + "/Users/" + this.UserID + "/FavoriteItems/" + id;
+	xmlHttp = new XMLHttpRequest();
+	if (xmlHttp) {
+		xmlHttp.open("DELETE", url , true); //must be true!
+		xmlHttp = this.setRequestHeaders(xmlHttp);
+		xmlHttp.send(null);
+	}
+}
+
+//------------------------------------------------------------
+//       GuiIP Functions
 //------------------------------------------------------------
 Server.createPlaylist = function(name, ids, mediaType) {
 	var url = this.serverAddr + "/Playlists?Name=" + name + "&Ids=" + ids + "&userId="+Server.getUserID() + "&MediaType=" + mediaType;

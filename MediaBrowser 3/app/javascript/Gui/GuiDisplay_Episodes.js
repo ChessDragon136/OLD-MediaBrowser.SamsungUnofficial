@@ -48,12 +48,11 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		"<div id='EpisodesSeriesInfo' class='EpisodesSeriesInfo'></div>" + 
 		"<div id='EpisodesImage' class='EpisodesImage'></div>" + 
 		"<div id='EpisodesInfo' class='EpisodesInfo'>" +
-		"<div id='SeasonName'></div>"+
-		"<div id='SeriesTitle' style='font-size:22px; margin:3px 0px' ></div>" +
-		"<div><hr /></div>"+
-		"<div id='SeriesOverview' class='EpisodesOverview'></div>" +
-		"<div id='SeriesSubData' style='margin-left:-5px;' class='MetaDataSeasonTable'></div>" +
-		"</div>";
+		"<div id='SeriesTitle' style='font-size:22px; margin:3px 0px'></div>" +
+		"<hr/>"+
+		"<div id='SeriesOverview' class='EpisodesOverview'></div></div>" +
+		"<div id='SeriesSubData' class='EpisodesSubData'></div>";
+		
 		
 		//Set backdrop
 		if (this.ItemData.Items[0].ParentBackdropImageTags.length > 0){
@@ -102,84 +101,34 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 	var htmlToAdd = "";
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++) {		
 		title = "";
-		var lineCountCSS = "EpisodeListTextOneLine";
 		if (this.ItemData.Items[index].IndexNumber === undefined) {
 			title = this.ItemData.Items[index].Name;
 		} else {
 			title = this.ItemData.Items[index].IndexNumber + " - " + this.ItemData.Items[index].Name;
 		}
- 
-		if (title.length > 40) {
-			lineCountCSS = "EpisodeListTextTwoLine";
-			//Regex to see if title has any spaces, if so record them in matches array
-			var regexp = / /g;
-			var match, matches = [];
-			while ((match = regexp.exec(title)) != null) {
-			  matches.push(match.index);
-			}
-			
-			//if title has space split the title at the nearest space before 40 characters
-			if (matches.length > 2) {
-				var nearestIndex = -1;
-				var gap = 1000;
-				for (var index2 = 0; index2 < matches.length; index2++) {
-					if (40 - matches[index2] < gap && 40 - matches[index2] > -1) {
-						gap = 40 - matches[index2];
-						nearestIndex = index2;
-					}
-				}
-				var line2 = title.substring(matches[nearestIndex]+1,title.length)
-				if (line2.length >  40) {
-					lineCountCSS = "EpisodeListTextThreeLine";
-					var gap = 1000;
-					var nearestIndex2 = -1;
-					for (var index2 = 0; index2 < matches.length; index2++) {
-						if (40 - matches[index2] < gap && 40 - matches[index2] > -1) {
-							gap = 40 - matches[index2];
-							nearestIndex2 = index2;
-						}
-					}
-					line2 = line2.substring(0,matches[nearestIndex2]) + "<br>" + line2.substring(matches[nearestIndex2]+1,line2.length);	
-				}
-				title = title.substring(0,matches[nearestIndex]) + "<br>" + line2;		
-			} else {
-				lineCountCSS = "EpisodeListTextThreeLine";
-				//No spaces, split on 45
-				var line2 = title.substring(40,title.length-1);
-				if (line2 > 40) {
-					line2 = line2.substring(0,40) + "<br>" + line2.substring(40,line2.length-1);
-				}
-				title = title.substring(0,40) + "<br>" + line2;	
-			}		
-		}
 
+		
 		if (this.ItemData.Items[index].UserData.Played == true) {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitleWatched'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='ShowListSingleWatched'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitleWatched'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='ShowListSingleWatched'></div></div>";
 			}
 		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
-			var status = ""
-			if (Support.FutureDate(this.ItemData.Items[index].PremiereDate) == true) {
-				status = "UNAIRED"
-			} else {
-				status = "MISSING"
-			}
-				
+			imageMissingOrUnaired = (Support.FutureDate(this.ItemData.Items[index].PremiereDate) == true) ? "ShowListSingleUnaired" : "ShowListSingleMissing";	
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>"+status+"</div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitleVirtual'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='"+imageMissingOrUnaired+"'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitleWatched'><div class="+lineCountCSS+">"+ title +"</div></div><div class='ShowListSingleMissing'>"+status+"</div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitleVirtual'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='"+imageMissingOrUnaired+"'></div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='EpisodeListSingleTitle'><div class="+lineCountCSS+">"+ title +"</div></div></div>"; // 
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitle'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table></div>"; // 
 			} else {  //
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div class='EpisodeListSingleTitle'><div class="+lineCountCSS+">"+ title +"</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitle'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table></div>";
 			}
 		}
 	}
@@ -203,32 +152,19 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		//Set Metadata
 		var htmlSubData = "";
 		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-			htmlSubData += "<div id='Rating' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
-				+ "</div></div>";
+			htmlSubData += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
+				+ " | ";
 		}
 		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
-			htmlSubData += "<div id='AirDate' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
-				+ "</div></div>";
+			htmlSubData += Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
+				+ " | ";
 		}
-
-//		if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined && this.ItemData.Items[this.selectedItem].OfficialRating != "") {
-//			htmlSubData += this.ItemData.Items[this.selectedItem].OfficialRating + " | ";
-//		}
-//		if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
-//			htmlSubData += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Episodes";
-//		}
 
 		if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-			htmlSubData += "<div id='RunTime' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
-				+ "</div></div>";
+			htmlSubData += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
+				+ " | ";
 		}
-//		htmlSubData = htmlSubData.substring(0,htmlSubData.length-2);
+		htmlSubData = htmlSubData.substring(0,htmlSubData.length-3);
 									
 		htmlForOverview = "";
 		if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
@@ -237,12 +173,20 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		
 		//var currentEpTitle = Support.getNameFormat("", this.ItemData.Items[this.selectedItem].ParentIndexNumber, this.ItemData.Items[this.selectedItem].Name, this.ItemData.Items[this.selectedItem].IndexNumber);
 		var currentEpTitle = this.ItemData.Items[this.selectedItem].IndexNumber + " - " + this.ItemData.Items[this.selectedItem].Name;
-		var currentSeries = "Season " + this.ItemData.Items[this.selectedItem].ParentIndexNumber;
-		
-		document.getElementById("SeasonName").innerHTML = currentSeries;
+
 		document.getElementById("SeriesTitle").innerHTML = currentEpTitle;
 		document.getElementById("SeriesSubData").innerHTML = htmlSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+		
+		var titleHeight = $('#SeriesTitle').height();
+		alert ("TitleHeight: " + titleHeight);
+		if (titleHeight >= 78) {
+			document.getElementById("SeriesOverview").style.height = "109px";
+		} else if (titleHeight >= 52) {
+			document.getElementById("SeriesOverview").style.height = "135px";
+		} else {
+			document.getElementById("SeriesOverview").style.height = "161px";
+		}
 					
 		Support.scrollingText("SeriesOverview");
 			

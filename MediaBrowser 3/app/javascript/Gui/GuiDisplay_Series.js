@@ -58,7 +58,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length > 0) {	
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='margin-left:-5px;' class='MetaDataTitleTable'></div>" +
+			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='font-size:22px;'></div>" +
 			"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;'></div>" +
 			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
 			"</div>";
@@ -153,60 +153,44 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
 	}
 			
-	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name;
+	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'>";
 	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForTitle += "<div id='ProductionYear' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-			+ Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate)
-			+ "</div></div>";
+		htmlForTitle += Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate)
+			+ " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlForTitle += "<div id='CommunityRating' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-			+ "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
-			+ "</div></div>";
+		htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
+			+ " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle += "<div id='Official Rating' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-			+ this.ItemData.Items[this.selectedItem].OfficialRating 
-			+ "</div></div>";
+		htmlForTitle +=this.ItemData.Items[this.selectedItem].OfficialRating 
+			+ " | ";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isTvOrMovies == 2) {
-			htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
-				+ "</div></div>";
+			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
+				+ " | ";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>"
-				+ this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
-				+ "</div></div>";	
+				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
+				+ " | ";	
 			}
 		} else {
 			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>"
-				+ this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
-				+ "</div></div>";					
+				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
+				+ " | ";					
 			} else {
-				htmlForTitle += "<div id='Count' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>"
-				+ this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
-				+ "</div></div>";
+				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
+				+ " | ";
 			}
 			
 		}	
 	}
-
-//	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-//			htmlForTitle += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + " | ";
-//	}
-
-				
+	
+	htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-3);
+	htmlForTitle += "</span>";
+			
 	htmlForSubData = "";
 	if (this.ItemData.Items[this.selectedItem].Genres !== undefined) {
 		htmlForSubData = this.ItemData.Items[this.selectedItem].Genres.join(" / ");

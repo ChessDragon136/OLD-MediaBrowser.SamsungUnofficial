@@ -218,7 +218,7 @@
 	position:absolute;
 	top:255px;
 	left:30px;
-	height:255px;
+	height:213px;
 	width:430px;
 	overflow-y:hidden;
 }
@@ -230,16 +230,26 @@
 	height:180px;
 	width:470px;
 	background-repeat: no-repeat;
-    background-position:left;
+    background-position:center;
 }
 
 .EpisodesOverview {
 	font-size:15px;
 	position:relative;
-	height:147px;
+	height:60px;
 	width:430px;
 	overflow-y:hidden;
 	margin: 10px 0px
+}
+
+.EpisodesSubData {
+	font-size:15px;
+	position:absolute;
+	top:470px;
+	left:30px;
+	width:430px;
+	overflow-y:hidden;
+	overflow-x:hidden;
 }
 
 .EpisodesList{
@@ -271,31 +281,20 @@
     background-position:center;
 }
 
-.EpisodeListTextOneLine {
-	position:relative;
-	top:18px;
-}
-
-.EpisodeListTextTwoLine {
-	position:relative;
-	top:10px;
-}
-
-.EpisodeListTextThreeLine {
-	position:relative;
-	top:1px;
-}
-
 .EpisodeListSingleTitle{
-	display:inline-block;
+	position:absolute;
 	width:330px;
+	height:50px;
+}
+
+.EpisodeListSingleTitleWatched{
+	width:277px;
 	height:50px;
 	position:absolute;
 }
 
-.EpisodeListSingleTitleWatched{
-	display:inline-block;
-	width:300px;
+.EpisodeListSingleTitleVirtual{
+	width:250px;
 	height:50px;
 	position:absolute;
 }
@@ -309,6 +308,28 @@
 	background-image:url('images/watched.png');
 	background-repeat: no-repeat;
     background-position:center;
+}
+
+.ShowListSingleMissing{
+	display:inline-block;
+ 	position:absolute; 
+    right:0px;
+	height:50px;
+	width:80px;
+	background-image:url('images/missing.png');
+	background-repeat: no-repeat;
+    background-position:center;	
+}
+
+.ShowListSingleUnaired{
+	display:inline-block;
+ 	position:absolute; 
+    right:0px;
+	height:50px;
+	width:80px;
+	background-image:url('images/unaired.png');
+	background-repeat: no-repeat;
+    background-position:center;	
 }
 
 .EpisodeListSelected {
@@ -982,124 +1003,9 @@
 	border: 2px solid black;
 }
 
- .ShowListSingleMissing{
-	display:inline-block;
- 	position:absolute; 
-	background: rgba(39,164,54,.8);
-	background-repeat: no-repeat;
-    background-position:center;
-    padding: 5px;
-    text-align: center;
-    color: #fff;
-    right:2px; 
-    margin-top: 11px;
-    margin-bottom: 11px;
-    border-radius: 10px
-}
 
-.playedOverlayCount {
-  display: block;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  text-align: center;
-  vertical-align: middle;
-  width: 24px;
-  height: 19px;
-  padding-top: 3px;
-  border-radius: 50%;
-  color: #fff;
-  background: rgb(82,181,75);
-  background: rgba(82,181,75,.8);
-}
-.playedOverlayCountShort {
-  display: block;
-  position: absolute;
-  top: 5px;
-  right: 60px;
-  text-align: center;
-  vertical-align: middle;
-  width: 24px;
-  height: 19px;
-  padding-top: 3px;
-  border-radius: 50%;
-  color: #fff;
-  background: rgb(82,181,75);
-  background: rgba(82,181,75,.8);
-}
 
-.playedOverlayCheck {
-  display: block;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  text-align: center;
-  vertical-align: middle;
-  width: 24px;
-  height: 19px;
-  padding-top: 3px;
-  border-radius: 50%;
-  color: #fff;
-  background: rgb(82,181,75);
-  background: rgba(82,181,75,.8);
-  background-image:url('images/watched.png');
-}
-.playedOverlayCheckShort {
-  display: block;
-  position: absolute;
-  top: 5px;
-  right: 60px;
-  text-align: center;
-  vertical-align: middle;
-  width: 24px;
-  height: 19px;
-  padding-top: 3px;
-  border-radius: 50%;
-  color: #fff;
-  background: rgb(82,181,75);
-  background: rgba(82,181,75,.8);
-  background-image:url('images/watched.png');
-}
 
-.MetaDataCell {
-  display:table-cell;
-  text-align: center;
-  font-size: 14px;
-  vertical-align: middle;
- }
- 
-.MetaDataTitleTable {
- display: inline-table;
- vertical-align: middle;
- border-collapse: separate;
- border-spacing: 5px 0px;
- font-size:22px
-
- }
- 
-.MetaDataSeasonTable {
- display: table;
- vertical-align: middle;
- border-collapse: separate;
- border-spacing: 5px 0px;
- font-size:22px;
- }
-
-.MetaDataCellContent{
-	background: -webkit-linear-gradient(rgba(72,72,72,.84), rgba(34,34,34,.65));
-	background-repeat: no-repeat;
-    background-position:center;
-    text-align: center;
-    border-radius: 3px;
-    margin: 0 0 3px 0;
-    padding: 1px 3px 1px 3px
-}
-
-hr {
-    height: 2px;
-    border: 0px solid grey; 
-    border-top-width: 1px;
-}
 
 .videoInfo_ProgressBar { 
 	height: 5px;  

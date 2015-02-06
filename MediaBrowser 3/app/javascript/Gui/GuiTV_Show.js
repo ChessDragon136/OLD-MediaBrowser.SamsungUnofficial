@@ -52,12 +52,12 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 		if (this.ItemData.Items.length > 0) {				
 			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content></div>" + 
 			"<div id='ShowSeriesInfo'></div>" + 
-			"<div id='ShowImage'><div id='UnwatchedOverlay'></div></div>" + 
+			"<div id='ShowImage'></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
-				"<div id='ShowTitle' class='MetaDataTitleTable'></div>" +
-				"<div id='ShowMetadata' class='MetaDataSeasonTable'></div>" +
-				"<div id='ShowOverview'></div>" + 
-			"</div>";
+				"<div id='ShowTitle' style='font-size:22px;'></div>" +
+				"<div id='ShowMetadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
+				"<div id='ShowOverview' class='ShowOverview'></div>" + 
+				"</div>";
 			
 			//Load Background
 			if (this.ShowData.BackdropImageTags.length > 0){
@@ -66,19 +66,17 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			}
 			
 			var htmlforTitle = "";
-			htmlforTitle += this.ShowData.Name;
+			htmlforTitle += this.ShowData.Name + "<span style='font-size:14px;padding-left:10px;'>";;
 			if (this.ShowData.CommunityRating !== undefined) {
-				htmlforTitle += "<div id='CommunityRating' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>"
-					+ "<img src='images/star.png'>"
-					+ this.ShowData.CommunityRating + "</div></div>";
+				htmlforTitle += "<img src='images/star.png'>"+ this.ShowData.CommunityRating
+				+ " | ";
 			}
 			if (this.ShowData.OfficialRating !== undefined) {
-				htmlforTitle += "<div id='OfficialRating' class='MetaDataCell'>"
-					+ "<div class='MetaDataCellContent'>"
-					+ this.ShowData.OfficialRating + "</div></div>";
+				htmlforTitle += this.ShowData.OfficialRating
+				+ " | ";
 			}
 			
+			htmlforTitle = htmlforTitle.substring(0,htmlforTitle.length-3);
 			document.getElementById("ShowTitle").innerHTML = htmlforTitle;
 			
 			if (this.ItemData.Items.length < 4) {
@@ -105,28 +103,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 				document.getElementById("ShowSeriesInfo").innerHTML = this.ShowData.Name;
 				document.getElementById("ShowSeriesInfo").className = 'EpisodesSeriesInfo';
 			}
-			
-			//Update Metadata
-			var htmlForTitle = "";
-			if (this.ShowData.ProductionYear !== undefined) {
-				htmlForTitle += this.ShowData.ProductionYear + " | ";
-			}
-			if (this.ShowData.CommunityRating !== undefined) {
-				htmlForTitle += "<img src='images/star.png'>" + this.ShowData.CommunityRating + " | ";
-			}
-			if (this.ShowData.OfficialRating !== undefined) {
-				htmlForTitle += this.ShowData.OfficialRating + " | ";
-			}
-			if (this.ShowData.RecursiveItemCount !== undefined) {
-				htmlForTitle += this.ShowData.RecursiveItemCount + " Episodes" + " | ";
-			}
-
-			if (this.ShowData.RunTimeTicks !== undefined) {
-					htmlForTitle += Support.convertTicksToMinutes(this.ShowData.RunTimeTicks/10000) + " | ";
-			}
-			htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-2);
-			document.getElementById("ShowMetadata").innerHTML = htmlForTitle;
-			
+				
 			//Update Overview
 			htmlForOverview = "";
 			if (this.ShowData.Overview !== undefined) {
@@ -212,52 +189,27 @@ GuiTV_Show.updateSelectedItems = function () {
 			document.getElementById("ShowImage").style.backgroundImage="url('" + imgsrc + "')";
 			
 				if (this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount){
-					if (this.ItemData.Items.length < 4){
-						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCountShort';
-						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;
-					} else {
-						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCount';
-						document.getElementById("UnwatchedOverlay").innerHTML = this.ItemData.Items[this.selectedItem].UserData.UnplayedItemCount;	
-					}
-				} else if (this.ItemData.Items[this.selectedItem].UserData.Played){
-					if (this.ItemData.Items.length < 4) {
-						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheckShort';
-						document.getElementById("UnwatchedOverlay").innerHTML = "";	
-					} else {
-						document.getElementById("UnwatchedOverlay").className = 'playedOverlayCheck';
-						document.getElementById("UnwatchedOverlay").innerHTML = "";	
-					}
-						
-				} else {
-					document.getElementById("UnwatchedOverlay").className = "";
-					document.getElementById("UnwatchedOverlay").innerHTML = "";
-				}
-					
+					//CD136 Removed - Not coded correctly
+				}			
 		}
 	
 		var htmlForSeason = "";
 		if (this.ItemData.Items[this.selectedItem].Name !== undefined) {
-			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-			    + this.ItemData.Items[this.selectedItem].Name + "</div></div>";
+			htmlForSeason += this.ItemData.Items[this.selectedItem].Name 
+				+ " | ";
 		}
+		
 		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
-			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-			    + Support.AirDate(
-					this.ItemData.Items[this.selectedItem].PremiereDate,
-					this.ItemData.Items[this.selectedItem].Type)
-					+ "</div></div>";
+			htmlForSeason += Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate,this.ItemData.Items[this.selectedItem].Type)
+					+ " | ";
 		}
 	
 		if (this.ItemData.Items[this.selectedItem].ChildCount !== undefined) {
-			htmlForSeason += "<div id='SeasonName' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-			    + this.ItemData.Items[this.selectedItem].ChildCount
-				+ " Episodes" + "</div></div>";
+			htmlForSeason += this.ItemData.Items[this.selectedItem].ChildCount
+				+ " Episodes | ";
 		}
-	
-		//htmlForSeason = htmlForSeason.substring(0, htmlForSeason.length - 2);
+		
+		htmlForSeason = htmlForSeason.substring(0,htmlForSeason.length-3);
 		document.getElementById("ShowMetadata").innerHTML = htmlForSeason;
 	}
 

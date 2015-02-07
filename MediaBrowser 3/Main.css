@@ -536,18 +536,31 @@
 }
 
 .genreItemCount {
-  position: absolute;
-  top: -5px;
-  right: 0px;
-  text-align: center;
-  vertical-align: middle;
-  width: 24px;
-  height: 19px;
-  padding-top: 3px;
-  border-radius: 50%;
-  color: #fff;
-  background: rgb(82,181,75);
-  background: rgba(82,181,75,.8)
+	position:absolute;
+	top:5px;
+	right:5px;
+	width:30px;
+	height:30px;
+	line-height:30px;
+	text-align:center;
+
+	background-image:url('images/itemCount.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.watchedItem {
+	position:absolute;
+	top:5px;
+	right:5px;
+	width:30px;
+	height:30px;
+	line-height:30px;
+	text-align:center;
+
+	background-image:url('images/watched.png');
+	background-repeat: no-repeat;
+    background-position:center;
 }
 
 .Selected {
@@ -661,8 +674,8 @@
 .ShowImageShort {
 	position:absolute;
 	top:70px;
-	left:20px;
-	width:250px;
+	left:75px;
+	width:140px;
 	height:200px;
 	background-repeat: no-repeat;
     background-position:center;

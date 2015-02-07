@@ -58,7 +58,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length > 0) {	
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='font-size:22px;'></div>" +
+			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='position:relative; height:22px; font-size:22px;'></div>" +
 			"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;'></div>" +
 			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
 			"</div>";
@@ -153,43 +153,52 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
 	}
 			
-	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<span style='font-size:14px;padding-left:10px;'>";
+	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<div style='display:inline-block; position:absolute; height:22px; bottom:0px'><table style='font-size:14px;padding-left:10px;'><tr>";
 	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		htmlForTitle += Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate)
-			+ " | ";
+		text =  Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate);
+		
+		if (text.indexOf("Present") > -1) {
+			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text
+			+ "</td>";
+		} else {
+			htmlForTitle += "<td class='MetadataItemSmall'>" + text
+			+ "</td>";
+		}
+		
+		
 	}
 	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlForTitle += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
-			+ " | ";
+		htmlImage = Support.getStarRatingImage(this.ItemData.Items[this.selectedItem].CommunityRating);
+		htmlForTitle += "<td class='MetadataItemSmallLong'>" + htmlImage;
+			+ "</td>";
 	}
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle +=this.ItemData.Items[this.selectedItem].OfficialRating 
-			+ " | ";
+		htmlForTitle +="<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].OfficialRating 
+			+ "</td>";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isTvOrMovies == 2) {
-			htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
-				+ " | ";	
+			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
+				+ "</td>";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
-				+ " | ";	
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
+				+ "</td>";	
 			}
 		} else {
 			if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
-				+ " | ";					
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
+				+ "</td>";					
 			} else {
-				htmlForTitle += this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
-				+ " | ";
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
+				+ "</td>";
 			}
 			
 		}	
 	}
-	
-	htmlForTitle = htmlForTitle.substring(0,htmlForTitle.length-3);
-	htmlForTitle += "</span>";
+
+	htmlForTitle += "</tr></table></div>";
 			
 	htmlForSubData = "";
 	if (this.ItemData.Items[this.selectedItem].Genres !== undefined) {

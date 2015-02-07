@@ -54,7 +54,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			"<div id='ShowSeriesInfo'></div>" + 
 			"<div id='ShowImage'></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
-				"<div id='ShowTitle' style='font-size:22px;'></div>" +
+				"<div id='ShowTitle' style='position:relative; height:22px; font-size:22px;'></div>" +
 				"<div id='ShowMetadata' style='padding-top:2px;color:#0099FF;padding-bottom:5px;'></div>" +
 				"<div id='ShowOverview' class='ShowOverview'></div>" + 
 				"</div>";
@@ -66,17 +66,18 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 			}
 			
 			var htmlforTitle = "";
-			htmlforTitle += this.ShowData.Name + "<span style='font-size:14px;padding-left:10px;'>";;
+			htmlforTitle += this.ShowData.Name + "<div style='display:inline-block; position:absolute; height:22px; bottom:0px'><table style='font-size:14px;padding-left:10px;'><tr>";
 			if (this.ShowData.CommunityRating !== undefined) {
-				htmlforTitle += "<img src='images/star.png'>"+ this.ShowData.CommunityRating
-				+ " | ";
+				htmlImage = Support.getStarRatingImage(this.ShowData.CommunityRating);
+				htmlforTitle += "<td class='MetadataItemSmallLong'>" + htmlImage;
+					+ "</td>";
 			}
 			if (this.ShowData.OfficialRating !== undefined) {
-				htmlforTitle += this.ShowData.OfficialRating
-				+ " | ";
+				htmlforTitle += "<td class='MetadataItemSmall'>" + this.ShowData.OfficialRating
+				+ "</td>";
 			}
 			
-			htmlforTitle = htmlforTitle.substring(0,htmlforTitle.length-3);
+			htmlforTitle += "</tr><table></div>";
 			document.getElementById("ShowTitle").innerHTML = htmlforTitle;
 			
 			if (this.ItemData.Items.length < 4) {

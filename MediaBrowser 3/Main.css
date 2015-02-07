@@ -242,14 +242,30 @@
 	margin: 10px 0px
 }
 
-.EpisodesSubData {
-	font-size:15px;
+.EpisodesSubData {	
+	font-size:14px;
 	position:absolute;
 	top:470px;
 	left:30px;
 	width:430px;
-	overflow-y:hidden;
-	overflow-x:hidden;
+}
+
+.MetadataItemSmall {
+	vertical-align:middle;
+	text-align:center;
+	width:72px;
+	height:22px;
+    background-position:center;
+    background-image:url('images/metadataSmall.png');
+}
+
+.MetadataItemSmallLong {
+	vertical-align:middle;
+	text-align:center;
+	width:100px;
+	height:22px;
+    background-position:center;
+    background-image:url('images/metadataSmallLong.png');
 }
 
 .EpisodesList{
@@ -283,20 +299,23 @@
 
 .EpisodeListSingleTitle{
 	position:absolute;
+	display:inline-block;
 	width:330px;
-	height:50px;
+	padding-top:18px;
 }
 
 .EpisodeListSingleTitleWatched{
 	width:277px;
-	height:50px;
 	position:absolute;
+	display:inline-block;
+	padding-top:18px;
 }
 
 .EpisodeListSingleTitleVirtual{
 	width:250px;
-	height:50px;
 	position:absolute;
+	display:inline-block;
+	padding-top:18px;
 }
 
 .ShowListSingleWatched{

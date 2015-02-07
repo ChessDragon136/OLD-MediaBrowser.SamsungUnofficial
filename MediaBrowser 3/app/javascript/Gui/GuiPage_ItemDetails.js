@@ -202,44 +202,36 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
    	}
 	
 	//Update MetaData
-	var htmlForMetaData = "";
+	var htmlForMetaData = "<table><tr>";
+	if (this.ItemData.CommunityRating !== undefined) {
+		htmlImage = Support.getStarRatingImage(this.ItemData.CommunityRating);
+		htmlForMetaData += "<td class='MetadataItemSmallLong'>" + htmlImage;
+			+ "</td>";
+	}
+	
 	if (this.ItemData.Type != "Episode") {
 		if (this.ItemData.ProductionYear !== undefined) {
-			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				this.ItemData.ProductionYear 
-				+ "</div></div>";
+			htmlForMetaData += "<td class='MetadataItemSmall'>" + this.ItemData.ProductionYear 
+				+ "</td>";
 		}
 	} else {
 		if (this.ItemData.PremiereDate !== undefined) {
-			htmlForMetaData += "<div id='AirDate' class='MetaDataCell'>"
-				+ "<div class='MetaDataCellContent'>"
-				+ Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type)
-				+ "</div></div>";
+			htmlForMetaData += "<td class='MetadataItemSmall'>" + Support.AirDate(this.ItemData.PremiereDate,this.ItemData.Type)
+				+ "</td>";
 			}
 	}
 
-	if (this.ItemData.CommunityRating !== undefined) {
-		htmlForMetaData += "<div id='CommunityRating' class='MetaDataCell'>" 
-			+ "<div class='MetaDataCellContent'>"
-			+ "<img src='images/star.png'>" + " " + this.ItemData.CommunityRating 
-			+ "</div></div>";
-	}
 	if (this.ItemData.OfficialRating !== undefined) {
-		htmlForMetaData += "<div id='OfficialRating' class='MetaDataCell'>"
-			+ "<div class='MetaDataCellContent'>"
-			+ this.ItemData.OfficialRating
-			+ "</div></div>";
+		htmlForMetaData += "<td class='MetadataItemSmall'>" + this.ItemData.OfficialRating
+			+ "</td>";
 	}
 
 	if (this.ItemData.RunTimeTicks !== undefined) {
-		htmlForMetaData += "<div id='Runtime' class='MetaDataCell'>" 
-			+ "<div class='MetaDataCellContent'>"
-			+ Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000)
-			+ "</div></div>";
+		htmlForMetaData += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000)
+			+ "</td>";
 	}
 	
-	
+	htmlForMetaData += "</tr></table>";
 	document.getElementById("guiTV_Show_Metadata").innerHTML = htmlForMetaData;
 	
 	//Set Overview Scroller

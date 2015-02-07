@@ -1072,3 +1072,45 @@ Support.formatDateTime = function(apiDate, formatOption) {
 	//Should never get here!!!!!
 	return day + "/" + month + "/" + year;
 }
+
+
+Support.getStarRatingImage = function(rating) {
+	switch (Math.round(rating)) {
+	case 0:
+	default:
+		return "<img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 1:
+		return "<img src='images/Star_Half.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 2:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 3:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Half.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 4:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 5:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Half.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 6:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Empty.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 7:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Half.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 8:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Empty.png'>"
+		break;
+	case 9:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Half.png'>"
+		break;	
+	case 10:
+		return "<img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'><img src='images/Star_Full.png'>"
+		break;
+	} 
+	
+	
+}

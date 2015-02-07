@@ -107,32 +107,43 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 			title = this.ItemData.Items[index].IndexNumber + " - " + this.ItemData.Items[index].Name;
 		}
 
-		
 		if (this.ItemData.Items[index].UserData.Played == true) {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitleWatched'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleWatched'>"+ title +"</div><div class='ShowListSingleWatched'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitleWatched'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleWatched'>"+ title +"</div><div class='ShowListSingleWatched'></div></div>";
 			}
 		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
 			imageMissingOrUnaired = (Support.FutureDate(this.ItemData.Items[index].PremiereDate) == true) ? "ShowListSingleUnaired" : "ShowListSingleMissing";	
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitleVirtual'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='"+imageMissingOrUnaired+"'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleVirtual'>"+ title +"</div><div class='"+imageMissingOrUnaired+"'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitleVirtual'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table><div class='"+imageMissingOrUnaired+"'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleVirtual'>"+ title +"</div><div class='"+imageMissingOrUnaired+"'></div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Primary) {			
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><table class='EpisodeListSingleTitle'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table></div>"; // 
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitle'>"+ title +"</div></div>"; // 
 			} else {  //
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><table class='EpisodeListSingleTitle'><tr><td style='vertical-align:middle;'>"+ title +"</td></tr></table></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitle'>"+ title +"</div></div>";
 			}
 		}
 	}
 	document.getElementById("Content").innerHTML = htmlToAdd;
+	
+	//Loop again to fix heights - has to be done after html is set!
+	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++) {		
+		//Height fix for overview based on height of title - Numbers will need to change if styling is changed!
+		var titleHeight = $('#title_'+this.ItemData.Items[index].Id).height();
+		
+		if (titleHeight >= 50) {
+			document.getElementById("title_"+this.ItemData.Items[index].Id).style.paddingTop = "1px";
+		} else if (titleHeight >= 34) {
+			document.getElementById("title_"+this.ItemData.Items[index].Id).style.paddingTop = "9px";
+		}
+	}
 }
 
 
@@ -150,21 +161,34 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		}
 					
 		//Set Metadata
-		var htmlSubData = "";
+		var htmlSubData = "<table><tr>";
+		
+		if (this.ItemData.Items[this.selectedItem].ParentIndexNumber !== undefined) {
+			if (this.ItemData.Items[this.selectedItem].ParentIndexNumber == 0) {
+				htmlSubData += "<td class='MetadataItemSmall'>" + "Specials";
+				+ "</td>";
+			} else {
+				htmlSubData += "<td class='MetadataItemSmall'>" + "Season " + this.ItemData.Items[this.selectedItem].ParentIndexNumber; 
+				+ "</td>";
+			}
+			
+		}
+		
 		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-			htmlSubData += "<img src='images/star.png'>" + this.ItemData.Items[this.selectedItem].CommunityRating 
-				+ " | ";
+			htmlImage = Support.getStarRatingImage(this.ItemData.Items[this.selectedItem].CommunityRating);
+			htmlSubData += "<td class='MetadataItemSmallLong'>" + htmlImage;
+				+ "</td>";
 		}
 		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
-			htmlSubData += Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
-				+ " | ";
+			htmlSubData += "<td class='MetadataItemSmall'>" + Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 
+				+ "</td>";
 		}
 
 		if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
-			htmlSubData += Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
-				+ " | ";
+			htmlSubData += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
+				+ "</td>";
 		}
-		htmlSubData = htmlSubData.substring(0,htmlSubData.length-3);
+		htmlSubData += "</tr></table>";
 									
 		htmlForOverview = "";
 		if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
@@ -178,8 +202,8 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 		document.getElementById("SeriesSubData").innerHTML = htmlSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
 		
+		//Height fix for overview based on height of title - Numbers will need to change if styling is changed!
 		var titleHeight = $('#SeriesTitle').height();
-		alert ("TitleHeight: " + titleHeight);
 		if (titleHeight >= 78) {
 			document.getElementById("SeriesOverview").style.height = "109px";
 		} else if (titleHeight >= 52) {

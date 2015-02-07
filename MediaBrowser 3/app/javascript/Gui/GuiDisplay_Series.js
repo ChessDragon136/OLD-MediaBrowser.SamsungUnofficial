@@ -157,8 +157,9 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
-		text =  Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate);
-		
+		//"" is required to ensure type string is stored!
+		text =  "" + Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate);
+
 		if (text.indexOf("Present") > -1) {
 			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text
 			+ "</td>";

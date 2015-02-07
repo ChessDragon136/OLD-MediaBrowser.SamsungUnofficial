@@ -303,9 +303,11 @@ GuiTV_Show.keyDown = function() {
 			if (this.selectedItem > -1) {
 				if (this.ShowData.UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ShowData.Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
 					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ShowData.Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
 					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
 			}

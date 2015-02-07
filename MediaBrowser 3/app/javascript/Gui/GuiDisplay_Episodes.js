@@ -332,9 +332,11 @@ GuiDisplay_Episodes.keyDown = function() {
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
 					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
 					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
 			}

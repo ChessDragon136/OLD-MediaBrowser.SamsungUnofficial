@@ -352,9 +352,11 @@ GuiPage_HomeTwoItems.keyDown = function()
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
 					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
+					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
 					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
 			}
@@ -506,9 +508,11 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			if (this.selectedItem > -1) {
 				if (this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData2.Items[this.selectedItem2].Id);
+					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = false;
 					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData2.Items[this.selectedItem2].Id);
+					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = true;
 					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
 			}

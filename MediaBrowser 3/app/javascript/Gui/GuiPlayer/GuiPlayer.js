@@ -457,7 +457,6 @@ GuiPlayer.setCurrentTime = function(time) {
 
 		//Subtitle Update
 		if (this.playingSubtitleIndex != null && this.PlayerDataSubtitle != null && this.subtitleSeeking == false) {
-			alert ("Subtitle Update");
 			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime) {
 				document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 				document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";

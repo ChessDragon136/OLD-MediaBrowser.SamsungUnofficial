@@ -133,7 +133,7 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			if (this.ItemData.LocalTrailerCount > 1) {
 				document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILERS</div></div></div>";
 			} else {
-				document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILER</div></div></div>";
+				//document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILER</div></div></div>";
 			}
 		} else {
 			if (this.ItemData.People.length > 0 && this.SimilarFilms.Items.length > 0) {
@@ -464,15 +464,16 @@ GuiPage_ItemDetails.processSelectedItem = function() {
 		break;
 
 	case "guiTV_Episode_Trailer":
-		if (this.ItemData.LocalTrailerCount > 1) {
-			document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle";
-			this.updateSelectedItems2();
-			document.getElementById("GuiPage_ItemDetailsSub").focus();
-		} else {
+		//Disable Multiple Trailers as its fucked
+		//if (this.ItemData.LocalTrailerCount > 1) {
+		//	document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle";
+		//	this.updateSelectedItems2();
+		//	document.getElementById("GuiPage_ItemDetailsSub").focus();
+		//} else {
 			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 			var url = Server.getItemInfoURL(this.trailerItems[0].Id,"&ExcludeLocationTypes=Virtual");
 			GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
-		}
+		//}
 		break;
 	case "guiTV_Episode_Chapters":
 	case "guiTV_Episode_Cast":
@@ -547,6 +548,9 @@ GuiPage_ItemDetails.subKeyDown = function() {
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
+	
+	//Update Screensaver Timer
+	Support.screensaver();
 	
 	//If screensaver is running 
 	if (Main.getIsScreensaverRunning()) {

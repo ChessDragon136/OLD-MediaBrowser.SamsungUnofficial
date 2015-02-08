@@ -65,6 +65,7 @@ GuiPlayer.init = function() {
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
+	alert ("Stat Time from start function: " + startingPlaybackTick);
 	
 	//Display Loading 
 	document.getElementById("guiPlayer_Loading").style.visibility = "";
@@ -99,6 +100,8 @@ GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) {
 GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	//Initiate Player for Video
 	this.init();
+	
+	alert ("Stat Time from startPlayback function: " + resumeTicksSamsung);
 
 	//Reset Vars
 	this.videoToolsOptions = [];
@@ -704,7 +707,12 @@ GuiPlayer.setupThreeDConfiguration = function() {
 GuiPlayer.setupAudioConfiguration = function() {
 
 	var audioInfoStream = this.playingMediaSource.MediaStreams[this.playingAudioIndex];
-	var codec = ((File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) && audioInfoStream.Codec.toLowerCase() == "aac") ? "ac3" : "aac";
+	var codec = audioInfoStream.Codec.toLowerCase();
+	
+	//If audio has been transcoded need to manually set codec as codec in stream info will be wrong
+	if ((File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) && audioInfoStream.Codec.toLowerCase() == "aac") {
+		codec = "ac3";
+	}
 
 	switch (codec) {
 	case "dca":
@@ -750,7 +758,11 @@ GuiPlayer.createToolsMenu = function() {
 	for (var index = 0;index < this.playingMediaSource.MediaStreams.length;index++) {
 		var Stream = this.playingMediaSource.MediaStreams[index];
 		if (Stream.Type == "Audio") {
-			this.audioIndexes.push(index);
+			if (Main.getModelYear() == "D" && File.getTVProperty("TranscodeDSeries") == false) {
+				//Don't add it!
+			} else {
+				this.audioIndexes.push(index);
+			}	
 		} 
 		
 		if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {
@@ -915,9 +927,10 @@ GuiPlayer.keyDownToolsSub = function() {
 				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] != this.playingAudioIndex) {
 					this.stopPlayback();
 					document.getElementById("GuiPlayer").focus();
-					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[this.videoToolsSelectedItemSub]);
-					var newTime = ((this.currentTime - 2000) < 0) ? 0 : this.currentTime - 2000; // Rewind a few seconds to ensure no gap loss
-					GuiPlayer.startPlayback(transcodeResult, newTime);
+					//Check if first index - If it is need to stream copy audio track
+					var isFirstAudioIndex = (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] == this.audioIndexes[0]) ? true : false;
+					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[this.videoToolsSelectedItemSub],isFirstAudioIndex);
+					GuiPlayer.startPlayback(transcodeResult, this.currentTime);
 				} else {
 					//Do Nothing!
 					document.getElementById("GuiPlayer").focus();

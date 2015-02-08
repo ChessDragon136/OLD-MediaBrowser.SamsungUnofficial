@@ -41,7 +41,7 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	//Loop through all options and see if transcode is required, generate URL blah...
 	for (var index = 0; index < this.MediaOptions.length; index++) {
 		var result = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.PlayerData.MediaSources[this.MediaOptions[index][0]],this.MediaOptions[index][0],
-			this.MediaOptions[index][1],this.MediaOptions[index][2]);
+			this.MediaOptions[index][1],this.MediaOptions[index][2],this.MediaOptions[index][3]);
 		
 		//Toggle D Series Transcoding in Main
 		if (Main.getModelYear == "D" && File.getTVProperty("TranscodeDSeries") == false) {
@@ -133,6 +133,7 @@ GuiPlayer_Versions.updateSelectedItems = function() {
 GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) {
 	var videoStreamIfNoDefault = 0, audioStreamCount = 0
 	var videoIndex = -1, audioIndex = -1;
+	var indexOfFirstAudio = -1;
 	
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json";
 	var UserData = Server.getContent(userURL);
@@ -142,6 +143,16 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 	var PlayDefaultAudioTrack = (UserData.Configuration.PlayDefaultAudioTrack !== undefined) ? true: false;
 	
 	var MediaStreams = MediaSource.MediaStreams;
+	
+	//Find 1st Audio Stream
+	for (var index = 0;index < MediaStreams.length;index++) {
+		var Stream = MediaStreams[index];
+		if (Stream.Type == "Audio") {
+			indexOfFirstAudio = index;
+			break;
+		} 
+	}
+	
 	for (var index = 0;index < MediaStreams.length;index++) {
 		var Stream = MediaStreams[index];
 		if (Stream.Type == "Video") {
@@ -197,6 +208,9 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		}
 	}
 	
+	alert ("audioIndex: " + audioIndex)
+	alert ("indexOfFirstAudio: " + indexOfFirstAudio)
+	var audioStreamFirst = (audioIndex == indexOfFirstAudio) ? true : false;
 	if (videoIndex > -1 && audioIndex > -1) {
 		//Check if item is 3D and if tv cannot support it don't add it to the list!
 		if (MediaSource.Video3DFormat !== undefined) {
@@ -205,13 +219,13 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			var pluginScreen = document.getElementById("pluginScreen");
 			if (pluginScreen.Flag3DEffectSupport()) {
 				alert ("3D playback supported on TV")
-				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex]); //Index != Id!!!
+				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); //Index != Id!!!
 			}
 		} else {
 			//Not 3D
 			alert ("Mediasource is 2D")
 			alert (MediaSource.Id);
-			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex]); // Index != Id!!!
+			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); // Index != Id!!!
 		}				
 	}	
 }

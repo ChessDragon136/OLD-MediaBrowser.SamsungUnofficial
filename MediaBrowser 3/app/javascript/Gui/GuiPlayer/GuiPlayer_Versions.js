@@ -119,7 +119,7 @@ GuiPlayer_Versions.updateDisplayedItems = function() {
 GuiPlayer_Versions.updateSelectedItems = function() {
 	for (var index = this.topLeftItem; index < Math.min(this.MediaSelections.length,this.topLeftItem + this.maxDisplay); index++){	
 		if (index == this.selectedItem) {
-			document.getElementById(this.MediaSelections[index][0].Id).style.color = "red";	
+			document.getElementById(this.MediaSelections[index][0].Id).style.color = "#27a436";	
 		} else {	
 			document.getElementById(this.MediaSelections[index][0].Id).style.color = "white";		
 		}		

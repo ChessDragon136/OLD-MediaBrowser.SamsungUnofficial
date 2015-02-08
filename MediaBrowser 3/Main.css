@@ -85,7 +85,7 @@
 }
 
 .headerSelected {
-	color:red;
+	color:#27a436;
 }
 
 /*----------------------------------------------------------------------------------------------*/
@@ -379,11 +379,15 @@
 }
 
 .GuiPage_Setting_Selected {
+	color:#27a436;
+}
+
+.GuiPage_Setting_Changing {
 	color:red;
 }
 
 .GuiPage_Setting_SubSelected {
-	color:#00b4ff;
+	color:#27a436;
 }
 
 .GuiPage_Setting_UnSelected {
@@ -714,19 +718,19 @@
 .ShowListSingle{
 	height:50px;
 	width:250px;
-	border-bottom: 1px solid #00b4ff;
+	border-bottom: 1px solid grey;
 }
 
 .FilmListSingle{
 	height:46px;
 	width:210px;
-	border-bottom: 1px solid #00b4ff;
+	border-bottom: 1px solid grey;
 }
 
 .FilmListSubSingle{
 	height:46px;
 	width:170px;
-	border-bottom: 1px solid #00b4ff;
+	border-bottom: 1px solid grey;
 }
 
 .FilmListSingleImage{

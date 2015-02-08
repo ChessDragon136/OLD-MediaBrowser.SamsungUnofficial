@@ -413,7 +413,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		this.updateSelectedBannerItems();
 	} else {
 		document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_SubSelected";
-		document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_Selected";
+		document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_Changing";
 		
 		switch (this.currentViewSettings[this.selectedItem]) {
 		case "Default":

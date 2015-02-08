@@ -129,7 +129,7 @@ GuiPage_Playlist.updateSelectedItems = function () {
 		//Sets Correct Item To Red
 		for (var index = 0; index < this.topMenuItems.length; index++) {
 			if (index == this.selectedItem2) {
-				document.getElementById(this.topMenuItems[index]).className = "red";
+				document.getElementById(this.topMenuItems[index]).className = "#27a436";
 			} else {
 				document.getElementById(this.topMenuItems[index]).className = "";
 			}
@@ -253,7 +253,7 @@ GuiPage_Playlist.handleReturn = function() {
 			document.getElementById(this.topMenuItems[index]).className = "";
 		}
 		this.selectedItem2 = 0;
-		GuiMainMenu.requested("GuiPage_Playlist",this.topMenuItems[0],"red");
+		GuiMainMenu.requested("GuiPage_Playlist",this.topMenuItems[0],"#27a436");
 	} else {
 		for (var index = 0; index<this.playItems.length;index++) {
 			document.getElementById(this.playItems[index]+this.AlbumData.Items[this.selectedItem].Id).className = "musicTableTd";

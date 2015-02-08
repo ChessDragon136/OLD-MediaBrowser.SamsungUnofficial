@@ -841,7 +841,7 @@ GuiPlayer.keyDownTools = function() {
 GuiPlayer.updateSelectedItems = function() {
 	for (var index = 0; index < this.videoToolsOptions.length; index++){	
 		if (index == this.videoToolsSelectedItem) {
-			document.getElementById(this.videoToolsOptions[index]).style.color = "red";	
+			document.getElementById(this.videoToolsOptions[index]).style.color = "#27a436";	
 		} else {	
 			document.getElementById(this.videoToolsOptions[index]).style.color = "white";		
 		}		
@@ -951,7 +951,7 @@ GuiPlayer.keyDownToolsSub = function() {
 GuiPlayer.updateSelectedItemsSub = function() {
 	for (var index = this.topLeftItem; index < Math.min(this.videoToolsSubOptions.length,this.topLeftItem + this.maxDisplay);index++){	
 		if (index == this.videoToolsSelectedItemSub) {
-			document.getElementById("videoToolsSubOptions"+index).style.color = "red";	
+			document.getElementById("videoToolsSubOptions"+index).style.color = "#27a436";	
 		} else {	
 			document.getElementById("videoToolsSubOptions"+index).style.color = "white";		
 		}		

@@ -143,28 +143,28 @@ GuiMusicPlayer.updateSelectedItem = function() {
 	
 	switch (this.selectedItem ) {
 		case 0:
-			document.getElementById("guiMusicPlayerPause").style.color = "red";
+			document.getElementById("guiMusicPlayerPause").style.color = "#27a436";
 			break;
 		case 1:
-			document.getElementById("guiMusicPlayerPlay").style.color = "red";
+			document.getElementById("guiMusicPlayerPlay").style.color = "#27a436";
 			break;
 		case 2:
-			document.getElementById("guiMusicPlayerStop").style.color = "red";
+			document.getElementById("guiMusicPlayerStop").style.color = "#27a436";
 			break;
 		case 3:
-			document.getElementById("guiMusicPlayerPrevious").style.color = "red";
+			document.getElementById("guiMusicPlayerPrevious").style.color = "#27a436";
 			break;
 		case 4:
-			document.getElementById("guiMusicPlayerNext").style.color = "red";
+			document.getElementById("guiMusicPlayerNext").style.color = "#27a436";
 			break;	
 		case 5:
-			document.getElementById("guiMusicPlayerScreenOff").style.color = "red";
+			document.getElementById("guiMusicPlayerScreenOff").style.color = "#27a436";
 			break;	
 		case 6:
-			//document.getElementById("guiMusicPlayerPlaylist").style.color = "red";
+			//document.getElementById("guiMusicPlayerPlaylist").style.color = "#27a436";
 			break;	
 		default:
-			document.getElementById("guiMusicPlayerPlay").style.color = "red";
+			document.getElementById("guiMusicPlayerPlay").style.color = "#27a436";
 			break;
 		}
 }

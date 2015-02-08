@@ -97,7 +97,7 @@ GuiPage_AddToPlaylist.updateDisplayedItems = function() {
 GuiPage_AddToPlaylist.updateSelectedItems = function() {
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length);index++) {
 		if (index == this.selectedItem) {
-			document.getElementById(this.ItemData.Items[index].Id).style.color = "red";	
+			document.getElementById(this.ItemData.Items[index].Id).style.color = "#27a436";	
 		} else {	
 			document.getElementById(this.ItemData.Items[index].Id).style.color = "#f9f9f9";		
 		}	

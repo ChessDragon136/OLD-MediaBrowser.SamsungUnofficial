@@ -1020,9 +1020,9 @@ Support.SeriesRun = function(type, prodyear, status, enddate) {
 		if (status == "Continuing") {
 			output += "-Present";
 		} else if (enddate) {		
-			var year = apiDate.substring(0,4);
-			var month = apiDate.substring(5,7);
-			var day = apiDate.substring(8,10);
+			var year = enddate.substring(0,4);
+			var month = enddate.substring(5,7);
+			var day = enddate.substring(8,10);
 			var endyear = new Date(year,month-1,day);
 			var yyyy = endyear.getFullYear();
 			if (yyyy != prodyear) {

@@ -1098,3 +1098,16 @@
 	background-color: #303030;
 	border: 2px solid #087B26;
 }
+
+.screensaveroverlay {
+	position : absolute;
+	left: 30px;
+    top: 480px;
+	
+	text-align : left;
+	font-size : 32px;
+	color : white;
+	
+	z-index: 99999;
+	display : block;
+}

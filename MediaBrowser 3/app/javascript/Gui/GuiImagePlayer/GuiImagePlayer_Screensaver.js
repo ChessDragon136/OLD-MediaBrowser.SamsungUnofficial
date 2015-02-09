@@ -5,6 +5,7 @@ var GuiImagePlayer_Screensaver = {
 		Timeout : null,
 		
 		images : [],
+		titles : [],
         imageIdx : 0,		// Image index
         effectIdx : 0,		// Transition effect index
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM'],
@@ -17,6 +18,9 @@ GuiImagePlayer_Screensaver.kill = function() {
 }
 
 GuiImagePlayer_Screensaver.start = function() {
+	this.images = []
+	this.titles = []
+	this.imageIdx = 0
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();
 	
@@ -45,6 +49,8 @@ GuiImagePlayer_Screensaver.start = function() {
 			if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index ].Id,"Backdrop",1920,1080);
 				this.images.push(imgsrc);
+				alert(randomImageData.Items[index].Name)
+				this.titles.push(randomImageData.Items[index].Name)
 			}
 		}		
 	}
@@ -74,14 +80,16 @@ GuiImagePlayer_Screensaver.start = function() {
 GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 	this.ImageViewer.startSlideshow();
 	this.ImageViewer.setOnBufferingComplete(function(){
-		GuiImagePlayer_Screensaver.ImageViewer.showNow();			
-    });
+		GuiImagePlayer_Screensaver.ImageViewer.showNow()
+		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer_Screensaver.titles[GuiImagePlayer_Screensaver.imageIdx];
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {
-				GuiImagePlayer_Screensaver.imageIdx = 0;
+				//Allows for refresh of images 
+				GuiImagePlayer_Screensaver.start()
 			}		
 			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
 		}, File.getUserProperty("ScreensaverImageTime"));	
@@ -95,7 +103,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 //SS calls  play -> BufferComplete, then the showNow will call RendComplete which starts timer for next image
 GuiImagePlayer_Screensaver.playImage = function() {	
 	var url = GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx];
-	GuiImagePlayer_Screensaver.ImageViewer.play(url, 1920, 1080);	
+	GuiImagePlayer_Screensaver.ImageViewer.play(url, 1920, 1080);
 }
 
 GuiImagePlayer_Screensaver.stopScreensaver = function() {	
@@ -106,7 +114,7 @@ GuiImagePlayer_Screensaver.stopScreensaver = function() {
 	this.ImageViewer.hide();
 	widgetAPI.blockNavigation(event);
 	GuiImagePlayer_Screensaver.kill()
-	
+	document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
 	//Show Page Contents
 	document.getElementById("everything").style.visibility="";
 }

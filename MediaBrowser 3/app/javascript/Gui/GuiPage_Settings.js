@@ -930,7 +930,7 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
 			break;	
 		case "PlayDefaultAudioTrack":
-			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play default audio track regardeless of language";
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play default audio track regardless of language";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
 			break;	
 		case "DefaultSubtitleLang":

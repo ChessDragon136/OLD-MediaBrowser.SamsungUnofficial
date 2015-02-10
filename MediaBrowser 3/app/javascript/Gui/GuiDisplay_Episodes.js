@@ -233,11 +233,11 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 GuiDisplay_Episodes.updateSelectedBannerItems = function() {
 	if (this.selectedItem == -1) {
 		if (this.selectedBannerItem == 0) {
-			document.getElementById("playAll").style.color = "red";
+			document.getElementById("playAll").style.color = "#27a436";
 			document.getElementById("shuffleAll").style.color = "#f9f9f9";
 		} else {
 			document.getElementById("playAll").style.color = "#f9f9f9";
-			document.getElementById("shuffleAll").style.color = "red";
+			document.getElementById("shuffleAll").style.color = "#27a436";
 		}
 	} else {
 		document.getElementById("playAll").style.color = "#f9f9f9";

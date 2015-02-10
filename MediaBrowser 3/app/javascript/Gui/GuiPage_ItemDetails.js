@@ -406,11 +406,11 @@ GuiPage_ItemDetails.keyDown = function()
 		case tvKey.KEY_YELLOW:	
 			if (this.ItemData.UserData.IsFavorite == true) {
 				Server.deleteFavourite(this.ItemData.Id);
-				this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
+				this.ItemData.UserData.IsFavorite = false;
 				GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 			} else {
 				Server.setFavourite(this.ItemData.Id);
-				this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
+				this.ItemData.UserData.IsFavorite = true;
 				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
 			break;				

@@ -74,7 +74,7 @@ GuiPage_Settings.getMaxDisplay = function() {
 
 GuiPage_Settings.initiateViewValues = function() {
 	ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=7&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName";
-	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=7&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
+	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=24&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
 	Favourites = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteMovies = Server.getItemTypeURL("&IncludeItemTypes=Movies&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteSeries = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");

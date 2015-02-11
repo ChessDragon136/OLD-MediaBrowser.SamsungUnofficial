@@ -3,8 +3,10 @@ var GuiImagePlayer = {
 		newItemData : null,
 		
 		Timeout : null,
+		Paused : false,
 		
 		images : [],
+		overlay : [],
         imageIdx : 0,		// Image index
         effectIdx : 0,		// Transition effect index
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM']
@@ -37,6 +39,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	for (var index = 0; index < result.Items.length; index++) {
 		var temp = Server.getImageURL(this.newItemData.Items[index].Id,"Primary",1920,1080,0,false,0);
 		this.images.push(temp);
+		this.overlay.push(Support.formatDateTime(this.newItemData.Items[index].PremiereDate,1))
 		if (result.Items[index].Id == ItemData.Items[selectedItem].Id) {
 			this.imageIdx = index;
 		}
@@ -79,17 +82,25 @@ GuiImagePlayer.setSlideshowMode = function() {
     });
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer.Timeout);
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer.overlay[GuiImagePlayer.imageIdx];
 		GuiImagePlayer.Timeout = setTimeout(function(){
-			GuiImagePlayer.imageIdx = GuiImagePlayer.imageIdx+1;
-			if (GuiImagePlayer.imageIdx >= GuiImagePlayer.newItemData.Items.length ) {
-				GuiImagePlayer.imageIdx = 0;
-			}		
-			GuiImagePlayer.ImageViewer.prepareNext(GuiImagePlayer.images[GuiImagePlayer.imageIdx], GuiImagePlayer.ImageViewer.Effect.FADE1);
+			if (GuiImagePlayer.Paused == false) {
+				GuiImagePlayer.imageIdx = GuiImagePlayer.imageIdx+1;
+				if (GuiImagePlayer.imageIdx >= GuiImagePlayer.newItemData.Items.length ) {
+					GuiImagePlayer.imageIdx = 0;
+				}
+				GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
+			}
 		}, File.getUserProperty("ImagePlayerImageTime"));	
     });
 	
 	this.ImageViewer.stop();
 	this.playImage();
+}
+
+//Prepare next image
+GuiImagePlayer.prepImage = function(imageIdx) {
+	this.ImageViewer.prepareNext(GuiImagePlayer.images[imageIdx], this.ImageViewer.Effect.FADE1)
 }
 
 // Play image - only called once in slideshow!
@@ -119,6 +130,8 @@ GuiImagePlayer.keyDown = function() {
 			clearTimeout(this.Timeout);
 			this.Timeout = null;
 			this.images = [];
+			this.overlay = [];
+			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
 			widgetAPI.blockNavigation(event);
@@ -129,6 +142,48 @@ GuiImagePlayer.keyDown = function() {
 			Support.screensaver();
 			
 			Support.processReturnURLHistory();
+			break;
+		case tvKey.KEY_RIGHT:
+			alert("RIGHT")
+			if (this.imageIdx >= this.newItemData.Items.length) {
+				this.imageIdx = 0	
+			} else {
+				this.imageIdx = this.imageIdx + 1
+			}
+			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
+			break;
+		case tvKey.KEY_LEFT:
+			alert("LEFT")
+			if (this.imageIdx == 0) {
+				this.imageIdx = this.newItemData.Items.length
+			} else {
+				this.imageIdx = this.imageIdx - 1	
+			}
+			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
+			break;
+		case tvKey.KEY_PAUSE:
+			alert("PAUSE")
+			this.Paused = true
+			break;
+		case tvKey.KEY_PLAY:
+			alert("PLAY")
+			this.Paused = false
+			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
+			break;
+		case tvKey.KEY_INFO:
+			alert ("INFO KEY");
+			GuiHelper.toggleHelp("GuiImagePlayer");
+			break;
+		case tvKey.KEY_YELLOW:	
+			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {
+				Server.deleteFavourite(this.newItemData.Items[this.imageIdx].Id);
+				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = false;
+				GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+			} else {
+				Server.setFavourite(this.newItemData.Items[this.imageIdx].Id);
+				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = true;
+				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+			}
 			break;
 	}
 }

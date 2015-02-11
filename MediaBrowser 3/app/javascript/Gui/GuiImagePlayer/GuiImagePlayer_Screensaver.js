@@ -1,11 +1,12 @@
 var GuiImagePlayer_Screensaver = {	
 		ImageViewer : null,
 		newItemData : null,
+		imagesToUse : "",
 		
 		Timeout : null,
 		
 		images : [],
-		titles : [],
+		overlay : [],
         imageIdx : 0,		// Image index
         effectIdx : 0,		// Transition effect index
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM'],
@@ -19,16 +20,18 @@ GuiImagePlayer_Screensaver.kill = function() {
 
 GuiImagePlayer_Screensaver.start = function() {
 	this.images = []
-	this.titles = []
+	this.overlay = []
 	this.imageIdx = 0
+	this.imagesToUse = File.getUserProperty("ScreensaverImages");
+	//alert("imagestouse - " + this.imagesToUse)
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();
 	
 	//Hide helper page if shown
 	GuiHelper.keyDown();
 	
-	var imagesToUse = File.getUserProperty("ScreensaverImages");
-	if (imagesToUse == "Media") {
+	
+	if (this.imagesToUse == "Media") {
 		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&MediaTypes=Photo&Recursive=true&CollapseBoxSetItems=false&Limit=500");
 		var randomImageData = Server.getContent(randomImageURL);
 		if (randomImageData == null) { return; }
@@ -38,6 +41,7 @@ GuiImagePlayer_Screensaver.start = function() {
 			if (randomImageData.Items[index].Width >= 1920 && randomImageData.Items[index].Height >= 1080){
 				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index].Id,"Primary",1920,1080);
 				this.images.push(imgsrc);
+				this.overlay.push(Support.formatDateTime(randomImageData.Items[index].PremiereDate,1))
 			}
 		}
 	} else {
@@ -49,8 +53,7 @@ GuiImagePlayer_Screensaver.start = function() {
 			if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index ].Id,"Backdrop",1920,1080);
 				this.images.push(imgsrc);
-				alert(randomImageData.Items[index].Name)
-				this.titles.push(randomImageData.Items[index].Name)
+				this.overlay.push(randomImageData.Items[index].Name)
 			}
 		}		
 	}
@@ -84,7 +87,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
-		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer_Screensaver.titles[GuiImagePlayer_Screensaver.imageIdx];
+			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx];	
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {

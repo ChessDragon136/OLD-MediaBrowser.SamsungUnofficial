@@ -568,7 +568,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		case "CollectionFolder":
 		case "BoxSet":	
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&Recursive=true&CollapseBoxSetItems=false&fields=SortName");
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=SortName");
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;
 		case "ManualCollectionsFolder":

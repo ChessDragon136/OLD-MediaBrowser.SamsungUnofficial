@@ -1105,14 +1105,13 @@
 }
 
 .screensaveroverlay {
-	position : absolute;
-	left: 30px;
-    top: 480px;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0.2);
 	
-	text-align : left;
-	font-size : 32px;
-	color : white;
-	
+	text-align:center;
 	z-index: 99999;
-	display : block;
+
 }

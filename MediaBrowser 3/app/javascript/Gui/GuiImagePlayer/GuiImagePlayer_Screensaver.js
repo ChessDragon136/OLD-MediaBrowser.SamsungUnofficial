@@ -30,6 +30,7 @@ GuiImagePlayer_Screensaver.start = function() {
 	//Hide helper page if shown
 	GuiHelper.keyDown();
 	
+	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
 	
 	if (this.imagesToUse == "Media") {
 		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&MediaTypes=Photo&Recursive=true&CollapseBoxSetItems=false&Limit=500");
@@ -87,7 +88,17 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
-		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx];	
+		if (GuiImagePlayer.imagesToUse == "Media") {
+			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
+		} else {
+			if (GuiImagePlayer.overlayFormat == 2) {
+				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat)	
+			} else {
+				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 1)
+			}
+		}
+			
+		
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {

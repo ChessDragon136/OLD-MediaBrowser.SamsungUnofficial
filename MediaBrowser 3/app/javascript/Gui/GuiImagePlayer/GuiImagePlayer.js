@@ -5,8 +5,10 @@ var GuiImagePlayer = {
 		Timeout : null,
 		Paused : false,
 		
+		overlayFormat : 1, // 0 - date, 1 - date:time, 2 - off 
+		
 		images : [],
-		overlay : [],
+		overlayData : [],
         imageIdx : 0,		// Image index
         effectIdx : 0,		// Transition effect index
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM']
@@ -33,13 +35,15 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	if (result == null) { return; }
 	this.newItemData = result; //Misleading I know!
 	
+	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
+	
 	//Create ARRAY of all URL's!
 	//Order from starting selectedItem!
 	imageIdx = 0;
 	for (var index = 0; index < result.Items.length; index++) {
 		var temp = Server.getImageURL(this.newItemData.Items[index].Id,"Primary",1920,1080,0,false,0);
 		this.images.push(temp);
-		this.overlay.push(Support.formatDateTime(this.newItemData.Items[index].PremiereDate,1))
+		this.overlayData.push(Support.formatDateTime(this.newItemData.Items[index].PremiereDate,1))
 		if (result.Items[index].Id == ItemData.Items[selectedItem].Id) {
 			this.imageIdx = index;
 		}
@@ -82,7 +86,7 @@ GuiImagePlayer.setSlideshowMode = function() {
     });
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer.Timeout);
-		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = GuiImagePlayer.overlay[GuiImagePlayer.imageIdx];
+		Support.setImagePlayerOverlay(GuiImagePlayer.overlayData[GuiImagePlayer.imageIdx], GuiImagePlayer.overlayFormat);
 		GuiImagePlayer.Timeout = setTimeout(function(){
 			if (GuiImagePlayer.Paused == false) {
 				GuiImagePlayer.imageIdx = GuiImagePlayer.imageIdx+1;
@@ -130,7 +134,7 @@ GuiImagePlayer.keyDown = function() {
 			clearTimeout(this.Timeout);
 			this.Timeout = null;
 			this.images = [];
-			this.overlay = [];
+			this.overlayData = [];
 			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
@@ -173,6 +177,15 @@ GuiImagePlayer.keyDown = function() {
 		case tvKey.KEY_INFO:
 			alert ("INFO KEY");
 			GuiHelper.toggleHelp("GuiImagePlayer");
+			break;
+		case tvKey.KEY_RED:
+			alert ("RED");
+			if (this.overlayFormat == 2) {
+				this.overlayFormat = 0
+			} else {
+				this.overlayFormat = this.overlayFormat + 1
+			}
+			Support.setImagePlayerOverlay(this.overlayData[this.imageIdx], this.overlayFormat);
 			break;
 		case tvKey.KEY_YELLOW:	
 			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {

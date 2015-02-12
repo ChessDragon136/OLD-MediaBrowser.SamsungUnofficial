@@ -883,11 +883,11 @@ GuiPage_Settings.setOverview = function() {
 			break;
 		case "SubtitleSize":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Size";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font size for displayed subtitles.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font size for displayed subtitles.<br><br>Image player and screensaver overlays also use this setting.";
 			break;
 		case "SubtitleColour":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Colour";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.<br><br>Image player and screensaver overlays also use this setting.";
 			break;	
 		case "ImagePlayerImageTime":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Image Player Rotate Speed";

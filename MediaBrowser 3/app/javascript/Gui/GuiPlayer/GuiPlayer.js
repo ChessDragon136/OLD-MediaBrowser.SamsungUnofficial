@@ -264,8 +264,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 		var Stream = this.playingMediaSource.MediaStreams[selectedSubtitleIndex];
 		if (Stream.IsTextSubtitleStream) {
 			//Set Colour & Size from User Settings
-			document.getElementById("guiPlayer_Subtitles").style.color = File.getUserProperty("SubtitleColour");
-			document.getElementById("guiPlayer_Subtitles").style.fontSize = File.getUserProperty("SubtitleSize");
+			Support.styleSubtitles("guiPlayer_Subtitles")
 			
 		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt");
 		    var PlayerDataSubtitles = Server.getSubtitles(url);
@@ -323,8 +322,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 
 		if (this.playingSubtitleIndex != null) {
 			//Set Colour & Size from User Settings
-			document.getElementById("guiPlayer_Subtitles").style.color = File.getUserProperty("SubtitleColour");
-			document.getElementById("guiPlayer_Subtitles").style.fontSize = File.getUserProperty("SubtitleSize");
+			Support.styleSubtitles("guiPlayer_Subtitles")
 			
 		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+this.playingSubtitleIndex+"/Stream.srt");
 		    var PlayerDataSubtitles = Server.getSubtitles(url);

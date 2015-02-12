@@ -1086,6 +1086,25 @@ Support.formatDateTime = function(apiDate, formatOption) {
 	return day + "/" + month + "/" + year;
 }
 
+Support.setImagePlayerOverlay = function(string, format) {
+	switch (format) {
+	case 0:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = string.substring(0,10)
+		break;
+	case 1:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = string
+		break;
+	case 2:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
+		break;
+	}
+	
+}
+
+Support.styleSubtitles = function (element) {
+	document.getElementById(element).style.color = File.getUserProperty("SubtitleColour");
+	document.getElementById(element).style.fontSize = File.getUserProperty("SubtitleSize");
+}
 
 Support.getStarRatingImage = function(rating) {
 	switch (Math.round(rating)) {

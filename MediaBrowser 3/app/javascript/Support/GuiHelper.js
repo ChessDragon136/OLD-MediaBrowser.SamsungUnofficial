@@ -61,7 +61,7 @@ GuiHelper.generateDisplayOneItemHelp = function() {
 		"Left, Right - Move 1 image backwards or forwards <br>" +
 		"Pause - Pause automatic slideshow <br>" +
 		"Play - Resume automatic slideshow <br>" +
-		//"Red - Toggle Date/Time overlay; None/Date/Date : Time <br>" +
+		"Red - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
 		//"Green - Toggle extended Exif overlay <br>" +
 		"Yellow - Mark photo as favourite" 
 		return htmlToAdd;

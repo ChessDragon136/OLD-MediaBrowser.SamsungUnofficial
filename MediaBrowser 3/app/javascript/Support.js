@@ -398,6 +398,14 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}  else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}	
+			} else if (Array[index].Type == "Photo") {
+				var title = Array[index].Name;		
+				if (Array[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				} 
 			} else {
 				var title = Array[index].Name;		
 				if (Array[index].BackdropImageTags.length > 0) {			
@@ -631,7 +639,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		default:
 			switch (ItemData.Items[selectedItem].MediaType) {
 			case "Photo":
-				GuiImagePlayer.start(ItemData,selectedItem);
+				//GuiImagePlayer.start(ItemData,selectedItem);
 				break;	
 			case "Video":	
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);

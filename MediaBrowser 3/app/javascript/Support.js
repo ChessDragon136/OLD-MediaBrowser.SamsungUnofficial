@@ -398,6 +398,14 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				}  else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}	
+			} else if (Array[index].Type == "Photo") {
+				var title = Array[index].Name;		
+				if (Array[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				} 
 			} else {
 				var title = Array[index].Name;		
 				if (Array[index].BackdropImageTags.length > 0) {			
@@ -568,7 +576,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		case "CollectionFolder":
 		case "BoxSet":	
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&Recursive=true&CollapseBoxSetItems=false&fields=SortName");
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=SortName");
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;
 		case "ManualCollectionsFolder":
@@ -631,7 +639,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		default:
 			switch (ItemData.Items[selectedItem].MediaType) {
 			case "Photo":
-				GuiImagePlayer.start(ItemData,selectedItem);
+				//GuiImagePlayer.start(ItemData,selectedItem);
 				break;	
 			case "Video":	
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
@@ -1086,6 +1094,25 @@ Support.formatDateTime = function(apiDate, formatOption) {
 	return day + "/" + month + "/" + year;
 }
 
+Support.setImagePlayerOverlay = function(string, format) {
+	switch (format) {
+	case 0:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = string.substring(0,10)
+		break;
+	case 1:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = string
+		break;
+	case 2:
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
+		break;
+	}
+	
+}
+
+Support.styleSubtitles = function (element) {
+	document.getElementById(element).style.color = File.getUserProperty("SubtitleColour");
+	document.getElementById(element).style.fontSize = File.getUserProperty("SubtitleSize");
+}
 
 Support.getStarRatingImage = function(rating) {
 	switch (Math.round(rating)) {

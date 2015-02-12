@@ -8,7 +8,9 @@ var GuiHelper = {
 GuiHelper.toggleHelp = function(helpPage) {
 	this.helpPage = helpPage;
 	alert ("Selected page: " + helpPage + "  -  Set page: " + this.helpPage);
-	
+	if (document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility == ""){
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = "hidden"
+	}
 	GuiHelper.setHelpPage(helpPage);
 	
 	//Unhide help window
@@ -19,6 +21,11 @@ GuiHelper.toggleHelp = function(helpPage) {
 }
 
 GuiHelper.keyDown = function() {
+	if (document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility == "hidden"){
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = ""
+	}
+		
+	
 	//If required for Screensaver call in GuiImagePlayer_Screensaver
 	if (document.getElementById("Help").style.visibility == "") {
 		//Hide help window
@@ -49,13 +56,25 @@ GuiHelper.setHelpPage = function(helpPage) {
 }
 
 GuiHelper.generateDisplayOneItemHelp = function() {
-	var htmlToAdd = "Return - Returns the user to the previous screen <br> " +
-			"Up, Down, Left, Right - Navigation Control <br>" +
-			"Enter - Select the highlighted item <br>" +
-			"Red - Indexing function that cycles through each letter of the alphabet, allowing quick access to large media collections <br>" +
-			"Green - Mark a video item as watched or unwatched <br>" +
-			"Blue - Logout the current user and returns to the login page <br>" +
-			"Chapter Up, Down - Skips one page's worth of content. ";
-	return htmlToAdd;
+	if (this.helpPage == "GuiImagePlayer") {
+		var htmlToAdd = "Return, Stop - Ends slideshow and returns the user to the previous screen <br> " +
+		"Left, Right - Move 1 image backwards or forwards <br>" +
+		"Pause - Pause automatic slideshow <br>" +
+		"Play - Resume automatic slideshow <br>" +
+		"Red - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
+		//"Green - Toggle extended Exif overlay <br>" +
+		"Yellow - Mark photo as favourite" 
+		return htmlToAdd;
+		} else {
+		var htmlToAdd = "Return - Returns the user to the previous screen <br> " +
+		"Up, Down, Left, Right - Navigation Control <br>" +
+		"Enter - Select the highlighted item <br>" +
+		"Red - Indexing function that cycles through each letter of the alphabet, allowing quick access to large media collections <br>" +
+		"Green - Mark a video item as watched or unwatched <br>" +
+		"Blue - Logout the current user and returns to the login page <br>" +
+		"Chapter Up, Down - Skips one page's worth of content. ";
+		return htmlToAdd;	
+	}
+	
 }
 

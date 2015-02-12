@@ -74,7 +74,7 @@ GuiPage_Settings.getMaxDisplay = function() {
 
 GuiPage_Settings.initiateViewValues = function() {
 	ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=7&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName";
-	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=7&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
+	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&Limit=24&IncludeItemTypes=Episode&UserId="+Server.getUserID()+"&ExcludeLocationTypes=Virtual&fields=SortName";
 	Favourites = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteMovies = Server.getItemTypeURL("&IncludeItemTypes=Movies&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteSeries = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
@@ -883,11 +883,11 @@ GuiPage_Settings.setOverview = function() {
 			break;
 		case "SubtitleSize":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Size";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font size for displayed subtitles.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font size for displayed subtitles.<br><br>Image player and screensaver overlays also use this setting.";
 			break;
 		case "SubtitleColour":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Text Colour";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The font colour for displayed subtitles.<br><br>Image player and screensaver overlays also use this setting.";
 			break;	
 		case "ImagePlayerImageTime":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Image Player Rotate Speed";

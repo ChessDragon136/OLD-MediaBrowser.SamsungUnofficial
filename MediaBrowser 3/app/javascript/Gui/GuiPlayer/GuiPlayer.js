@@ -216,7 +216,8 @@ GuiPlayer.restorePreviousMenu = function() {
 	//Hide Player GUI Elements
 	document.getElementById("guiPlayer_Info").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
-    document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+    document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
+    document.getElementById("guiPlayer_Tools").style.visibility = "hidden";  
     
     document.getElementById("pageBackgroundFade").style.visibility="";
     document.getElementById("pageBackgroundHolder").style.visibility="";

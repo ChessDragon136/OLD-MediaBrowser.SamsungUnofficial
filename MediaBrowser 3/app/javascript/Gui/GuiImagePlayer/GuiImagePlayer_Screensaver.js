@@ -42,7 +42,12 @@ GuiImagePlayer_Screensaver.start = function() {
 			if (randomImageData.Items[index].Width >= 1920 && randomImageData.Items[index].Height >= 1080){
 				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index].Id,"Primary",1920,1080);
 				this.images.push(imgsrc);
-				this.overlay.push(Support.formatDateTime(randomImageData.Items[index].PremiereDate,1))
+				if (randomImageData.Items[index].PremiereDate !== undefined) {
+					this.overlay.push(Support.formatDateTime(randomImageData.Items[index].PremiereDate,1))
+				} else {
+					this.overlay.push(""); //Need to push something to keep indexes matched up!
+				}
+				
 			}
 		}
 	} else {
@@ -54,7 +59,12 @@ GuiImagePlayer_Screensaver.start = function() {
 			if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 				var imgsrc = Server.getScreenSaverImageURL(randomImageData.Items[index ].Id,"Backdrop",1920,1080);
 				this.images.push(imgsrc);
-				this.overlay.push(randomImageData.Items[index].Name)
+				if (randomImageData.Items[index].Name !== undefined) {
+					this.overlay.push(randomImageData.Items[index].Name)
+				} else {
+					this.overlay.push(""); //Need to push something to keep indexes matched up!
+				}
+				
 			}
 		}		
 	}

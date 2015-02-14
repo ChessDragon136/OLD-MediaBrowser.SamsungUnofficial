@@ -8,7 +8,7 @@ var GuiImagePlayer = {
 		overlayFormat : 1, // 0 - date, 1 - date:time, 2 - off 
 		
 		images : [],
-		overlayData : [],
+		overlay : [],
         imageIdx : 0,		// Image index
         effectIdx : 0,		// Transition effect index
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM']
@@ -34,9 +34,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	var result = Server.getContent(url);
 	if (result == null) { return; }
 	this.newItemData = result; //Misleading I know!
-	
-	alert (this.newItemData.Items.length);
-	
+
 	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
 	
 	//Create ARRAY of all URL's!
@@ -45,7 +43,12 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	for (var index = 0; index < result.Items.length; index++) {
 		var temp = Server.getImageURL(this.newItemData.Items[index].Id,"Primary",1920,1080,0,false,0);
 		this.images.push(temp);
-		this.overlayData.push(Support.formatDateTime(this.newItemData.Items[index].PremiereDate,1))
+		
+		if (this.newItemData.Items[index].PremiereDate !== undefined) {
+			this.overlay.push(Support.formatDateTime(this.newItemData.Items[index].PremiereDate,1))
+		} else {
+			this.overlay.push(""); //Need to push something to keep indexes matched up!
+		}
 		if (result.Items[index].Id == ItemData.Items[selectedItem].Id) {
 			this.imageIdx = index;
 		}
@@ -88,7 +91,7 @@ GuiImagePlayer.setSlideshowMode = function() {
     });
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer.Timeout);
-		Support.setImagePlayerOverlay(GuiImagePlayer.overlayData[GuiImagePlayer.imageIdx], GuiImagePlayer.overlayFormat);
+		Support.setImagePlayerOverlay(GuiImagePlayer.overlay[GuiImagePlayer.imageIdx], GuiImagePlayer.overlayFormat);
 		GuiImagePlayer.Timeout = setTimeout(function(){
 			if (GuiImagePlayer.Paused == false) {
 				GuiImagePlayer.imageIdx = GuiImagePlayer.imageIdx+1;
@@ -136,7 +139,7 @@ GuiImagePlayer.keyDown = function() {
 			clearTimeout(this.Timeout);
 			this.Timeout = null;
 			this.images = [];
-			this.overlayData = [];
+			this.overlay = [];
 			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
@@ -185,7 +188,7 @@ GuiImagePlayer.keyDown = function() {
 			} else {
 				this.overlayFormat = this.overlayFormat + 1
 			}
-			Support.setImagePlayerOverlay(this.overlayData[this.imageIdx], this.overlayFormat);
+			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
 			break;
 		case tvKey.KEY_YELLOW:	
 			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {

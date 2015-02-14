@@ -22,11 +22,9 @@ Support.clock = function() {
     var today=new Date();
     var h=today.getHours();
     var m=today.getMinutes();
-    var s=today.getSeconds();
     if (m<10) {m = "0" + m;};
-    if (s<10) {s = "0" + s;};
-    document.getElementById('Clock').innerHTML = h+":"+m+":"+s;
-    this.clockVar = setTimeout(function(){Support.clock();},500);
+    document.getElementById('Clock').innerHTML = h+":"+m;
+    this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 
 Support.logout = function() {

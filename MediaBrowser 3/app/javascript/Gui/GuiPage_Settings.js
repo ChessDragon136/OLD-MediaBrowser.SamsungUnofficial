@@ -98,6 +98,7 @@ GuiPage_Settings.start = function() {
 	this.selectedItem = 0;
 	this.selectedBannerItem = 0;
 	this.selectedSubItem = 0;
+	this.topLeftItem = 0;
 	
 	//Get View Vaules - Specific per user due to Id!
 	this.initiateViewValues();

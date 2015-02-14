@@ -80,10 +80,6 @@ GuiMainMenu.start = function() {
 
 //Entry Point when called from any page displaying the menu
 GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass) {
-	
-	//Start Clock
-	GuiMainMenu.clock();
-	
 	//Reset Menus
 	this.selectedMainMenuItem = 0;
 	this.selectedSubMenuItem = 0;
@@ -187,8 +183,6 @@ GuiMainMenu.keyDown = function()
 }
 
 GuiMainMenu.processSelectedItems = function() {
-	//Clear Clock Timer
-	clearTimeout(this.clockVar);
 	switch (this.menuItems[this.selectedMainMenuItem]) {
 	case "Home":
 		Support.removeAllURLs();
@@ -268,10 +262,6 @@ GuiMainMenu.processSelectedItems = function() {
 
 GuiMainMenu.processReturnKey = function() {
 	if (this.pageSelected != null) {
-		
-		//Clear Clock Timer
-		clearTimeout(this.clockVar);
-		
 		//As I don't want the settings page in the URL History I need to prevent popping it here (as its not added on leaving the settings page
 		if (this.pageSelected != "GuiPage_Settings") {
 			Support.removeLatestURL();
@@ -311,17 +301,6 @@ GuiMainMenu.processDownKey = function() {
 		this.selectedMainMenuItem = 0;
 	}	
 	this.updateSelectedItems();
-}
-
-GuiMainMenu.clock = function() {
-	    var today=new Date();
-	    var h=today.getUTCHours();
-	    var m=today.getUTCMinutes();
-	    var s=today.getUTCSeconds();
-	    if (m<10) {m = "0" + m};
-	    if (s<10) {s = "0" + s};
-	    document.getElementById('headerClock').innerHTML = h+":"+m+":"+s;
-	    this.clockVar = setTimeout(function(){GuiMainMenu.clock()},500);
 }
 
 GuiMainMenu.toggleTestMode = function() {

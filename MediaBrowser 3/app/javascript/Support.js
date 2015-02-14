@@ -14,6 +14,19 @@ var Support = {
 		//Screensaver
 		screensaverVar : null,
 		isScreensaverOn : true,
+		
+		clockVar : null
+}
+
+Support.clock = function() {
+    var today=new Date();
+    var h=today.getHours();
+    var m=today.getMinutes();
+    var s=today.getSeconds();
+    if (m<10) {m = "0" + m;};
+    if (s<10) {s = "0" + s;};
+    document.getElementById('Clock').innerHTML = h+":"+m+":"+s;
+    this.clockVar = setTimeout(function(){Support.clock();},500);
 }
 
 Support.logout = function() {
@@ -639,7 +652,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		default:
 			switch (ItemData.Items[selectedItem].MediaType) {
 			case "Photo":
-				//GuiImagePlayer.start(ItemData,selectedItem);
+				GuiImagePlayer.start(ItemData,selectedItem);
 				break;	
 			case "Video":	
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);

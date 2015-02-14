@@ -35,6 +35,8 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	if (result == null) { return; }
 	this.newItemData = result; //Misleading I know!
 	
+	alert (this.newItemData.Items.length);
+	
 	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
 	
 	//Create ARRAY of all URL's!
@@ -148,20 +150,18 @@ GuiImagePlayer.keyDown = function() {
 			Support.processReturnURLHistory();
 			break;
 		case tvKey.KEY_RIGHT:
-			alert("RIGHT")
-			if (this.imageIdx >= this.newItemData.Items.length) {
-				this.imageIdx = 0	
-			} else {
-				this.imageIdx = this.imageIdx + 1
+			alert("RIGHT");
+			this.imageIdx++;
+			if (this.imageIdx == this.images.length) {
+				this.imageIdx = 0;	
 			}
 			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
 			break;
 		case tvKey.KEY_LEFT:
-			alert("LEFT")
-			if (this.imageIdx == 0) {
-				this.imageIdx = this.newItemData.Items.length
-			} else {
-				this.imageIdx = this.imageIdx - 1	
+			alert("LEFT");
+			this.imageIdx--;
+			if (this.imageIdx < 0) {
+				this.imageIdx = this.images.length-1;
 			}
 			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
 			break;

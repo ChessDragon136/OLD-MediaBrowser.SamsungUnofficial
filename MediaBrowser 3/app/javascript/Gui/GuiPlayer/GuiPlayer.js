@@ -21,6 +21,7 @@ var GuiPlayer = {
 		videoToolsSelectedItem : 0,
 		subtitleIndexes : [], //Only used in menus
 		audioIndexes : [], //Only used in menus
+		chapterIndexes : [], //Only used in menus
 		
 		topLeftItem : 0,
 		videoToolsSelectedItemSub : 0,
@@ -108,6 +109,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.videoToolsSelectedItem = 0;
 	this.subtitleIndexes = [];
 	this.audioIndexes = [];
+	this.chapterIndexes = [];
 	this.PlayerDataSubtitle = null;
 	this.subtitleShowingIndex = 0;
 	this.subtitleSeeking = false;
@@ -163,7 +165,6 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.setDisplaySize();
 	
 	//Subtitles
-	
 	if (Main.isSubtitlesEnabled()) {
 		this.getSubtitles(-1);
 		//If resuming find the correct index to start from!
@@ -178,15 +179,17 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     
 	//Update URL with resumeticks
 	if (Main.getModelYear() == "D" && this.playingTranscodeStatus != "Direct Play") {
-		this.playingURL = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000) + '|COMPONENT=HLS';
+		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000) + '|COMPONENT=HLS';
+		alert (url)
+		var position = Math.round(resumeTicksSamsung / 1000);
+	    this.plugin.ResumePlay(url,position); 
 	} else {
-		this.playingURL = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000);
+		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000);
+		alert (url);
+		var position = Math.round(resumeTicksSamsung / 1000);
+		alert (position);
+	    this.plugin.ResumePlay(url,position); 
 	}
-	alert ("Video Playback URL: " + this.playingURL);
-	
-	//Calculate position in seconds
-	var position = Math.round(resumeTicksSamsung / 1000);
-    this.plugin.ResumePlay(this.playingURL,position);    
 }
 
 GuiPlayer.stopPlayback = function() {
@@ -199,6 +202,9 @@ GuiPlayer.stopPlayback = function() {
 	this.plugin.Stop();
 	this.Status = "STOPPED";
 	Server.videoStopped(this.PlayerData.Id,this.playingMediaSource.Id,this.currentTime,this.PlayMethod);
+	
+	this.currentTime = 0;
+    this.updateTimeCount = 0;
 	
 	//If D series need to stop HLS Encoding
 	if (Main.getModelYear() == "D") {
@@ -378,6 +384,7 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 
 GuiPlayer.handleOnRenderingComplete = function() {
 	GuiPlayer.stopPlayback();
+	alert ("RENDERING COMPLETE");
 	
 	////Call Resume Option - Check playlist first, then AutoPlay property, then return
 	if (this.startParams[0] == "PlayAll") {
@@ -420,6 +427,7 @@ GuiPlayer.handleOnRenderingComplete = function() {
 
 GuiPlayer.handleOnNetworkDisconnected = function() {
 	//Transcoded files throw this error at end of playback!
+	alert ("Network Disconnected")
 	GuiPlayer.stopPlayback();
 	GuiPlayer.restorePreviousMenu();
 }
@@ -583,7 +591,7 @@ GuiPlayer.keyDown = function() {
         	GuiPlayer.setupThreeDConfiguration();
 			break;	
         case tvKey.KEY_TOOLS:
-        	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden" && (this.subtitleIndexes.length > 0 || this.audioIndexes.length > 1)) {
+        	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden") {
         		GuiPlayer.updateSelectedItems();
         		document.getElementById("guiPlayer_Tools").style.visibility = "";
         		document.getElementById("GuiPlayer_Tools").focus();
@@ -767,6 +775,16 @@ GuiPlayer.createToolsMenu = function() {
 			this.subtitleIndexes.push(index); //
 		} 
 	}
+	
+	alert ("Chapter Count: " + this.PlayerData.Chapters.length);
+	for (var index = 0; index < this.PlayerData.Chapters.length; index++) {
+		this.chapterIndexes.push(index);
+	}
+	
+	if (this.chapterIndexes.length > 0) {
+		this.videoToolsOptions.push("videoOptionChapters");
+	    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionChapters" style="display:inline-block;">Chapters</div>';
+	}
 	    
 	if (this.subtitleIndexes.length > 0) {
 		this.subtitleIndexes.unshift(-1);
@@ -811,8 +829,14 @@ GuiPlayer.keyDownTools = function() {
 		case tvKey.KEY_ENTER:
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");	
-			alert (this.videoToolsOptions[this.videoToolsSelectedItem]);
+			this.topLeftItem = 0;
 			switch (this.videoToolsOptions[this.videoToolsSelectedItem]) {
+			case "videoOptionChapters":
+				this.videoToolsSubOptions = this.chapterIndexes;
+				this.updateDisplayedItemsSub();
+				this.updateSelectedItemsSub();
+				document.getElementById("GuiPlayer_ToolsSub").focus();
+				break;
 			case "videoOptionSubtitles":
 				this.videoToolsSubOptions = this.subtitleIndexes;
 				this.updateDisplayedItemsSub();
@@ -885,6 +909,21 @@ GuiPlayer.keyDownToolsSub = function() {
 			document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			switch (this.videoToolsOptions[this.videoToolsSelectedItem]) {
+			case "videoOptionChapters":
+				document.getElementById("NoKeyInput").focus();		
+				this.stopPlayback();
+				//Update URL with resumeticks
+				if (Main.getModelYear() == "D" && this.playingTranscodeStatus != "Direct Play") {
+					var url = this.playingURL + '&StartTimeTicks=' + (Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks)) + '|COMPONENT=HLS';			
+					alert (url)
+					var position = Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks / 10000000);
+				    this.plugin.ResumePlay(url,10000); 
+				} else {
+					var url = this.playingURL + '&StartTimeTicks=' + (Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks));
+					var position = Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks / 10000000);
+				    this.plugin.ResumePlay(url,position); 
+				}
+				break;	
 			case "videoOptionSubtitles":
 				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] == -1 && this.playingSubtitleIndex != null) {
 					//Turn Off Subtitles
@@ -936,7 +975,6 @@ GuiPlayer.keyDownToolsSub = function() {
 				break;	
 			}	
 			break;	
-			
         case tvKey.KEY_EXIT:
             alert("EXIT");
             widgetAPI.blockNavigation(event);
@@ -997,6 +1035,10 @@ GuiPlayer.updateDisplayedItemsSub = function() {
 			}
 			
 			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+Name+"</div>";
+			break;	
+		case "videoOptionChapters":
+			//Run option through transcoding algorithm - see if it plays natively
+			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+this.PlayerData.Chapters[index].Name+"</div>";
 			break;	
 		}	
 	}

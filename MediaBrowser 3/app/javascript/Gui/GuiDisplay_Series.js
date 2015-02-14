@@ -232,7 +232,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Support.fadeImage(imgsrc);
 			}
 		}
-	}, 500);
+	}, 800);
 	
 	//If Genre update Overview
 	if (GuiDisplay_Series.genreType != null) {

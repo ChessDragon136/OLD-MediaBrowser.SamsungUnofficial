@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.550b",
+		version : "v0.560",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -105,8 +105,9 @@ Main.onLoad = function()
 	pluginAPI.registKey(tvKey.KEY_TOOLS);
 	pluginAPI.registKey(tvKey.KEY_3D); 
 	
-	//Set Version Number
-	document.getElementById("Version").innerHTML = this.version;
+	//Set Version Number & initialte clock
+	document.getElementById("headerVersion").innerHTML = this.version;
+	Support.clock();
 	
 	//Set DeviceID & Device Name
 	var NNaviPlugin = document.getElementById("pluginObjectNNavi");

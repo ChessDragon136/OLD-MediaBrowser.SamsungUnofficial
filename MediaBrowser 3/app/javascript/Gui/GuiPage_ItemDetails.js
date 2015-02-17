@@ -122,6 +122,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		if (this.SimilarFilms == null) { return; }
 			
 		//Add Remaining Menu Options
+		//Trailer Disabled Properly
+		/*
 		if (this.ItemData.LocalTrailerCount > 0) {
 			//Get trailerItems
 			var url3 = Server.getCustomURL("/Users/"+Server.getUserID()+"/Items/"+this.ItemData.Id+"/LocalTrailers?format=json");
@@ -133,13 +135,14 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 			if (this.ItemData.LocalTrailerCount > 1) {
 				document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILERS</div></div></div>";
 			} else {
-				//document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILER</div></div></div>";
+				document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Trailer' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>TRAILER</div></div></div>";
 			}
 		} else {
 			if (this.ItemData.People.length > 0 && this.SimilarFilms.Items.length > 0) {
 				document.getElementById("guiTV_Episode_Options").innerHTML += "<div class='FilmListSingle'></div>";
 			}
 		}
+		*/
 	
 		if (this.ItemData.People.length > 0) {
 			this.menuItems.push("guiTV_Episode_Cast");                     
@@ -638,7 +641,6 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 	}
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Cast") {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var cast = this.subMenuItems[this.selectedItem2].Name.replace(/ /g, '+');
 		var url = Server.getItemInfoURL(this.subMenuItems[this.selectedItem2].Id);
 		GuiPage_CastMember.start(this.subMenuItems[this.selectedItem2].Name,url,0,0);
 	}
@@ -680,7 +682,6 @@ GuiPage_ItemDetails.getMediaInfo = function() {
 GuiPage_ItemDetails.processMediaInfo = function(itemsArray) {
 	var htmlToAdd = "";
 	for (var index = 0; index < itemsArray.length; index++) {
-		alert (itemsArray[index]);
 		switch (itemsArray[index]) {
 		//Container
 		case "mkv":

@@ -81,6 +81,7 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 		}
 	}
 	var url = Server.getServerAddr() + '/Videos/' + showId + streamparams + '&DeviceId='+Server.getDeviceID();
+	FileLog.write("Video : Transcode Status : " + transcodeStatus);
 
 	//Return results to Versions
 	//MediaSourceId,Url,transcodeStatus,videoIndex,audioIndex
@@ -88,7 +89,6 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 }
 
 GuiPlayer_Transcoding.checkCodec = function() {
-	alert ("Checking Video Codec");
 	var codec = this.MediaSource.MediaStreams[this.videoIndex].Codec.toLowerCase();
 	var codecParams = GuiPlayer_TranscodeParams.getParameters(codec);
 	
@@ -101,16 +101,14 @@ GuiPlayer_Transcoding.checkCodec = function() {
 	this.isProfile = this.checkProfile(codecParams[6]);
 	
 	//Results
-	alert ("-----------------------------------------------------");
-	alert ("Video File Analysis Results");
-	alert (" Codec Compatibility: " + this.isCodec + " : " + this.MediaSource.MediaStreams[this.videoIndex].Codec);
-	alert (" Container Compatibility: " + this.isContainer + " : " + this.MediaSource.Container);
-	alert (" Resolution Compatibility: " + this.isResolution + " : " +this.MediaSource.MediaStreams[this.videoIndex].Width + "x" + this.MediaSource.MediaStreams[this.videoIndex].Height);
-	alert (" BitRate Compatibility: " + this.isBitRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].BitRate + " : " + this.bitRateToUse);
-	alert (" FrameRate Compatibility: " + this.isFrameRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].RealFrameRate);
-	alert (" Level Compatibility: " + this.isLevel + " : " + this.MediaSource.MediaStreams[this.videoIndex].Level);
-	alert (" Profile Compatibility: " + this.isProfile + " : " + this.MediaSource.MediaStreams[this.videoIndex].Profile);
-	alert ("-----------------------------------------------------");
+	FileLog.write("Video : Video File Analysis Results");
+	FileLog.write("Video : Codec Compatibility: " + this.isCodec + " : " + this.MediaSource.MediaStreams[this.videoIndex].Codec);
+	FileLog.write("Video : Container Compatibility: " + this.isContainer + " : " + this.MediaSource.Container);
+	FileLog.write("Video : Resolution Compatibility: " + this.isResolution + " : " +this.MediaSource.MediaStreams[this.videoIndex].Width + "x" + this.MediaSource.MediaStreams[this.videoIndex].Height);
+	FileLog.write("Video : BitRate Compatibility: " + this.isBitRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].BitRate + " : " + this.bitRateToUse);
+	FileLog.write("Video : FrameRate Compatibility: " + this.isFrameRate + " : " + this.MediaSource.MediaStreams[this.videoIndex].RealFrameRate);
+	FileLog.write("Video : Level Compatibility: " + this.isLevel + " : " + this.MediaSource.MediaStreams[this.videoIndex].Level);
+	FileLog.write("Video : Profile Compatibility: " + this.isProfile + " : " + this.MediaSource.MediaStreams[this.videoIndex].Profile);
 	
 	//Put it all together
 	if (this.isCodec && this.isContainer && this.isResolution && this.isBitRate && this.isFrameRate && this.isLevel && this.isProfile) { // 
@@ -121,7 +119,6 @@ GuiPlayer_Transcoding.checkCodec = function() {
 }
 
 GuiPlayer_Transcoding.checkAudioCodec = function() {
-	alert ("Checking Audio Codec");
 	var audiocodec = this.MediaSource.MediaStreams[this.audioIndex].Codec.toLowerCase();
 	var audiocodecParams = GuiPlayer_TranscodeParams.getAudioParameters(audiocodec);
 	
@@ -130,12 +127,10 @@ GuiPlayer_Transcoding.checkAudioCodec = function() {
 	this.isAudioChannel = this.checkAudioChannels(audiocodecParams[2]);		
 	
 	//Results
-	alert ("-----------------------------------------------------");
-	alert ("Audio File Analysis Results");
-	alert (" Codec Compatibility: " + this.isAudioCodec + " : " + this.MediaSource.MediaStreams[this.audioIndex].Codec);
-	alert (" Container Compatibility: " + this.isAudioContainer + " : " + this.MediaSource.Container);
-	alert (" Channel Compatibility: " + this.isAudioChannel + " : " + this.MediaSource.MediaStreams[this.audioIndex].Channels);
-	alert ("-----------------------------------------------------");
+	FileLog.write("Video : Audio File Analysis Results");
+	FileLog.write("Video : Codec Compatibility: " + this.isAudioCodec + " : " + this.MediaSource.MediaStreams[this.audioIndex].Codec);
+	FileLog.write("Video : Container Compatibility: " + this.isAudioContainer + " : " + this.MediaSource.Container);
+	FileLog.write("Video : Channel Compatibility: " + this.isAudioChannel + " : " + this.MediaSource.MediaStreams[this.audioIndex].Channels);
 	
 	//Put it all together
 	if (this.isAudioCodec && this.isAudioChannel) {

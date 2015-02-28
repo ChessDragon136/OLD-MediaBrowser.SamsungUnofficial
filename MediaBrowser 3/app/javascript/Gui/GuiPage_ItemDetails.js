@@ -456,16 +456,12 @@ GuiPage_ItemDetails.processRightKey = function() {
 GuiPage_ItemDetails.processSelectedItem = function() {	
 	switch (this.menuItems[this.selectedItem]) {
 	case "guiTV_Episode_Play":
-		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
-		GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
-		break;
 	case "guiTV_Episode_Resume":
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
-		GuiPlayer.start("PLAY",url,this.ItemData.UserData.PlaybackPositionTicks / 10000,"GuiPage_ItemDetails");
+		var playbackPos = (this.menuItems[this.selectedItem] == "guiTV_Episode_Resume") ? this.ItemData.UserData.PlaybackPositionTicks / 10000 : 0;
+		GuiPlayer.start("PLAY",url,playbackPos,"GuiPage_ItemDetails");
 		break;
-
 	case "guiTV_Episode_Trailer":
 		//Disable Multiple Trailers as its fucked
 		//if (this.ItemData.LocalTrailerCount > 1) {

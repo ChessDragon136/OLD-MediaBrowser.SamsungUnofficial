@@ -10,7 +10,7 @@ var GuiPage_Settings = {
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 10,
 		
-		bannerItems : ["User Settings","Server Settings","TV Settings"],
+		bannerItems : ["User Settings","Server Settings","TV Settings","Log"],
 		currentView : null,
 		currentViewSettings : null,
 		currentViewSettingsName : null,
@@ -93,7 +93,7 @@ GuiPage_Settings.initiateViewValues = function() {
 	this.SettingsDefaults[2] = TVNextUp;
 }
 
-GuiPage_Settings.start = function() {	
+GuiPage_Settings.start = function(viewToDisplay) {	
 	//Reset Vars
 	this.selectedItem = 0;
 	this.selectedBannerItem = 0;
@@ -117,8 +117,8 @@ GuiPage_Settings.start = function() {
 	if (this.ServerUserData == null) { return; }
 	
 	document.getElementById("pageContent").className = "";
-	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id='guiTV_Show_Title' class='guiPage_Settings_Title'>Client Settings for "+this.UserData.UserName +" </div>\ \
-		<div id='guiPage_Settings_Settings' class='guiPage_Settings_Settings'></div>" +
+	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id='guiTV_Show_Title' class='guiPage_Settings_Title'></div>" +
+		"<div id='guiPage_Settings_Settings' class='guiPage_Settings_Settings'></div>" +
 		"<div id='guiPage_Settings_Overview' class='guiPage_Settings_Overview'>" +
 			"<div id=guiPage_Settings_Overview_Title></div>" +
 			"<div id=guiPage_Settings_Overview_Content></div>" +
@@ -134,10 +134,26 @@ GuiPage_Settings.start = function() {
 	}
 
 	//Set default view as the User Settings Page
-	this.currentView = "User Settings";
-	this.currentViewSettings = this.Settings;
-	this.currentViewSettingsName = this.SettingsName;
-	this.currentViewSettingsDefaults = this.SettingsDefaults;
+	if (viewToDisplay == null || viewToDisplay === undefined || viewToDisplay == "User Settings") {
+		this.currentView = "User Settings";
+		this.currentViewSettings = this.Settings;
+		this.currentViewSettingsName = this.SettingsName;
+		this.currentViewSettingsDefaults = this.SettingsDefaults;
+		document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
+	} else if (viewToDisplay == "TV Settings") {
+		this.currentView = "TV Settings";
+		this.currentViewSettings = this.TVSettings;
+		this.currentViewSettingsName = this.TVSettingsName;
+		this.currentViewSettingsDefaults = this.TVSettingsDefaults;
+		document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
+	} else {
+		//Set default view as the User Settings Page
+		this.currentView = "Server Settings";
+		this.currentViewSettings = this.ServerSettings;
+		this.currentViewSettingsName = this.ServerSettingsName;
+		this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
+		document.getElementById("guiTV_Show_Title").innerHTML = "Server Settings for "+this.UserData.UserName;	
+	}
 	
 	//Update Displayed & Updates Settings
 	this.updateDisplayedItems();
@@ -402,6 +418,10 @@ GuiPage_Settings.processSelectedItem = function() {
 			this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
 			document.getElementById("guiTV_Show_Title").innerHTML = "Server Settings for "+this.UserData.UserName;
 			break;	
+		case "Log":
+			GuiPage_SettingsLog.start();
+			return;
+			break;
 		}
 		//Set Current View - needed to write to file
 		this.currentView = this.bannerItems[this.selectedBannerItem];

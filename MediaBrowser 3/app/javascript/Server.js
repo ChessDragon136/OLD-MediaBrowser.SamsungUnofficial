@@ -100,6 +100,10 @@ Server.getSearchURL = function(searchTermString) {
 	return Server.getServerAddr() + "/Search/Hints?format=json&UserId=" + Server.getUserID() + "&SearchTerm=" + parsedSearchTermString;
 }
 
+Server.getAdditionalPartsURL = function(ShowID) {
+	return  Server.getServerAddr() + "/Videos/" + ShowID +  "/AdditionalParts?format=json&userId="+Server.getUserID();
+}
+
 Server.getAdjacentEpisodesURL = function(ShowID,SeasonID,EpisodeID) {
 	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&ImageTypeLimit=1&seasonId="+SeasonID+"&userId="+Server.getUserID() +"&AdjacentTo=" + EpisodeID;
 }

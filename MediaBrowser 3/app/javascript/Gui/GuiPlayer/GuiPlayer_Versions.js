@@ -32,13 +32,16 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	this.PlayerData = playerData;
 	this.resumeTicks = resumeTicks;
 	this.playedFromPage = playedFromPage;
-
+	
 	//Loop through all media sources and determine which is best
+	FileLog.write("Video : Loading " + this.PlayerData.Name)
+	FileLog.write("Video : Find Media Streams")
 	for(var index = 0; index < this.PlayerData.MediaSources.length;index++) {
 		this.getMainStreamIndex(this.PlayerData.MediaSources[index],index);
 	}
 	
 	//Loop through all options and see if transcode is required, generate URL blah...
+	FileLog.write("Video : Determine Playback of Media Streams")
 	for (var index = 0; index < this.MediaOptions.length; index++) {
 		var result = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.PlayerData.MediaSources[this.MediaOptions[index][0]],this.MediaOptions[index][0],
 			this.MediaOptions[index][1],this.MediaOptions[index][2],this.MediaOptions[index][3]);
@@ -46,9 +49,11 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 		//Toggle D Series Transcoding in Main
 		if (Main.getModelYear == "D" && File.getTVProperty("TranscodeDSeries") == false) {
 			if (result[2] == "Direct Stream") { 
+				FileLog.write("Video : Playback Added")
 				this.MediaPlayback.push(result);
 			}
 		} else {
+			FileLog.write("Video : Playback Added")
 			this.MediaPlayback.push(result);
 		}	
 	}
@@ -58,6 +63,7 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	
 	//MediaSource,Url,hasVideo,hasAudio,hasSubtitle,videoIndex,audioIndex,subtitleIndex
 	if (this.MediaPlayback.length <= 0) {
+		FileLog.write("Video : No Playback Options")
 		//Error - No media playback options!
 		document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 		GuiNotifications.setNotification("None of the MediaSources are playable","Unable To Play");
@@ -67,39 +73,49 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 		document.getElementById(this.playedFromPage).focus();
 	} else if (this.MediaPlayback.length == 1) { //Added in check to play only non transcoded stuff
 		//Play file 
+		FileLog.write("Video : One Playback Option - Player Loaded")
 		GuiPlayer.startPlayback(this.MediaPlayback[0],resumeTicks); //Need to change
 	} else {
 		//See how many will direct play
+		FileLog.write("Video : Multiple Playback Options - Determine Direct Stream Count")
 		for (var index = 0; index < this.MediaPlayback.length;index++) {
 			if (this.MediaPlayback[index][2] == "Direct Stream") {
+				FileLog.write("Video : Found Direct Stream - Added to Selections")
 				this.MediaSelections.push(this.MediaPlayback[index]);
 			}
 		}
 		
 		//If more than 1 loop through and generate GUI asking user
 		if (this.MediaSelections.length == 1) {
+			FileLog.write("Video : One Direct Stream - Player Loaded")
 			GuiPlayer.startPlayback(this.MediaSelections[0],resumeTicks);
 		} else if (this.MediaSelections.length > 1) {
+			FileLog.write("Video : Multiple Direct Stream - Option Presented to User")
 			document.getElementById("GuiPlayer_Versions").focus();
 			this.updateDisplayedItems();
 			this.updateSelectedItems();
 		} else {
 			//None Direct Play - see if any require Audio Only Transcoding
+			FileLog.write("Video : None Direct Stream - Determine Audio Only Transcode Count")
 			for (var index = 0; index < this.MediaPlayback.length;index++) {
 				if (this.MediaPlayback[index][2] == "Transcoding Audio") {
+					FileLog.write("Video : Found Audio Only Transcode - Added to Selections")
 					this.MediaSelections.push(this.MediaPlayback[index]);
 				}
 			}
 			
 			//If more than 1 loop through and generate GUI asking user
 			if (this.MediaSelections.length == 1) {
+				FileLog.write("Video : One Audio Only Transcode - Player Loaded")
 				GuiPlayer.startPlayback(this.MediaSelections[0],resumeTicks);
 			} else if (this.MediaSelections.length > 1) {
+				FileLog.write("Video : Multiple Audio Only Transcode - Option Presented to User")
 				document.getElementById("GuiPlayer_Versions").focus();
 				this.updateDisplayedItems();
 				this.updateSelectedItems();
 			} else {	
 				//Just use 1st Source and give up!
+				FileLog.write("Video : None Audio Only Transcode - Use First Media Source - Player Started")
 				GuiPlayer.startPlayback(this.MediaSelections[0],resumeTicks);
 			}
 		}
@@ -207,9 +223,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			}
 		}
 	}
-	
-	alert ("audioIndex: " + audioIndex)
-	alert ("indexOfFirstAudio: " + indexOfFirstAudio)
+
 	var audioStreamFirst = (audioIndex == indexOfFirstAudio) ? true : false;
 	if (videoIndex > -1 && audioIndex > -1) {
 		//Check if item is 3D and if tv cannot support it don't add it to the list!
@@ -219,12 +233,14 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			var pluginScreen = document.getElementById("pluginScreen");
 			if (pluginScreen.Flag3DEffectSupport()) {
 				alert ("3D playback supported on TV")
+				FileLog.write("Video : Media Stream Added : 3D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst)
 				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); //Index != Id!!!
+			} else {
+				FileLog.write("Video : Media Stream Added : 3D - Not Added, TV does not support 3D");
 			}
 		} else {
 			//Not 3D
-			alert ("Mediasource is 2D")
-			alert (MediaSource.Id);
+			FileLog.write("Video : Media Stream Added : 2D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst)
 			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); // Index != Id!!!
 		}				
 	}	

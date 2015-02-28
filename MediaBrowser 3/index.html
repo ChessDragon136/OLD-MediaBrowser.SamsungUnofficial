@@ -20,6 +20,7 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Support.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/json2.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/File.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Support/FileLog.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/Sha1.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/GuiHelper.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Support/GuiNotifications.js"></script>
@@ -48,6 +49,7 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_MusicArtist.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_CastMember.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Settings.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_SettingsLog.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_TvChannel.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_TvGuide.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_PhotoNavigation.js"></script>
@@ -66,7 +68,12 @@
         <object id='pluginObjectTV' border=0 classid='clsid:SAMSUNG-INFOLINK-TV'></object> 
         <object id='pluginSEF' border=0 classid='clsid:SAMSUNG-INFOLINK-SEF'></object>
         
-        
+        <script type="text/javascript">
+			window.onerror = function(msg, url, line) {
+			   // You can view the information in an alert to see things working like this:
+			   alert("Error: " + msg + "\nurl: " + url + "\nline: " + line);
+			};
+		</script>
         
 		<!-- TODO : Style sheets code -->
 		<link rel="stylesheet" href="Main.css" type="text/css">
@@ -106,7 +113,8 @@
 		<a href='javascript:void(0);' id='GuiPage_Music' onkeydown='GuiPage_Music.keyDown();'></a>	
 		<a href='javascript:void(0);' id='GuiPage_CastMember' onkeydown='GuiPage_CastMember.keyDown();'></a>	
 		<a href='javascript:void(0);' id='GuiPage_Settings' onkeydown='GuiPage_Settings.keyDown();'></a>	
-		<a href='javascript:void(0);' id='GuiPage_SettingsBottom' onkeydown='GuiPage_Settings.bottomKeyDown();'></a>	
+		<a href='javascript:void(0);' id='GuiPage_SettingsBottom' onkeydown='GuiPage_Settings.bottomKeyDown();'></a>
+		<a href='javascript:void(0);' id='GuiPage_SettingsLog' onkeydown='GuiPage_SettingsLog.keyDown();'></a>		
 		<a href='javascript:void(0);' id='GuiPage_TvChannel' onkeydown='GuiPage_TvChannel.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_TvGuide' onkeydown='GuiPage_TvGuide.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPage_PhotoNavigation' onkeydown='GuiPage_PhotoNavigation.keyDown();'></a>	

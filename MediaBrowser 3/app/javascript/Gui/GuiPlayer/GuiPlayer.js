@@ -138,7 +138,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     document.getElementById("pageBackgroundHolder").style.visibility="hidden";
     document.getElementById("pageBackground").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = "";    
-    
+
     //Set PageContent
     var fileInfo = "";
     if (this.PlayerData.Type == "Episode") {
@@ -387,8 +387,8 @@ GuiPlayer.handleOnRenderingComplete = function() {
 	GuiPlayer.stopPlayback();
 	alert ("RENDERING COMPLETE");
 	
-	////Call Resume Option - Check playlist first, then AutoPlay property, then return
 	if (this.startParams[0] == "PlayAll") {
+	////Call Resume Option - Check playlist first, then AutoPlay property, then return
 		this.PlayerIndex++;
 		if (this.VideoData.Items.length < this.PlayerIndex) {	
 			//Take focus to no input
@@ -777,14 +777,14 @@ GuiPlayer.createToolsMenu = function() {
 		} 
 	}
 	
-	alert ("Chapter Count: " + this.PlayerData.Chapters.length);
-	for (var index = 0; index < this.PlayerData.Chapters.length; index++) {
-		this.chapterIndexes.push(index);
-	}
-	
-	if (this.chapterIndexes.length > 0) {
-		this.videoToolsOptions.push("videoOptionChapters");
-	    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionChapters" style="display:inline-block;">Chapters</div>';
+	if (this.PlayerData.Chapters !== undefined) {
+		for (var index = 0; index < this.PlayerData.Chapters.length; index++) {
+			this.chapterIndexes.push(index);
+		}
+		if (this.chapterIndexes.length > 0) {
+			this.videoToolsOptions.push("videoOptionChapters");
+		    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionChapters" style="display:inline-block;">Chapters</div>';
+		}
 	}
 	    
 	if (this.subtitleIndexes.length > 0) {

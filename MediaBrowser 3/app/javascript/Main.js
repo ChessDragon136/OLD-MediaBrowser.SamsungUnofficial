@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.560b",
+		version : "v0.565",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -95,6 +95,11 @@ Main.setIsScreensaverRunning = function() {
 
 Main.onLoad = function()
 {	
+	//Setup Logging
+	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
+	FileLog.write("---------------------------------------------------------------------")
+	FileLog.write("MB3 Application Started")
+	
 	//Delete Old style Settings File
 	File.deleteOldSettingsFile();
 	

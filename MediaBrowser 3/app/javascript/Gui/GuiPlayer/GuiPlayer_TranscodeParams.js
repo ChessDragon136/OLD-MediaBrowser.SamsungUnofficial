@@ -45,6 +45,15 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     			this.level = 51;
     			this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
     			break;
+    	    case "hevc":    	    
+    	    	this.codec = true;
+    	    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+    	    	this.resolution = [1920,1080];
+    	    	this.bitrate = 50720000;
+    	    	this.framerate = 30;
+    	    	this.level = 120;			//  Level 4  (HEVC is x30 not x10 like h264)
+    	    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
+		break;			
     	    case "h265":
     	    	this.codec = true;
     	    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];

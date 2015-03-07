@@ -48,9 +48,9 @@ GuiPage_SettingsLog.start = function() {
 }
 
 GuiPage_SettingsLog.updateDisplayedItems = function() {
-	var htmlToAdd = "<table class=guiSettingsTable>";
+	var htmlToAdd = "<table>";
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.logArray.length); index++) {
-		htmlToAdd += "<tr class=guiSettingsRow><td>"+(index+1)+"</td><td>" + this.logArray[index] + "</td></tr>";
+		htmlToAdd += "<tr><td>"+(index+1)+"</td><td style='word-wrap:break-word;word-break:break-all;width:450px;'>" + this.logArray[index] + "</td></tr>";
 	}
 	document.getElementById("guiPage_Settings_Settings").innerHTML = htmlToAdd + "</table>";
 }

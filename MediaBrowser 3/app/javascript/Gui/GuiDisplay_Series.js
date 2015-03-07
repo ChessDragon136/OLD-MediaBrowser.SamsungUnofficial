@@ -130,8 +130,8 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 			}
 		}
 	
-		//Indexing Algorithm
-		this.ItemIndexData = Support.processIndexing(this.ItemData.Items); 
+		//Indexing Algorithm - Disabled v0.570c
+		//this.ItemIndexData = Support.processIndexing(this.ItemData.Items); 
 	
 		//Display first XX series
 		this.updateDisplayedItems();
@@ -364,7 +364,8 @@ GuiDisplay_Series.keyDown = function() {
 			this.playSelectedItem();
 			break;
 		case tvKey.KEY_RED:
-			this.processIndexing();
+			//Disabled v0.570c
+			//this.processIndexing();
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.selectedItem > -1) {

@@ -269,7 +269,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 	//Used for user change in Tools!
 	if (selectedSubtitleIndex > -1) {
 		var Stream = this.playingMediaSource.MediaStreams[selectedSubtitleIndex];
-		if (Stream.IsTextSubtitleStream) {
+		if (Stream.SupportsExternalStream) {
 			//Set Colour & Size from User Settings
 			Support.styleSubtitles("guiPlayer_Subtitles")
 			
@@ -291,7 +291,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 		if (SubtitlePreference != "None") {
 			for (var index = 0;index < this.playingMediaSource.MediaStreams.length;index++) {
 				var Stream = this.playingMediaSource.MediaStreams[index];
-				if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {			
+				if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
 					if (Stream.IsForced == true) {
 						this.playingSubtitleIndex = index;
 						break;
@@ -305,7 +305,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 			if (SubtitlePreference != "None" && SubtitlePreference != "OnlyForced") {
 				for (var index = 0;index < this.playingMediaSource.MediaStreams.length;index++) {
 					var Stream = this.playingMediaSource.MediaStreams[index];
-					if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {			
+					if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
 						if (Stream.Language == SubtitleLanguage) {
 							this.playingSubtitleIndex = index;
 							break;
@@ -320,7 +320,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 			if (SubtitlePreference == "Always") {	
 				for (var index = 0;index < this.playingMediaSource.MediaStreams.length;index++) {
 					var Stream = this.playingMediaSource.MediaStreams[index];
-					if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {			
+					if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
 						this.playingSubtitleIndex = index;
 					} 
 				}
@@ -772,7 +772,7 @@ GuiPlayer.createToolsMenu = function() {
 			}	
 		} 
 		
-		if (Stream.Type == "Subtitle" && Stream.IsTextSubtitleStream) {
+		if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {
 			this.subtitleIndexes.push(index); //
 		} 
 	}

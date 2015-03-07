@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
+		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries"],
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series"],
@@ -210,6 +210,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		case "SeasonLabel":
 		case "AutoPlay":
 		case "ShowDisc":	
+		case "LargerView":	
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -450,6 +451,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "PlayDefaultAudioTrack":
 		case "ShowDisc":	
 		case "AACtoDolby":	
+		case "LargerView":		
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
 		case "View1":
@@ -669,6 +671,7 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "SeasonLabel":	
 	case "AutoPlay":
 	case "ShowDisc":	
+	case "LargerView":		
 		this.UserData[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		break;
@@ -881,6 +884,10 @@ GuiPage_Settings.setOverview = function() {
 					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Resume All Items</li><li>TV Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
 					"<br><br>Setting this to None will show more content from Home View 1";
 			break;	
+		case "LargerView":	
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Larger View";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enabling this changes the TV & Movies view from 9 items across to 7 items accross, allowing for larger images for each item.";
+			break;
 		case "AudioTheme":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play Audio Theme";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "This option allows for audio themes to be played when viewing the details of an item." +

@@ -386,6 +386,14 @@ GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
 			this.audiochannels = 6;
 			break;
+		case "pcm":	
+		case "pcm_s16le":	
+		case "pcm_s24le":
+		case "pcm_s32le":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;	
 		default:
 			this.audiocodec = false;
 			this.audiocontainer = null;
@@ -441,6 +449,14 @@ GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 			this.audiocontainer = ["ts"];
 			this.audiochannels = 6;
 			break;
+		case "pcm":	
+		case "pcm_s16le":	
+		case "pcm_s24le":
+		case "pcm_s32le":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
+			this.audiochannels = 6;
+			break;		
 		default:
 			this.audiocodec = false;
 			this.audiocontainer = null;

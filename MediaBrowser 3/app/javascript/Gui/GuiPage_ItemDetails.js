@@ -713,6 +713,18 @@ GuiPage_ItemDetails.processMediaInfo = function(itemsArray) {
 		case "ac3":
 			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/codec_ac3.png)></div>";
 			break;
+		case "pcm":
+		case "pcm_s16le":	
+		case "pcm_s24le":
+		case "pcm_s32le":	
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/codec_pcm.png)></div>";
+			break;	
+		case "truehd":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/codec_ddtruehd.png)></div>";
+			break;
+		case "mp3":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/codec_mp3.png)></div>";
+			break;
 		case "dts":
 		case "dca":
 			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/codec_dts.png)></div>";

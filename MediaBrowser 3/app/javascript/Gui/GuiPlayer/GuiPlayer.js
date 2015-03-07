@@ -914,14 +914,13 @@ GuiPlayer.keyDownToolsSub = function() {
 				document.getElementById("NoKeyInput").focus();		
 				this.stopPlayback();
 				//Update URL with resumeticks
+				this.setDisplaySize();
+				var position = Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks / 10000000);
 				if (Main.getModelYear() == "D" && this.playingTranscodeStatus != "Direct Play") {
-					var url = this.playingURL + '&StartTimeTicks=' + (Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks)) + '|COMPONENT=HLS';			
-					alert (url)
-					var position = Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks / 10000000);
-				    this.plugin.ResumePlay(url,10000); 
+					var url = this.playingURL + '&StartTimeTicks=' + (Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks)) + '|COMPONENT=HLS';						
+				    this.plugin.ResumePlay(url,position); 
 				} else {
 					var url = this.playingURL + '&StartTimeTicks=' + (Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks));
-					var position = Math.round(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks / 10000000);
 				    this.plugin.ResumePlay(url,position); 
 				}
 				break;	

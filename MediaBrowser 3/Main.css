@@ -483,6 +483,23 @@
     background-position:center;
 }
 
+.SeriesPortraitLarge {
+	width: 119px;
+    height: 178px;
+    display:inline-block;
+    position:relative; 
+
+    margin:1px;
+    border:4px solid transparent;
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-repeat: no-repeat;
+    background-position:center;
+}
+
 .Music {
 	width: 109px;
     height: 109px;

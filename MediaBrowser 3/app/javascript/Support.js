@@ -531,7 +531,6 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 	}
 	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
-		alert (ItemData.Items[selectedItem].CollectionType);
 		switch (ItemData.Items[selectedItem].CollectionType) {
 		case "boxsets":	
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
@@ -578,11 +577,11 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		case "CollectionFolder":
 		case "ManualCollectionsFolder":
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=SortName");
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 			GuiDisplay_Series.start("Collections",url,0,0);
 			break;
 		case "BoxSet":
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks	");
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 			GuiDisplay_Series.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;
 		case "Series":
@@ -835,7 +834,7 @@ Support.processHomePageMenu = function (menuItem) {
 		GuiDisplayOneItem.start("Channels", url,0,0);
 		break;
 	case "Collections":	
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=SortName");
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 		GuiDisplay_Series.start("Collections", url,0,0);
 		break;		
 	case "TV":

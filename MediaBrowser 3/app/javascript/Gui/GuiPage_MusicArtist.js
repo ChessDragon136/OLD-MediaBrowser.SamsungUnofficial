@@ -57,8 +57,8 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 		document.getElementById("bannerSelection").style.paddingTop="10px";
 		document.getElementById("bannerSelection").style.paddingBottom="5px";
 		
-		//Index Data
-		this.ItemIndexData = Support.processIndexing(this.ItemData.Items); 
+		//Index Data - Disabled v0.570d
+		//this.ItemIndexData = Support.processIndexing(this.ItemData.Items); 
 		
 		//Display first XX series
 		this.updateDisplayedItems();
@@ -185,7 +185,8 @@ GuiPage_MusicArtist.keyDown = function() {
 			this.processTopMenuEnterKey();
 			break;		
 		case tvKey.KEY_RED:
-			this.processIndexing();
+			//Disabled v0.570d
+			//this.processIndexing();
 			break;	
 		case tvKey.KEY_UP:	
 			this.processTopMenuUpKey();

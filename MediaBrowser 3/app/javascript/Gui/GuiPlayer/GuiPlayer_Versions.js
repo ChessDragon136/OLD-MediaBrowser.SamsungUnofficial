@@ -147,7 +147,7 @@ GuiPlayer_Versions.updateSelectedItems = function() {
 
 //Gets Primary Streams - Ones that would be used on first playback)
 GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) {
-	var videoStreamIfNoDefault = 0, audioStreamCount = 0
+	var videoStreamIfNoDefault = 0
 	var videoIndex = -1, audioIndex = -1;
 	var indexOfFirstAudio = -1;
 	
@@ -155,8 +155,11 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 	var UserData = Server.getContent(userURL);
 	if (UserData == null) { return; }
 	
-	var AudioLanguagePreferenece = (UserData.Configuration.AudioLanguagePreference !== undefined) ? UserData.Configuration.AudioLanguagePreference : "eng";
+	var AudioLanguagePreferenece = (UserData.Configuration.AudioLanguagePreference !== undefined) ? UserData.Configuration.AudioLanguagePreference : "none";
 	var PlayDefaultAudioTrack = (UserData.Configuration.PlayDefaultAudioTrack !== undefined) ? true: false;
+	
+	FileLog.write("Video : Audio Play Default Track Setting: " + PlayDefaultAudioTrack);
+	FileLog.write("Video : Audio Language Preference Setting: " + AudioLanguagePreferenece);
 	
 	var MediaStreams = MediaSource.MediaStreams;
 	
@@ -165,6 +168,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		var Stream = MediaStreams[index];
 		if (Stream.Type == "Audio") {
 			indexOfFirstAudio = index;
+			FileLog.write("Video : First Audio Index : " + indexOfFirstAudio);
 			break;
 		} 
 	}
@@ -175,50 +179,38 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			videoStreamIfNoDefault = (videoStreamIfNoDefault == 0) ? index : videoStreamIfNoDefault;
 			if (Stream.IsDefault == true) {
 				videoIndex = index;
+				FileLog.write("Video : Default Video Index Found : " + videoIndex);
 			}
 		} 
 		
 		if (Stream.Type == "Audio") {
-			audioStreamCount++;
 			if (PlayDefaultAudioTrack == false) {
 				if (Stream.Language == AudioLanguagePreferenece) {
 					audioIndex = index;
+					FileLog.write("Video : Audio Language Preference Found : " + audioIndex);
 				}
 			} else {
 				if (Stream.IsDefault == true) {
 					audioIndex = index;
+					FileLog.write("Video : Default Audio Track Found : " + audioIndex);
 				}
 			}
 		}
 	}
 	
 	//If there was no default video track use first one
-	videoIndex = (videoIndex == -1) ? videoStreamIfNoDefault : videoIndex ;
+	if (videoIndex == -1) {
+		videoIndex = videoStreamIfNoDefault;
+		FileLog.write("Video : No Default Video Index Found - Use First Video Index : " + videoIndex);
+	}
 
 	//If there was no default audio track find others
 	if (audioIndex == -1) {	
 		for (var index = 0;index < MediaStreams.length;index++) {
 			var Stream = MediaStreams[index];
-
-			if (Stream.Type == "Audio") {
-				if (PlayDefaultAudioTrack == false) {
-					if (Stream.Language == AudioLanguagePreferenece) {
-						audioIndex = index;
-					}
-				} else {
-					if (Stream.IsDefault == true) {
-						audioIndex = index;
-					}
-				}
-			}
-		}	
-	}
-	
-	if (audioIndex == -1) {	
-		for (var index = 0;index < MediaStreams.length;index++) {
-			var Stream = MediaStreams[index];
 			if (Stream.Type == "Audio") {
 				audioIndex = index;
+				FileLog.write("Video : No Audio Track Set - Use First Audio Index : " + audioIndex);
 				break;
 			}
 		}
@@ -243,6 +235,13 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			FileLog.write("Video : Media Stream Added : 2D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst)
 			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); // Index != Id!!!
 		}				
+	} else {
+		if (videoIndex == -1) {
+			FileLog.write("Video : No Video Index Found - Not Added");
+		}
+		if (audioIndex == -1) {
+			FileLog.write("Video : No Audio Index Found - Not Added");
+		}
 	}	
 }
 

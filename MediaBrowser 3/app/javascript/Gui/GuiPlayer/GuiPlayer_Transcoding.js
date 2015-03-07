@@ -55,29 +55,29 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 	if (this.isVideo && this.isAudio && convertAACtoDolby == false) {
 		if (isFirstAudioIndex == true) {
 			transcodeStatus = "Direct Stream";
-			streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id;
+			streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		} else {			
 			if (Main.getModelYear() == "D") {
-				transcodeStatus = "Stream Copy D Series";
-				streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id;
+				transcodeStatus = "Stream Copy D Series - Audio Not First Track";
+				streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			} else {
-				transcodeStatus = "Direct Stream";
-				streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id;
+				transcodeStatus = "Stream Copy - Audio Not First Track";
+				streamparams = '/Master.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			}
 		}	
 	} else if (this.isVideo == false) {
 		transcodeStatus = "Transcoding Audio & Video";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec='+ audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;	
+			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec='+ audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
 		} else {
-			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=' + audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;	
+			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=' + audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
 		}
 	} else if (this.isVideo == true && (this.isAudio == false || convertAACtoDolby == true)) {
 		transcodeStatus = "Transcoding Audio";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;
+			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		} else {
-			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id;
+			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		}
 	}
 	var url = Server.getServerAddr() + '/Videos/' + showId + streamparams + '&DeviceId='+Server.getDeviceID();

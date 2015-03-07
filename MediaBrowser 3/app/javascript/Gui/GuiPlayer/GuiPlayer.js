@@ -273,7 +273,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 			//Set Colour & Size from User Settings
 			Support.styleSubtitles("guiPlayer_Subtitles")
 			
-		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt");
+		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt?api_key=" + '&api_key=' + Server.getAuthToken());
 		    var PlayerDataSubtitles = Server.getSubtitles(url);
 		    if (PlayerDataSubtitles == null) { return; }
 		    
@@ -331,7 +331,7 @@ GuiPlayer.getSubtitles = function(selectedSubtitleIndex) {
 			//Set Colour & Size from User Settings
 			Support.styleSubtitles("guiPlayer_Subtitles")
 			
-		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+this.playingSubtitleIndex+"/Stream.srt");
+		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+this.playingSubtitleIndex+"/Stream.srt?api_key=" + '&api_key=' + Server.getAuthToken());
 		    var PlayerDataSubtitles = Server.getSubtitles(url);
 		    if (PlayerDataSubtitles == null) { return; }
 		    

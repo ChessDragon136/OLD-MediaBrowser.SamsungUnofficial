@@ -22,6 +22,7 @@
 	<description itemtype="string">Samsung Smart TV MediaBrowser 3 Alpha</description>
 	<width itemtype="string">960</width>
 	<height itemtype="string">540</height>
+	<mouse>y</mouse>
 	<author itemtype="group"> 
 		<name itemtype="ChessDragon136"/>
 		<email itemtype="string"/>

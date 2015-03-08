@@ -144,34 +144,34 @@ GuiTV_Show.updateDisplayedItems = function() {
 		if (this.ItemData.Items[index].UserData.Played == true) {	
 			if (this.ItemData.Items[index].ImageTags.Thumb) {
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ItemData.Items[index].BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ShowData.ImageTags.Thumb) {			
 				var imgsrc = Server.getImageURL(this.ShowData.Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ShowData.BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ShowData.Id,"Backdrop",100,46,0,false,0,this.ShowData.BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Thumb) {
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ItemData.Items[index].BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ShowData.ImageTags.Thumb) {			
 				var imgsrc = Server.getImageURL(this.ShowData.Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ShowData.BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ShowData.Id,"Backdrop",100,46,0,false,0,this.ShowData.BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver("+index+")' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			}
 		}
 	}

@@ -62,7 +62,7 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 				streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			} else {
 				transcodeStatus = "Stream Copy - Audio Not First Track";
-				streamparams = '/Master.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
+				streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			}
 		}	
 	} else if (this.isVideo == false) {

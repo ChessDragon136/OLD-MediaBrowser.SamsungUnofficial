@@ -504,7 +504,7 @@ Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 //ByPass Counter required for views that have 2 lists (Like Home Page) so I only display the counter of the active list
-Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter) {
+Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter, totalRecordCount) {
 	for (var index = startPos; index < endPos; index++){	
 		if (index == selectedItemID) {
 			document.getElementById(DivIdPrepend + Array[index].Id).className = strIfSelected;			
@@ -519,7 +519,11 @@ Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfS
 		if (Array.length == 0) {
 			document.getElementById("Counter").innerHTML = "";
 		} else {
-			document.getElementById("Counter").innerHTML = (selectedItemID + 1) + "/" + Array.length;
+			if (totalRecordCount !== undefined || totalRecordCount != null) { 
+				document.getElementById("Counter").innerHTML = (selectedItemID + 1) + "/" + totalRecordCount;
+			} else {
+				document.getElementById("Counter").innerHTML = (selectedItemID + 1) + "/" + Array.length;
+			}	
 		}	
 	}	
 }

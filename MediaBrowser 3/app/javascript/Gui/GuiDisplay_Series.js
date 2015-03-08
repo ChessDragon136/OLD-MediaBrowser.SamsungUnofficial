@@ -2,6 +2,8 @@ var GuiDisplay_Series = {
 		ItemData : null,
 		ItemIndexData : null,
 		
+		totalRecordCount : null,
+		
 		selectedItem : 0,
 		selectedBannerItem : 0,
 		topLeftItem : 0,
@@ -30,6 +32,7 @@ GuiDisplay_Series.getMaxDisplay = function() {
 
 GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {	
 	//Save Start Params	
+	Support.pageLoadTimes("GuiDisplay_Series","Start",true);
 	this.startParams = [title,url];
 	
 	//Reset Values
@@ -47,10 +50,12 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	if (ItemDataCount == null) { return; }
 
 	//If more than 200 only load first 200, load other data later!
-	//url = (ItemDataCount.TotalRecordCount > 200) ? url + "&Limit=200" : url;
+	this.totalRecordCount = ItemDataCount.TotalRecordCount;
+	url = (ItemDataCount.TotalRecordCount > 200) ? url + "&Limit=200" : url;
 	
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
+	Support.pageLoadTimes("GuiDisplay_Series","RetrievedServerData",false);
 	
 	//Latest Page Fix
 	this.isLatest = false;
@@ -147,19 +152,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 			
 		//Set Focus for Key Events
 		document.getElementById("GuiDisplay_Series").focus();
-		
-		//If more to load, load them now
-		/*
-		if (ItemDataCount.TotalRecordCount > 200) {
-			var ItemDataRemaining = Server.getContent(url + "&StartIndex=201");
-			if (ItemDataRemaining == null) { return; }
-			
-			for (var index = 0; index < ItemDataRemaining.Items.length; index++) {
-				this.ItemData.Items[index+201] = ItemDataRemaining.Items[index];
-			}
-			document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;
-		}
-		*/
+		Support.pageLoadTimes("GuiDisplay_Series","UserControl",false);
 	} else {
 		//Set message to user
 		document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";
@@ -183,14 +176,14 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (this.isTvOrMovies == 2) {
 		//Music - Use different styles
 		Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Music Selected","Music","");
+				Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Music Selected","Music","",false,this.totalRecordCount);
 	} else {
 		if (File.getUserProperty("LargerView") == true) {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge Selected","SeriesPortraitLarge","");
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge Selected","SeriesPortraitLarge","",false,this.totalRecordCount);
 		} else {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","",false,this.totalRecordCount);
 		}
 		
 	}
@@ -484,19 +477,19 @@ GuiDisplay_Series.processSelectedItem = function() {
 		break;
 		case "Album":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
+				var url1 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&fields=SortName");
 				GuiDisplay_Series.start("Album",url1,0,0);
 			}		
 		break;
 		case "Album Artist":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+				var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
 				GuiPage_MusicArtist.start("Album Artist",url1);
 			}		
 		break;
 		case "Artist":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+				var url1 = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
 				GuiDisplay_Series.start("Artist",url1,0,0);
 			}		
 		break;
@@ -598,11 +591,21 @@ GuiDisplay_Series.processDownKey = function() {
 	} else {
 		this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
 		if (this.selectedItem >= this.ItemData.Items.length) {
-			this.selectedItem = (this.ItemData.Items.length-1);
-			if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
-				this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
-				this.updateDisplayedItems();
-			}
+			if (this.totalRecordCount > this.ItemData.Items.length) {
+				this.loadMoreItems();
+				
+				if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
+					this.updateDisplayedItems();
+				}
+				
+			} else {
+				this.selectedItem = (this.ItemData.Items.length-1);
+				if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
+					this.updateDisplayedItems();
+				}
+			}	
 		} else {
 			if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
 				this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
@@ -635,12 +638,22 @@ GuiDisplay_Series.processChannelUpKey = function() {
 GuiDisplay_Series.processChannelDownKey = function() {
 	if (this.selectedItem > -1) {
 		this.selectedItem = this.selectedItem + this.getMaxDisplay();
-		if (this.selectedItem >= this.ItemData.Items.length) {		
-			this.selectedItem = (this.ItemData.Items.length-1);
-			if (this.selectedItem >= this.topLeftItem + this.getMaxDisplay()) {
-				this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
-			}
-			this.updateDisplayedItems();
+		if (this.selectedItem >= this.ItemData.Items.length) {	
+			
+			if (this.totalRecordCount > this.ItemData.Items.length) {
+				this.loadMoreItems();
+				
+				if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
+					this.updateDisplayedItems();
+				}		
+			} else {
+				this.selectedItem = (this.ItemData.Items.length-1);
+				if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
+					this.updateDisplayedItems();
+				}
+			}	
 		} else {
 			this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
 			this.updateDisplayedItems();
@@ -665,6 +678,39 @@ GuiDisplay_Series.processIndexing = function() {
 		
 		this.updateDisplayedItems();
 		this.updateSelectedItems();
+	}
+}
+
+GuiDisplay_Series.loadMoreItems = function() {
+	if (this.totalRecordCount > this.ItemData.Items.length) {
+		Support.pageLoadTimes("GuiDisplay_Series","GetRemainingItems",false);
+		
+		//Show Loading Div
+		document.getElementById("guiPlayer_Loading").style.visibility = "";
+		
+		//Remove User Control
+		document.getElementById("NoKeyInput").focus();
+		
+		//Load Data
+		var originalLength = this.ItemData.Items.length
+		var ItemDataRemaining = Server.getContent(this.startParams[1] + "&Limit=200&StartIndex=" + originalLength);
+		if (ItemDataRemaining == null) { return; }
+		Support.pageLoadTimes("GuiDisplay_Series","GotRemainingItems",false);
+		
+		for (var index = 0; index < ItemDataRemaining.Items.length; index++) {
+			this.ItemData.Items[index+originalLength] = ItemDataRemaining.Items[index];
+		}
+		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;
+		
+		//Reprocess Indexing Algorithm
+		
+		//Hide Loading Div
+		document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
+		
+		//Pass back Control
+		document.getElementById("GuiDisplay_Series").focus();
+		
+		upport.pageLoadTimes("GuiDisplay_Series","AddedRemainingItems",false);
 	}
 }
 

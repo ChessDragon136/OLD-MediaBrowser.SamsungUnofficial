@@ -3,6 +3,8 @@ var GuiPage_MusicArtist = {
 		selectedItem : 0,
 		topLeftItem : 0,
 		
+		totalRecordCount : null,
+		
 		ItemData2 : null,
 		selectedItem2 : -1,
 		topLeftItem2 : 0,
@@ -49,6 +51,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	if (ItemDataCount == null) { return; }
 
 	//If more than 200 only load first 200, load other data later!
+	this.totalRecordCount = ItemDataCount.TotalRecordCount;
 	url1 = (ItemDataCount.TotalRecordCount > 200) ? url1 + "&Limit=200" : url1;
 	
 	this.ItemData = Server.getContent(url1);
@@ -56,9 +59,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	Support.pageLoadTimes("GuiPage_MusicArtist","RetrievedServerData",false);
 	
 	if (this.ItemData.Items.length > 0) {
-		//Proceed as Normal
-		//Set PageContent
-		
+		//Proceed as Normal	
 		//Update Padding on pageContent
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
 				"<div style='padding-top:260px;padding-left:4px;'><p id=pageTitle2 style='font-size:22px;'></p><div id=Content2></div></div>";
@@ -88,20 +89,6 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 		//Set Focus for Key Events
 		document.getElementById("GuiPage_MusicArtist").focus();	
 		Support.pageLoadTimes("GuiPage_MusicArtist","UserControl",false);
-		
-		//If more to load, load them now
-		if (ItemDataCount.TotalRecordCount > 200) {
-			Support.pageLoadTimes("GuiPage_MusicArtist","GetRemainingItems",false);
-			var ItemDataRemaining = Server.getContent(url + "&StartIndex=201");
-			if (ItemDataRemaining == null) { return; }
-			Support.pageLoadTimes("GuiPage_MusicArtist","GotRemainingItems",false);
-			
-			for (var index = 0; index < ItemDataRemaining.Items.length; index++) {
-				this.ItemData.Items[index+201] = ItemDataRemaining.Items[index];
-			}
-			document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;
-			Support.pageLoadTimes("GuiPage_MusicArtist","AddedRemainingItems",false);
-		}
 	} else {
 	}
 }
@@ -117,7 +104,7 @@ GuiPage_MusicArtist.updateDisplayedItems = function() {
 //Function sets CSS Properties so show which user is selected
 GuiPage_MusicArtist.updateSelectedItems = function (bypassCounter) {
 	Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Music Selected","Music",this.divprepend1,bypassCounter);
+			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Music Selected","Music",this.divprepend1,bypassCounter,this.totalRecordCount);
 	
 	//Prevent execution when selectedItem is set to -1 to hide selected item
 	if (this.selectedItem != -1) {	
@@ -144,8 +131,6 @@ GuiPage_MusicArtist.updateSelectedItems = function (bypassCounter) {
 			url2 = Server.getItemTypeURL("?SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=MusicAlbum&Recursive=true&StartIndex=0&Artists="+artist);
 			break;
 		}
-		
-		alert (this.ItemData.Items[this.selectedItem].Name + " : " + url2);
 		
 		//Blocking code to skip getting data for items where the user has just gone past it
 		var currentArtistSelected = this.selectedItem;
@@ -326,11 +311,21 @@ GuiPage_MusicArtist.processTopMenuDownKey = function() {
 	} else {
 		this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
 		if (this.selectedItem >= this.ItemData.Items.length) {
-			this.selectedItem = (this.ItemData.Items.length-1);
-			if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
-				this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
-				this.updateDisplayedItems();
-			}
+			if (this.totalRecordCount > this.ItemData.Items.length) {
+				this.loadMoreItems();
+				
+				if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
+					this.updateDisplayedItems();
+				}
+				
+			} else {
+				this.selectedItem = (this.ItemData.Items.length-1);
+				if (this.selectedItem >= (this.topLeftItem  + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.getMaxDisplay();
+					this.updateDisplayedItems();
+				}
+			}	
 		} else {
 			if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
 				this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
@@ -557,6 +552,39 @@ GuiPage_MusicArtist.processIndexing = function() {
 	
 	this.updateDisplayedItems();
 	this.updateSelectedItems();
+}
+
+GuiPage_MusicArtist.loadMoreItems = function() {
+	if (this.totalRecordCount > this.ItemData.Items.length) {
+		Support.pageLoadTimes("GuiPage_MusicArtist","GetRemainingItems",false);
+		
+		//Show Loading Div
+		document.getElementById("guiPlayer_Loading").style.visibility = "";
+		
+		//Remove User Control
+		document.getElementById("NoKeyInput").focus();
+		
+		//Load Data
+		var originalLength = this.ItemData.Items.length
+		var ItemDataRemaining = Server.getContent(this.startParams[1] + "&Limit=200&StartIndex=" + originalLength);
+		if (ItemDataRemaining == null) { return; }
+		Support.pageLoadTimes("GuiPage_MusicArtist","GotRemainingItems",false);
+		
+		for (var index = 0; index < ItemDataRemaining.Items.length; index++) {
+			this.ItemData.Items[index+originalLength] = ItemDataRemaining.Items[index];
+		}
+		document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;
+		
+		//Reprocess Indexing Algorithm
+		
+		//Hide Loading Div
+		document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
+		
+		//Pass back Control
+		document.getElementById("GuiDisplay_Series").focus();
+		
+		Support.pageLoadTimes("GuiPage_MusicArtist","AddedRemainingItems",false);
+	}
 }
 
 GuiPage_MusicArtist.returnFromMusicPlayer = function() {

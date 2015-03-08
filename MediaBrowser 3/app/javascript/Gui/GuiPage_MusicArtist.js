@@ -31,6 +31,7 @@ GuiPage_MusicArtist.getMaxDisplay2 = function() {
 
 GuiPage_MusicArtist.start = function(title1, url1) {
 	//Save Start Vars
+	Support.pageLoadTimes("GuiPage_MusicArtist","Start",true);
 	this.startParams = [title1,url1];
 	
 	//Reset Vars
@@ -44,6 +45,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	this.title1 = title1;
 	this.ItemData = Server.getContent(url1);
 	if (this.ItemData == null) { return; }
+	Support.pageLoadTimes("GuiPage_MusicArtist","RetrievedServerData",false);
 	
 	if (this.ItemData.Items.length > 0) {
 		//Proceed as Normal
@@ -77,6 +79,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	
 		//Set Focus for Key Events
 		document.getElementById("GuiPage_MusicArtist").focus();	
+		Support.pageLoadTimes("GuiPage_MusicArtist","UserControl",false);
 	} else {
 	}
 }

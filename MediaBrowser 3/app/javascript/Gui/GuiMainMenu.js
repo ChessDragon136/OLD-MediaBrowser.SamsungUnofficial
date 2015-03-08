@@ -217,8 +217,8 @@ GuiMainMenu.processSelectedItems = function() {
 		break;
 	case "Collections":	
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=SortName");
-		GuiDisplayOneItem.start("Collections", url,0,0);
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
+		GuiDisplay_Series.start("Collections",url,0,0);
 		break;		
 	case "TV":
 		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");

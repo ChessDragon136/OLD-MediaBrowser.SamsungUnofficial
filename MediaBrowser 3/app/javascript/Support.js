@@ -11,6 +11,9 @@ var Support = {
 		scrollpos : 0,
 		resetToTop : null,
 		
+		//PageLoadingTime
+		pageLoadedTime : null,
+		
 		//Screensaver
 		screensaverVar : null,
 		isScreensaverOn : true,
@@ -576,7 +579,6 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		switch (ItemData.Items[selectedItem].Type) {
 		case "CollectionFolder":
 		case "ManualCollectionsFolder":
-			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 			GuiDisplay_Series.start("Collections",url,0,0);
 			break;
@@ -931,6 +933,27 @@ Support.screensaverOff = function () {
 		}
 	}
 }
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+Support.pageLoadTimes = function(page,process,isStart) {
+	if (isStart == true) {
+		Support.pageLoadedTime = new Date().getTime();
+		FileLog.write("Loading : " + page + " : Time 0");
+	} else {
+		var time = new Date().getTime() - Support.pageLoadedTime;
+		switch (process) {	
+			case "RetrievedServerData":
+				FileLog.write("Loading : " + page + " : Time " + time + "ms");
+			break;
+			case "UserControl":
+				FileLog.write("Loading : " + page + " : Time " + time + "ms");
+			break;
+			default:
+			break;
+		}
+	}
+}
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 Support.convertTicksToTime = function (currentTime, duration) {

@@ -1,3 +1,18 @@
+Skip to content
+ This repository
+Explore
+Gist
+Blog
+Help
+graeme0811 graeme0811
+ 
+4  Watch 
+  Star 2
+ Fork 6ChessDragon136/MediaBrowser.SamsungUnofficial
+ tree: 86767693b3  MediaBrowser.SamsungUnofficial/MediaBrowser 3/app/javascript/Gui/GuiTV_Show.js
+graeme0811graeme0811 2 minutes ago Update GuiTV_Show.js
+4 contributors ChessDragon136cragjaggedgraeme0811Ian Mclaughlin
+RawBlameHistory  481 lines (419 sloc)  20.823 kb
 var GuiTV_Show = {
 		ItemData : null,
 		ItemIndexData : null,
@@ -50,7 +65,7 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 		GuiDisplay_Episodes.start(this.ShowData.Name + " " + this.ItemData.Items[this.selectedItem].Name,url,0,0);
 	} else {
 		if (this.ItemData.Items.length > 0) {				
-			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' style='padding-right:35px'>Play All</span><span id='shuffleAll'>Shuffle All</span></div><div id=Content></div>" + 
+			document.getElementById("pageContent").innerHTML = "<div id=allOptions><span id='playAll' onmouseover='this.updateSelectedBannerItemOnMouseOver(0)' style='padding-right:35px'>Play All</span><span id='shuffleAll' onmouseover='this.updateSelectedBannerItemOnMouseOver(1)'>Shuffle All</span></div><div id=Content></div>" + 
 			"<div id='ShowSeriesInfo'></div>" + 
 			"<div id='ShowImage'></div>" + 
 			"<div id='InfoContainer' class='showItemContainer'>" + 
@@ -144,34 +159,34 @@ GuiTV_Show.updateDisplayedItems = function() {
 		if (this.ItemData.Items[index].UserData.Played == true) {	
 			if (this.ItemData.Items[index].ImageTags.Thumb) {
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ItemData.Items[index].BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ShowData.ImageTags.Thumb) {			
 				var imgsrc = Server.getImageURL(this.ShowData.Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else if (this.ShowData.BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ShowData.Id,"Backdrop",100,46,0,false,0,this.ShowData.BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div><div class='ShowListSingleWatched'></div></div>";
 			}
 		} else {
 			if (this.ItemData.Items[index].ImageTags.Thumb) {
 				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ItemData.Items[index].BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[index].Id,"Backdrop",100,46,0,false,0,this.ItemData.Items[index].BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ShowData.ImageTags.Thumb) {			
 				var imgsrc = Server.getImageURL(this.ShowData.Id,"Thumb",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else if (this.ShowData.BackdropImageTags.length > 0) {			
 				var imgsrc = Server.getBackgroundImageURL(this.ShowData.Id,"Backdrop",100,46,0,false,0,this.ShowData.BackdropImageTags.length);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(" +imgsrc+ ")></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
+				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + "><div class='ShowListSingleImage' onmouseover='this.updateSelectedItemOnMouseOver('+index+')' style=background-image:url(images/ShowNoImage.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLine'>"+ this.ItemData.Items[index].Name + "</div></div></div>";
 			}
 		}
 	}
@@ -232,6 +247,19 @@ GuiTV_Show.updateSelectedBannerItems = function() {
 		document.getElementById("playAll").style.color = "#f9f9f9";
 		document.getElementById("shuffleAll").style.color = "#f9f9f9";
 	}
+}
+
+GuiTV_Show.updateSelectedItemByMouseOver = function(index) {
+	this.selectedItem = index;
+	this.updateSelectedBannerItems();
+	this.updateSelectedItems();
+}
+
+GuiTV_Show.updateSelectedBannerItemOnMouseOver = function(bannerItem) {
+	this.selectedItem = -1;
+	this.selectedBannerItem = bannerItem;
+	this.updateSelectedBannerItems();
+	this.updateSelectedItems();
 }
 
 GuiTV_Show.keyDown = function() {
@@ -465,3 +493,5 @@ GuiTV_Show.returnFromMusicPlayer = function() {
 	this.updateDisplayedItems();
 	this.updateSelectedItems();
 }
+Status API Training Shop Blog About
+© 2015 GitHub, Inc. Terms Privacy Security Contact

@@ -938,15 +938,24 @@ Support.screensaverOff = function () {
 Support.pageLoadTimes = function(page,process,isStart) {
 	if (isStart == true) {
 		Support.pageLoadedTime = new Date().getTime();
-		FileLog.write("Loading : " + page + " : Time 0");
+		FileLog.write("Loading : " + page + " : New Page Loaded : Time 0");
 	} else {
 		var time = new Date().getTime() - Support.pageLoadedTime;
 		switch (process) {	
 			case "RetrievedServerData":
-				FileLog.write("Loading : " + page + " : Time " + time + "ms");
+				FileLog.write("Loading : " + page + " : Retrieved Data From Server : Time " + time + "ms");
 			break;
 			case "UserControl":
-				FileLog.write("Loading : " + page + " : Time " + time + "ms");
+				FileLog.write("Loading : " + page + " : User Control : Time " + time + "ms");
+			break;
+			case "GetRemainingItems":
+				FileLog.write("Loading : " + page + " : Getting Additional Data > 200 Items : Time " + time + "ms");
+			break;
+			case "GotRemainingItems":
+				FileLog.write("Loading : " + page + " : Got Additional Data > 200 Items : Time " + time + "ms");
+			break;
+			case "AddedRemainingItems":
+				FileLog.write("Loading : " + page + " : Added Additional Data > 200 Items to original 200 Items : Time " + time + "ms");
 			break;
 			default:
 			break;

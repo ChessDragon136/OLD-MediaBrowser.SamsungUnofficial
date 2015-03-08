@@ -43,6 +43,12 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	this.MAXROWCOUNT = 2;
 	
 	//Load Data
+	var ItemDataCount = Server.getContent(url + "&Limit=0");
+	if (ItemDataCount == null) { return; }
+
+	//If more than 200 only load first 200, load other data later!
+	//url = (ItemDataCount.TotalRecordCount > 200) ? url + "&Limit=200" : url;
+	
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 	
@@ -141,6 +147,19 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 			
 		//Set Focus for Key Events
 		document.getElementById("GuiDisplay_Series").focus();
+		
+		//If more to load, load them now
+		/*
+		if (ItemDataCount.TotalRecordCount > 200) {
+			var ItemDataRemaining = Server.getContent(url + "&StartIndex=201");
+			if (ItemDataRemaining == null) { return; }
+			
+			for (var index = 0; index < ItemDataRemaining.Items.length; index++) {
+				this.ItemData.Items[index+201] = ItemDataRemaining.Items[index];
+			}
+			document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;
+		}
+		*/
 	} else {
 		//Set message to user
 		document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";

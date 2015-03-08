@@ -414,7 +414,7 @@ GuiDisplay_Series.keyDown = function() {
 			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
-				if (this.selectedBannerItem != this.menuItems.length-1) {
+				if (this.selectedBannerItem != this.bannerItems.length-1) {
 					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
 				} else {
 					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
@@ -560,8 +560,14 @@ GuiDisplay_Series.processUpKey = function() {
 				Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
 						Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Music Selected","Music","");
 			} else {
-				Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-						Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
+				if (File.getUserProperty("LargerView") == true) {
+					Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
+							Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge Selected","SeriesPortraitLarge","");
+				} else {
+					Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
+							Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","");
+				}
+				
 			}
 			//update selected banner item
 			this.updateSelectedBannerItems();

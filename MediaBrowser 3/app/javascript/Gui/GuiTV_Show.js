@@ -1,18 +1,3 @@
-Skip to content
- This repository
-Explore
-Gist
-Blog
-Help
-graeme0811 graeme0811
- 
-4  Watch 
-  Star 2
- Fork 6ChessDragon136/MediaBrowser.SamsungUnofficial
- tree: 86767693b3  MediaBrowser.SamsungUnofficial/MediaBrowser 3/app/javascript/Gui/GuiTV_Show.js
-graeme0811graeme0811 2 minutes ago Update GuiTV_Show.js
-4 contributors ChessDragon136cragjaggedgraeme0811Ian Mclaughlin
-RawBlameHistory  481 lines (419 sloc)  20.823 kb
 var GuiTV_Show = {
 		ItemData : null,
 		ItemIndexData : null,
@@ -493,5 +478,3 @@ GuiTV_Show.returnFromMusicPlayer = function() {
 	this.updateDisplayedItems();
 	this.updateSelectedItems();
 }
-Status API Training Shop Blog About
-© 2015 GitHub, Inc. Terms Privacy Security Contact

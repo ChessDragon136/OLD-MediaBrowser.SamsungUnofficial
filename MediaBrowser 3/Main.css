@@ -258,6 +258,8 @@
 	height:22px;
     background-position:center;
     background-image:url('images/metadataSmall.png');
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .MetadataItemSmallLong {
@@ -267,6 +269,8 @@
 	height:22px;
     background-position:center;
     background-image:url('images/metadataSmallLong.png');
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .EpisodesList{

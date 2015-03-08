@@ -225,8 +225,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	}
 
 	if (this.ItemData.OfficialRating !== undefined) {
-		htmlForMetaData += "<td class='MetadataItemSmall'>" + this.ItemData.OfficialRating
+		if (this.ItemData.OfficialRating.length < 15) {
+			htmlForMetaData += "<td class='MetadataItemSmall'>" + this.ItemData.OfficialRating
 			+ "</td>";
+		}
 	}
 
 	if (this.ItemData.RunTimeTicks !== undefined) {

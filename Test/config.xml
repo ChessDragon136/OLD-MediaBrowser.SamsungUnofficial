@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget>
+    <previewjs></previewjs>
+    <type>user</type>
+    <cpname></cpname>
+    <cplogo></cplogo>
+    <cpauthjs></cpauthjs>
+      <ThumbIcon>Images/icon/Tutorial_Video_106.png</ThumbIcon>
+    <BigThumbIcon>Images/icon/Tutorial_Video_115.png</BigThumbIcon>
+    <ListIcon>Images/icon/Tutorial_Video_85.png</ListIcon>
+    <BigListIcon>Images/icon/Tutorial_Video_95.png</BigListIcon>
+  <emp>Download</emp>
+    <ver>2.2</ver>
+    <mgrver></mgrver>
+    <fullwidget>y</fullwidget>
+	<movie>y</movie>
+    <srcctl>y</srcctl>
+    <ticker>n</ticker>
+    <childlock>n</childlock>
+    <audiomute>n</audiomute>
+    <videomute>n</videomute>
+    <dcont>y</dcont>
+    <widgetname>VideoTutorial</widgetname>
+    <description></description>
+    <width>960</width>
+    <height>540</height>
+    <author>
+        <name>Samsung Electronics Co. Ltd.</name>
+        <email></email>
+        <link></link>
+        <organization>Samsung Electronics Co. Ltd.</organization>
+    </author>
+</widget>

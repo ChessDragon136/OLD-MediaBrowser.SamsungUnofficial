@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+    	<item>
+            <title>Short movie trailer</title>
+            <link>link is defined in</link>
+            <subtitle> </subtitle>
+            <description>
+                This is a trailer for the new Transformers movie. Lots of robots and people fighting each other. The cinema is comming soon!
+            </description>
+        </item>
+    </channel>
+</rss>

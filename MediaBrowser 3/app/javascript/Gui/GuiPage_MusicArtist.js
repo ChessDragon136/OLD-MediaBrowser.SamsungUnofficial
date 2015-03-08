@@ -46,16 +46,9 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	//Load Data
 	this.title1 = title1;
 	
-	//Load Data
-	var ItemDataCount = Server.getContent(url1 + "&Limit=0");
-	if (ItemDataCount == null) { return; }
-
-	//If more than 200 only load first 200, load other data later!
-	this.totalRecordCount = ItemDataCount.TotalRecordCount;
-	url1 = (ItemDataCount.TotalRecordCount > 200) ? url1 + "&Limit=200" : url1;
-	
-	this.ItemData = Server.getContent(url1);
+	this.ItemData = Server.getContent(url1 + "&Limit=200");
 	if (this.ItemData == null) { return; }
+	this.totalRecordCount = this.ItemData.TotalRecordCount;
 	Support.pageLoadTimes("GuiPage_MusicArtist","RetrievedServerData",false);
 	
 	if (this.ItemData.Items.length > 0) {
@@ -581,7 +574,7 @@ GuiPage_MusicArtist.loadMoreItems = function() {
 		document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
 		
 		//Pass back Control
-		document.getElementById("GuiDisplay_Series").focus();
+		document.getElementById("GuiPage_MusicArtist").focus();
 		
 		Support.pageLoadTimes("GuiPage_MusicArtist","AddedRemainingItems",false);
 	}

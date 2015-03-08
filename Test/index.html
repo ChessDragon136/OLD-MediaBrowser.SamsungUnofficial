@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/div/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Tutorial Video App</title>     
+         
+        <!-- Common App API -->
+        <script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common//API/Widget.js'></script>
+        <script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common//API/TVKeyValue.js'></script>
+        
+        <!-- App code -->        
+        <script language="javascript" type="text/javascript" src="app/Javascript/Main.js"></script>
+        <script language="javascript" type="text/javascript" src="app/Javascript/Server.js"></script>
+        <script language="javascript" type="text/javascript" src="app/Javascript/Data.js"></script>
+        <script language="javascript" type="text/javascript" src="app/Javascript/Player.js"></script>
+        <script language="javascript" type="text/javascript" src="app/Javascript/Display.js"></script>
+        <script language="javascript" type="text/javascript" src="app/Javascript/Audio.js"></script>
+      
+        <!-- Style sheets -->
+        <link rel="stylesheet" href="CSS/Main.css" type="text/css">
+
+
+    </head>
+	
+    <body onload="Main.onLoad();" style="height: 540px; overflow:hidden; margin: 0px;" onunload="Main.onUnload();">
+	
+        <!-- Plugins -->
+        <object id="pluginPlayer" classid="clsid:SAMSUNG-INFOLINK-SEF" style="border:none; width:0px;height:0px;"></object>
+        <object id="pluginAudio" classid="clsid:SAMSUNG-INFOLINK-SEF" style="border:none; width:0px;height:0px;"></object>
+        <object id="pluginDL" classid="clsid:SAMSUNG-INFOLINK-SEF" style="border:none; width:0px;height:0px;"></object>
+	    <!-- Dummy anchor as focus for key events -->
+        <a href='javascript:void(0);' id='anchor' onkeydown='Main.keyDown();'></a>
+        <!-- Layout begins -->
+        <div id="main">
+        </div>
+    </body>
+</html>

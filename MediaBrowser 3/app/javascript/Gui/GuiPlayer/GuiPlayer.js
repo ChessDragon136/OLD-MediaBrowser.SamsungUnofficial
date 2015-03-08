@@ -964,6 +964,12 @@ GuiPlayer.keyDownToolsSub = function() {
 				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] != this.playingAudioIndex) {
 					this.stopPlayback();
 					document.getElementById("GuiPlayer").focus();
+					
+					//var SefPlugin = document.getElementById('pluginSEF');
+				    //SefPlugin.Open('Player','1.000','Player');
+				    //SefPlugin.Execute('SetStreamID', 1, 0);
+				    //SefPlugin.Close();
+					
 					//Check if first index - If it is need to stream copy audio track
 					var isFirstAudioIndex = (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] == this.audioIndexes[0]) ? true : false;
 					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[this.videoToolsSelectedItemSub],isFirstAudioIndex);

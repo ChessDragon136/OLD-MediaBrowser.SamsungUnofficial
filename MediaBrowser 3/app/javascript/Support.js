@@ -939,13 +939,15 @@ Support.screensaverOff = function () {
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-Support.pageLoadTimes = function(page,process,isStart) {
-	if (isStart == true) {
-		Support.pageLoadedTime = new Date().getTime();
-		FileLog.write("Loading : " + page + " : New Page Loaded : Time 0");
+Support.pageLoadTimes = function(page,process,reset) {
+	if (reset == true) {
+		Support.pageLoadedTime = new Date().getTime();	
 	} else {
 		var time = new Date().getTime() - Support.pageLoadedTime;
 		switch (process) {	
+			case "Start": 
+			FileLog.write("Loading : " + page + " : New Page Loaded : Time 0");
+			break;	
 			case "RetrievedServerData":
 				FileLog.write("Loading : " + page + " : Retrieved Data From Server : Time " + time + "ms");
 			break;

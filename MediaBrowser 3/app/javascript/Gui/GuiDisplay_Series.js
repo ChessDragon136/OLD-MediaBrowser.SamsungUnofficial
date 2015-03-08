@@ -45,16 +45,9 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	this.MAXCOLUMNCOUNT = (File.getUserProperty("LargerView") == true) ? 7 : 9;
 	this.MAXROWCOUNT = 2;
 	
-	//Load Data
-	var ItemDataCount = Server.getContent(url + "&Limit=0");
-	if (ItemDataCount == null) { return; }
-
-	//If more than 200 only load first 200, load other data later!
-	this.totalRecordCount = ItemDataCount.TotalRecordCount;
-	url = (ItemDataCount.TotalRecordCount > 200) ? url + "&Limit=200" : url;
-	
-	this.ItemData = Server.getContent(url);
+	this.ItemData = Server.getContent(url + "&Limit=200");
 	if (this.ItemData == null) { return; }
+	this.totalRecordCount = this.ItemData.TotalRecordCount;
 	Support.pageLoadTimes("GuiDisplay_Series","RetrievedServerData",false);
 	
 	//Latest Page Fix
@@ -477,19 +470,19 @@ GuiDisplay_Series.processSelectedItem = function() {
 		break;
 		case "Album":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&fields=SortName");
+				var url1 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName");
 				GuiDisplay_Series.start("Album",url1,0,0);
 			}		
 		break;
 		case "Album Artist":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+				var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
 				GuiPage_MusicArtist.start("Album Artist",url1);
 			}		
 		break;
 		case "Artist":
 			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ImageTypeLimit=0&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+				var url1 = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
 				GuiDisplay_Series.start("Artist",url1,0,0);
 			}		
 		break;
@@ -689,7 +682,7 @@ GuiDisplay_Series.processIndexing = function() {
 
 GuiDisplay_Series.loadMoreItems = function() {
 	if (this.totalRecordCount > this.ItemData.Items.length) {
-		Support.pageLoadTimes("GuiDisplay_Series","GetRemainingItems",false);
+		Support.pageLoadTimes("GuiDisplay_Series","GetRemainingItems",true);
 		
 		//Show Loading Div
 		document.getElementById("guiPlayer_Loading").style.visibility = "";
@@ -716,7 +709,7 @@ GuiDisplay_Series.loadMoreItems = function() {
 		//Pass back Control
 		document.getElementById("GuiDisplay_Series").focus();
 		
-		upport.pageLoadTimes("GuiDisplay_Series","AddedRemainingItems",false);
+		Support.pageLoadTimes("GuiDisplay_Series","AddedRemainingItems",false);
 	}
 }
 

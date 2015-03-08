@@ -23,7 +23,7 @@ GuiMusicPlayer.init = function() {
 	GuiPlayer.stopOnAppExit();
 
 	this.pluginMusic = document.getElementById("pluginPlayer");
-	this.pluginAudioMusic = document.getElementById("pluginObjectAudio");
+	this.pluginAudioMusic = document.getElementById("pluginAudio");
 	
 	//Set up Player
 	this.pluginMusic.OnConnectionFailed = 'GuiMusicPlayer.handleConnectionFailed';

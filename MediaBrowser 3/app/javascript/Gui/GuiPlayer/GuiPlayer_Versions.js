@@ -180,6 +180,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			if (Stream.IsDefault == true) {
 				videoIndex = index;
 				FileLog.write("Video : Default Video Index Found : " + videoIndex);
+				break;
 			}
 		} 
 		
@@ -188,11 +189,13 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 				if (Stream.Language == AudioLanguagePreferenece) {
 					audioIndex = index;
 					FileLog.write("Video : Audio Language Preference Found : " + audioIndex);
+					break;
 				}
 			} else {
 				if (Stream.IsDefault == true) {
 					audioIndex = index;
 					FileLog.write("Video : Default Audio Track Found : " + audioIndex);
+					break;
 				}
 			}
 		}

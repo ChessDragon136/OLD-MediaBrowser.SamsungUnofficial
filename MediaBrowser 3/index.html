@@ -32,7 +32,7 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiMainMenu.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiTV_Show.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer.js"></script>
-		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiLivePlayer.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_Display.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_Versions.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_Transcoding.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPlayer/GuiPlayer_TranscodeParams.js"></script>
@@ -66,15 +66,6 @@
         <object id='pluginObjectNNavi' border=0 classid='clsid:SAMSUNG-INFOLINK-NNAVI'></object>
         <object id='pluginObjectTV' border=0 classid='clsid:SAMSUNG-INFOLINK-TV'></object> 
         <object id='pluginSEF' border=0 classid='clsid:SAMSUNG-INFOLINK-SEF'></object>
-        <!-- <object id='pluginSEFPlayer' border=0 classid='clsid:SAMSUNG-INFOLINK-SEF'></object>
-        <object id='pluginSEFAudio' border=0 classid='clsid:SAMSUNG-INFOLINK-SEF'></object>  -->
-        
-        <script type="text/javascript">
-			window.onerror = function(msg, url, line) {
-			   // You can view the information in an alert to see things working like this:
-			   alert("Error: " + msg + "\nurl: " + url + "\nline: " + line);
-			};
-		</script>
         
 		<!-- TODO : Style sheets code -->
 		<link rel="stylesheet" href="Main.css" type="text/css">
@@ -96,9 +87,9 @@
 		<a href='javascript:void(0);' id='GuiPage_ItemDetailsSub' onkeydown='GuiPage_ItemDetails.subKeyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPlayer_Versions' onkeydown='GuiPlayer_Versions.keyDown();'></a>	
 		<a href='javascript:void(0);' id='GuiPlayer' onkeydown='GuiPlayer.keyDown();'></a>
-		<a href='javascript:void(0);' id='GuiPlayer_Tools' onkeydown='GuiPlayer.keyDownTools();'></a>
-		<a href='javascript:void(0);' id='GuiPlayer_ToolsSub' onkeydown='GuiPlayer.keyDownToolsSub();'></a>
-		<a href='javascript:void(0);' id='GuiLivePlayer' onkeydown='GuiLivePlayer.keyDown();'></a>
+		<a href='javascript:void(0);' id='GuiPlayer_Tools' onkeydown='GuiPlayer_Display.keyDownTools();'></a>
+		<a href='javascript:void(0);' id='GuiPlayer_ToolsSlider' onkeydown='GuiPlayer_Display.keyDownToolsSlider();'></a>
+		<a href='javascript:void(0);' id='GuiPlayer_ToolsSub' onkeydown='GuiPlayer_Display.keyDownToolsSub();'></a>
 		<a href='javascript:void(0);' id='GuiMusicPlayer' onkeydown='GuiMusicPlayer.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiImagePlayer' onkeydown='GuiImagePlayer.keyDown();'></a>
 		<a href='javascript:void(0);' id='GuiPlayer_Control' onkeydown='GuiPlayer_Control.keyDown();'></a>
@@ -186,6 +177,11 @@
 			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
+			<div id='guiPlayer_Tools_Slider' class='videoToolsSlider' style='visibility:hidden'>
+				<div id='guiPlayer_Tools_SliderBarCurrentTime' class='videoTools_SliderBarCurrentTime'></div>
+				<div id='guiPlayer_Tools_SliderBar'  class='videoTools_SliderBar'></div>
+				<div id='guiPlayer_Tools_SliderBarCurrent' class='videoTools_SliderBarCurrent'></div>
+			</div>
 	
 			<!--  Menu -->
 			<div id="header" class ="header" style="visibility:hidden">

@@ -112,8 +112,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {
-				//Allows for refresh of images 
-				GuiImagePlayer_Screensaver.start()
+				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
 			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
 		}, File.getUserProperty("ScreensaverImageTime"));	

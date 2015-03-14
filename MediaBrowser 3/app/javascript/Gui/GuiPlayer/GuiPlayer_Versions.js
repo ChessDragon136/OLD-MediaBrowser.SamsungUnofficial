@@ -13,7 +13,7 @@ var GuiPlayer_Versions = {
 		//Holds MediaStream Indexes of Primary Video Audio for each MediaOption
 		MediaOptions : [],
 
-		//Holds Playback Details  : MediaSourceId,Url,transcodeStatus,videoIndex,audioIndex
+		//Holds Playback Details  : MediaSourceId,Url,transcodeStatus,videoIndex,audioIndex,isFirstAudioIndex,subtitleIndex
 		MediaPlayback : [],
 
 		//Holds all options to show in GUI if required
@@ -44,13 +44,16 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	FileLog.write("Video : Determine Playback of Media Streams")
 	for (var index = 0; index < this.MediaOptions.length; index++) {
 		var result = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.PlayerData.MediaSources[this.MediaOptions[index][0]],this.MediaOptions[index][0],
-			this.MediaOptions[index][1],this.MediaOptions[index][2],this.MediaOptions[index][3]);
+			this.MediaOptions[index][1],this.MediaOptions[index][2],this.MediaOptions[index][3],this.MediaOptions[index][4]);
 		
 		//Toggle D Series Transcoding in Main
-		if (Main.getModelYear == "D" && File.getTVProperty("TranscodeDSeries") == false) {
+		if (Main.getModelYear() == "D" && (File.getTVProperty("TranscodeDSeries") == false)) {
+			alert (result[2])
 			if (result[2] == "Direct Stream") { 
-				FileLog.write("Video : Playback Added")
+				FileLog.write("Video : Playback Added - D Series")
 				this.MediaPlayback.push(result);
+			} else {
+				FileLog.write("Video : Playback NOT Added - Requires Transcode and user setting is off");
 			}
 		} else {
 			FileLog.write("Video : Playback Added")
@@ -148,7 +151,7 @@ GuiPlayer_Versions.updateSelectedItems = function() {
 //Gets Primary Streams - Ones that would be used on first playback)
 GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) {
 	var videoStreamIfNoDefault = 0
-	var videoIndex = -1, audioIndex = -1;
+	var videoIndex = -1, audioIndex = -1, subtitleIndex = -1;
 	var indexOfFirstAudio = -1;
 	
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json";
@@ -158,11 +161,16 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 	var AudioLanguagePreferenece = (UserData.Configuration.AudioLanguagePreference !== undefined) ? UserData.Configuration.AudioLanguagePreference : "none";
 	var PlayDefaultAudioTrack = (UserData.Configuration.PlayDefaultAudioTrack !== undefined) ? true: false;
 	
+	var SubtitlePreference = (UserData.Configuration.SubtitleMode !== undefined) ? UserData.Configuration.SubtitleMode : "Default";
+	var SubtitleLanguage = (UserData.Configuration.SubtitleLanguagePreference !== undefined) ? UserData.Configuration.SubtitleLanguagePreference : "eng";
+	
 	FileLog.write("Video : Audio Play Default Track Setting: " + PlayDefaultAudioTrack);
 	FileLog.write("Video : Audio Language Preference Setting: " + AudioLanguagePreferenece);
+	FileLog.write("Video : Subtitle Preference: " + SubtitlePreference);
+	FileLog.write("Video : Subtitle Language: " + SubtitleLanguage);
 	
 	var MediaStreams = MediaSource.MediaStreams;
-	
+	//---------------------------------------------------------------------------
 	//Find 1st Audio Stream
 	for (var index = 0;index < MediaStreams.length;index++) {
 		var Stream = MediaStreams[index];
@@ -177,25 +185,22 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		var Stream = MediaStreams[index];
 		if (Stream.Type == "Video") {
 			videoStreamIfNoDefault = (videoStreamIfNoDefault == 0) ? index : videoStreamIfNoDefault;
-			if (Stream.IsDefault == true) {
+			if (videoIndex != -1 && Stream.IsDefault == true) {
 				videoIndex = index;
 				FileLog.write("Video : Default Video Index Found : " + videoIndex);
-				break;
 			}
 		} 
 		
 		if (Stream.Type == "Audio") {
 			if (PlayDefaultAudioTrack == false) {
-				if (Stream.Language == AudioLanguagePreferenece) {
+				if (audioIndex != -1 && Stream.Language == AudioLanguagePreferenece) {
 					audioIndex = index;
 					FileLog.write("Video : Audio Language Preference Found : " + audioIndex);
-					break;
 				}
 			} else {
-				if (Stream.IsDefault == true) {
+				if (audioIndex != -1 && Stream.IsDefault == true) {
 					audioIndex = index;
 					FileLog.write("Video : Default Audio Track Found : " + audioIndex);
-					break;
 				}
 			}
 		}
@@ -218,6 +223,52 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			}
 		}
 	}
+	
+	//---------------------------------------------------------------------------
+	
+	//Search Subtitles
+	//If user setting not none, look for forced subtitles
+	if (SubtitlePreference != "None") {
+		for (var index = 0;index < MediaStreams.length;index++) {
+			var Stream = MediaStreams[index];
+			if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
+				if (Stream.IsForced == true) {
+					subtitleIndex = index;
+					break;
+				}	
+			} 
+		}
+	}
+	
+	//If no forced subs and user setting not none or forced only, look for subs in native language
+	if (subtitleIndex == -1) {
+		if (SubtitlePreference != "None" && SubtitlePreference != "OnlyForced") {
+			for (var index = 0;index < MediaStreams.length;index++) {
+				var Stream = MediaStreams[index];
+				if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
+					if (Stream.Language == SubtitleLanguage) {
+						subtitleIndex = index;
+						break;
+					}	
+				} 
+			}
+		}
+	}
+	
+	//If user always wants subs, play 1st one.
+	if (subtitleIndex == -1) {
+		if (SubtitlePreference == "Always") {	
+			for (var index = 0;index < MediaStreams.length;index++) {
+				var Stream = MediaStreams[index];
+				if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
+					subtitleIndex = index;
+					break;
+				} 
+			}
+		}	
+	}
+	
+	//---------------------------------------------------------------------------
 
 	var audioStreamFirst = (audioIndex == indexOfFirstAudio) ? true : false;
 	if (videoIndex > -1 && audioIndex > -1) {
@@ -228,15 +279,15 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			var pluginScreen = document.getElementById("pluginScreen");
 			if (pluginScreen.Flag3DEffectSupport()) {
 				alert ("3D playback supported on TV")
-				FileLog.write("Video : Media Stream Added : 3D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst)
-				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); //Index != Id!!!
+				FileLog.write("Video : Media Stream Added : 3D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst + "," + subtitleIndex)
+				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst,subtitleIndex]); //Index != Id!!!
 			} else {
 				FileLog.write("Video : Media Stream Added : 3D - Not Added, TV does not support 3D");
 			}
 		} else {
 			//Not 3D
-			FileLog.write("Video : Media Stream Added : 2D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst)
-			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst]); // Index != Id!!!
+			FileLog.write("Video : Media Stream Added : 2D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst+ "," + subtitleIndex)
+			this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst,subtitleIndex]); // Index != Id!!!
 		}				
 	} else {
 		if (videoIndex == -1) {
@@ -247,7 +298,6 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		}
 	}	
 }
-
 
 GuiPlayer_Versions.keyDown = function() {
 	var keyCode = event.keyCode;

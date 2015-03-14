@@ -992,6 +992,45 @@
 	background-color:rgba(0,0,0,0.8);
 }
 
+.videoToolsSlider {
+	position:absolute;
+	bottom:30px;
+	left:0px;
+	height:50px;
+	width:100%;
+	padding: 5px 10px;
+	text-align:left;
+	color: white;	
+	background-color:rgba(0,0,0,0.8);
+}
+
+.videoTools_SliderBar {
+	width:900px;
+	height:10px;
+	position:absolute;
+	top:20px;
+    left:30px;
+    background-color:#fff;
+}
+
+.videoTools_SliderBarCurrent {
+	width:20px;
+	height:20px;
+	position:absolute;
+	top:15px;
+    
+    background-image:url('images/sliderPosition.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.videoTools_SliderBarCurrentTime {
+	position:absolute;
+	width:60px;
+	background-color:green;
+	text-align:center;
+}
+
 .videoInfo_Time {
 	position:absolute;
 	top:40px;

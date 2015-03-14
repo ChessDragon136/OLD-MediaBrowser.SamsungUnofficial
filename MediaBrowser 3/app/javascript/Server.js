@@ -43,7 +43,7 @@ Server.setDevice = function(Device) {
 	this.Device = Device;
 }
 
-//Used in Settings
+//Used in Settings 
 Server.getDevice = function() {
 	return this.Device;
 }
@@ -52,7 +52,7 @@ Server.setDeviceID = function(DeviceID) {
 	this.DeviceID = DeviceID;
 }
 
-//Required in Transcoding functions
+//Required in Transcoding functions + guiPlayer
 Server.getDeviceID = function() {
 	return this.DeviceID;
 }
@@ -206,10 +206,7 @@ Server.getSubtitles = function(url) {
 		xmlHttp.send(null);
 		    
 		if (xmlHttp.status != 200) {
-			alert ("Server NOT 200 - Logout");
-			Server.Logout();
-			GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
-			GuiUsers.start(true);
+			alert (xmlHttp.status);
 			return null;
 		} else {
 			return xmlHttp.responseText;

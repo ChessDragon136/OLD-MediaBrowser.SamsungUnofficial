@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.571",
+		version : "v0.572",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -21,18 +21,10 @@ var Main =
 		
 		enableScreensaver : true,
 		isScreensaverRunning : false,
-		
-		enableSubtitles : true,
-		
-		testMode : false
 };
 
 Main.getModelYear = function() {
 	return this.modelYear;
-}
-
-Main.isSubtitlesEnabled = function() {
-	return this.enableSubtitles;
 }
 
 Main.isMusicEnabled = function() {
@@ -65,18 +57,6 @@ Main.getRequiredServerVersion = function() {
 
 Main.getVersion = function() {
 	return this.version;
-}
-
-Main.getTestMode = function() {
-	return this.testMode;
-}
-
-Main.setTestMode = function() {
-	if (this.testMode == false) {
-		this.testMode = true;
-	} else {
-		this.testMode = false;
-	}
 }
 
 Main.getIsScreensaverRunning = function() {

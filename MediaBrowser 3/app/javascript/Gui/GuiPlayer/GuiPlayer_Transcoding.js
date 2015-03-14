@@ -35,13 +35,11 @@ var GuiPlayer_Transcoding = {
 }
 
 //--------------------------------------------------------------------------------------
-GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, videoIndex, audioIndex, isFirstAudioIndex) {	
+GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, videoIndex, audioIndex, isFirstAudioIndex, subtitleIndex) {	
 	//Set Class Vars
 	this.MediaSource = MediaSource;
 	this.videoIndex = videoIndex;
 	this.audioIndex = audioIndex;
-	
-	alert (this.MediaSource.Id);
 	
 	//Check Video & Audio Compatibility
 	this.checkCodec(videoIndex);
@@ -49,18 +47,19 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 
 	var streamparams = "";
 	var transcodeStatus = "";
-	var convertAACtoDolby = (File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby")) ? true : false;
-	var audioCodec = (convertAACtoDolby) ? "ac3" : "aac";
+	var audioCodec = this.MediaSource.MediaStreams[this.audioIndex].Codec.toLowerCase();
+	var convertAACtoDolby = (File.getTVProperty("Dolby") && File.getTVProperty("AACtoDolby") && audioCodec == "aac") ? true : false;
+	
+	audioCodec = (convertAACtoDolby) ? "ac3" : "aac";
 	
 	if (this.isVideo && this.isAudio && convertAACtoDolby == false) {
 		if (isFirstAudioIndex == true) {
 			transcodeStatus = "Direct Stream";
-			//streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			streamparams = '/Stream.'+this.MediaSource.Container+'?static=true&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		} else {			
 			if (Main.getModelYear() == "D") {
 				transcodeStatus = "Stream Copy D Series - Audio Not First Track";
-				streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
+				streamparams = '/master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 			} else {
 				transcodeStatus = "Stream Copy - Audio Not First Track";
 				streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec=copy&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
@@ -69,14 +68,14 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 	} else if (this.isVideo == false) {
 		transcodeStatus = "Transcoding Audio & Video";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec='+ audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
+			streamparams = '/master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&Profile=high&Level=41&MaxVideoBitDepth=8&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec='+ audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
 		} else {
-			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=' + audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
+			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=h264&Profile=high&Level=41&MaxVideoBitDepth=8&MaxWidth=1280&VideoBitrate='+this.bitRateToUse+'&AudioCodec=' + audioCodec +'&AudioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();	
 		}
 	} else if (this.isVideo == true && (this.isAudio == false || convertAACtoDolby == true)) {
 		transcodeStatus = "Transcoding Audio";	
 		if (Main.getModelYear() == "D") {
-			streamparams = '/Master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
+			streamparams = '/master.m3u8?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		} else {
 			streamparams = '/Stream.ts?VideoStreamIndex='+this.videoIndex+'&AudioStreamIndex='+this.audioIndex+'&VideoCodec=copy&AudioCodec='+ audioCodec +'&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.MediaSource.Id + '&api_key=' + Server.getAuthToken();
 		}
@@ -87,7 +86,7 @@ GuiPlayer_Transcoding.start = function(showId, MediaSource,MediaSourceIndex, vid
 
 	//Return results to Versions
 	//MediaSourceId,Url,transcodeStatus,videoIndex,audioIndex
-	return [MediaSourceIndex,url,transcodeStatus,videoIndex,audioIndex];	
+	return [MediaSourceIndex,url,transcodeStatus,videoIndex,audioIndex,subtitleIndex];	
 }
 
 GuiPlayer_Transcoding.checkCodec = function() {

@@ -392,7 +392,7 @@ GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 		case "pcm_s32le":
 			this.audiocodec = true;
 			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
-			this.audiochannels = 6;
+			this.audiochannels = 2;
 			break;	
 		default:
 			this.audiocodec = false;
@@ -455,7 +455,7 @@ GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 		case "pcm_s32le":
 			this.audiocodec = true;
 			this.audiocontainer = ["asf","avi","mkv","mp4","mpg","mpeg","vro","vob","ts"];
-			this.audiochannels = 6;
+			this.audiochannels = 2;
 			break;		
 		default:
 			this.audiocodec = false;

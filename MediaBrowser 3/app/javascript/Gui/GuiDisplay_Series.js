@@ -107,6 +107,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 				document.getElementById("SeriesOverview").style.height="47px";
 			}
 		} else if (title == "Collections"){
+			this.isTvOrMovies = -1; //Set false - else displays incorrectly! @Frostbyte
 			//Move Title Down if larger icons shown!
 			if (File.getUserProperty("LargerView") == true) {
 				document.getElementById("SeriesContent").style.top="422px";

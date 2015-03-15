@@ -462,6 +462,7 @@ GuiPage_ItemDetails.processSelectedItem = function() {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
 		var playbackPos = (this.menuItems[this.selectedItem] == "guiTV_Episode_Resume") ? this.ItemData.UserData.PlaybackPositionTicks / 10000 : 0;
+		alert (url);
 		GuiPlayer.start("PLAY",url,playbackPos,"GuiPage_ItemDetails");
 		break;
 	case "guiTV_Episode_Trailer":

@@ -134,7 +134,7 @@ File.deleteServer = function (index) {
 	}	
 }
 
-File.addUser = function (UserId, Name, Password) {
+File.addUser = function (UserId, Name, Password, rememberPassword) {
 	var fileSystemObj = new FileSystem();
 	var openRead = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'r');
 	if (openRead) {
@@ -148,6 +148,7 @@ File.addUser = function (UserId, Name, Password) {
 				userFound = true;
 				this.UserEntry = index;
 				fileJson.Servers[this.ServerEntry].Users[index].Password = Password;
+				fileJson.Servers[this.ServerEntry].Users[index].RememberPassword = rememberPassword;
 				break;
 			}
 		}
@@ -157,7 +158,7 @@ File.addUser = function (UserId, Name, Password) {
 			view1 = Server.getServerAddr() + "/Users/"+UserId+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=12&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1";
 			view2 = Server.getServerAddr() + "/Shows/NextUp?format=json&IncludeItemTypes=Episode&UserId="+UserId+"&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1"
 			
-			fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name,"Password":Password,"Default":false,"View1":view1,View1Name:"Resume All Items","View2":view2,View2Name:"TV Next Up"};
+			fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name,"Password":Password,"RememberPassword":rememberPassword,"Default":false,"View1":view1,View1Name:"Resume All Items","View2":view2,View2Name:"TV Next Up"};
 			
 		}
 		
@@ -203,7 +204,7 @@ File.deleteAllUsers = function (index) {
 	}
 }
 
-File.deleteUserPasswords = function (index) {
+File.deleteUserPasswords = function () {
 	var fileSystemObj = new FileSystem();
 	var openRead = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'r');
 	if (openRead) {
@@ -316,5 +317,28 @@ File.getTVProperty = function(property) {
 			}
 		} 
 		return fileJson.TV[property];			
+	}
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+//-  SET FUNCTIONS
+//---------------------------------------------------------------------------------------------------------------------------------
+
+File.setUserProperty = function(property,value) {
+	var fileSystemObj = new FileSystem();
+	var openRead = fileSystemObj.openCommonFile(curWidget.id + '/MB3_Settings.json', 'r');
+	if (openRead) {
+		var fileJson = JSON.parse(openRead.readLine()); //Read line as only 1 and skips line break!
+		fileSystemObj.closeCommonFile(openRead);	
+
+		if (property == "Password") {
+			value = Sha1.hash(value,true);
+		}
+		
+		if (fileJson.Servers[this.ServerEntry].Users[this.UserEntry][property] !== undefined) {
+			fileJson.Servers[this.ServerEntry].Users[this.UserEntry][property] = value;
+			File.writeAll(fileJson);
+		} 
+		return 	
 	}
 }

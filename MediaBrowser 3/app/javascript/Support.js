@@ -332,9 +332,17 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
 					}
 				} else {
+					//EXPERIMENTAL CACHING CODE - COULD NOT MAKE IMAGE DOWNLOAD WORK!
+					//size = (File.getUserProperty("LargerView") == true) ? "Large":"Small";
+					//var isCachedImage = Download.checkFileExists(Array[index].Id,size);
+					//if (isCachedImage != null) {
+					//	FileLog.write("ImageCache : Is in Image Cache!");
+					//	htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +isCachedImage+ ")></div>";
+					//} else 
 					if (Array[index].ImageTags.Primary) {
-						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0) 
+						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0); 
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";
+					//	Download.downloadImage(Array[index].Id,imgsrc,size);
 					} else {
 						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
 					}
@@ -407,7 +415,10 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				} 
 			} else {
 				var title = Array[index].Name;		
-				if (Array[index].BackdropImageTags.length > 0) {			
+				if (Array[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				} else if (Array[index].BackdropImageTags.length > 0) {			
 					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
@@ -579,7 +590,6 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			break;
 		}
 	} else {
-		alert (ItemData.Items[selectedItem].Type);
 		switch (ItemData.Items[selectedItem].Type) {
 		case "CollectionFolder":
 		case "ManualCollectionsFolder":

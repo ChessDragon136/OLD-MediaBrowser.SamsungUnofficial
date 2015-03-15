@@ -46,6 +46,8 @@ GuiMainMenu.start = function() {
 	htmlToAdd += "<div id=Contributors style='padding-left:5px;'>CONTRIBUTORS</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out style='padding-left:5px;'>LOG OUT</div>";	
+	this.menuItems.push("Log-Out_Delete");
+	htmlToAdd += "<div id=Log-Out_Delete style='padding-left:5px;'>LOG OUT & FORGET PASSWORD</div>";	
 	document.getElementById("headerTypes").innerHTML += htmlToAdd;
 	
 	//Get User Image
@@ -253,6 +255,10 @@ GuiMainMenu.processSelectedItems = function() {
 		GuiPage_Contributors.start();
 		break;		
 	case "Log-Out":
+		Support.logout();
+		break;		
+	case "Log-Out_Delete":
+		File.setUserProperty("Password","");
 		Support.logout();
 		break;		
 	}

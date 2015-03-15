@@ -131,6 +131,11 @@ GuiUsers.processSelectedUser = function () {
     			var User = fileJson.Servers[File.getServerEntry()].Users[index].UserName;
     			var Password = fileJson.Servers[File.getServerEntry()].Users[index].Password;
     			
+    			if (fileJson.Servers[File.getServerEntry()].Users[index].RememberPassword !== undefined) {
+    				this.rememberPassword = fileJson.Servers[File.getServerEntry()].Users[index].RememberPassword;
+    				document.getElementById("guiUsers_rempwdvalue").innerHTML = this.rememberPassword;
+    			}
+    			
     			//Authenticate with MB3 - if fail somehow bail?					
 				var authenticateSuccess = Server.Authenticate(UserId, User, Password);		
 				if (authenticateSuccess) {
@@ -158,7 +163,7 @@ GuiUsers.processSelectedUser = function () {
 			if (authenticateSuccess) {
 				//Reset GUI to as new - Not Required as it already is!!
 				//Add Username & Password to DB
-				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
+				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1,this.rememberPassword);
 				//Change Focus and call function in GuiMain to initiate the page!
 				GuiMainMenu.start();
 			} else {
@@ -262,9 +267,11 @@ GuiUsers.keyDown = function()
 			GuiPage_Servers.start();
 			break;
 		case tvKey.KEY_YELLOW:
+			GuiNotifications.setNotification("All Passwords Deleted","Deletion");
 			File.deleteUserPasswords();
 			break;			
 		case tvKey.KEY_GREEN:
+			GuiNotifications.setNotification("All Users Deleted","Deletion");
 			File.deleteAllUsers();
 			break;		
 		case tvKey.KEY_INFO:
@@ -340,9 +347,9 @@ GuiUsers.IMEAuthenticate = function(password) {
 
 		//Add Username & Password to DB - Save password only if rememberPassword = true
 		if (this.rememberPassword == true) {
-			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1);
+			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1,this.rememberPassword);
 		} else {
-			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,"");
+			File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,"",this.rememberPassword);
 		}
 			
 		//Change Focus and call function in GuiMain to initiate the page!

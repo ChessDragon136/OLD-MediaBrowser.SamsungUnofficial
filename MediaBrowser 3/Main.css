@@ -1057,15 +1057,33 @@
 
 .videoInfo_Details {
 	position:absolute;
-	top:10px;
+	top:7px;
     left:20px;
     width:460px;
+    height:53px;
+    background-repeat: no-repeat;
+    background-position:left;
 }
 
-.videoInfo_Details_Item {
-	overflow-x:hidden;
-	text-overflow:ellipsis; 
-	height:20px;
+
+
+.videoItemDetails {
+	position:absolute;
+	bottom:0px;
+    left:0px;
+    width: 100%;
+    max-height:200px;
+    text-align:left;
+	color: white;	
+	background-color:rgba(0,0,0,0.8);
+}
+
+.videoItemDetailsTitle {
+    font-size:24px;
+}
+
+.videoItemDetailsSubData {
+	font-size:16px;
 }
 
 /* ---------------------------------------------------------------------------   */

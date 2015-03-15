@@ -4,6 +4,8 @@ var GuiPlayer_Display = {
 		playingTranscodeStatus : null,
 		offsetSeconds : 0,
 		
+		ItemData : null,
+		
 		videoToolsOptions : [],
 		videoToolsSelectedItem : 0,
 		subtitleIndexes : [], 
@@ -25,6 +27,15 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
 	this.playingTranscodeStatus = playingtranscodestatus;
 	this.offsetSeconds = offsetSeconds
 	
+	//Reset Vars
+	this.videoToolsOptions = [];
+	this.videoToolsSelectedItem = 0;
+	this.subtitleIndexes = [];
+	this.audioIndexes = [];
+	this.chapterIndexes = [];
+	this.topLeftItme = 0;
+	this.videoToolsSelectedItemSub = 0;
+	
 	//Hide page!
     document.getElementById("pageContent").innerHTML = "";
     document.getElementById("page").style.visibility="hidden";
@@ -32,23 +43,39 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     document.getElementById("pageBackgroundHolder").style.visibility="hidden";
     document.getElementById("pageBackground").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = ""; 
-    
+
     //Set PageContent
     var fileInfo = "";
     if (this.PlayerData.Type == "Episode") {
     	fileInfo = Support.getNameFormat(this.PlayerData.SeriesName, this.PlayerData.ParentIndexNumber, this.PlayerData.Name, this.PlayerData.IndexNumber);
     	fileInfo = fileInfo.replace("<br>", " ");
+    	
+    	if (this.PlayerData.ParentLogoImageTag) {
+    		var imgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Logo",450,53,0,false,0);
+    		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
+    	}
+    	
     } else {
     	fileInfo = this.PlayerData.Name;
+    	
+    	if (this.PlayerData.ImageTags.Logo) {
+    		var imgsrc = Server.getImageURL(this.PlayerData.Id,"Logo",450,53,0,false,0);
+    		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
+    	}
     }
 
     var videoName = this.playingMediaSource.Name;
-    document.getElementById("guiPlayer_Info_Details").innerHTML = "<div class='videoInfo_Details_Item'>" + fileInfo + "</div><div class='videoInfo_Details_Item'>" + videoName + "</div>";
-    document.getElementById("guiPlayer_Info_Details").innerHTML += "<div class='videoInfo_Details_Item'>"+this.playingTranscodeStatus+"</div>"; 
+    document.getElementById("guiPlayer_ItemDetails_Title").innerHTML = fileInfo;
+    document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML += videoName + " : " + this.playingTranscodeStatus; 
+    
+    if (this.PlayerData.Overview !== undefined) {
+    	document.getElementById("guiPlayer_ItemDetails_Overview").innerHTML = this.PlayerData.Overview;
+    }
 }
 
 GuiPlayer_Display.restorePreviousMenu = function() {
 	//Hide Player GUI Elements
+	document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
 	document.getElementById("guiPlayer_Info").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
     document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";

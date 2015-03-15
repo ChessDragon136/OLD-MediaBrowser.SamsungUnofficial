@@ -36,7 +36,7 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
 		}
     	
 		if (userInFile == false) {
-			File.addUser(Server.getUserID(),user,Sha1.hash("",true));
+			File.addUser(Server.getUserID(),user,Sha1.hash("",true),false);
 		}
 			
     	//Change Focus and call function in GuiMain to initiate the page!

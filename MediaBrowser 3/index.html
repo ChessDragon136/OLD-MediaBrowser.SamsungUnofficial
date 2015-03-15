@@ -57,6 +57,7 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Playlist.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_AddToPlaylist.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Search.js"></script>
+		<script language="javascript" type="text/javascript" src="app/javascript/Support/Download.js"></script>
 		
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
         <object id="pluginObjectAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
@@ -66,6 +67,7 @@
         <object id='pluginObjectNNavi' border=0 classid='clsid:SAMSUNG-INFOLINK-NNAVI'></object>
         <object id='pluginObjectTV' border=0 classid='clsid:SAMSUNG-INFOLINK-TV'></object> 
         <object id='pluginSEF' border=0 classid='clsid:SAMSUNG-INFOLINK-SEF'></object>
+        <object id='pluginDownload' border=0 classid='clsid:SAMSUNG-INFOLINK-DOWNLOAD'  style='width: 0; height: 0; opacity: 0;'></object>
         
 		<!-- TODO : Style sheets code -->
 		<link rel="stylesheet" href="Main.css" type="text/css">
@@ -173,6 +175,11 @@
 				<div id='guiPlayer_Info_Time'  class='videoInfo_Time'></div>	
 				<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'><div id='guiPlayer_Info_ProgressBar_Current'></div></div>	
 				<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
+			</div>
+			<div id='guiPlayer_ItemDetails' class='videoItemDetails' style='visibility:hidden'>
+				<div id='guiPlayer_ItemDetails_Title' class='videoItemDetailsTitle'></div>
+				<div id='guiPlayer_ItemDetails_SubData' class='videoItemDetailsSubData'></div>
+				<div id='guiPlayer_ItemDetails_Overview' class='videoItemDetailsSubData'></div>
 			</div>
 			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>

@@ -103,12 +103,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.currentTime = 0;
     this.updateTimeCount = 0;
     this.setThreeD = false;
-	this.videoToolsOptions = [];
-	this.videoToolsSelectedItem = 0;
 	this.offsetSeconds = 0;
-	this.subtitleIndexes = [];
-	this.audioIndexes = [];
-	this.chapterIndexes = [];
 	this.PlayerDataSubtitle = null;
 	this.subtitleShowingIndex = 0;
 	this.subtitleSeeking = false;
@@ -157,7 +152,10 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	} else {
 		FileLog.write("Playback : E+ Series Playback - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000);
-		var position = Math.round(resumeTicksSamsung / 1000);
+		var position = 0; // If transcoding, it takes the &startTimeTick as point 0 in the file
+		if (this.PlayMethod == "DirectStream") {
+			position = Math.round(resumeTicksSamsung / 1000);
+		}	
 	    this.plugin.ResumePlay(url,position); 
 	}
 }
@@ -246,7 +244,7 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 					}
 				}
 			}	
-		} else if (direction == "NewSubs") {
+		} else {
 			this.subtitleShowingIndex = 0;
 			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {				
 				if (newTime < this.PlayerDataSubtitle[index].startTime) {
@@ -351,12 +349,12 @@ GuiPlayer.setCurrentTime = function(time) {
 
 		//Subtitle Update
 		if (this.playingSubtitleIndex != null && this.PlayerDataSubtitle != null && this.subtitleSeeking == false) {
-			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime) {
+			if (this.currentTime + this.offsetSeconds >= this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime) {
 				document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 				document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
 				this.subtitleShowingIndex++;
 			}
-			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].startTime && this.currentTime < this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime && document.getElementById("guiPlayer_Subtitles").innerHTML != this.PlayerDataSubtitle.text) {
+			if (this.currentTime + this.offsetSeconds >= this.PlayerDataSubtitle[this.subtitleShowingIndex].startTime && this.currentTime < this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime && document.getElementById("guiPlayer_Subtitles").innerHTML != this.PlayerDataSubtitle.text) {
 				document.getElementById("guiPlayer_Subtitles").innerHTML = this.PlayerDataSubtitle[this.subtitleShowingIndex].text; 
 				document.getElementById("guiPlayer_Subtitles").style.visibility = "";
 			}
@@ -550,6 +548,7 @@ GuiPlayer.handleFFKey = function() {
     		GuiPlayer.updateSubtitleTime(this.currentTime + 29000,"FF"); //Add 29 seconds on, let code find correct sub!
         	this.plugin.JumpForward(30); 
     	} else {
+    		/*
     		var canSkip = this.checkTranscodeCanSkip(this.currentTime + 30000);
     		if (canSkip == true) {
     			FileLog.write("Playback : Fast Forward : Transcode : Transcoded already, can skip");
@@ -559,6 +558,7 @@ GuiPlayer.handleFFKey = function() {
     			FileLog.write("Playback : Fast Forward : Transcode : Not Transcoded already, reset");
     			this.newPlaybackPosition((this.currentTime+this.offsetSeconds + 30000)*1000)
     		}
+    		*/
     	}
     	
     }  
@@ -572,6 +572,7 @@ GuiPlayer.handleRWKey = function() {
     		GuiPlayer.updateSubtitleTime(this.currentTime - 33000,"RW"); //Subtract 33 seconds on, let code find correct sub!
     		this.plugin.JumpBackward(30); 
     	} else {
+    		/*
     		var canSkip = this.checkTranscodeCanSkip(this.currentTime - 30000);
     		if (canSkip == true) {
     			FileLog.write("Playback : Rewind : Transcode : Transcoded already, can skip");
@@ -581,18 +582,35 @@ GuiPlayer.handleRWKey = function() {
     			FileLog.write("Playback : Rewind : Transcode : Not Transcoded already, reset");
     			this.newPlaybackPosition((this.currentTime+this.offsetSeconds - 30000)*1000)
     		}
+    		*/
     	}
     }  
 }
 
 GuiPlayer.handleInfoKey = function () {
+	//If subtitles are showing - pause playback so none are lost!
 	if (document.getElementById("guiPlayer_Info").style.visibility=="hidden"){
+		if (this.playingSubtitleIndex > -1) {
+			document.getElementById("guiPlayer_Subtitles").style.visibility="hidden";
+			GuiPlayer.handlePauseKey();			
+		}	
 		document.getElementById("guiPlayer_Info").style.visibility="";
+		document.getElementById("guiPlayer_ItemDetails").style.visibility="";
 		setTimeout(function(){
-			document.getElementById("guiPlayer_Info").style.visibility="hidden";	
-		}, 5000);
+			document.getElementById("guiPlayer_Info").style.visibility="hidden";
+			document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
+			if (GuiPlayer.playingSubtitleIndex > -1) {
+				document.getElementById("guiPlayer_Subtitles").style.visibility=""
+				GuiPlayer.handlePlayKey();
+			}
+		}, 10000);
 	} else {
+		document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
 		document.getElementById("guiPlayer_Info").style.visibility="hidden";
+		if (this.playingSubtitleIndex > -1) {
+			document.getElementById("guiPlayer_Subtitles").style.visibility="";
+			GuiPlayer.handlePlayKey();
+		}		
 	}
 }
 
@@ -692,13 +710,17 @@ GuiPlayer.newPlaybackPosition = function(startPositionTicks) {
 	this.setDisplaySize();
 	var position = Math.round(startPositionTicks / 10000000);
 	if (Main.getModelYear() == "D" && this.PlayMethod != "DirectStream") {
-		
 		var url = this.playingURL + '&StartTimeTicks=' + (Math.round(startPositionTicks)) + '|COMPONENT=HLS';						
-	    this.plugin.ResumePlay(url,position); 
+	    this.plugin.ResumePlay(url,0); //0 as if transcoding the transcode will start from the supplied starttimeticks
 	    this.updateSubtitleTime(startPositionTicks / 10000,"NewSubs");
 	} else {
 		var url = this.playingURL + '&StartTimeTicks=' + (Math.round(startPositionTicks));
-	    this.plugin.ResumePlay(url,position); 
+		
+		if (this.PlayMethod != "DirectStream") {
+			this.plugin.ResumePlay(url,0); //0 as if transcoding the transcode will start from the supplied starttimeticks
+		} else {
+			this.plugin.ResumePlay(url,position); 
+		}    
 	    this.updateSubtitleTime(startPositionTicks / 10000,"NewSubs");
 	}
 }

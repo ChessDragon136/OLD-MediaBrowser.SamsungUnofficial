@@ -185,85 +185,8 @@ GuiMainMenu.keyDown = function()
 }
 
 GuiMainMenu.processSelectedItems = function() {
-	switch (this.menuItems[this.selectedMainMenuItem]) {
-	case "Home":
-		Support.removeAllURLs();
-		
-		//Load Home Page
-		var url1 = File.getUserProperty("View1");
-		var title1 = File.getUserProperty("View1Name");
-		var url2 = File.getUserProperty("View2");
-		var title2 = File.getUserProperty("View2Name");
-		
-		if (url2 != null) {
-			GuiPage_HomeTwoItems.start(title1,url1,title2,url2,0,0,true);
-		} else {
-			GuiPage_HomeOneItem.start(title1,url1,0,0);
-		}
-		
-		break;
-	case "Favourites":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
-		GuiDisplayOneItem.start("Favourites", url,0,0);
-		break;	
-	case "Media-Folders":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");	
-		GuiDisplayOneItem.start("Media Folders", url,0,0);
-		break;
-	case "Channels":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getCustomURL("/Channels?userId="+Server.getUserID()+"&format=json");	
-		GuiDisplayOneItem.start("Channels", url,0,0);
-		break;
-	case "Collections":	
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=BoxSet&Recursive=true&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
-		GuiDisplay_Series.start("Collections",url,0,0);
-		break;		
-	case "TV":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
-		GuiDisplay_Series.start("All Series",url,0,0);
-		break;	
-	case "Movies":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
-		GuiDisplay_Series.start("All Movies",url,0,0);
-		break;
-	case "Music":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false");
-		GuiDisplay_Series.start("Album",url,0,0);
-		break;	
-	case "Playlists":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
-		GuiDisplayOneItem.start("Playlists", url,0,0);
-		break;		
-	case "Search":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		GuiPage_Search.start();
-		break;		
-	case "Settings":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		GuiPage_Settings.start();
-		break;	
-	case "Contributors":
-		document.getElementById(this.menuItems[this.selectedMainMenuItem]).className = document.getElementById(this.menuItems[this.selectedMainMenuItem]).className.replace("headerSelected","");
-		GuiPage_Contributors.start();
-		break;		
-	case "Log-Out":
-		Support.logout();
-		break;		
-	case "Log-Out_Delete":
-		File.setUserProperty("Password","");
-		Support.logout();
-		break;		
-	}
-	
 	document.getElementById("header").style.visibility = "hidden";
+	Support.processHomePageMenu(this.menuItems[this.selectedMainMenuItem]);
 }
 
 GuiMainMenu.processReturnKey = function() {

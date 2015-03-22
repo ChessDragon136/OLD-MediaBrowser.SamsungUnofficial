@@ -145,8 +145,9 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     
 	//Update URL with resumeticks
 	if (Main.getModelYear() == "D" && this.PlayMethod != "DirectStream") {
-		FileLog.write("Playback : D Series Playback - Load URL");
+		FileLog.write("Playback : D Series Playback OR HTTP - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000) + '|COMPONENT=HLS';
+		alert (url);
 		var position = Math.round(resumeTicksSamsung / 1000);
 	    this.plugin.ResumePlay(url,position); 
 	} else {
@@ -178,7 +179,8 @@ GuiPlayer.stopPlayback = function() {
 }
 
 GuiPlayer.setDisplaySize = function() {
-	if (this.playingMediaSource.MediaStreams[this.playingVideoIndex].AspectRatio == "16:9") {
+	var aspectRatio = (this.playingMediaSource.MediaStreams[this.playingVideoIndex] === undefined) ? "16:9" : this.playingMediaSource.MediaStreams[this.playingVideoIndex].AspectRatio;
+	if (aspectRatio == "16:9") {
 		this.plugin.SetDisplayArea(0, 0, 960, 540);
 	} else {
 		//Scale Video	

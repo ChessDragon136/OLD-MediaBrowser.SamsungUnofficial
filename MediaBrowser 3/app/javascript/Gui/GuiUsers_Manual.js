@@ -1,10 +1,13 @@
 var GuiUsers_Manual = {
 	selectedItem : 0, //0 = User, 1 = Password
+	rememberPassword : false
 }
 
 GuiUsers_Manual.start = function() {
 	//Reset Properties
 	this.selectedItem = 0;
+	this.rememberPassword = false;
+	
 	document.getElementById("NotificationText").innerHTML = "";
 	document.getElementById("Notifications").style.visibility = "hidden";
 	
@@ -14,6 +17,7 @@ GuiUsers_Manual.start = function() {
 		<form><input id='user' style='z-index:10;' type='text' size='50' value=''/></form> \
 		<p style='padding-bottom:5px'>Password</p> \
 		<form><input id='pass' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<br><span id='guiUsers_rempwd'>Remember Password </span> : <span id='guiUsers_rempwdvalue'>" + this.rememberPassword + "</span> \
 		</div>";
 	
 	new GuiUsers_Manual_Input("user");	
@@ -36,19 +40,19 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
 		}
     	
 		if (userInFile == false) {
-			File.addUser(Server.getUserID(),user,Sha1.hash("",true),false);
+			//Add Username & Password to DB - Save password only if rememberPassword = true
+			if (this.rememberPassword == true) {
+				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1,this.rememberPassword);
+			} else {
+				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,"",this.rememberPassword);
+			}
 		}
 			
     	//Change Focus and call function in GuiMain to initiate the page!
     	GuiMainMenu.start();
     } else {
     			
-    	alert ("Authentication Failed");
-    	
-    	//Wrong password - Reset IME focus and notifty user
-    	document.getElementById("user").value = "";
-    	document.getElementById("pass").value = "";
-    			
+    	alert ("Authentication Failed");		
     	document.getElementById("user").focus();
     	GuiNotifications.setNotification("Wrong User / Password Combination or Network Error");
     }     		
@@ -90,10 +94,8 @@ var GuiUsers_Manual_Input  = function(id) {
             	new GuiUsers_Manual_Input("pass");
             	document.getElementById("pass").focus;
             } else {
-            	//Process Login Here
-            	var usr = document.getElementById("user").value;
-            	var pwd = document.getElementById("pass").value;
-            	GuiUsers_Manual.IMEAuthenticate(usr,pwd);
+            	document.getElementById("guiUsers_rempwd").style.color = "red";
+            	document.getElementById("GuiUsers_Manual_Pwd").focus();
             }        
         });
         
@@ -117,4 +119,77 @@ var GuiUsers_Manual_Input  = function(id) {
         	widgetAPI.sendExitEvent();
         });   
     }
+};
+
+GuiUsers_Manual.keyDownPassword = function() {
+	var keyCode = event.keyCode;
+	alert("Key pressed: " + keyCode);
+
+	if (document.getElementById("Notifications").style.visibility == "") {
+		document.getElementById("Notifications").style.visibility = "hidden";
+		document.getElementById("NotificationText").innerHTML = "";
+		
+		//Change keycode so it does nothing!
+		keyCode = "VOID";
+	}
+	
+	switch(keyCode)
+	{
+		case tvKey.KEY_RETURN:
+		case tvKey.KEY_PANEL_RETURN:
+			alert("RETURN");
+			widgetAPI.sendReturnEvent();
+			break;
+		case tvKey.KEY_UP:
+			if (document.getElementById("guiUsers_rempwd").style.color == "red") {
+				document.getElementById("guiUsers_rempwd").style.color = "#f9f9f9";
+				document.getElementById("pass").focus();  
+			} else {
+				this.rememberPassword = (this.rememberPassword == false) ? true : false;
+				document.getElementById("guiUsers_rempwdvalue").innerHTML = this.rememberPassword;
+			}
+			break;	
+		case tvKey.KEY_DOWN:
+			if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+				this.rememberPassword = (this.rememberPassword == false) ? true : false;
+				document.getElementById("guiUsers_rempwdvalue").innerHTML = this.rememberPassword;
+			}
+			break;	
+		case tvKey.KEY_RIGHT:
+			alert("RIGHT");
+			if (document.getElementById("guiUsers_rempwd").style.color == "red") {
+				document.getElementById("guiUsers_rempwd").style.color = "green";
+				document.getElementById("guiUsers_rempwdvalue").style.color = "red";
+			}
+			break;
+		case tvKey.KEY_LEFT:
+			alert("LEFT");
+			if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+				document.getElementById("guiUsers_rempwd").style.color = "red";
+				document.getElementById("guiUsers_rempwdvalue").style.color = "#f9f9f9";
+			}
+			break;
+		case tvKey.KEY_ENTER:
+		case tvKey.KEY_PANEL_ENTER:
+			alert("ENTER");
+			if (document.getElementById("guiUsers_rempwdvalue").style.color == "red") {
+				document.getElementById("guiUsers_rempwd").style.color = "red";
+				document.getElementById("guiUsers_rempwdvalue").style.color = "#f9f9f9";
+			} else {
+				document.getElementById("guiUsers_rempwd").style.color = "green";
+				document.getElementById("guiUsers_rempwdvalue").style.color = "red";
+			}
+			break;	
+		case tvKey.KEY_INFO:
+			alert ("INFO KEY");
+			GuiHelper.toggleHelp("GuiUsers");
+			break;
+		case tvKey.KEY_EXIT:
+			alert ("EXIT KEY");
+			widgetAPI.sendExitEvent();
+			break;
+		default:
+			alert("Unhandled key");
+			break;
+	}
 };

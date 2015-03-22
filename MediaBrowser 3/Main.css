@@ -505,8 +505,8 @@
 }
 
 .Music {
-	width: 109px;
-    height: 109px;
+	width: 112px;
+    height: 112px;
     display:inline-block;
     position:relative; 
 
@@ -520,6 +520,23 @@
     
     background-repeat: no-repeat;
     background-position:center;
+}
+
+.Letter {
+	width: 80px;
+    height: 80px;
+    display:inline-block;
+    position:relative; 
+
+    margin:1px;
+    color:#fff;
+    border:4px solid transparent; 
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-color:rgba(0,0,0,0.7);
 }
 
 .Collection {
@@ -1102,6 +1119,10 @@
 
 .red {
 	color:#27a436;
+}
+
+.blue {
+	color:#66CCFF;
 }
 
 .musicPlaylist {

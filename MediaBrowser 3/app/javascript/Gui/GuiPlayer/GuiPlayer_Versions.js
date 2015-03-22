@@ -32,9 +32,22 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	this.PlayerData = playerData;
 	this.resumeTicks = resumeTicks;
 	this.playedFromPage = playedFromPage;
-	
-	//Loop through all media sources and determine which is best
+
 	FileLog.write("Video : Loading " + this.PlayerData.Name)
+	
+	//Check if HTTP
+	if (this.PlayerData.MediaSources[0].Protocol.toLowerCase() == "http") {
+		FileLog.write("Video : Is HTTP : Generate URL Directly")
+		//var streamparams = '/master.m3u8?MediaSourceId='+this.PlayerData.MediaSources[0].Id + '&api_key=' + Server.getAuthToken();	
+		var streamparams = '/Stream.ts?VideoCodec=h264&Profile=high&Level=41&MaxVideoBitDepth=8&MaxWidth=1280&VideoBitrate=10000000&AudioCodec=aac&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+this.PlayerData.MediaSources[0].Id + '&api_key=' + Server.getAuthToken();	
+		var url = Server.getServerAddr() + '/Videos/' + this.PlayerData.Id + streamparams + '&DeviceId='+Server.getDeviceID();
+		var httpPlayback = [0,url,"Transcode",-1,-1,-1];
+		GuiPlayer.startPlayback(httpPlayback,resumeTicks);
+		return;	
+	}
+		
+	//Loop through all media sources and determine which is best
+	
 	FileLog.write("Video : Find Media Streams")
 	for(var index = 0; index < this.PlayerData.MediaSources.length;index++) {
 		this.getMainStreamIndex(this.PlayerData.MediaSources[index],index);
@@ -48,7 +61,6 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 		
 		//Toggle D Series Transcoding in Main
 		if (Main.getModelYear() == "D" && (File.getTVProperty("TranscodeDSeries") == false)) {
-			alert (result[2])
 			if (result[2] == "Direct Stream") { 
 				FileLog.write("Video : Playback Added - D Series")
 				this.MediaPlayback.push(result);
@@ -275,10 +287,8 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		//Check if item is 3D and if tv cannot support it don't add it to the list!
 		if (MediaSource.Video3DFormat !== undefined) {
 			//If TV Supports 3d
-			alert ("Mediasource is 3D - Checking TV Compatibility")
 			var pluginScreen = document.getElementById("pluginScreen");
 			if (pluginScreen.Flag3DEffectSupport()) {
-				alert ("3D playback supported on TV")
 				FileLog.write("Video : Media Stream Added : 3D " + MediaSourceIndex + "," + videoIndex + "," + audioIndex + "," + audioStreamFirst + "," + subtitleIndex)
 				this.MediaOptions.push([MediaSourceIndex,videoIndex,audioIndex,audioStreamFirst,subtitleIndex]); //Index != Id!!!
 			} else {
@@ -294,7 +304,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			FileLog.write("Video : No Video Index Found - Not Added");
 		}
 		if (audioIndex == -1) {
-			FileLog.write("Video : No Audio Index Found - Not Added");
+			FileLog.write("Video : No Audio Index Found - Not Added");	
 		}
 	}	
 }

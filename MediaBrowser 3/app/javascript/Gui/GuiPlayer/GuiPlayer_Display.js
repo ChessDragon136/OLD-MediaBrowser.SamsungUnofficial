@@ -66,7 +66,7 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
 
     var videoName = this.playingMediaSource.Name;
     document.getElementById("guiPlayer_ItemDetails_Title").innerHTML = fileInfo;
-    document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML += videoName + " : " + this.playingTranscodeStatus; 
+    document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML = videoName + " : " + this.playingTranscodeStatus; 
     
     if (this.PlayerData.Overview !== undefined) {
     	document.getElementById("guiPlayer_ItemDetails_Overview").innerHTML = this.PlayerData.Overview;

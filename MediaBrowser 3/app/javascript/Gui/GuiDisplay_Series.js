@@ -4,10 +4,12 @@ var GuiDisplay_Series = {
 		
 		totalRecordCount : null,
 		
+		currentView : "",
+		
 		selectedItem : 0,
 		selectedBannerItem : 0,
 		topLeftItem : 0,
-		MAXCOLUMNCOUNT : 9,
+		MAXCOLUMNCOUNT : 9, //Default TV
 		MAXROWCOUNT : 2,
 		
 		bannerItems : [],
@@ -40,88 +42,101 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	this.selectedItem = selectedItem;
 	this.topLeftItem = topLeftItem;
 	this.genreType = null;
+	this.isLatest = false;
+	this.bannerItems = [];
 	
 	//Set Display Size from User settings
 	this.MAXCOLUMNCOUNT = (File.getUserProperty("LargerView") == true) ? 7 : 9;
 	this.MAXROWCOUNT = 2;
 	
-	this.ItemData = Server.getContent(url + "&Limit=200");
+	this.ItemData = Server.getContent(url + "&Limit="+File.getTVProperty("ItemPaging"));
 	if (this.ItemData == null) { return; }
 	this.totalRecordCount = this.ItemData.TotalRecordCount;
 	Support.pageLoadTimes("GuiDisplay_Series","RetrievedServerData",false);
 	
-	//Latest Page Fix
-	this.isLatest = false;
-	if (title == "New TV" || title == "New Movies") {
+	//Update Padding on pageContent
+	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
+	"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='position:relative; height:22px; font-size:23px;'></div>" +
+	"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;font-size:18px;'></div>" +
+	"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;font-size:15px;max-height:110px;overflow-y:hidden;'></div>" +
+	"</div>";
+	
+	//Split Name - 2st Element = View, 2nd = Type (Collections being the odd one out!)
+	var titleArray = title.split(" ");
+	this.currentView = titleArray[0];
+	switch (titleArray[0]) {
+	case "Genre":
+		this.genreType = (titleArray[1] == "TV") ? "Series" : "Movie";
+		this.currentView = "Genres";
+		break;
+	case "Latest":
 		this.isLatest = true;
 		this.ItemData.Items = this.ItemData;
+		break;
 	}
 	
-	//Genre Page Fix
-	if (title == "TV Genres" || title == "Movie Genres") {
-		this.genreType = (title == "TV Genres") ? "Series" : "Movie";
-	}
-	
-	if (this.ItemData.Items.length > 0) {	
-		//Update Padding on pageContent
-		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div id=SeriesContent class='SeriesContent'><div id='SeriesTitle' style='position:relative; height:22px; font-size:22px;'></div>" +
-			"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;'></div>" +
-			"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;height:85px;overflow-y:hidden;'></div>" +
-			"</div>";
-		
-		//Determine if display is for all tv / movies or just a folder
-		if ((url.split("ParentId").length - 1) == 2 || title == "Collections") {
-			alert ("Media Folder");
-			this.isAllorFolder = 1;
-			document.getElementById("bannerSelection").style.paddingTop="15px";
-			document.getElementById("bannerSelection").style.paddingBottom="10px";
-		} else {
-			alert ("All TV or Movies");
-			this.isAllorFolder = 0;
-			document.getElementById("bannerSelection").style.paddingTop="10px";
-			document.getElementById("bannerSelection").style.paddingBottom="5px";
-		}
-		
-		//Determine if extra top padding is needed for items <= MaxRow
-		if (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) {
-			document.getElementById("Center").style.top = "110px";
-		}
-		
-		//See if first item is tv or movie and save result
-		//Will never display movies and tv in the same view!
-		if (this.ItemData.Items[0].Type == "Movie") {
-			this.isTvOrMovies = 1;
-			this.bannerItems = this.movieBannerItems;
-			//Move Title Down if larger icons shown!
-			if (File.getUserProperty("LargerView") == true) {
-				document.getElementById("SeriesContent").style.top="422px";
-				document.getElementById("SeriesOverview").style.height="47px";
-			}	
-		} else if (this.ItemData.Items[0].Type == "Series"){
-			this.isTvOrMovies = 0;
-			this.bannerItems = this.tvBannerItems;
-			//Move Title Down if larger icons shown!
-			if (File.getUserProperty("LargerView") == true) {
-				document.getElementById("SeriesContent").style.top="422px";
-				document.getElementById("SeriesOverview").style.height="47px";
-			}
-		} else if (title == "Collections"){
-			this.isTvOrMovies = -1; //Set false - else displays incorrectly! @Frostbyte
-			//Move Title Down if larger icons shown!
-			if (File.getUserProperty("LargerView") == true) {
-				document.getElementById("SeriesContent").style.top="422px";
-				document.getElementById("SeriesOverview").style.height="47px";
-			}
-		}else {
-			//Fix No of displayed items
-			this.MAXCOLUMNCOUNT = 8;
-			this.MAXROWCOUNT = 3;
-			//Move Title content down
-			document.getElementById("SeriesContent").style.top="400px";
+	switch (titleArray[1]) {
+	case "TV":
+		this.isTvOrMovies = 0;
+		this.bannerItems = this.tvBannerItems;
+		if (File.getUserProperty("LargerView") == true) {
+			document.getElementById("SeriesContent").style.top="426px";
 			document.getElementById("SeriesOverview").style.height="0px";
-			this.isTvOrMovies = 2;
-			this.bannerItems = this.musicBannerItems;
+		}
+	break;
+	case "Movies":
+		this.isTvOrMovies = 1;
+		this.bannerItems = this.tvBannerItems;
+		if (File.getUserProperty("LargerView") == true) {
+			document.getElementById("SeriesContent").style.top="426px";
+			document.getElementById("SeriesOverview").style.height="0px";
+		}
+	break;
+	case "Collections":
+		this.isTvOrMovies = -1;
+		if (File.getUserProperty("LargerView") == true) {
+			document.getElementById("SeriesContent").style.top="426px";
+			document.getElementById("SeriesOverview").style.height="0px";
+		}
+		break;
+	case "Music":
+	default:
+		//MUSIC
+		this.MAXCOLUMNCOUNT = 7;
+		this.MAXROWCOUNT = 3;
+		this.isTvOrMovies = 2;
+		this.bannerItems = this.musicBannerItems;
+		document.getElementById("SeriesContent").style.top="400px";
+		document.getElementById("SeriesOverview").style.height="0px";	
+	}
+
+	//Determine if display is for all tv / movies or just a folder
+	if ((url.split("ParentId").length - 1) == 2 || title == "Collections") {
+		alert ("Media Folder");
+		this.isAllorFolder = 1;
+		document.getElementById("bannerSelection").style.paddingTop="15px";
+		document.getElementById("bannerSelection").style.paddingBottom="10px";
+	} else {
+		alert ("All TV or Movies");
+		this.isAllorFolder = 0;
+		document.getElementById("bannerSelection").style.paddingTop="10px";
+		document.getElementById("bannerSelection").style.paddingBottom="5px";
+	}
+	
+	if (this.ItemData.Items.length > 0) {		
+		//Determine if extra top padding is needed for items <= MaxRow
+		if (this.MAXROWCOUNT > 2) {
+			if (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT * 2) {
+				if (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) {
+					document.getElementById("Center").style.top = "112px";
+				} else {
+					document.getElementById("Center").style.top = "75px";
+				}		
+			}
+		} else {
+			if (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) {
+				document.getElementById("Center").style.top = "110px";
+			}
 		}
 		
 		//Create banner headers only if all tv or all movies is selected
@@ -143,24 +158,32 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 			
 		//Update Selected Collection CSS
 		this.updateSelectedItems();	
+		
+		this.selectedBannerItem = -1;
+		this.updateSelectedBannerItems();
+		this.selectedBannerItem = 0;
 			
 		//Set Focus for Key Events
 		document.getElementById("GuiDisplay_Series").focus();
 		Support.pageLoadTimes("GuiDisplay_Series","UserControl",false);
 	} else {
 		//Set message to user
-		document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";
 		document.getElementById("Counter").innerHTML = "";
-		document.getElementById("title").innerHTML = "Sorry";
-		document.getElementById("Content").className = "padding60";
-		document.getElementById("Content").innerHTML = "Huh.. Looks like I have no content to show you in this view I'm afraid";
+		document.getElementById("Content").style.fontSize="20px";
+		document.getElementById("Content").innerHTML = "Huh.. Looks like I have no content to show you in this view I'm afraid<br>Press return to get back to the previous screen";
 		
-		//As no content focus on menu bar and null null means user can't return off the menu bar
-		GuiMainMenu.requested(null,null);
+		document.getElementById("NoItems").focus();
 	}	
 }
 
 GuiDisplay_Series.updateDisplayedItems = function() {
+	
+	if (this.topLeftItem + this.getMaxDisplay() > this.ItemData.Items.length) {
+		if (this.totalRecordCount > this.ItemData.Items.length) {
+			this.loadMoreItems();
+		}
+	}
+	
 	Support.updateDisplayedItems(this.ItemData.Items,this.selectedItem,this.topLeftItem,
 			Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"Content","",this.isResume,this.genreType);
 }
@@ -295,9 +318,17 @@ GuiDisplay_Series.updateSelectedBannerItems = function() {
 			}		
 		} else {
 			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				if (this.bannerItems[index] == this.currentView) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				}
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				if (this.bannerItems[index] == this.currentView) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				}
 			}
 		}
 	}
@@ -445,47 +476,34 @@ GuiDisplay_Series.processSelectedItem = function() {
 		case "Unwatched":
 			if (this.isTvOrMovies == 1) {	
 				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true&Filters=IsUnPlayed");
-				GuiDisplay_Series.start("All Movies",url,0,0);
+				GuiDisplay_Series.start("Unwatched Movies",url,0,0);
 			}	else {
 				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
-				GuiDisplay_Series.start("All TV",url,0,0);
+				GuiDisplay_Series.start("Unwatched TV",url,0,0);
 			}
 		break;
 		case "Latest":		
 			if (this.isTvOrMovies == 1) {
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Movie&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
-				GuiDisplay_Series.start("New Movies",url,0,0);
+				GuiDisplay_Series.start("Latest Movies",url,0,0);
 			} else {
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
-				GuiDisplay_Series.start("New TV",url,0,0);
+				GuiDisplay_Series.start("Latest TV",url,0,0);
 			}			
 		break;
 		case "Genre":
 			if (this.isTvOrMovies == 1) {	
 				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
-				GuiDisplay_Series.start("Movie Genres",url1,0,0);
+				GuiDisplay_Series.start("Genre Movies",url1,0,0);
 			} else {
 				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
-				GuiDisplay_Series.start("TV Genres",url1,0,0);
+				GuiDisplay_Series.start("Genre TV",url1,0,0);
 			}		
 		break;
-		case "Album":
-			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName");
-				GuiDisplay_Series.start("Album",url1,0,0);
-			}		
-		break;
-		case "Album Artist":
-			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
-				GuiPage_MusicArtist.start("Album Artist",url1);
-			}		
-		break;
-		case "Artist":
-			if (this.isTvOrMovies == 2) {	
-				var url1 = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
-				GuiDisplay_Series.start("Artist",url1,0,0);
-			}		
+		case "Album":	
+		case "Album Artist":	
+		case "Artist":	
+			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);		
 		break;
 		}
 	} else {
@@ -531,7 +549,15 @@ GuiDisplay_Series.processRightKey = function() {
 	} else {
 		this.selectedItem++;
 		if (this.selectedItem >= this.ItemData.Items.length) {
-			this.selectedItem--;
+			if (this.totalRecordCount > this.ItemData.Items.length) {
+				this.loadMoreItems();		
+				if (this.selectedItem >= (this.topLeftItem + this.getMaxDisplay())) {
+					this.topLeftItem = this.topLeftItem + this.MAXCOLUMNCOUNT;
+				}	
+				this.updateDisplayedItems();
+			} else {
+				this.selectedItem = this.selectedItem--;
+			}					
 		} else {
 			if (this.selectedItem >= this.topLeftItem+this.getMaxDisplay() ) {
 				this.topLeftItem = this.selectedItem;
@@ -693,7 +719,7 @@ GuiDisplay_Series.loadMoreItems = function() {
 		
 		//Load Data
 		var originalLength = this.ItemData.Items.length
-		var ItemDataRemaining = Server.getContent(this.startParams[1] + "&Limit=200&StartIndex=" + originalLength);
+		var ItemDataRemaining = Server.getContent(this.startParams[1] + "&Limit="+File.getTVProperty("ItemPaging") + "&StartIndex=" + originalLength);
 		if (ItemDataRemaining == null) { return; }
 		Support.pageLoadTimes("GuiDisplay_Series","GotRemainingItems",false);
 		

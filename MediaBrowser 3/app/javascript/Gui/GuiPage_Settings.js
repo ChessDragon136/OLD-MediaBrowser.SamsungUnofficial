@@ -24,9 +24,9 @@ var GuiPage_Settings = {
 		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
 		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
-		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries"],
-		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series"],
-		TVSettingsDefaults : [60,false,false,false,false],
+		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
+		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
+		TVSettingsDefaults : [60,false,false,false,false,150],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
 		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ", "Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
@@ -44,6 +44,9 @@ var GuiPage_Settings = {
 
 		TvConnectionOptions : ["120MB/s","100MB/s","80MB/s","60MB/s","40MB/s","30MB/s","20MB/s","15MB/s","10MB/s","8MB/s","6MB/s","5MB/s","4MB/s","3MB/s","2MB/s","1MB/s","0.5MB/s"], 
 		TvConnectionValues : [120,100,80,60,40,30,20,15,10,8,6,5,4,3,2,1,0.5], 
+		
+		ItemPagingOptions : [100,150,200,300,500],
+		ItemPagingValues : [100,150,200,300,500],
 		
 		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
 		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
@@ -286,6 +289,14 @@ GuiPage_Settings.updateDisplayedItems = function() {
 				}
 			}
 			break;	
+		case "ItemPaging":	
+			for (var index2 = 0; index2 < this.ItemPagingValues.length; index2++) {
+				if (this.ItemPagingValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
+					Setting = this.ItemPagingOptions[index2];
+					break;
+				}
+			}
+			break;		
 		case "Bitrate":
 			for (var index2 = 0; index2 < this.TvConnectionValues.length; index2++) {
 				if (this.TvConnectionValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
@@ -475,6 +486,9 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "ScreensaverImageTime":
 		case "ImagePlayerImageTime":		
 			this.CurrentSubSettings = this.ScreensaverImageTimeOptions;
+			break;	
+		case "ItemPaging":
+			this.CurrentSubSettings = this.ItemPagingOptions;
 			break;	
 		case "Bitrate":
 			this.CurrentSubSettings = this.TvConnectionOptions;
@@ -724,6 +738,10 @@ GuiPage_Settings.processSelectedSubItem = function() {
 		this.AllData.TV.Bitrate = this.TvConnectionValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.TvConnectionOptions[this.selectedSubItem];
 		break;
+	case "ItemPaging":
+		this.AllData.TV.ItemPaging = this.ItemPagingValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ItemPagingOptions[this.selectedSubItem];
+		break;	
 	case "DefaultAudioLang":
 		this.ServerUserData.Configuration.AudioLanguagePreference = this.LanguageValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.LanguageOptions[this.selectedSubItem];
@@ -953,6 +971,10 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Transcoding on D Series TV's";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enable this if you want to transcode videos to your D Series TV<br><br>This is off by default as it is not reliable and may cause issues, and as such is unsupported.";
 			break;
+		case "ItemPaging":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Item Paging";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "As nobody likes waiting, items on screen are loaded in batches, with each new batch called when needed, as opposed to loading everything and making you wait until its all ready.<br><br>Change the number of items loaded in a batch dependant on how fast your server is.";
+			break;	
 		case "DefaultAudioLang":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Audio Language Preference";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";

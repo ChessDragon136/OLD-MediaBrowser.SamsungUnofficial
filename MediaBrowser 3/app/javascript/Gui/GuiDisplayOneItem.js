@@ -35,34 +35,33 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 
+	//Setup display width height based on title
+	switch (title) {
+	case "Media Folders":
+	case "Collections":	
+		this.MAXCOLUMNCOUNT = 3;
+		this.MAXROWCOUNT = 2;
+		break;
+	case "Music":
+	case "Albums":	
+	case "Artists":	
+		this.MAXCOLUMNCOUNT = 6;
+		this.MAXROWCOUNT = 3;
+		break;		
+	default:
+		this.MAXCOLUMNCOUNT = 4;
+		this.MAXROWCOUNT = 3;
+		break;
+	}
+	
+	//Set Page Content
+	document.getElementById("pageContent").innerHTML = "<div id='title' class='EpisodesSeriesInfo'>"+title+"</div>" +
+			"<div id=Center class='SeriesCenter'><div id=Content></div></div>";	
+	
+	//Set Top 
+	GuiDisplayOneItem.setPadding(title);
+	
 	if (this.ItemData.Items.length > 0) {
-		
-		//Setup display width height based on title
-		switch (title) {
-		case "Media Folders":
-		case "Collections":	
-			this.MAXCOLUMNCOUNT = 3;
-			this.MAXROWCOUNT = 2;
-			break;
-		case "Music":
-		case "Albums":	
-		case "Artists":	
-			this.MAXCOLUMNCOUNT = 6;
-			this.MAXROWCOUNT = 3;
-			break;		
-		default:
-			this.MAXCOLUMNCOUNT = 4;
-			this.MAXROWCOUNT = 3;
-			break;
-		}
-		
-		//Set Page Content
-		document.getElementById("pageContent").innerHTML = "<div id='title' class='EpisodesSeriesInfo'>"+title+"</div>" +
-				"<div id=Center class='SeriesCenter'><div id=Content></div></div>";			
-
-		//Set Top 
-		GuiDisplayOneItem.setPadding(title);
-		
 		//Set isResume based on title - used in UpdateDisplayedItems
 		this.isResume = (title == "Resume") ? true : false;
 		
@@ -79,14 +78,11 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		document.getElementById("GuiDisplayOneItem").focus();
 	} else {
 		//Set message to user
-		document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";
 		document.getElementById("Counter").innerHTML = "";
-		document.getElementById("title").innerHTML = "Sorry";
-		document.getElementById("Content").className = "padding60";
-		document.getElementById("Content").innerHTML = "Huh.. Looks like I have no content to show you in this view I'm afraid";
+		document.getElementById("Content").style.fontSize="20px";
+		document.getElementById("Content").innerHTML = "Huh.. Looks like I have no content to show you in this view I'm afraid<br>Press return to get back to the previous screen";
 		
-		//As no content focus on menu bar and null null means user can't return off the menu bar
-		GuiMainMenu.requested(null,null);
+		document.getElementById("NoItems").focus();
 	}	
 }
 

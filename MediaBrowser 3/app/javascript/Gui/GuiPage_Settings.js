@@ -28,9 +28,9 @@ var GuiPage_Settings = {
 		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
 		TVSettingsDefaults : [60,false,false,false,false,150],
 		
-		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
-		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ", "Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
-		ServerSettingsDefaults : [false,false,"",true,"","default"], //Not actually Used but implemented for clean code!!! Values read from Server so no default needed!
+		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","GroupMovieCollections","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
+		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ","Group Movies into Collections: ","Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
+		ServerSettingsDefaults : [false,false,false,"",true,"","default"], //Not actually Used but implemented for clean code!!! Values read from Server so no default needed!
 		
 		//Per Setting Options & Values
 		DefaultOptions : ["True","False"],
@@ -359,6 +359,14 @@ GuiPage_Settings.updateDisplayedItems = function() {
 				}
 			}
 			break;	
+		case "GroupMovieCollections":
+			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
+				if (this.DefaultValues[index2] == this.ServerUserData.Configuration.GroupMoviesIntoBoxSets) {
+					Setting = this.DefaultOptions[index2];
+					break;
+				}
+			}
+			break;	
 		}
 		htmlToAdd += "<tr class=guiSettingsRow><td id="+index+">" + this.currentViewSettingsName[index] + "</td><td id=Value"+index+" class='guiSettingsTD'>"+Setting+"</td></tr>";
 	}
@@ -458,6 +466,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "DTS":	
 		case "DisplayMissingEpisodes":
 		case "DisplayUnairedEpisodes":	
+		case "GroupMovieCollections":
 		case "TranscodeDSeries":
 		case "PlayDefaultAudioTrack":
 		case "ShowDisc":	
@@ -783,6 +792,13 @@ GuiPage_Settings.processSelectedSubItem = function() {
 				
 		//Update Server	
 		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
+		break;
+	case "GroupMovieCollections":
+		this.ServerUserData.Configuration.GroupMoviesIntoBoxSets = this.DefaultValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
+				
+		//Update Server	
+		Server.updateUserConfiguration(JSON.stringify(this.ServerUserData.Configuration));
 		break;	
 	}
 		
@@ -998,6 +1014,10 @@ GuiPage_Settings.setOverview = function() {
 		case "DisplayUnairedEpisodes":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Unaired Episodes within Seasons";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			break;	
+		case "GroupMovieCollections":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Group Movies into Collections";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "When displaying movie lists, movies belonging to a collection will be displayed as one grouped item<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
 			break;		
 	}
 }

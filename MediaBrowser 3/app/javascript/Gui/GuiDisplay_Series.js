@@ -64,16 +64,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	//Split Name - 2st Element = View, 2nd = Type (Collections being the odd one out!)
 	var titleArray = title.split(" ");
 	this.currentView = titleArray[0];
-	switch (titleArray[0]) {
-	case "Genre":
-		this.genreType = (titleArray[1] == "TV") ? "Series" : "Movie";
-		this.currentView = "Genres";
-		break;
-	case "Latest":
-		this.isLatest = true;
-		this.ItemData.Items = this.ItemData;
-		break;
-	}
 	
 	switch (titleArray[1]) {
 	case "TV":
@@ -109,11 +99,22 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		document.getElementById("SeriesContent").style.top="400px";
 		document.getElementById("SeriesOverview").style.height="0px";	
 	}
+	
+	switch (titleArray[0]) {
+	case "Genre":
+		this.genreType = (titleArray[1] == "TV") ? "Series" : "Movie";
+		break;
+	case "Latest":
+		this.isLatest = true;
+		this.ItemData.Items = this.ItemData;
+		break;
+	}
 
 	//Determine if display is for all tv / movies or just a folder
 	if ((url.split("ParentId").length - 1) == 2 || title == "Collections") {
 		alert ("Media Folder");
 		this.isAllorFolder = 1;
+		this.bannerItems = []; //NEEDED HERE! 
 		document.getElementById("bannerSelection").style.paddingTop="15px";
 		document.getElementById("bannerSelection").style.paddingBottom="10px";
 	} else {
@@ -162,7 +163,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		this.selectedBannerItem = -1;
 		this.updateSelectedBannerItems();
 		this.selectedBannerItem = 0;
-			
+
 		//Set Focus for Key Events
 		document.getElementById("GuiDisplay_Series").focus();
 		Support.pageLoadTimes("GuiDisplay_Series","UserControl",false);
@@ -294,22 +295,11 @@ GuiDisplay_Series.updateSelectedItems = function () {
 			}
 		}
 	}, 800);
-	
-	//If Genre update Overview
-	if (GuiDisplay_Series.genreType != null) {
-		var urlGenre = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes="+GuiDisplay_Series.genreType+"&Recursive=true&CollapseBoxSetItems=false&fields=&Genres=" + GuiDisplay_Series.ItemData.Items[GuiDisplay_Series.selectedItem].Name);
-		var GenreData = Server.getContent(urlGenre);
-		if (GenreData == null) { return; }
-		
-		document.getElementById("SeriesOverview").innerHTML = "";
-		for (var index = 0; index < GenreData.Items.length; index++) {
-			document.getElementById("SeriesOverview").innerHTML += GenreData.Items[index].Name + "<br>";
-		}
-	}
 }
 
 GuiDisplay_Series.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.bannerItems.length; index++) {
+		
 		if (index == this.selectedBannerItem) {
 			if (index != this.bannerItems.length-1) {
 				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
@@ -466,21 +456,25 @@ GuiDisplay_Series.processSelectedItem = function() {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "All":		
 			if (this.isTvOrMovies == 1) {	
-				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
 				GuiDisplay_Series.start("All Movies",url,0,0);
 			} else {
-				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true");
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
 				GuiDisplay_Series.start("All TV",url,0,0);
 			}
 		break;
 		case "Unwatched":
 			if (this.isTvOrMovies == 1) {	
-				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&CollapseBoxSetItems=false&recursive=true&Filters=IsUnPlayed");
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true&Filters=IsUnPlayed");
 				GuiDisplay_Series.start("Unwatched Movies",url,0,0);
 			}	else {
 				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
 				GuiDisplay_Series.start("Unwatched TV",url,0,0);
 			}
+		break;
+		case "Upcoming":
+			////var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
+			////GuiDisplay_Series.start(" TV",url,0,0);
 		break;
 		case "Latest":		
 			if (this.isTvOrMovies == 1) {
@@ -556,7 +550,7 @@ GuiDisplay_Series.processRightKey = function() {
 				}	
 				this.updateDisplayedItems();
 			} else {
-				this.selectedItem = this.selectedItem--;
+				this.selectedItem = this.selectedItem - 1;
 			}					
 		} else {
 			if (this.selectedItem >= this.topLeftItem+this.getMaxDisplay() ) {

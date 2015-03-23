@@ -296,7 +296,7 @@ GuiPage_MusicArtist.processTopMenuRightKey = function() {
 				}
 				this.updateDisplayedItems();
 			} else {
-				this.selectedItem = this.selectedItem--;
+				this.selectedItem = this.selectedItem-1;
 			}
 		} else {
 			if (this.selectedItem >= this.topLeftItem+this.getMaxDisplay() ) {

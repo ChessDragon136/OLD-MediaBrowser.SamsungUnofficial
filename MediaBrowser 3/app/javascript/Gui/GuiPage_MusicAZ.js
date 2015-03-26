@@ -317,7 +317,7 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			GuiPage_MusicArtist.start("Album Artist",url1);
 			break;
 		case "Artist":
-			var url = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false" + urlString);
+			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID() + urlString);
 			GuiDisplay_Series.start("Artist Music",url,0,0);
 			break;
 		default:

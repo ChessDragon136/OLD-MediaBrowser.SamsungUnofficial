@@ -3,7 +3,7 @@ var GuiPage_MusicAZ = {
 		selectedItem : 0,
 		topLeftItem : 0,
 		
-		bannerItems : ["Album","Album Artist", "Artist"],
+		bannerItems : ["Latest","Recent","Frequent","Album","Album Artist", "Artist"],
 		selectedBannerItem : 0,
 		
 		MAXCOLUMNCOUNT : 10,
@@ -110,6 +110,9 @@ GuiPage_MusicAZ.updateSelectedBannerItems = function() {
 				}
 			}
 		}
+	}
+	if (this.selectedItem == -1) {
+		document.getElementById("Counter").innerHTML = (this.selectedBannerItem+1) + "/" + this.bannerItems.length;
 	}
 }
 
@@ -298,26 +301,41 @@ GuiPage_MusicAZ.processTopMenuDownKey = function() {
 GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 	alert ("TopMenuEnterKey");
 	if (this.selectedItem == -1) {
-		GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);	
+		switch (this.bannerItems[this.selectedBannerItem]) {
+		case "Latest":
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Audio&Limit=21&fields=SortName,Genres");
+			GuiDisplay_Series.start("Latest Music",url,0,0);
+		break;	
+		case "Recent":
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Audio&Limit=21&Filters=IsPlayed&Recursive=true&fields=SortName,Genres");
+			GuiDisplay_Series.start("Recent Music",url,0,0);
+			break;
+		case "Frequent": //Music Only
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=PlayCount&SortOrder=Descending&IncludeItemTypes=Audio&Limit=21&Filters=IsPlayed&Recursive=true&fields=SortName,Genres");
+			GuiDisplay_Series.start("Frequent Music",url,0,0);
+			break;		
+		case "Album":	
+		case "Album Artist":	
+		case "Artist":	
+			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);	
+			break;
+		}	
 	} else {
 		var urlString = (this.selectedItem == 0) ? "&NameLessThan=A" : "&NameStartsWith=" + this.Letters[this.selectedItem];
 		urlString = (this.selectedItem == 27) ? "&NameStartsWithOrGreater=~" : urlString;
 		
-		alert (this.selectedItem)
-		alert (urlString);
-		
 		Support.updateURLHistory("GuiPage_MusicAZ",this.startParams[0],null,null,null,this.selectedItem,this.topLeftItem,null);
 		switch (this.startParams[0]) {
 		case "Album":
-			var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&CollapseBoxSetItems=false" + urlString);
+			var url = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName,Genres&CollapseBoxSetItems=false" + urlString);
 			GuiDisplay_Series.start("Album Music",url,0,0);
 		break;
 		case "Album Artist":
-			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID() + urlString);
+			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
 			GuiPage_MusicArtist.start("Album Artist",url1);
 			break;
 		case "Artist":
-			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID() + urlString);
+			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
 			GuiDisplay_Series.start("Artist Music",url,0,0);
 			break;
 		default:

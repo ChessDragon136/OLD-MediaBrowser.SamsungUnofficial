@@ -136,6 +136,9 @@ Support.processReturnURLHistory = function() {
 			case "GuiTV_Show":
 				GuiTV_Show.start(title,url,selectedItem,topLeftItem);
 				break;	
+			case "GuiTV_Upcoming":
+				GuiTV_Upcoming.start();
+				break;		
 			case "GuiPage_ItemDetails":
 				GuiPage_ItemDetails.start(title,url,selectedItem);
 				break;	
@@ -513,7 +516,7 @@ Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfS
 		if (index == selectedItemID) {
 			document.getElementById(DivIdPrepend + Array[index].Id).className = strIfSelected;			
 		} else {	
-			document.getElementById(DivIdPrepend +  Array[index].Id).className = strIfNot;		
+			document.getElementById(DivIdPrepend + Array[index].Id).className = strIfNot;		
 		}			
     }
 	
@@ -534,11 +537,16 @@ Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfS
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,topLeftItem,isTop,genreType,isLatest) {
+Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,topLeftItem,isTop,genreType,isLatest) {	
 	if (page == "GuiPage_HomeTwoItems") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 	} else {
-		Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
+		if (startParams == null) {
+			Support.updateURLHistory(page,null,null,null,null,selectedItem,topLeftItem,null);
+		} else {
+			Support.updateURLHistory(page,startParams[0],startParams[1],null,null,selectedItem,topLeftItem,null);
+		}
+		
 	}
 	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
@@ -651,6 +659,11 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			case "Video":	
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
 				GuiPage_ItemDetails.start(ItemData.Items[selectedItem].Name,url,0);
+				break;
+			case "Audio":
+				Support.removeLatestURL(); //Music player loads within the previous page - thus remove!
+				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
+				GuiMusicPlayer.start("Song",url,page,false);
 				break;
 			default:
 				Support.removeLatestURL();

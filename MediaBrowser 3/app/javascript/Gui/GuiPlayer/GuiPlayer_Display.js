@@ -36,6 +36,12 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
 	this.topLeftItme = 0;
 	this.videoToolsSelectedItemSub = 0;
 	
+	//Reset Page Elements
+	document.getElementById("guiPlayer_Info_Details").style.backgroundImage="";
+	document.getElementById("guiPlayer_ItemDetails_Overview").innerHTML = "";
+	document.getElementById("guiPlayer_ItemDetails_Title").innerHTML = "";
+    document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML = "";
+	
 	//Hide page!
     document.getElementById("pageContent").innerHTML = "";
     document.getElementById("page").style.visibility="hidden";
@@ -49,6 +55,7 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     if (this.PlayerData.Type == "Episode") {
     	fileInfo = Support.getNameFormat(this.PlayerData.SeriesName, this.PlayerData.ParentIndexNumber, this.PlayerData.Name, this.PlayerData.IndexNumber);
     	fileInfo = fileInfo.replace("<br>", " ");
+    	
     	
     	if (this.PlayerData.ParentLogoImageTag) {
     		var imgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Logo",450,53,0,false,0);

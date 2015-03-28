@@ -13,9 +13,9 @@ var GuiDisplay_Series = {
 		MAXROWCOUNT : 2,
 		
 		bannerItems : [],
-		tvBannerItems : ["All","Unwatched","Latest", "Genre"],
+		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre"],
 		movieBannerItems : ["All","Unwatched","Latest","Genre"],
-		musicBannerItems : ["Album","Album Artist", "Artist"],
+		musicBannerItems : ["Latest","Recent","Frequent","Album","Album Artist", "Artist"],
 		
 		indexSeekPos : -1,
 		isResume : false,
@@ -44,14 +44,22 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	this.genreType = null;
 	this.isLatest = false;
 	this.bannerItems = [];
+	this.totalRecordCount = 0;
 	
 	//Set Display Size from User settings
 	this.MAXCOLUMNCOUNT = (File.getUserProperty("LargerView") == true) ? 7 : 9;
 	this.MAXROWCOUNT = 2;
 	
-	this.ItemData = Server.getContent(url + "&Limit="+File.getTVProperty("ItemPaging"));
+	//On show all items pages, there is no limit - For music there is due to speed!
+	if (title == "Latest Music" || title == "Recent Music" || title == "Frequent Music") {
+		this.ItemData = Server.getContent(url);
+		this.totalRecordCount = 21;
+	} else {
+		this.ItemData = Server.getContent(url + "&Limit="+File.getTVProperty("ItemPaging"));
+	}
+	
 	if (this.ItemData == null) { return; }
-	this.totalRecordCount = this.ItemData.TotalRecordCount;
+	this.totalRecordCount = (this.totalRecordCount == 0) ? this.ItemData.TotalRecordCount : this.totalRecordCount;
 	Support.pageLoadTimes("GuiDisplay_Series","RetrievedServerData",false);
 	
 	//Update Padding on pageContent
@@ -298,8 +306,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 }
 
 GuiDisplay_Series.updateSelectedBannerItems = function() {
-	for (var index = 0; index < this.bannerItems.length; index++) {
-		
+	for (var index = 0; index < this.bannerItems.length; index++) {	
 		if (index == this.selectedBannerItem) {
 			if (index != this.bannerItems.length-1) {
 				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
@@ -321,6 +328,9 @@ GuiDisplay_Series.updateSelectedBannerItems = function() {
 				}
 			}
 		}
+	}
+	if (this.selectedItem == -1) {
+		document.getElementById("Counter").innerHTML = (this.selectedBannerItem+1) + "/" + this.bannerItems.length;
 	}
 }
 
@@ -473,16 +483,18 @@ GuiDisplay_Series.processSelectedItem = function() {
 			}
 		break;
 		case "Upcoming":
-			////var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
-			////GuiDisplay_Series.start(" TV",url,0,0);
+			GuiTV_Upcoming.start();
 		break;
 		case "Latest":		
 			if (this.isTvOrMovies == 1) {
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Movie&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("Latest Movies",url,0,0);
-			} else {
+			} else if (this.isTvOrMovies == 0){
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("Latest TV",url,0,0);
+			} else {
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Audio&Limit=21&fields=SortName,Genres");
+				GuiDisplay_Series.start("Latest Music",url,0,0);
 			}			
 		break;
 		case "Genre":
@@ -499,6 +511,14 @@ GuiDisplay_Series.processSelectedItem = function() {
 		case "Artist":	
 			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);		
 		break;
+		case "Recent": //Music Only
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Audio&Filters=IsPlayed&Limit=21&Recursive=true&fields=SortName,Genres");
+			GuiDisplay_Series.start("Recent Music",url,0,0);
+			break;
+		case "Frequent": //Music Only
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=PlayCount&SortOrder=Descending&IncludeItemTypes=Audio&Limit=21&Filters=IsPlayed&Recursive=true&fields=SortName,Genres");
+			GuiDisplay_Series.start("Frequent Music",url,0,0);
+			break;	
 		}
 	} else {
 		Support.processSelectedItem("GuiDisplay_Series",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null,this.genreType,this.isLatest); 	

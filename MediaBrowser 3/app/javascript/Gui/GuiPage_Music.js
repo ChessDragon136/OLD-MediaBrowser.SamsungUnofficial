@@ -95,7 +95,7 @@ GuiPage_Music.updateDisplayedItems = function() {
 
 //Function sets CSS Properties so show which user is selected
 GuiPage_Music.updateSelectedItems = function () {
-	if (this.selectedItem == -1) {
+	if (this.selectedItem == -1) {		
 		//Resets original Items to White
 		document.getElementById(this.AlbumData.Items[0].Id).style.color = "white";
 		for (var index = 0; index < this.playItems.length; index++) {
@@ -105,15 +105,15 @@ GuiPage_Music.updateSelectedItems = function () {
 		//Sets Correct Item To Red
 		for (var index = 0; index < this.topMenuItems.length; index++) {
 			if (index == this.selectedItem2) {
-				document.getElementById(this.topMenuItems[index]).className = "#27a436";
+				document.getElementById(this.topMenuItems[index]).style.color = "#27a436";
 			} else {
-				document.getElementById(this.topMenuItems[index]).className = "";
+				document.getElementById(this.topMenuItems[index]).style.color = "white";
 			}
 		}		
 	} else {
 		//Resets original Item to White
 		for (var index = 0; index < this.topMenuItems.length; index++) {
-			document.getElementById(this.topMenuItems[index]).className = "";
+			document.getElementById(this.topMenuItems[index]).style.color = "white";
 		}
 		
 		//Finds correct items to set Red / Green
@@ -230,9 +230,7 @@ GuiPage_Music.handleReturn = function() {
 GuiPage_Music.processUpKey = function() {
 	this.selectedItem--;
 	if (this.selectedItem < -1) {
-		this.updateSelectedItems();
 		this.selectedItem = -1;
-		this.handleReturn();
 	} else if (this.selectedItem == -1) {
 		this.selectedItem2 = 0;
 		this.updateSelectedItems();

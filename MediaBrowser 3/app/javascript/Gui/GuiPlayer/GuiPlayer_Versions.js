@@ -171,7 +171,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 	if (UserData == null) { return; }
 	
 	var AudioLanguagePreferenece = (UserData.Configuration.AudioLanguagePreference !== undefined) ? UserData.Configuration.AudioLanguagePreference : "none";
-	var PlayDefaultAudioTrack = (UserData.Configuration.PlayDefaultAudioTrack !== undefined) ? true: false;
+	var PlayDefaultAudioTrack = (UserData.Configuration.PlayDefaultAudioTrack !== undefined) ? UserData.Configuration.PlayDefaultAudioTrack: false;
 	
 	var SubtitlePreference = (UserData.Configuration.SubtitleMode !== undefined) ? UserData.Configuration.SubtitleMode : "Default";
 	var SubtitleLanguage = (UserData.Configuration.SubtitleLanguagePreference !== undefined) ? UserData.Configuration.SubtitleLanguagePreference : "eng";
@@ -197,7 +197,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		var Stream = MediaStreams[index];
 		if (Stream.Type == "Video") {
 			videoStreamIfNoDefault = (videoStreamIfNoDefault == 0) ? index : videoStreamIfNoDefault;
-			if (videoIndex != -1 && Stream.IsDefault == true) {
+			if (videoIndex == -1 && Stream.IsDefault == true) {
 				videoIndex = index;
 				FileLog.write("Video : Default Video Index Found : " + videoIndex);
 			}
@@ -205,12 +205,12 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		
 		if (Stream.Type == "Audio") {
 			if (PlayDefaultAudioTrack == false) {
-				if (audioIndex != -1 && Stream.Language == AudioLanguagePreferenece) {
+				if (audioIndex == -1 && Stream.Language == AudioLanguagePreferenece) {
 					audioIndex = index;
 					FileLog.write("Video : Audio Language Preference Found : " + audioIndex);
 				}
 			} else {
-				if (audioIndex != -1 && Stream.IsDefault == true) {
+				if (audioIndex == -1 && Stream.IsDefault == true) {
 					audioIndex = index;
 					FileLog.write("Video : Default Audio Track Found : " + audioIndex);
 				}

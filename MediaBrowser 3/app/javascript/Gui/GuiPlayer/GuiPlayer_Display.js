@@ -24,11 +24,14 @@ var GuiPlayer_Display = {
 		sliderCurrentTime : 0
 }
 
-GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtranscodestatus, offsetSeconds) {
+GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtranscodestatus, offsetSeconds, playingVideoIndex, playingAudioIndex, playingSubtitleIndex) {
 	this.PlayerData = playerdata;
 	this.playingMediaSource = playingmediasource;
 	this.playingTranscodeStatus = playingtranscodestatus;
 	this.offsetSeconds = offsetSeconds
+	this.playingVideoIndex = playingVideoIndex;
+	this.playingAudioIndex = playingAudioIndex;
+	this.playingSubtitleIndex = playingSubtitleIndex;
 	
 	//Reset Vars
 	this.videoToolsOptions = [];

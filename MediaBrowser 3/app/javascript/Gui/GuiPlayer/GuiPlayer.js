@@ -126,7 +126,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     this.offsetSeconds = (this.PlayMethod == "Transcode") ? resumeTicksSamsung : 0;
 
     //Set up GuiPlayer_Display
-    GuiPlayer_Display.setDisplay(this.PlayerData, this.playingMediaSource, this.playingTranscodeStatus, this.offsetSeconds)
+    GuiPlayer_Display.setDisplay(this.PlayerData, this.playingMediaSource, this.playingTranscodeStatus, this.offsetSeconds, this.playingVideoIndex, this.playingAudioIndex, this.playingSubtitleIndex)
     
 	//Set Resolution Display
 	this.setDisplaySize();

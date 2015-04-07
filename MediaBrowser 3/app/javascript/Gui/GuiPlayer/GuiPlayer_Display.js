@@ -2,6 +2,9 @@ var GuiPlayer_Display = {
 		PlayerData : null,
 		playingMediaSource : null,
 		playingTranscodeStatus : null,
+		playingVideoIndex : null,
+		playingAudioIndex : null,
+		playingSubtitleIndex : null,
 		offsetSeconds : 0,
 		
 		ItemData : null,
@@ -334,7 +337,7 @@ GuiPlayer_Display.keyDownToolsSub = function() {
 				break;
 			case "videoOptionAudio":
 				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] != this.playingAudioIndex) {
-					this.stopPlayback();
+					GuiPlayer.stopPlayback();
 					document.getElementById("GuiPlayer").focus();
 					
 					//Check if first index - If it is need to stream copy audio track

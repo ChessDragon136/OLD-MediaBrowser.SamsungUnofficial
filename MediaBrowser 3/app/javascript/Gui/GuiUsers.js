@@ -86,12 +86,7 @@ GuiUsers.start = function(runAutoLogin) {
 		} else {
 			//Probably need some padding here to make it look nice!
 			document.getElementById("GuiUsers").focus();
-		}
-		
-		//Set Backdrop
-		imgsrc =  "images/hd-splash.jpg";
-		document.getElementById("pageBackgroundHolder").style.backgroundImage="url(" + imgsrc + ")";
-		
+		}	
 	}
 }
 

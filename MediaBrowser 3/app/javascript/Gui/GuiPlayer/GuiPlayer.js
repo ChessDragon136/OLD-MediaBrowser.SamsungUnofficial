@@ -209,14 +209,18 @@ GuiPlayer.setSubtitles = function(selectedSubtitleIndex) {
 		var Stream = this.playingMediaSource.MediaStreams[selectedSubtitleIndex];
 		if (Stream.SupportsExternalStream) {
 			//Set Colour & Size from User Settings
-			Support.styleSubtitles("guiPlayer_Subtitles")
+			Support.styleSubtitles("guiPlayer_Subtitles");
 			
-		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt?api_key=" + '&api_key=' + Server.getAuthToken());
-		    var PlayerDataSubtitles = Server.getSubtitles(url);
+		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.js?format=json&api_key=" + Server.getAuthToken());
+			this.PlayerDataSubtitle = Server.getSubtitles(url);
+
+		    if (this.PlayerDataSubtitle == null) { this.playingSubtitleIndex= -1; return; }
 		    
-		    if (PlayerDataSubtitles == null) { this.playingSubtitleIndex= -1; return; }
-		    
-		    this.PlayerDataSubtitle = parser.fromSrt(PlayerDataSubtitles, true);
+		    try{
+		    	 this.PlayerDataSubtitle = JSON.parse(this.PlayerDataSubtitle);
+		    }catch(e){
+		        alert(e); //error in the above string(in this case,yes)!
+		    }
 		}
 	}
 }

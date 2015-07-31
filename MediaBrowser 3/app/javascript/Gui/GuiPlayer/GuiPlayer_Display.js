@@ -436,8 +436,7 @@ GuiPlayer_Display.updateDisplayedItemsSub = function() {
 		case "videoOptionChapters":
 			//Run option through transcoding algorithm - see if it plays natively
 			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+this.PlayerData.Chapters[index].Name+"</div>";
-			break;	
-		}	
+			break;
 		case "videoOptionSubtitlesSync":
 			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+this.subtitleSyncMenuItems[index]+"</div>";
 			break;	

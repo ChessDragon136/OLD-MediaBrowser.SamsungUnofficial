@@ -252,8 +252,9 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 			}	
 		} else {*/
 			this.subtitleShowingIndex = 0;
-			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {				
-				if (newTime < this.PlayerDataSubtitle[index].startTime) {
+			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {		
+				startpos = this.PlayerDataSubtitle.TrackEvents[index].StartPositionTicks / 10000;		
+				if (newTime < startpos) {
 					this.subtitleShowingIndex = index;
 					break;
 				}

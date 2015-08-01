@@ -213,6 +213,7 @@ GuiPlayer.setSubtitles = function(selectedSubtitleIndex) {
 			
 		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.js?format=json&api_key=" + Server.getAuthToken());
 			this.PlayerDataSubtitle = Server.getSubtitles(url);
+			FileLog.write("Subtitles : loaded "+url);
 
 		    if (this.PlayerDataSubtitle == null) { this.playingSubtitleIndex= -1; return; }
 		    
@@ -252,14 +253,15 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 			}	
 		} else {*/
 			this.subtitleShowingIndex = 0;
-			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {		
+			for (var index = 0; index < this.PlayerDataSubtitle.TrackEvents.length; index++) {		
 				startpos = this.PlayerDataSubtitle.TrackEvents[index].StartPositionTicks / 10000;		
 				if (newTime < startpos) {
 					this.subtitleShowingIndex = index;
 					break;
 				}
-			}	
+			}
 		//}
+		FileLog.write("Subtitle : new subtitleShowingIndex:  "+this.subtitleShowingIndex +" @ "+newTime);
 		this.subtitleSeeking = false;
 	}
 }

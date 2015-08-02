@@ -211,14 +211,14 @@ GuiPlayer.setSubtitles = function(selectedSubtitleIndex) {
 			//Set Colour & Size from User Settings
 			Support.styleSubtitles("guiPlayer_Subtitles");
 			
-		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.js?format=json&api_key=" + Server.getAuthToken());
-			this.PlayerDataSubtitle = Server.getSubtitles(url);
+		    var url = Server.getCustomURL("/Videos/"+ this.PlayerData.Id+"/"+this.playingMediaSource.Id+"/Subtitles/"+selectedSubtitleIndex+"/Stream.srt?api_key=" + Server.getAuthToken());
+		    this.PlayerDataSubtitle = Server.getSubtitles(url);
 			FileLog.write("Subtitles : loaded "+url);
 
 		    if (this.PlayerDataSubtitle == null) { this.playingSubtitleIndex= -1; return; }
 		    
 		    try{
-		    	 this.PlayerDataSubtitle = JSON.parse(this.PlayerDataSubtitle);
+		    	 this.PlayerDataSubtitle = parser.fromSrt(this.PlayerDataSubtitle,true);
 		    }catch(e){
 		        alert(e); //error in the above string(in this case,yes)!
 		    }
@@ -227,12 +227,12 @@ GuiPlayer.setSubtitles = function(selectedSubtitleIndex) {
 }
 
 GuiPlayer.updateSubtitleTime = function(newTime,direction) {
-	if (this.playingSubtitleIndex != -1) {
+	if (this.playingSubtitleIndex != null) {
 		//Clear Down Subtitles
 		this.subtitleSeeking = true;
 		document.getElementById("guiPlayer_Subtitles").innerHTML = "";
 		document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
-		/*
+		
 		if (direction == "FF") {
 			for (var index = this.subtitleShowingIndex; index < this.PlayerDataSubtitle.length; index++) {
 				if (newTime >= this.PlayerDataSubtitle[index].startTime) {
@@ -251,16 +251,16 @@ GuiPlayer.updateSubtitleTime = function(newTime,direction) {
 					}
 				}
 			}	
-		} else {*/
+		} else if (direction == "NewSubs") {
 			this.subtitleShowingIndex = 0;
-			for (var index = 0; index < this.PlayerDataSubtitle.TrackEvents.length; index++) {		
-				startpos = this.PlayerDataSubtitle.TrackEvents[index].StartPositionTicks / 10000;		
-				if (newTime < startpos) {
+			for (var index = 0; index < this.PlayerDataSubtitle.length; index++) {				
+				if (newTime < this.PlayerDataSubtitle[index].startTime) {
 					this.subtitleShowingIndex = index;
+					alert (this.subtitleShowingIndex)
 					break;
 				}
-			}
-		//}
+			}	
+		}
 		FileLog.write("Subtitle : new subtitleShowingIndex:  "+this.subtitleShowingIndex +" @ "+newTime);
 		this.subtitleSeeking = false;
 	}
@@ -358,22 +358,14 @@ GuiPlayer.setCurrentTime = function(time) {
 
 		//Subtitle Update
 		if (this.playingSubtitleIndex != null && this.PlayerDataSubtitle != null && this.subtitleSeeking == false) {
-			startpos = this.PlayerDataSubtitle.TrackEvents[this.subtitleShowingIndex].StartPositionTicks / 10000; //important fix
-			endpos = this.PlayerDataSubtitle.TrackEvents[this.subtitleShowingIndex].EndPositionTicks / 10000;
-
-			if (this.currentTime + this.offsetSeconds >= startpos && this.currentTime < endpos && document.getElementById("guiPlayer_Subtitles").innerHTML != this.PlayerDataSubtitle.text) {
-				subtitletext = this.PlayerDataSubtitle.TrackEvents[this.subtitleShowingIndex].Text;
-				subtitletext = subtitletext.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2'); //support two-line subtitles
-				document.getElementById("guiPlayer_Subtitles").innerHTML = subtitletext;
-				document.getElementById("guiPlayer_Subtitles").style.visibility = "visible";
-			}
-
-			if (this.currentTime + this.offsetSeconds >= endpos) {
-				nextstartpos = this.PlayerDataSubtitle.TrackEvents[this.subtitleShowingIndex+1].StartPositionTicks / 10000;
-				if (nextstartpos >= endpos + 50 || this.subtitleShowingIndex == this.PlayerDataSubtitle.TrackEvents.length) { //to fix flickering subtitles
-					document.getElementById("guiPlayer_Subtitles").innerHTML = "";
-				}
+			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime) {
+				document.getElementById("guiPlayer_Subtitles").innerHTML = "";
+				document.getElementById("guiPlayer_Subtitles").style.visibility = "hidden";
 				this.subtitleShowingIndex++;
+			}
+			if (this.currentTime >= this.PlayerDataSubtitle[this.subtitleShowingIndex].startTime && this.currentTime < this.PlayerDataSubtitle[this.subtitleShowingIndex].endTime && document.getElementById("guiPlayer_Subtitles").innerHTML != this.PlayerDataSubtitle.text) {
+				document.getElementById("guiPlayer_Subtitles").innerHTML = this.PlayerDataSubtitle[this.subtitleShowingIndex].text; 
+				document.getElementById("guiPlayer_Subtitles").style.visibility = "";
 			}
 		}
 		
@@ -387,10 +379,10 @@ GuiPlayer.setCurrentTime = function(time) {
 		}
 		
 		//Update GUIs
-		percentage = (100 * (this.currentTime + this.offsetSeconds) / (this.PlayerData.RunTimeTicks / 10000));
+			percentage = (100 * this.currentTime / (this.PlayerData.RunTimeTicks / 10000));
 
-		document.getElementById("guiPlayer_Info_ProgressBar_Current").style.width = percentage + "%";	
-		document.getElementById("guiPlayer_Info_Time").innerHTML = Support.convertTicksToTime(this.currentTime+ this.offsetSeconds, (this.PlayerData.RunTimeTicks / 10000));
+	document.getElementById("guiPlayer_Info_ProgressBar_Current").style.width = percentage + "%";	
+	document.getElementById("guiPlayer_Info_Time").innerHTML = Support.convertTicksToTime(this.currentTime, (this.PlayerData.RunTimeTicks / 10000));
 	
 		//Update Server every 8 ticks (Don't want to spam!
 		if (this.updateTimeCount == 8) {

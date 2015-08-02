@@ -48,11 +48,11 @@ var GuiPage_Settings = {
 		ItemPagingOptions : [100,150,200,300,500],
 		ItemPagingValues : [100,150,200,300,500],
 		
-		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
-		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
+		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
+		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
 		
-		SubtitleColourOptions: ["White","Red","Green","Blue"],
-		SubtitleColourValues: ["white","red","green","blue"],
+		SubtitleColourOptions: ["White","Yellow","Red","Green","Blue"],
+		SubtitleColourValues: ["white","yellow","red","green","blue"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],

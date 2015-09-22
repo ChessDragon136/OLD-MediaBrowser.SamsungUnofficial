@@ -12,8 +12,6 @@ var GuiPlayer_Display = {
 		videoToolsOptions : [],
 		videoToolsSelectedItem : 0,
 		subtitleIndexes : [], 
-		subtitleSyncIndexes : [],
-		subtitleSyncMenuItems : [],
 		audioIndexes : [],
 		chapterIndexes : [], 
 		
@@ -143,11 +141,6 @@ GuiPlayer_Display.createToolsMenu = function() {
 		} 
 	}
 	
-	this.subtitleSyncMenuItems = [ "&lt; Back 900", "&lt; Back 1200", "&lt; Back 2400", "&gt; Forward 900", "&gt; Forward 1200", "&gt; Forward 2400" ];
-	for (var index = 0; index < this.subtitleSyncMenuItems.length; index++) {
-		this.subtitleSyncIndexes.push(index);
-	}
-	
 	if (this.PlayerData.Chapters !== undefined) {
 		for (var index = 0; index < this.PlayerData.Chapters.length; index++) {
 			this.chapterIndexes.push(index);
@@ -162,8 +155,6 @@ GuiPlayer_Display.createToolsMenu = function() {
 		this.subtitleIndexes.unshift(-1);
 	    this.videoToolsOptions.push("videoOptionSubtitles");
 	    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionSubtitles" style="display:inline-block;">Subtitles</div>';
-	    this.videoToolsOptions.push("videoOptionSubtitlesSync");
-	    document.getElementById("guiPlayer_Tools").innerHTML += '<div id="videoOptionSubtitlesSync" style="display:inline-block;">Sync</div>';
 	}
 	    
 	//Hide if only 1 audio stream given thats the one playing!
@@ -218,12 +209,6 @@ GuiPlayer_Display.keyDownTools = function() {
 				break;
 			case "videoOptionSubtitles":
 				this.videoToolsSubOptions = this.subtitleIndexes;
-				this.updateDisplayedItemsSub();
-				this.updateSelectedItemsSub();
-				document.getElementById("GuiPlayer_ToolsSub").focus();
-				break;
-			case "videoOptionSubtitlesSync":
-				this.videoToolsSubOptions = this.subtitleSyncIndexes;
 				this.updateDisplayedItemsSub();
 				this.updateSelectedItemsSub();
 				document.getElementById("GuiPlayer_ToolsSub").focus();
@@ -353,9 +338,6 @@ GuiPlayer_Display.keyDownToolsSub = function() {
 			case "videoOptionSubtitles":
 				GuiPlayer.newSubtitleIndex(this.videoToolsSubOptions[this.videoToolsSelectedItemSub]);
 				break;
-			case "videoOptionSubtitlesSync":
-				GuiPlayer.subtitleSync(this.videoToolsSubOptions[this.videoToolsSelectedItemSub]);
-				break;
 			case "videoOptionAudio":
 				if (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] != this.playingAudioIndex) {
 					GuiPlayer.stopPlayback();
@@ -436,9 +418,6 @@ GuiPlayer_Display.updateDisplayedItemsSub = function() {
 		case "videoOptionChapters":
 			//Run option through transcoding algorithm - see if it plays natively
 			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+this.PlayerData.Chapters[index].Name+"</div>";
-			break;
-		case "videoOptionSubtitlesSync":
-			document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+this.subtitleSyncMenuItems[index]+"</div>";
 			break;	
 		}	
 	}

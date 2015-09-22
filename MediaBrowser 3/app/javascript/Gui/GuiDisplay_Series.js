@@ -13,9 +13,9 @@ var GuiDisplay_Series = {
 		MAXROWCOUNT : 2,
 		
 		bannerItems : [],
-		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre"],
-		movieBannerItems : ["All","Unwatched","Latest","Genre"],
-		musicBannerItems : ["Latest","Recent","Frequent","Album","Album Artist", "Artist"],
+		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre", "A-Z"],
+		movieBannerItems : ["All","Unwatched","Latest","Genre", "A-Z"],
+		musicBannerItems : ["Recent","Frequent","Album","Album Artist", "Artist"],
 		
 		indexSeekPos : -1,
 		isResume : false,
@@ -84,7 +84,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	break;
 	case "Movies":
 		this.isTvOrMovies = 1;
-		this.bannerItems = this.tvBannerItems;
+		this.bannerItems = this.movieBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
 			document.getElementById("SeriesContent").style.top="426px";
 			document.getElementById("SeriesOverview").style.height="0px";
@@ -511,6 +511,13 @@ GuiDisplay_Series.processSelectedItem = function() {
 		case "Artist":	
 			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);		
 		break;
+		case"A-Z":
+			if (this.isTvOrMovies == 1) {
+				GuiPage_MusicAZ.start("Movies");
+			} else {
+				GuiPage_MusicAZ.start("TV");
+			}
+			break;
 		case "Recent": //Music Only
 			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Audio&Filters=IsPlayed&Limit=21&Recursive=true&fields=SortName,Genres");
 			GuiDisplay_Series.start("Recent Music",url,0,0);

@@ -25,7 +25,7 @@ var GuiPage_Settings = {
 		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
-		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
+		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
 		TVSettingsDefaults : [60,false,false,false,false,150],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","GroupMovieCollections","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
@@ -42,17 +42,17 @@ var GuiPage_Settings = {
 		View2Options : [], 
 		View2Values : [], 
 
-		TvConnectionOptions : ["120MB/s","100MB/s","80MB/s","60MB/s","40MB/s","30MB/s","20MB/s","15MB/s","10MB/s","8MB/s","6MB/s","5MB/s","4MB/s","3MB/s","2MB/s","1MB/s","0.5MB/s"], 
+		TvConnectionOptions : ["120Mb/s","100Mb/s","80Mb/s","60Mb/s","40Mb/s","30Mb/s","20Mb/s","15Mb/s","10Mb/s","8Mb/s","6Mb/s","5Mb/s","4Mb/s","3Mb/s","2Mb/s","1Mb/s","0.5Mb/s"], 
 		TvConnectionValues : [120,100,80,60,40,30,20,15,10,8,6,5,4,3,2,1,0.5], 
 		
 		ItemPagingOptions : [100,150,200,300,500],
 		ItemPagingValues : [100,150,200,300,500],
 		
-		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
-		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
+		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
+		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
 		
-		SubtitleColourOptions: ["White","Yellow","Red","Green","Blue"],
-		SubtitleColourValues: ["white","yellow","red","green","blue"],
+		SubtitleColourOptions: ["White","Red","Green","Blue"],
+		SubtitleColourValues: ["white","red","green","blue"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],
@@ -968,8 +968,8 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during screensaver playback until the next one is displayed.";
 			break;		
 		case "Bitrate":
-			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Bitrate";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enter a maximum bitrate that your network can manage";
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Max Bitrate";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use this setting to select the maximum video bitrate your network can handle. If a video bitrate is higher than this, the video will be transcoded to use the max bitrate setting here.";
 			break;
 		case "Dolby":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Dolby Digital Playback";

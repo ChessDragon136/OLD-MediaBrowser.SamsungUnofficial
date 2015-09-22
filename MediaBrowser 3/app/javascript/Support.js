@@ -27,6 +27,7 @@ Support.clock = function() {
     var m=today.getMinutes();
     if (m<10) {m = "0" + m;};
     document.getElementById('Clock').innerHTML = h+":"+m;
+    document.getElementById('guiPlayer_clock').innerHTML = h+":"+m;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 

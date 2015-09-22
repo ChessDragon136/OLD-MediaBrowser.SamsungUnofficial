@@ -235,15 +235,18 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			}
 		}
 	}
+	FileLog.write("Video : Audio language " + (MediaStreams[audioIndex].Language == null ? "unknown, defaulting to " + AudioLanguagePreferenece : MediaStreams[audioIndex].Language));
 	
 	//---------------------------------------------------------------------------
 	
-	//Search Subtitles
+	//Search Subtitles - the order of these is important.
+	
+	//Subtitle Mode = Only Forced Subtitles
 	//If user setting not none, look for forced subtitles
 	if (SubtitlePreference != "None") {
 		for (var index = 0;index < MediaStreams.length;index++) {
 			var Stream = MediaStreams[index];
-			if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
+			if (Stream.IsTextSubtitleStreamm) {			
 				if (Stream.IsForced == true) {
 					subtitleIndex = index;
 					break;
@@ -252,13 +255,15 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		}
 	}
 	
-	//If no forced subs and user setting not none or forced only, look for subs in native language
+	//Subtitle Mode = Default
+	//If no forced subs and user setting not none or forced only, look for subs in native language.
+	//But only if the audio is in NON-native language. (If the audio language is not specified, use the server default audio language.)
 	if (subtitleIndex == -1) {
 		if (SubtitlePreference != "None" && SubtitlePreference != "OnlyForced") {
 			for (var index = 0;index < MediaStreams.length;index++) {
 				var Stream = MediaStreams[index];
-				if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
-					if (Stream.Language == SubtitleLanguage) {
+				if (Stream.IsTextSubtitleStream) {			
+					if ((MediaStreams[audioIndex].Language == null ? AudioLanguagePreferenece : MediaStreams[audioIndex].Language) != SubtitleLanguage && Stream.Language == SubtitleLanguage) {
 						subtitleIndex = index;
 						break;
 					}	
@@ -267,12 +272,13 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		}
 	}
 	
+	//Subtitle Mode = Always Play Subtitles
 	//If user always wants subs, play 1st one.
 	if (subtitleIndex == -1) {
 		if (SubtitlePreference == "Always") {	
 			for (var index = 0;index < MediaStreams.length;index++) {
 				var Stream = MediaStreams[index];
-				if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {			
+				if (Stream.IsTextSubtitleStream) {			
 					subtitleIndex = index;
 					break;
 				} 

@@ -60,13 +60,17 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     var fileInfo = "";
     if (this.PlayerData.Type == "Episode") {
     	fileInfo = Support.getNameFormat(this.PlayerData.SeriesName, this.PlayerData.ParentIndexNumber, this.PlayerData.Name, this.PlayerData.IndexNumber);
-    	fileInfo = fileInfo.replace("<br>", " ");
+    	fileInfo = fileInfo.replace("<br>", " ");	
     	
     	
     	if (this.PlayerData.ParentLogoImageTag) {
     		var imgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Logo",450,53,0,false,0);
     		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
-    	}
+    	}	
+    	
+        //Add the TV series DVD cover art to the GUI display.
+        var diskImgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Primary",96,140,0,false,0);
+    	document.getElementById("guiPlayer_DvdArt").style.backgroundImage="url('" + diskImgsrc + "')";
     	
     } else {
     	fileInfo = this.PlayerData.Name;
@@ -75,11 +79,19 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     		var imgsrc = Server.getImageURL(this.PlayerData.Id,"Logo",450,53,0,false,0);
     		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
     	}
+    	
+        //Add the movie DVD cover art to the GUI display.
+        var diskImgsrc = Server.getImageURL(this.PlayerData.Id,"Primary",96,140,0,false,0);
+    	document.getElementById("guiPlayer_DvdArt").style.backgroundImage="url('" + diskImgsrc + "')";
     }
 
     var videoName = this.playingMediaSource.Name;
     document.getElementById("guiPlayer_ItemDetails_Title").innerHTML = fileInfo;
+    document.getElementById("guiPlayer_ItemDetails_Title2").innerHTML = fileInfo;
     document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML = videoName + " : " + this.playingTranscodeStatus; 
+    document.getElementById("guiPlayer_ItemDetails_SubData2").innerHTML = videoName + " : " + this.playingTranscodeStatus; 
+
+
     
     if (this.PlayerData.Overview !== undefined) {
     	document.getElementById("guiPlayer_ItemDetails_Overview").innerHTML = this.PlayerData.Overview;
@@ -89,6 +101,7 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
 GuiPlayer_Display.restorePreviousMenu = function() {
 	//Hide Player GUI Elements
 	document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
+	document.getElementById("guiPlayer_ItemDetails2").style.visibility="hidden";
 	document.getElementById("guiPlayer_Info").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
     document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
@@ -136,7 +149,7 @@ GuiPlayer_Display.createToolsMenu = function() {
 			}	
 		} 
 		
-		if (Stream.Type == "Subtitle" && Stream.SupportsExternalStream) {
+		if (Stream.IsTextSubtitleStream) {
 			this.subtitleIndexes.push(index); //
 		} 
 	}
@@ -380,21 +393,25 @@ GuiPlayer_Display.updateDisplayedItemsSub = function() {
 		
 		switch (this.videoToolsOptions[this.videoToolsSelectedItem]) {
 		case "videoOptionSubtitles":
-			alert ("Subtitle Option Index in DisplayItems: " + this.videoToolsSubOptions[index]);
+			alert ("Subtitle Option Index in DisplayItems1: " + this.videoToolsSubOptions[index]);
 			if (this.videoToolsSubOptions[index] == -1) {
 				document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>None</div>";	
 			} else {
 				var Name = "";
 				if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language !== undefined) {
-					Name = this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language;
+					if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "eng"){
+						Name = "English";
+					} else {
+						Name = this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language;
+					}
 				} else {
 					Name = "Unknown Language";
 				}
 				if (this.playingSubtitleIndex == this.videoToolsSubOptions[index]) {
-					Name += "<br>Currently Showing";
+					Name += "<br>Currently Showing"; //cmcgerty: This should grab focus somehow.
 				}
 				document.getElementById("guiPlayer_Tools_SubOptions").innerHTML += "<div id=videoToolsSubOptions"+index+" class=videoToolsOption>"+Name+"</div>";	
-			}	
+			}
 			break;
 		case "videoOptionAudio":
 			//Run option through transcoding algorithm - see if it plays natively

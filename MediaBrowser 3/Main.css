@@ -5,6 +5,17 @@
 	
 }
 
+.splashscreen{ 
+	position: fixed;
+	top: 0px;
+	width: 960px;
+	height: 540px;
+	z-index: 1000;
+	background-image: url('images/splash.jpg');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
 .pageBackground{ 
 	position:absolute;
     top:0px;
@@ -992,7 +1003,7 @@
 
 .videoSubtitles1 {
 	position:absolute;
-	bottom:0px;
+	bottom:4px;
 	left:0px;
 	width:100%;
 	background-color:rgba(0,0,0,0);
@@ -1001,7 +1012,16 @@
 
 .videoSubtitles2 {
 	position:absolute;
-	top:75px;
+	top:77px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	text-align:center;
+}
+
+.videoSubtitles3 {
+	position:absolute;
+	bottom:47px;
 	left:0px;
 	width:100%;
 	background-color:rgba(0,0,0,0);
@@ -1103,17 +1123,6 @@
 	background-color:rgba(0,0,0,0.8);
 }
 
-.videoItemDetails2 {
-	position:absolute;
-	bottom:0px;
-    left:0px;
-    width: 100%;
-    max-height:200px;
-    text-align:left;
-	color: white;	
-	background-color:rgba(0,0,0,0.8);
-}
-
 .videoItemDetailsTitle {
     font-size:24px;
 }
@@ -1132,6 +1141,56 @@
     background-position: left;
     background-color:rgba(0,0,0,0);
 }
+
+.videoItemRatings {
+	position:absolute;
+    bottom:0px;
+    right: 160px;
+	width: 53px;
+    height: 48px;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsTomatoIcon {
+	position:absolute;
+    bottom:24px;
+    left: 0px;
+	width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsTomato {
+	position:absolute;
+    bottom:24px;
+    right: 0px;
+	width: 24px;
+    height: 20px;
+    color: white;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsStarIcon {
+	position:absolute;
+    bottom:0px;
+    left: 0px;
+	width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsStar {
+	position:absolute;
+    bottom:0px;
+    right: 0px;
+	width: 24px;
+    height: 20px;
+	color: white;
+    background-color:rgba(0,0,0,0);
+}
+
 /* ---------------------------------------------------------------------------   */
 
 .musicDiv {

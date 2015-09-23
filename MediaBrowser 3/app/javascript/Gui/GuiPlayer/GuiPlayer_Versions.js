@@ -240,13 +240,12 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 	//---------------------------------------------------------------------------
 	
 	//Search Subtitles - the order of these is important.
-	
 	//Subtitle Mode = Only Forced Subtitles
 	//If user setting not none, look for forced subtitles
 	if (SubtitlePreference != "None") {
 		for (var index = 0;index < MediaStreams.length;index++) {
 			var Stream = MediaStreams[index];
-			if (Stream.IsTextSubtitleStreamm) {			
+			if (Stream.IsTextSubtitleStream) {			
 				if (Stream.IsForced == true) {
 					subtitleIndex = index;
 					break;
@@ -262,6 +261,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		if (SubtitlePreference != "None" && SubtitlePreference != "OnlyForced") {
 			for (var index = 0;index < MediaStreams.length;index++) {
 				var Stream = MediaStreams[index];
+
 				if (Stream.IsTextSubtitleStream) {			
 					if ((MediaStreams[audioIndex].Language == null ? AudioLanguagePreferenece : MediaStreams[audioIndex].Language) != SubtitleLanguage && Stream.Language == SubtitleLanguage) {
 						subtitleIndex = index;
@@ -278,6 +278,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 		if (SubtitlePreference == "Always") {	
 			for (var index = 0;index < MediaStreams.length;index++) {
 				var Stream = MediaStreams[index];
+
 				if (Stream.IsTextSubtitleStream) {			
 					subtitleIndex = index;
 					break;

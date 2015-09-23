@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.591",
+		version : "v0.592c",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -25,43 +25,43 @@ var Main =
 
 Main.getModelYear = function() {
 	return this.modelYear;
-}
+};
 
 Main.isMusicEnabled = function() {
 	return this.enableMusic;
-}
+};
 
 Main.isLiveTVEnabled = function() {
 	return this.enableLiveTV;
-}
+};
 
 Main.isPhotoEnabled = function() {
 	return this.enablePhoto;
-}
+};
 
 Main.isCollectionsEnabled = function() {
 	return this.enableCollections;
-}
+};
 
 Main.isChannelsEnabled = function() {
 	return this.enableChannels;
-}
+};
 
 Main.isScreensaverEnabled = function() {
 	return this.enableScreensaver;
-}
+};
 
 Main.getRequiredServerVersion = function() {
 	return this.requiredServerVersion;
-}
+};
 
 Main.getVersion = function() {
 	return this.version;
-}
+};
 
 Main.getIsScreensaverRunning = function() {
 	return this.isScreensaverRunning;
-}
+};
 
 Main.setIsScreensaverRunning = function() {
 	if (this.isScreensaverRunning == false) {
@@ -69,16 +69,14 @@ Main.setIsScreensaverRunning = function() {
 	} else {
 		this.isScreensaverRunning = false;
 	}
-}
-
-
+};
 
 Main.onLoad = function()
 {	
 	//Setup Logging
 	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
-	FileLog.write("---------------------------------------------------------------------")
-	FileLog.write("MB3 Application Started")
+	FileLog.write("---------------------------------------------------------------------");
+	FileLog.write("MB3 Application Started");
 	
 	//Delete Old style Settings File
 	File.deleteOldSettingsFile();
@@ -162,6 +160,9 @@ Main.onLoad = function()
 		document.getElementById("pageContent").innerHTML = "You have no network connectivity to the TV - Please check the settings on the TV";
 	}
 	widgetAPI.sendReadyEvent();
+	setTimeout(function(){
+		document.getElementById("SplashScreen").style.visibility="hidden";
+	}, 3000);
 };
 
 Main.onUnload = function()

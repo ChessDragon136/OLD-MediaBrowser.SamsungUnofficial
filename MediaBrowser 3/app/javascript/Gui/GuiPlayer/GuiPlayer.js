@@ -120,8 +120,13 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	this.playingSubtitleIndex = TranscodeAlg[5];
 	
 	//Set PlayMethod
-    this.PlayMethod =  (this.playingTranscodeStatus == "Direct Stream") ? "DirectStream" : "Transcode";
-    this.playingTranscodeStatus =  (this.playingTranscodeStatus == "Direct Stream") ? "Direct Play" : this.playingTranscodeStatus;
+	if (this.playingTranscodeStatus == "Direct Stream"){
+		this.PlayMethod = "DirectStream";
+	} else if (this.playingTranscodeStatus == "Direct Play"){
+		this.PlayMethod = "DirectPlay";
+	} else if (this.playingTranscodeStatus == "Transcoding Audio & Video"){
+		this.PlayMethod = "Transcode";
+	}
 
     //Set offsetSeconds time
     this.offsetSeconds = (this.PlayMethod == "Transcode") ? resumeTicksSamsung : 0;
@@ -145,17 +150,20 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	Server.videoStarted(this.PlayerData.Id,this.playingMediaSource.Id,this.PlayMethod);
     
 	//Update URL with resumeticks
-	if (Main.getModelYear() == "D" && this.PlayMethod != "DirectStream") {
+	if (Main.getModelYear() == "D") {
 		FileLog.write("Playback : D Series Playback OR HTTP - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000) + '|COMPONENT=HLS';
-		alert (url);
-		var position = Math.round(resumeTicksSamsung / 1000);
+		alert ("D Series Playback url : "+url);
+		var position = 0;
+		if (this.PlayMethod == "DirectPlay" || this.PlayMethod == "DirectStream") {
+			position = Math.round(resumeTicksSamsung / 1000);
+		}
 	    this.plugin.ResumePlay(url,position); 
 	} else {
 		FileLog.write("Playback : E+ Series Playback - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000);
-		var position = 0; // If transcoding, it takes the &startTimeTick as point 0 in the file
-		if (this.PlayMethod == "DirectStream") {
+		var position = 0;
+		if (this.PlayMethod == "DirectPlay" || this.PlayMethod == "DirectStream") {
 			position = Math.round(resumeTicksSamsung / 1000);
 		}	
 	    this.plugin.ResumePlay(url,position); 
@@ -507,10 +515,15 @@ GuiPlayer.keyDown = function() {
 			break;	
         case tvKey.KEY_TOOLS:
         	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden") {
+        		if (this.infoTimer != null){
+        			clearTimeout(this.infoTimer);
+        		}
         		document.getElementById("guiPlayer_Info").style.visibility="hidden";
         		document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
         		document.getElementById("guiPlayer_ItemDetails2").style.visibility="hidden";
         		document.getElementById("guiPlayer_DvdArt").style.visibility="hidden";
+        		document.getElementById("guiPlayer_Ratings").style.visibility="hidden";
+        		document.getElementById("guiPlayer_Subtitles").className="videoSubtitles3";
         		GuiPlayer_Display.updateSelectedItems();
         		document.getElementById("guiPlayer_Tools").style.visibility = "";
         		document.getElementById("GuiPlayer_Tools").focus();
@@ -633,14 +646,14 @@ GuiPlayer.handlePauseKey = function() {
 GuiPlayer.handleFFKey = function() {
 	FileLog.write("Playback : Fast Forward");
     if(this.Status == "PLAYING") {
-    	if (this.PlayMethod == "DirectStream") {
+    	if (this.PlayMethod == "DirectStream" | this.PlayMethod == "DirectPlay") {
     		document.getElementById("guiPlayer_Subtitles").className="videoSubtitles3";
     		document.getElementById("guiPlayer_Info").style.visibility="";
     		document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
     		document.getElementById("guiPlayer_ItemDetails2").style.visibility="";
     		document.getElementById("guiPlayer_DvdArt").style.visibility="";
     		document.getElementById("guiPlayer_Ratings").style.visibility="";
-    		FileLog.write("Playback : Fast Forward : Direct Stream");
+    		FileLog.write("Playback : Fast Forward : Direct Stream or Direct Play");
     		GuiPlayer.updateSubtitleTime(this.currentTime + 29000,"FF"); //Add 29 seconds on, let code find correct sub!
         	this.plugin.JumpForward(30); 
     		if (this.infoTimer != null){
@@ -673,14 +686,14 @@ GuiPlayer.handleFFKey = function() {
 GuiPlayer.handleRWKey = function() {
 	FileLog.write("Playback : Fast Forward");
     if(this.Status == "PLAYING") {
-    	if (this.PlayMethod == "DirectStream") {
+    	if (this.PlayMethod == "DirectStream" | this.PlayMethod == "DirectPlay") {
     		document.getElementById("guiPlayer_Subtitles").className="videoSubtitles3";
     		document.getElementById("guiPlayer_Info").style.visibility="";
     		document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
     		document.getElementById("guiPlayer_ItemDetails2").style.visibility="";
     		document.getElementById("guiPlayer_DvdArt").style.visibility="";
     		document.getElementById("guiPlayer_Ratings").style.visibility="";
-    		FileLog.write("Playback : Rewind : Direct Stream");
+    		FileLog.write("Playback : Rewind : Direct Stream or Direct Play");
     		GuiPlayer.updateSubtitleTime(this.currentTime - 13000,"RW"); //Subtract 13 seconds on, let code find correct sub!
     		this.plugin.JumpBackward(10); 
     		if (this.infoTimer != null){
@@ -716,8 +729,8 @@ GuiPlayer.handleInfoKey = function () {
 		document.getElementById("guiPlayer_Info").style.visibility="";
 		document.getElementById("guiPlayer_ItemDetails").style.visibility="";
 		document.getElementById("guiPlayer_ItemDetails2").style.visibility="hidden";
-		document.getElementById("guiPlayer_DvdArt").style.visibility="hidden";
-		document.getElementById("guiPlayer_Ratings").style.visibility="hidden";
+		document.getElementById("guiPlayer_DvdArt").style.visibility="";
+		document.getElementById("guiPlayer_Ratings").style.visibility="";
 		if (this.infoTimer != null){
 			clearTimeout(this.infoTimer);
 		}
@@ -725,11 +738,15 @@ GuiPlayer.handleInfoKey = function () {
 			document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";		
 			document.getElementById("guiPlayer_Info").style.visibility="hidden";
 			document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
+			document.getElementById("guiPlayer_DvdArt").style.visibility="hidden";
+			document.getElementById("guiPlayer_Ratings").style.visibility="hidden";
 		}, 10000);
 	} else {
 		document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";
 		document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
-		document.getElementById("guiPlayer_Info").style.visibility="hidden";	
+		document.getElementById("guiPlayer_Info").style.visibility="hidden";
+		document.getElementById("guiPlayer_DvdArt").style.visibility="hidden";
+		document.getElementById("guiPlayer_Ratings").style.visibility="hidden";
 		if (this.infoTimer != null){
 			clearTimeout(this.infoTimer);
 		}
@@ -837,7 +854,7 @@ GuiPlayer.newPlaybackPosition = function(startPositionTicks) {
 	} else {
 		var url = this.playingURL + '&StartTimeTicks=' + (Math.round(startPositionTicks));
 		
-		if (this.PlayMethod != "DirectStream") {
+		if (this.PlayMethod == "Transcode") {
 			this.plugin.ResumePlay(url,0); //0 as if transcoding the transcode will start from the supplied starttimeticks
 		} else {
 			this.plugin.ResumePlay(url,position); 

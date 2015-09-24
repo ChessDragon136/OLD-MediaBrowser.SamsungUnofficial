@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.592c",
+		version : "v0.592",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -103,7 +103,12 @@ Main.onLoad = function()
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
 	
 	//Get the model year - Used for transcoding
-	this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	if (pluginTV.GetProductCode(0).substring(0,2) == "HT"){
+		this.modelYear = pluginTV.GetProductCode(0).substring(3,4);
+	} else {
+		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	}
+	
 	alert ("Model Year: " + this.modelYear);
 	
 	if (phyConnection && http && gateway) {
@@ -160,9 +165,11 @@ Main.onLoad = function()
 		document.getElementById("pageContent").innerHTML = "You have no network connectivity to the TV - Please check the settings on the TV";
 	}
 	widgetAPI.sendReadyEvent();
+	Support.clock();
+	document.getElementById("splashscreen_version").innerHTML = Main.version;
 	setTimeout(function(){
-		document.getElementById("SplashScreen").style.visibility="hidden";
-	}, 3000);
+		document.getElementById("splashscreen").style.visibility="hidden";
+	}, 2500);
 };
 
 Main.onUnload = function()

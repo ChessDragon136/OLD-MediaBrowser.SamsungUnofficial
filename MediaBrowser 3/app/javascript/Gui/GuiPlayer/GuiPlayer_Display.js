@@ -166,8 +166,7 @@ GuiPlayer_Display.restorePreviousMenu = function() {
     document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
     document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
     document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
-    document.getElementById("guiPlayer_Tools").style.visibility = "hidden";  
-    
+    document.getElementById("guiPlayer_Tools").style.visibility = "hidden";    
     
     document.getElementById("pageBackgroundFade").style.visibility="";
     document.getElementById("pageBackgroundHolder").style.visibility="";
@@ -255,6 +254,7 @@ GuiPlayer_Display.keyDownTools = function() {
 			widgetAPI.blockNavigation(event);
 			this.videoToolsSelectedItem = 0;
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+		    document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";
 			document.getElementById("GuiPlayer").focus();
 			break;	
 		case tvKey.KEY_LEFT:
@@ -308,6 +308,9 @@ GuiPlayer_Display.keyDownTools = function() {
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePlayKey();
 			break;
+		case tvKey.KEY_STOP:
+			GuiPlayer.handleStopKey();
+            break;
 		case tvKey.KEY_PAUSE:
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
@@ -369,18 +372,20 @@ GuiPlayer_Display.keyDownToolsSlider = function() {
 		case tvKey.KEY_PANEL_ENTER:
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+		    document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";
 			GuiPlayer.newPlaybackPosition(this.sliderCurrentTime * 10000);
 			break;
 		case tvKey.KEY_PLAY:
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePlayKey();
 			break;
+		case tvKey.KEY_STOP:
+			GuiPlayer.handleStopKey();
+            break;
 		case tvKey.KEY_PAUSE:
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePauseKey();
@@ -388,20 +393,17 @@ GuiPlayer_Display.keyDownToolsSlider = function() {
         case tvKey.KEY_FF:
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
         	GuiPlayer.handleFFKey();      
             break;       
         case tvKey.KEY_RW:
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
         	GuiPlayer.handleRWKey();
             break;
         case tvKey.KEY_INFO:	
 			document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handleInfoKey();
@@ -463,6 +465,7 @@ GuiPlayer_Display.keyDownToolsSub = function() {
 			alert("ENTER");	
 			document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+		    document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";
 			switch (this.videoToolsOptions[this.videoToolsSelectedItem]) {
 			case "videoOptionChapters":
 				GuiPlayer.newPlaybackPosition(this.PlayerData.Chapters[this.videoToolsSelectedItemSub].StartPositionTicks);
@@ -492,6 +495,9 @@ GuiPlayer_Display.keyDownToolsSub = function() {
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePlayKey();
 			break;
+		case tvKey.KEY_STOP:
+			GuiPlayer.handleStopKey();
+            break;
 		case tvKey.KEY_PAUSE:
 			document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";

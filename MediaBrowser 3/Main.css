@@ -74,7 +74,7 @@
 
 .header {
 	position: absolute;
- 	left: 0px; top: 0px;
+ 	left: -200px; top: 0px;
  	height:540px; width:200px;
 	color:#f9f9f9;	
 	text-align:left; 	

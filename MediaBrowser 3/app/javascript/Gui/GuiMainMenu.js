@@ -103,6 +103,11 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 		
 	//Show Header
 	document.getElementById("header").style.visibility = "";
+	$('.header').animate({
+		left: 0
+	}, 400, function() {
+		//animate complete.
+	});
 
 	//Show submenu dependant on selectedMainMenuItem
 	this.updateSelectedItems();
@@ -185,7 +190,12 @@ GuiMainMenu.keyDown = function()
 }
 
 GuiMainMenu.processSelectedItems = function() {
-	document.getElementById("header").style.visibility = "hidden";
+	$('.header').animate({
+		left: -200
+	}, 400, function() {
+		document.getElementById("header").style.visibility = "hidden";
+	});
+	
 	Support.processHomePageMenu(this.menuItems[this.selectedMainMenuItem]);
 }
 
@@ -202,7 +212,11 @@ GuiMainMenu.processReturnKey = function() {
 		this.selectedMainMenuItem = 0;
 		
 		//Hide Header
-		document.getElementById("header").style.visibility = "hidden";
+		$('.header').animate({
+			left: -200
+		}, 400, function() {
+			document.getElementById("header").style.visibility = "hidden";
+		});
 		
 		//Set Page GUI elements Correct & Set Focus
 		if (this.pageSelectedId != null) {

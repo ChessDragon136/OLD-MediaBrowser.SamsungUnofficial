@@ -94,7 +94,7 @@ GuiImagePlayer_Screensaver.start = function() {
 GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 	this.ImageViewer.startSlideshow();
 	this.ImageViewer.setOnBufferingComplete(function(){
-		GuiImagePlayer_Screensaver.ImageViewer.showNow()
+		GuiImagePlayer_Screensaver.ImageViewer.showNow();
 		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
@@ -102,9 +102,9 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
 		} else {
 			if (GuiImagePlayer.overlayFormat == 2) {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat)	
+				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
 			} else {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 1)
+				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 1);
 			}
 		}
 			
@@ -114,7 +114,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {
 				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
-			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
+			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE);
 		}, File.getUserProperty("ScreensaverImageTime"));	
     });
 	

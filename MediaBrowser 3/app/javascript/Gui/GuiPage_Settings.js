@@ -920,7 +920,7 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "LargerView":	
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Larger View";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enabling this changes the TV & Movies view from 9 items across to 7 items accross, allowing for larger images for each item.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enabling this changes the TV & Movies view from 9 items across to 7 items across, allowing for larger images for each item.";
 			break;
 		case "AudioTheme":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play Audio Theme";

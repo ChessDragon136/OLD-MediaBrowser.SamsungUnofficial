@@ -20,7 +20,7 @@ GuiMainMenu.getSelectedMainMenuItem = function() {
 
 //Entry Point from User Menu - ONLY RUN ONCE PER USER LOGIN
 GuiMainMenu.start = function() {	
-	//Generate Menu based on whethere there is any of (Folders, TV, Movies, .....)
+	//Generate Menu based on whether there is any of (Folders, TV, Movies, .....)
 	this.menuItems.length = 0;
 	this.menuItemsHomePages.length = 0;
 	

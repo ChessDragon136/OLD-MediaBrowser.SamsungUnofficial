@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.592",
+		version : "v0.593a",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -103,7 +103,7 @@ Main.onLoad = function()
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
 	
 	//Get the model year - Used for transcoding
-	if (pluginTV.GetProductCode(0).substring(0,2) == "HT"){
+	if (pluginTV.GetProductCode(0).substring(0,2) == "HT" || pluginTV.GetProductCode(0).substring(0,2) == "BD"){
 		this.modelYear = pluginTV.GetProductCode(0).substring(3,4);
 	} else {
 		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);

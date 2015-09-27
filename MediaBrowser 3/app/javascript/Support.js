@@ -29,7 +29,6 @@ Support.clock = function() {
     document.getElementById('Clock').innerHTML = h+":"+m;
     document.getElementById('guiPlayer_clock').innerHTML = h+":"+m;
     document.getElementById('guiPlayer_clock2').innerHTML = h+":"+m;
-    document.getElementById('splashscreen_clock').innerHTML = h+":"+m;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 
@@ -272,8 +271,8 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				default:
 					break;
 				}
-				
-				if (Array[index].ImageTags.Primary) {			
+
+				if (Array[index].ImageTags.Primary) {
 					var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0); 
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
 				} else {

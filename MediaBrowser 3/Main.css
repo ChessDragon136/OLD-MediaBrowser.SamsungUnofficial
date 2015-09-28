@@ -96,15 +96,41 @@
     background-position:center;
 }
 
-.headerUserImage {
+.menu-UserImage {
 	width:200px;
 	height:60px;
+	padding-top: 15px;
 	background-repeat: no-repeat;
     background-position:center;
 }
 
-.headerSelected {
-	color:#27a436;
+.menu-item {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 33px;
+	padding-left: 45px;
+}
+
+.menu-itemSelected {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 33px;
+	padding-left: 45px;
+	background-color:#444444;
+}
+
+.menu-icon {
+	position: absolute; 
+	left: 10px;
+	width: 23px;
+	height: 32px;
+	background-position: 30% 40%; 
+	background-repeat: no-repeat;
+	background-image: url('images/menu/folder-23x19.png');
 }
 
 /*----------------------------------------------------------------------------------------------*/

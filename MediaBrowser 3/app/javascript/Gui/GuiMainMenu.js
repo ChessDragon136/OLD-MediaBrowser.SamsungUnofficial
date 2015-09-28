@@ -31,23 +31,22 @@ GuiMainMenu.start = function() {
 	//Add Header Types
 	var htmlToAdd = "<div id=headerUser style='text-align:center;padding-bottom:20px;'>"+Server.getUserName()+"</div>";	
 	for (var index = 0; index < this.menuItems.length;index++) {
-		htmlToAdd += "<div id=" + this.menuItems[index] + " style='padding-left:5px;'>" + this.menuItems[index].replace(/-/g, ' ').toUpperCase()+ "</div>";	
+		htmlToAdd += "<div id='" + this.menuItems[index] + "' class='menu-item'><div id='menuIcon' class='menu-icon' style='background-image:url(images/menu/" + this.menuItems[index] + "-23x19.png)'></div>" + this.menuItems[index].replace(/-/g, ' ')+ "</div>";	
 	}	
 	document.getElementById("headerTypes").innerHTML = htmlToAdd;
 	
 	//Add settings and logout
 	htmlToAdd = "";
 	this.menuItems.push("Search");
-	htmlToAdd += "<div id=Search style='padding-left:5px;'>SEARCH</div>";
-	htmlToAdd += "<hr>";
+	htmlToAdd += "<div id=Search class='menu-item'><div id='menuIcon' class='menu-icon' style='background-image:url(images/menu/Search-23x19.png)'></div>Search</div>";
 	this.menuItems.push("Settings");
-	htmlToAdd += "<div id=Settings style='padding-left:5px;'>SETTINGS</div>";
+	htmlToAdd += "<div id=Settings class='menu-item'><div id='menuIcon' class='menu-icon'style='background-image:url(images/menu/Settings-23x19.png)'></div>Settings</div>";
 	this.menuItems.push("Contributors");
-	htmlToAdd += "<div id=Contributors style='padding-left:5px;'>CONTRIBUTORS</div>";
+	htmlToAdd += "<div id=Contributors class='menu-item'><div id='menuIcon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
 	this.menuItems.push("Log-Out");
-	htmlToAdd += "<div id=Log-Out style='padding-left:5px;'>LOG OUT</div>";	
+	htmlToAdd += "<div id=Log-Out class='menu-item'><div id='menuIcon' class='menu-icon' style='background-image:url(images/menu/Logout-23x19.png)'></div>Log Out</div>";	
 	this.menuItems.push("Log-Out_Delete");
-	htmlToAdd += "<div id=Log-Out_Delete style='padding-left:5px;'>LOG OUT & FORGET PASSWORD</div>";	
+	htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menuIcon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
 	document.getElementById("headerTypes").innerHTML += htmlToAdd;
 	
 	//Get User Image
@@ -58,9 +57,9 @@ GuiMainMenu.start = function() {
 	
 	if (UserData.PrimaryImageTag) {
 		var imgsrc = Server.getImageURL(UserData.Id,"UsersPrimary",60,60,0,false,0);
-		document.getElementById("headerUserImage").style.backgroundImage = "url(" + imgsrc + ")";	
+		document.getElementById("menu-UserImage").style.backgroundImage = "url(" + imgsrc + ")";	
 	} else {
-		document.getElementById("headerUserImage").style.backgroundImage = "url(images/usernoimage.png)";
+		document.getElementById("menu-UserImage").style.backgroundImage = "url(images/usernoimage.png)";
 	}
 	
 	//Turn On Screensaver
@@ -119,9 +118,9 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 GuiMainMenu.updateSelectedItems = function () {		
 	for (var index = 0; index < this.menuItems.length; index++){	
 		if (index == this.selectedMainMenuItem) {
-			document.getElementById(this.menuItems[index]).className = "headerSelected";		
+			document.getElementById(this.menuItems[index]).className = "menu-itemSelected";		
 		} else {
-			document.getElementById(this.menuItems[index]).className = "";
+			document.getElementById(this.menuItems[index]).className = "menu-item";
 		}	
     }
 }

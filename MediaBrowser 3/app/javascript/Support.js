@@ -37,7 +37,7 @@ Support.logout = function() {
 	//Turn off screensaver
 	Support.screensaverOff();
 	
-	document.getElementById("headerUserImage").style.backgroundImage = "";
+	document.getElementById("menu-UserImage").style.backgroundImage = "";
 	document.getElementById("headerTypes").innerHTML = "";
 	Server.setUserID("");
 	Server.setUserName("");

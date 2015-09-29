@@ -392,11 +392,11 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			GuiDisplay_Series.start("Album Music",url,0,0);
 		break;
 		case "Album Artist":
-			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
+			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres,ItemCounts&userId=" + Server.getUserID() + urlString);
 			GuiPage_MusicArtist.start("Album Artist",url1);
 			break;
 		case "Artist":
-			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
+			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres,ItemCounts&userId=" + Server.getUserID() + urlString);
 			GuiDisplay_Series.start("Artist Music",url,0,0);
 			break;
 		case "TV":				

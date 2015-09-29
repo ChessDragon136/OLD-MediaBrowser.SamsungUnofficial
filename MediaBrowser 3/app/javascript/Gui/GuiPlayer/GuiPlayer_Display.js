@@ -57,9 +57,6 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     document.getElementById("pageBackgroundHolder").style.visibility="hidden";
     document.getElementById("pageBackground").style.visibility="hidden";
     document.getElementById("guiPlayer_Loading").style.visibility = ""; 
-    //document.getElementById("guiPlayer_Ratings_TomatoIcon").style.backgroundImage="";
-    //document.getElementById("guiPlayer_Ratings_Tomato").innerHTML="";
-    //document.getElementById("guiPlayer_Ratings_StarIcon").style.backgroundImage="";
     document.getElementById("guiPlayer_Ratings").innerHTML="";
 
     //Set PageContent
@@ -68,14 +65,13 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     	fileInfo = Support.getNameFormat(this.PlayerData.SeriesName, this.PlayerData.ParentIndexNumber, this.PlayerData.Name, this.PlayerData.IndexNumber);
     	fileInfo = fileInfo.replace("<br>", " ");
     	
-    	
+    	//Add the series logo at the top left.
     	if (this.PlayerData.ParentLogoImageTag) {
     		document.getElementById("guiPlayer_Info_Details").innerHTML = "";
     		var imgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Logo",450,53,0,false,0);
     		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
-		} else {
-			document.getElementById("guiPlayer_Info_Details").innerHTML = fileInfo;
 		}
+    	
         //Add the TV series DVD cover art to the GUI display.
         var diskImgsrc = Server.getImageURL(this.PlayerData.SeriesId,"Primary",96,140,0,false,0);
     	document.getElementById("guiPlayer_DvdArt").style.backgroundImage="url('" + diskImgsrc + "')";
@@ -108,13 +104,13 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
     } else {
     	fileInfo = this.PlayerData.Name;
     	
+    	//Add the movie logo at the top left.
     	if (this.PlayerData.ImageTags.Logo) {
     		document.getElementById("guiPlayer_Info_Details").innerHTML = "";
     		var imgsrc = Server.getImageURL(this.PlayerData.Id,"Logo",450,53,0,false,0);
     		document.getElementById("guiPlayer_Info_Details").style.backgroundImage="url('"+imgsrc+"')";	
-    	} else {
-    		document.getElementById("guiPlayer_Info_Details").innerHTML = fileInfo;
     	}
+    	
         //Add the movie DVD cover art to the GUI display.
         var diskImgsrc = Server.getImageURL(this.PlayerData.Id,"Primary",96,140,0,false,0);
     	document.getElementById("guiPlayer_DvdArt").style.backgroundImage="url('" + diskImgsrc + "')";

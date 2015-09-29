@@ -33,7 +33,7 @@ GuiPlayer_Versions.start = function(playerData,resumeTicks,playedFromPage) {
 	this.resumeTicks = resumeTicks;
 	this.playedFromPage = playedFromPage;
 
-	FileLog.write("Video : Loading " + this.PlayerData.Name)
+	FileLog.write("Video : Loading " + this.PlayerData.Name);
 	
 	//Check if HTTP
 	if (this.PlayerData.MediaSources[0].Protocol.toLowerCase() == "http") {

@@ -682,9 +682,9 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	startParams[2] = (startParams[2] === undefined) ? null : startParams[2];
 	startParams[3] = (startParams[3] === undefined) ? null : startParams[3];
 	
-	alert (ItemData.Items[selectedItem].CollectionType)
-	alert (ItemData.Items[selectedItem].MediaType)
-	alert (ItemData.Items[selectedItem].Type)
+	alert ("playSelectedItem: CollectionType "+ItemData.Items[selectedItem].CollectionType);
+	alert ("playSelectedItem: MediaType "+ItemData.Items[selectedItem].MediaType);
+	alert ("playSelectedItem: Type "+ItemData.Items[selectedItem].Type);
 	if (ItemData.Items[selectedItem].MediaType == "Folder") {
 		//Catch Folder - Do Nothing!
 	} else if (ItemData.Items[selectedItem].MediaType == "Video") {

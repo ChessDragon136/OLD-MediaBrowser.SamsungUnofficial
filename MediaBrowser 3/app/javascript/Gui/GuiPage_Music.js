@@ -79,10 +79,12 @@ GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or 
 GuiPage_Music.updateDisplayedItems = function() {
 	var htmlToAdd = "<table class=table><th style='width:33px'></th><th style='width:50px'></th><th style='width:45px'></th><th style='width:33px'></th><th style='width:250px'></th><th style='width:65px'></th>";
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.AlbumData.Items.length); index++){	
-		if (this.AlbumData.Items[index].ParentIndexNumber === undefined || this.AlbumData.Items[index].IndexNumber === undefined) {
-			TrackDetails = "?";
-		} else {
+		if (this.AlbumData.Items[index].ParentIndexNumber && this.AlbumData.Items[index].IndexNumber) {
 			TrackDetails = this.AlbumData.Items[index].ParentIndexNumber+"." + this.AlbumData.Items[index].IndexNumber;
+		} else if (this.AlbumData.Items[index].IndexNumber) {
+			TrackDetails = this.AlbumData.Items[index].IndexNumber;
+		} else {
+			TrackDetails = "?";
 		}
 		
 		

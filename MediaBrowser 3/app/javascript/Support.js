@@ -37,8 +37,8 @@ Support.logout = function() {
 	//Turn off screensaver
 	Support.screensaverOff();
 	
-	document.getElementById("menu-UserImage").style.backgroundImage = "";
-	document.getElementById("headerTypes").innerHTML = "";
+	document.getElementById("menuUserImage").style.backgroundImage = "";
+	document.getElementById("menuItems").innerHTML = "";
 	Server.setUserID("");
 	Server.setUserName("");
 	Server.Logout();
@@ -751,7 +751,15 @@ Support.generateMainMenu = function() {
 	var menuItems = [];
 	
 	menuItems.push("Home");
-	menuItems.push("Favourites");
+	
+	//Check Favourites
+	var urlFav = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+	var hasFavourites = Server.getContent(urlFav);
+	if (hasFavourites == null) { return; }
+	
+	if (hasFavourites.TotalRecordCount > 0) {
+		menuItems.push("Favourites");
+	}
 	
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");

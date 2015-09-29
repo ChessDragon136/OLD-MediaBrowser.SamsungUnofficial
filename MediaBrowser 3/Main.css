@@ -72,7 +72,9 @@
 	text-align:left; 
 }
 
-.header {
+/*----------------------------------------------------------------------------------------------*/
+
+.menu {
 	position: absolute;
  	left: -200px; top: 0px;
  	height:540px; width:200px;
@@ -83,25 +85,17 @@
 	border-right: 2px solid #087B26;
 }
 
-.headerLogo {
-	width:200px;
-	height:45px;
-}
-
-.headerLogoImage {
-	width:100%;
-	height:100%;
-	background-image: url('images/Logo.png');
-	background-repeat: no-repeat;
-    background-position:center;
-}
-
-.menu-UserImage {
+.menu-userImage {
 	width:200px;
 	height:60px;
 	padding-top: 15px;
 	background-repeat: no-repeat;
     background-position:center;
+}
+
+.menu-userName {
+	text-align:center;
+	padding-bottom:3px;
 }
 
 .menu-item {
@@ -131,6 +125,14 @@
 	background-position: 30% 40%; 
 	background-repeat: no-repeat;
 	background-image: url('images/menu/folder-23x19.png');
+}
+
+.menu-version {
+	position:absolute;
+	padding-left:75px;
+	width:100%;
+	font-size:13px;
+	bottom:10px;
 }
 
 /*----------------------------------------------------------------------------------------------*/

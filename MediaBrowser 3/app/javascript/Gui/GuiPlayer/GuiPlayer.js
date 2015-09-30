@@ -150,20 +150,17 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 	Server.videoStarted(this.PlayerData.Id,this.playingMediaSource.Id,this.PlayMethod);
     
 	//Update URL with resumeticks
-	if (Main.getModelYear() == "D") {
+	if (Main.getModelYear() == "D" && this.PlayMethod != "DirectStream") {
 		FileLog.write("Playback : D Series Playback OR HTTP - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000) + '|COMPONENT=HLS';
 		alert ("D Series Playback url : "+url);
-		var position = 0;
-		if (this.PlayMethod == "DirectPlay" || this.PlayMethod == "DirectStream") {
-			position = Math.round(resumeTicksSamsung / 1000);
-		}
+		var position = Math.round(resumeTicksSamsung / 1000);
 	    this.plugin.ResumePlay(url,position); 
 	} else {
 		FileLog.write("Playback : E+ Series Playback - Load URL");
 		var url = this.playingURL + '&StartTimeTicks=' + (resumeTicksSamsung*10000);
 		var position = 0;
-		if (this.PlayMethod == "DirectPlay" || this.PlayMethod == "DirectStream") {
+		if (this.PlayMethod == "DirectStream") {
 			position = Math.round(resumeTicksSamsung / 1000);
 		}	
 	    this.plugin.ResumePlay(url,position); 

@@ -344,7 +344,7 @@ GuiMusicPlayer.handleNextKey = function() {
 		this.returnToPage();
 	} else {
 		//Play Next Item
-		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.'+this.queuedItems[this.currentPlayingItem].MediaSources[0].MediaStreams[0].Codec+'?DeviceId='+Server.getDeviceID();
+		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?static=true&MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
 		alert ("Next " + this.videoURL);
 		//Start Playback
 		this.handlePlayKey();
@@ -369,7 +369,7 @@ GuiMusicPlayer.handlePreviousKey = function() {
 		this.returnToPage();
 	} else {
 		//Play Next Item
-		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.'+this.queuedItems[this.currentPlayingItem].MediaSources[0].MediaStreams[0].Codec+'?DeviceId='+Server.getDeviceID();
+		this.videoURL = Server.getServerAddr() + '/Audio/'+this.queuedItems[this.currentPlayingItem].Id+'/Stream.mp3?static=true&MediaSource='+this.queuedItems[this.currentPlayingItem].MediaSources[0].Id;
 		alert ("Next " + this.videoURL);
 		//Start Playback
 		this.handlePlayKey();

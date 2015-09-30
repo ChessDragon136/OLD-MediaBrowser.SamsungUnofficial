@@ -413,6 +413,9 @@ GuiPlayer.setCurrentTime = function(time) {
 };
 
 GuiPlayer.onBufferingStart = function() {
+	if (GuiMusicPlayer.Status == "PLAYING"){
+		return;
+	}
 	this.Status = "PLAYING";
 	FileLog.write("Playback : Buffering...");
 	
@@ -430,6 +433,9 @@ GuiPlayer.onBufferingProgress = function(percent) {
 };
 
 GuiPlayer.onBufferingComplete = function() {
+	if (GuiMusicPlayer.Status == "PLAYING"){
+		return;
+	}
 	FileLog.write("Playback : Buffering Complete");
     
   //Start Subtitle Display - Mainly for Transcode pauses

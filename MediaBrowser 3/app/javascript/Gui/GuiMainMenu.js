@@ -218,6 +218,10 @@ GuiMainMenu.processReturnKey = function() {
 			document.getElementById("menu").style.visibility = "hidden";
 		});
 		
+		if (this.pageSelected == "GuiMusicPlayer") {
+			GuiMusicPlayer.showMusicPlayer(this.pageSelectedId);
+		}
+		
 		//Set Page GUI elements Correct & Set Focus
 		if (this.pageSelectedId != null) {
 			if (this.pageSelectedClass == "UNDEFINED") {

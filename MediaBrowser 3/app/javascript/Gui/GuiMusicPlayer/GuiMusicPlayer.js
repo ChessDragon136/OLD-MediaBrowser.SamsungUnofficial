@@ -43,6 +43,11 @@ GuiMusicPlayer.showMusicPlayer = function(playedFromPage) {
 	if (this.Status != "STOPPED") {
 		this.playedFromPage = playedFromPage;
 		document.getElementById("guiMusicPlayerDiv").style.visibility = "";
+		$('.musicDiv').animate({
+			bottom: 0
+		}, 400, function() {
+			//animate complete.
+		});
 		document.getElementById("GuiMusicPlayer").focus();
 	}
 }
@@ -122,6 +127,11 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,i
 		    
 			//Show Content
 			document.getElementById("guiMusicPlayerDiv").style.visibility = "";
+			$('.musicDiv').animate({
+				bottom: 0
+			}, 400, function() {
+				//animate complete.
+			});
 		    
 			//set focus
 			document.getElementById("GuiMusicPlayer").focus();
@@ -252,6 +262,16 @@ GuiMusicPlayer.keyDown = function() {
 		case tvKey.KEY_STOP:	
 			this.handleStopKey();
 			break;
+		case tvKey.KEY_TOOLS:
+			//Hide the music player.
+			$('.musicDiv').animate({
+				bottom: -60
+			}, 400, function() {
+				document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
+			});
+			Support.updateURLHistory("GuiMusicPlayer",this.playedFromPage,0,null,null,this.selectedItem,this.topLeftItem,null);
+			GuiMainMenu.requested("GuiMusicPlayer",this.playedFromPage);
+			break;
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_YELLOW:	
 			alert("RETURN");
@@ -259,7 +279,12 @@ GuiMusicPlayer.keyDown = function() {
 			if (this.status == "PAUSED") {
 				this.handleStopKey();
 			} else {
-				document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
+				//Hide the music player.
+				$('.musicDiv').animate({
+					bottom: -60
+				}, 400, function() {
+					document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
+				});
 				document.getElementById(this.playedFromPage).focus();	
 			}
 			break;
@@ -326,7 +351,12 @@ GuiMusicPlayer.returnToPage = function() {
 	this.queuedItems.length = 0;
 	
     if (document.getElementById("guiMusicPlayerDiv").style.visibility == "") {
-    	document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
+		$('.musicDiv').animate({
+			bottom: -60
+		}, 400, function() {
+			document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
+		});
+    	
     	document.getElementById(this.playedFromPage).focus();	
     }		
 }

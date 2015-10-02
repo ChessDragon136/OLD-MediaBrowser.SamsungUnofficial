@@ -34,6 +34,9 @@ GuiPage_MusicArtist.getMaxDisplay2 = function() {
 }
 
 GuiPage_MusicArtist.start = function(title1, url1) {
+	alert("Page Enter : GuiPage_MusicArtist");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Vars
 	Support.pageLoadTimes("GuiPage_MusicArtist","Start",true);
 	this.startParams = [title1,url1];

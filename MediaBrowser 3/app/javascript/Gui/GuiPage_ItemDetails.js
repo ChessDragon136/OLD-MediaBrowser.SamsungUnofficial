@@ -22,6 +22,9 @@ GuiPage_ItemDetails.getMaxDisplay2 = function() {
 //------------------------------------------------------------
 
 GuiPage_ItemDetails.start = function(title,url,selectedItem) {
+	alert("Page Enter : GuiPage_ItemDetails");
+	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params
 	this.startParams = [title,url];
 	alert (url);

@@ -21,6 +21,9 @@ GuiPage_MusicAZ.getMaxDisplay = function() {
 
 
 GuiPage_MusicAZ.start = function(entryView) {
+	alert("Page Enter : GuiPage_MusicAZ");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Vars
 	this.startParams = [entryView];
 	

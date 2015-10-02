@@ -22,6 +22,9 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 }
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiPage_HomeOneItem");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params	
 	this.startParams = [title,url];
 	
@@ -113,7 +116,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		
 		//As no content focus on menu bar and null null means user can't return off the menu bar
 		GuiMainMenu.requested(null,null);
-	}	
+	}
 }
 
 GuiPage_HomeOneItem.updateDisplayedItems = function() {
@@ -212,7 +215,8 @@ GuiPage_HomeOneItem.keyDown = function() {
 			this.playSelectedItem();
 			break;
 		case tvKey.KEY_RED:
-			this.processIndexing();
+			//this.processIndexing();
+			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {

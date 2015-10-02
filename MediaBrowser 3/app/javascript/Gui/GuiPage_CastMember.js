@@ -13,6 +13,9 @@ GuiPage_CastMember.getMaxDisplay = function() {
 }
 
 GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiPage_CastMember");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params
 	this.startParams = [title,url];
 	

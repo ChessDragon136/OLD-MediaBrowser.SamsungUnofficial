@@ -16,6 +16,9 @@ GuiPage_Search.getMaxDisplay = function() {
 }
 
 GuiPage_Search.start = function(title, url) {
+	alert("Page Enter : GuiPage_Search");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Reset Properties
 	this.ItemData = null;
 	this.selectedItem = 0;

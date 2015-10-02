@@ -97,6 +97,9 @@ GuiPage_Settings.initiateViewValues = function() {
 }
 
 GuiPage_Settings.start = function(viewToDisplay) {	
+	alert("Page Enter : GuiPage_Settings");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Reset Vars
 	this.selectedItem = 0;
 	this.selectedBannerItem = 0;

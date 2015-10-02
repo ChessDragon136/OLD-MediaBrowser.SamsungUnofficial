@@ -334,6 +334,7 @@ GuiMusicPlayer.stopPlayback = function() {
 GuiMusicPlayer.handleStopKey = function() {
 	alert ("STOPPING PLAYBACK");
 	this.stopPlayback();
+	GuiHelper.setControlButtons(0,0,0,null,0);
 	this.returnToPage();
 }
 

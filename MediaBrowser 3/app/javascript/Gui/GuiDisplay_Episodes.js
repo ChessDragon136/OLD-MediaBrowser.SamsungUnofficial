@@ -21,6 +21,7 @@ GuiDisplay_Episodes.getMaxDisplay = function() {
 }
 
 GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiDisplay_Episodes");
 	//Save Start Params	
 	this.startParams = [title,url];
 	alert (url);
@@ -34,6 +35,8 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 	//Load Data
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
+	
+	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
 	
 	//Latest Page Fix
 	this.isLatest = false;

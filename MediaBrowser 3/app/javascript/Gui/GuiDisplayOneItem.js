@@ -19,7 +19,10 @@ GuiDisplayOneItem.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
-GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {	
+GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
+	alert("Page Enter : GuiDisplayOneItem");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params	
 	this.startParams = [title,url];
 	

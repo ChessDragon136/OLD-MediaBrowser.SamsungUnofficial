@@ -152,6 +152,72 @@
 	z-index:99999
 }
 
+.RedButton{
+	position:absolute;
+	bottom:2px;
+	right:390px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_red.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:15;
+}
+
+.GreenButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_green.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:16;
+}
+
+.YellowButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_yellow.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:17;
+}
+
+.BlueButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_blue.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:18;
+}
+
+.ReturnButton{
+	position:absolute;
+	bottom:2px;
+	width:90px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/icon_return_nor-18x18.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:21;
+}
+
 .notification {
 	position:absolute;
 	top:195px;
@@ -192,6 +258,7 @@
 	left:920px;	
 	font-size:15px;
 	color: white;
+	z-index:22;
 }
 
 .GuiPage_NewServer {
@@ -1242,6 +1309,7 @@
 	border-top: 2px solid #087B26;
 	display:inline-block;
 	vertical-align:middle;
+	z-index:20;
 }
 
 .guiMusicPlayerTitle{

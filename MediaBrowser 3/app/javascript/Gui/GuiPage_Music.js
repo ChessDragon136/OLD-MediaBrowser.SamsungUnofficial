@@ -24,6 +24,9 @@ GuiPage_Music.getMaxDisplay = function() {
 //------------------------------------------------------------
 
 GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
+	alert("Page Enter : GuiPage_Music");
+	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params
 	this.startParams = [title,url];
 	
@@ -319,6 +322,7 @@ GuiPage_Music.processSelectedItem = function() {
 			GuiMusicPlayer.start("Album",url + "&Fields=MediaSources","GuiPage_Music",false);
 			break;	
 		}
+		GuiHelper.setControlButtons(null,null,"Favourite","Music","Return");
 	} else {
 		switch (this.selectedItem2) {
 		case 0:

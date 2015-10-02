@@ -27,6 +27,9 @@ GuiTV_Show.GetDetail = function(itemid) {
 }
 
 GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiTV_Show");
+	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params	
 	this.startParams = [title,url];
 	

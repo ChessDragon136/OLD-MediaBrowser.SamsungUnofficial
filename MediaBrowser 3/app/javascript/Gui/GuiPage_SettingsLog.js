@@ -13,7 +13,10 @@ GuiPage_SettingsLog.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
-GuiPage_SettingsLog.start = function() {	
+GuiPage_SettingsLog.start = function() {
+	alert("Page Enter : GuiPage_SettingsLog");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Reset Vars
 	this.selectedBannerItem = 3; //match Logs
 	

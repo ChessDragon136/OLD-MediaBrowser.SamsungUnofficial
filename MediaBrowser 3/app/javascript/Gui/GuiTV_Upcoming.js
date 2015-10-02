@@ -28,6 +28,9 @@ GuiTV_Upcoming.getMaxDisplayBottom = function() {
 }
 
 GuiTV_Upcoming.start = function() {
+	alert("Page Enter : GuiTV_Upcoming");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Load Data
 	var url = Server.getCustomURL("/Shows/Upcoming?format=json&Limit=40&UserId=" + Server.getUserID());
 	var ItemData = Server.getContent(url);

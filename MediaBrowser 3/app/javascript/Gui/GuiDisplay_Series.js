@@ -33,6 +33,9 @@ GuiDisplay_Series.getMaxDisplay = function() {
 }
 
 GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiDisplay_Series");
+	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params	
 	Support.pageLoadTimes("GuiDisplay_Series","Start",true);
 	this.startParams = [title,url];

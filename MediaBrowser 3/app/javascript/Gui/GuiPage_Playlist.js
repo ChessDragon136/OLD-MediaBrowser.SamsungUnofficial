@@ -24,6 +24,9 @@ GuiPage_Playlist.getMaxDisplay = function() {
 //------------------------------------------------------------
 
 GuiPage_Playlist.start = function(title,url,type,playlistId) { //Type is either Audio or Video
+	alert("Page Enter : GuiPage_Playlist");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	
 	//Save Start Params
 	this.startParams = [title,url,type,playlistId];
 	

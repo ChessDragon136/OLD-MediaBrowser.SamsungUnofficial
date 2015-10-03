@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.593e",
+		version : "v0.593g",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -84,9 +84,7 @@ Main.onLoad = function()
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
 	
-	//Register Tools Key
-	pluginAPI.registKey(tvKey.KEY_TOOLS);
-	pluginAPI.registKey(tvKey.KEY_3D); 
+	window.onShow = Main.initKeys;
 	
 	//Set Version Number & initialte clock
 	document.getElementById("menuVersion").innerHTML = this.version;
@@ -172,6 +170,15 @@ Main.onLoad = function()
 	}, 2500);
 };
 
+Main.initKeys = function() {
+    alert('initKeys called');
+	pluginAPI.registKey(tvKey.KEY_TOOLS);
+	pluginAPI.registKey(tvKey.KEY_MENU);
+	pluginAPI.registKey(tvKey.KEY_PANEL_MENU);
+	pluginAPI.registKey(tvKey.KEY_3D); 
+}
+
+
 Main.onUnload = function()
 {
 	Support.screensaverOff();
@@ -179,4 +186,6 @@ Main.onUnload = function()
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();
 	pluginAPI.unregistKey(tvKey.KEY_TOOLS);
+	pluginAPI.unregistKey(tvKey.KEY_MENU);
+	pluginAPI.unregistKey(tvKey.KEY_PANEL_MENU);
 };

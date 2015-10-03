@@ -15,7 +15,7 @@ GuiPage_SettingsLog.getMaxDisplay = function() {
 
 GuiPage_SettingsLog.start = function() {
 	alert("Page Enter : GuiPage_SettingsLog");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Vars
 	this.selectedBannerItem = 3; //match Logs
@@ -139,6 +139,7 @@ GuiPage_SettingsLog.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
 			break;		
 		case tvKey.KEY_TOOLS:
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			GuiMainMenu.requested("GuiPage_SettingsLog",null);
 			break;	

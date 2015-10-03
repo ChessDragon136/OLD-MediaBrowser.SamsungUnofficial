@@ -172,9 +172,9 @@ GuiMainMenu.keyDown = function()
 			alert("ENTER");
 			this.processSelectedItems();
 			break;	
-		case tvKey.KEY_TOOLS:	
 		case tvKey.KEY_RETURN:
-			alert("RETURN");
+		case tvKey.KEY_TOOLS:
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			//Allows blocking of return from menu if page has no selectable items
 			this.processReturnKey();

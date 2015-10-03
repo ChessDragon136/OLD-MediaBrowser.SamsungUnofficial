@@ -17,7 +17,7 @@ GuiPage_Search.getMaxDisplay = function() {
 
 GuiPage_Search.start = function(title, url) {
 	alert("Page Enter : GuiPage_Search");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Properties
 	this.ItemData = null;
@@ -263,7 +263,7 @@ GuiPage_Search.keyDown = function() {
 			this.processSelectedItem();
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			this.handleTools(true);
 			break;	

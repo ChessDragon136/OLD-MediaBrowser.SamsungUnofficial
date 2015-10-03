@@ -98,7 +98,7 @@ GuiPage_Settings.initiateViewValues = function() {
 
 GuiPage_Settings.start = function(viewToDisplay) {	
 	alert("Page Enter : GuiPage_Settings");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Vars
 	this.selectedItem = 0;
@@ -591,7 +591,7 @@ GuiPage_Settings.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 			GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
@@ -884,7 +884,7 @@ GuiPage_Settings.bottomKeyDown = function() {
 			Support.logout();
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";

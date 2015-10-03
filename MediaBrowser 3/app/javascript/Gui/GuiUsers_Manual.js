@@ -5,7 +5,7 @@ var GuiUsers_Manual = {
 
 GuiUsers_Manual.start = function() {
 	alert("Page Enter : GuiUsers_Manual");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Properties
 	this.selectedItem = 0;

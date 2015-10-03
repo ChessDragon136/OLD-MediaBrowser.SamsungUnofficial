@@ -71,6 +71,7 @@ GuiHelper.generateDisplayOneItemHelp = function() {
 		"Enter - Select the highlighted item. <br>" +
 		"Red - Show this help message. <br>" +
 		"Green - Mark a video item as watched or unwatched. <br>" +
+		"Yellow - Add or remove an item on the favourites page. <br>" +
 		"Blue - When music is playing, show the music player controls. <br>" +
 		"Ch. Up/Down - Skips one page of content. ";
 		return htmlToAdd;	

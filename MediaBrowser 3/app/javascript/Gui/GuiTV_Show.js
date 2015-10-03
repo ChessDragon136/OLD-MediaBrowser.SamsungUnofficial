@@ -28,7 +28,7 @@ GuiTV_Show.GetDetail = function(itemid) {
 
 GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiTV_Show");
-	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -319,7 +319,7 @@ GuiTV_Show.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiTV_Show",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiTV_Show",this.ItemData.Items[this.selectedItem].Id,"ShowListSingle EpisodeListSelected","ShowListSingle");

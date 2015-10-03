@@ -25,7 +25,7 @@ GuiPage_Music.getMaxDisplay = function() {
 
 GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
 	alert("Page Enter : GuiPage_Music");
-	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params
 	this.startParams = [title,url];
@@ -193,7 +193,7 @@ GuiPage_Music.keyDown = function() {
 			this.processSelectedItem();
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			this.handleReturn();
 			break;	

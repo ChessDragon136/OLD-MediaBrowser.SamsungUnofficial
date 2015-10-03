@@ -139,7 +139,7 @@ GuiPage_TvGuide.keyDown = function() {
 			Support.logout();
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_TvGuide",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiPage_TvGuide",this.ItemData.Items[this.selectedItem].Id);

@@ -34,7 +34,6 @@ GuiDisplay_Series.getMaxDisplay = function() {
 
 GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiDisplay_Series");
-	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
 	
 	//Save Start Params	
 	Support.pageLoadTimes("GuiDisplay_Series","Start",true);
@@ -78,6 +77,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	
 	switch (titleArray[1]) {
 	case "TV":
+		GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 0;
 		this.bannerItems = this.tvBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -86,6 +86,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Movies":
+		GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 1;
 		this.bannerItems = this.movieBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -94,6 +95,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Collections":
+		GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = -1;
 		if (File.getUserProperty("LargerView") == true) {
 			document.getElementById("SeriesContent").style.top="426px";
@@ -102,7 +104,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		break;
 	case "Music":
 	default:
-		//MUSIC
+		GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.MAXCOLUMNCOUNT = 7;
 		this.MAXROWCOUNT = 3;
 		this.isTvOrMovies = 2;
@@ -439,7 +441,7 @@ GuiDisplay_Series.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiDisplay_Series");
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
 				if (this.selectedBannerItem != this.bannerItems.length-1) {

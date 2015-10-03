@@ -34,7 +34,7 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	alert("Page Enter : GuiPage_HomeTwoItems");
-	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
@@ -318,7 +318,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 			this.playSelectedItem(this.ItemData.Items,true);
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);	
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -2) {		
@@ -484,7 +484,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			this.playSelectedItem(this.ItemData2.Items,false);
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem2,this.topLeftItem2,false);				
 			GuiMainMenu.requested("GuiPage_HomeTwoItemsBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);

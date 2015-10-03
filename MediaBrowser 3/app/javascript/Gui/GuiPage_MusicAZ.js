@@ -22,7 +22,7 @@ GuiPage_MusicAZ.getMaxDisplay = function() {
 
 GuiPage_MusicAZ.start = function(entryView) {
 	alert("Page Enter : GuiPage_MusicAZ");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Vars
 	this.startParams = [entryView];
@@ -188,7 +188,7 @@ GuiPage_MusicAZ.keyDown = function() {
 			this.processTopMenuUpKey();
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
+		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -1) {		

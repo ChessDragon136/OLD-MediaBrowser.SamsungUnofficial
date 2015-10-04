@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.593g",
+		version : "v0.593h",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -173,8 +173,6 @@ Main.onLoad = function()
 Main.initKeys = function() {
     alert('initKeys called');
 	pluginAPI.registKey(tvKey.KEY_TOOLS);
-	pluginAPI.registKey(tvKey.KEY_MENU);
-	pluginAPI.registKey(tvKey.KEY_PANEL_MENU);
 	pluginAPI.registKey(tvKey.KEY_3D); 
 }
 
@@ -186,6 +184,5 @@ Main.onUnload = function()
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();
 	pluginAPI.unregistKey(tvKey.KEY_TOOLS);
-	pluginAPI.unregistKey(tvKey.KEY_MENU);
-	pluginAPI.unregistKey(tvKey.KEY_PANEL_MENU);
+	pluginAPI.unregistKey(tvKey.KEY_3D);
 };

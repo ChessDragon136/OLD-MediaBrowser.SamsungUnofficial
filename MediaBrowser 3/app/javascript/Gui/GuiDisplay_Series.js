@@ -441,7 +441,6 @@ GuiDisplay_Series.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiDisplay_Series");
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
 				if (this.selectedBannerItem != this.bannerItems.length-1) {

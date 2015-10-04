@@ -139,7 +139,6 @@ GuiPage_SettingsLog.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
 			break;		
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			GuiMainMenu.requested("GuiPage_SettingsLog",null);
 			break;	

@@ -182,7 +182,6 @@ GuiDisplayOneItem.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
 			break;		
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiDisplayOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiDisplayOneItem",this.ItemData.Items[this.selectedItem].Id);

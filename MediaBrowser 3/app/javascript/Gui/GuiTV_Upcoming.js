@@ -333,7 +333,6 @@ GuiTV_Upcoming.keyDown = function()
 			this.processSelectedItem(false);
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);	
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -2) {		
@@ -493,7 +492,6 @@ GuiTV_Upcoming.bottomKeyDown = function()
 			this.processSelectedItem(true);
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiTV_Upcoming",null,null,null,null,this.selectedItem2,this.topLeftItem2,false);				
 			GuiMainMenu.requested("GuiTV_UpcomingBottom",this.divprepend2 + this.upcomingData[this.selectedDayItem][this.selectedItem2].Id);

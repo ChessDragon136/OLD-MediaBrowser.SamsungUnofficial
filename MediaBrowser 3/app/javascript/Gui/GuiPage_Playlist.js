@@ -227,7 +227,6 @@ GuiPage_Playlist.keyDown = function() {
 			this.processSelectedItem();
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			this.handleReturn();
 			break;	

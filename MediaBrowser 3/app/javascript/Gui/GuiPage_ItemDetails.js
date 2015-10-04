@@ -384,7 +384,6 @@ GuiPage_ItemDetails.keyDown = function()
 			this.processSelectedItem();
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 			document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle"; 
@@ -608,7 +607,6 @@ GuiPage_ItemDetails.subKeyDown = function() {
 			this.processSelectedItem2();
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 			document.getElementById(this.selectedItem2).className = "FilmListSubSingle";

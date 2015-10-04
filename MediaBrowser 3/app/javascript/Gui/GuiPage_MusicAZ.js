@@ -188,7 +188,6 @@ GuiPage_MusicAZ.keyDown = function() {
 			this.processTopMenuUpKey();
 			break;
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -1) {		

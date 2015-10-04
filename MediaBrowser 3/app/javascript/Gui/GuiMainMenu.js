@@ -25,7 +25,7 @@ GuiMainMenu.start = function() {
 	this.menuItemsHomePages.length = 0;
 	
 	//Generate main menu items
-	this.menuItemsHomePages = Support.generateMainMenu(); 
+	this.menuItemsHomePages = Support.generateTopMenu(); 
 	this.menuItems = Support.generateMainMenu();
 	
 	//Get user details.
@@ -174,7 +174,6 @@ GuiMainMenu.keyDown = function()
 			break;	
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			//Allows blocking of return from menu if page has no selectable items
 			this.processReturnKey();

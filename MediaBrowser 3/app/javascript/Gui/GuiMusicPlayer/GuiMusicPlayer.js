@@ -243,7 +243,6 @@ GuiMusicPlayer.keyDown = function() {
 			this.handlePreviousKey();
 			break;
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			$('.guiMusicPlayerDiv').animate({
 				bottom: -60
@@ -378,10 +377,10 @@ GuiMusicPlayer.handleNextKey = function() {
 	
 	document.getElementById("guiMusicPlayerPlay").style.backgroundImage="url('images/musicplayer/play-23x19.png')";
 	document.getElementById("guiMusicPlayerPause").style.backgroundImage="url('images/musicplayer/pause-23x19.png')";
-	document.getElementById("guiMusicPlayerNext").style.backgroundImage="url('images/musicplayer/fast-forward-selected-27x19.png')";
+	document.getElementById("guiMusicPlayerNext").style.backgroundImage="url('images/musicplayer/skip-next-selected-23x19.png')";
 	setTimeout(function(){
 		document.getElementById("guiMusicPlayerPlay").style.backgroundImage="url('images/musicplayer/play-selected-23x19.png')";
-		document.getElementById("guiMusicPlayerNext").style.backgroundImage="url('images/musicplayer/fast-forward-27x19.png')";
+		document.getElementById("guiMusicPlayerNext").style.backgroundImage="url('images/musicplayer/skip-next-23x19.png')";
 	}, 300);
 }
 
@@ -411,10 +410,10 @@ GuiMusicPlayer.handlePreviousKey = function() {
 	
 	document.getElementById("guiMusicPlayerPlay").style.backgroundImage="url('images/musicplayer/play-23x19.png')";
 	document.getElementById("guiMusicPlayerPause").style.backgroundImage="url('images/musicplayer/pause-23x19.png')";
-	document.getElementById("guiMusicPlayerPrevious").style.backgroundImage="url('images/musicplayer/fast-rewind-selected-27x19.png')";
+	document.getElementById("guiMusicPlayerPrevious").style.backgroundImage="url('images/musicplayer/skip-previous-selected-23x19.png')";
 	setTimeout(function(){
 		document.getElementById("guiMusicPlayerPlay").style.backgroundImage="url('images/musicplayer/play-selected-23x19.png')";
-		document.getElementById("guiMusicPlayerPrevious").style.backgroundImage="url('images/musicplayer/fast-rewind-27x19.png')";
+		document.getElementById("guiMusicPlayerPrevious").style.backgroundImage="url('images/musicplayer/skip-previous-23x19.png')";
 	}, 300);
 }
 GuiMusicPlayer.handleScreenKey = function() {

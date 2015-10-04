@@ -90,7 +90,6 @@ GuiPage_Contributors.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Contributors");
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_Contributors",null,null,null,null,null,null,null);
 			GuiMainMenu.requested("GuiPage_Contributors",null);

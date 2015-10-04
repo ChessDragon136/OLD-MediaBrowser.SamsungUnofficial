@@ -246,7 +246,6 @@ GuiPlayer_Display.keyDownTools = function() {
 	switch(keyCode) {
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
 			this.videoToolsSelectedItem = 0;
 			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";

@@ -73,7 +73,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		document.getElementById("Center").style.width = "760px";
 
 		//Generate Banner Items - Mreove Home Page
-		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(2); 
+		this.menuItems = GuiMainMenu.menuItemsHomePages; 
 		
 		//Generate Banner display
 		for (var index = 0; index < this.menuItems.length; index++) {
@@ -248,8 +248,6 @@ GuiPage_HomeOneItem.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeOneItem");
 			break;
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
-		case tvKey.KEY_PANEL_MENU:
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
 				if (this.selectedBannerItem != this.menuItems.length-1) {

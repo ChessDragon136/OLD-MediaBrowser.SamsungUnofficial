@@ -761,16 +761,6 @@ Support.generateMainMenu = function() {
 		menuItems.push("Favourites");
 	}
 	
-	//Check Media Folders
-	var urlMF = Server.getItemTypeURL("&Limit=0");
-	var hasMediaFolders = Server.getContent(urlMF);
-	if (hasMediaFolders == null) { return; }
-		
-	if (hasMediaFolders.TotalRecordCount > 0) {
-		menuItems.push("Media-Folders");
-	}
-	
-	
 	//Check TV
 	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
 	var hasTV = Server.getContent(urlTV);
@@ -788,6 +778,16 @@ Support.generateMainMenu = function() {
 	if (hasMovies.TotalRecordCount > 0) {
 		menuItems.push("Movies");
 	}
+	
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
+	}
+	
 	//Check Music
 	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
 	var hasMusic = Server.getContent(urlMusic);
@@ -844,7 +844,41 @@ Support.generateMainMenu = function() {
 		}
 	}
 	
-	//Check Collection
+	//Check Media Folders
+	var urlMF = Server.getItemTypeURL("&Limit=0");
+	var hasMediaFolders = Server.getContent(urlMF);
+	if (hasMediaFolders == null) { return; }
+		
+	if (hasMediaFolders.TotalRecordCount > 0) {
+		menuItems.push("Media-Folders");
+	}
+
+	return menuItems;
+}
+
+Support.generateTopMenu = function() {
+	
+	var menuItems = [];
+	
+	//Check TV
+	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
+	var hasTV = Server.getContent(urlTV);
+	if (hasTV == null) { return; }
+		
+	if (hasTV.TotalRecordCount > 0) {
+		menuItems.push("TV");
+	}
+		
+	//Check Movies
+	var urlMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&Recursive=true&Limit=0");
+	var hasMovies = Server.getContent(urlMovies);
+	if (hasMovies == null) { return; }
+		
+	if (hasMovies.TotalRecordCount > 0) {
+		menuItems.push("Movies");
+	}
+	
+	//Check Collections
 	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
 	var hasCollections = Server.getContent(urlCollections);
 	if (hasCollections == null) { return; }
@@ -852,6 +886,37 @@ Support.generateMainMenu = function() {
 	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
 		menuItems.push("Collections");
 	}
+	
+	//Check Music
+	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
+	var hasMusic = Server.getContent(urlMusic);
+	if (hasMusic == null) { return; }
+	
+	if (hasMusic.TotalRecordCount == 0) {
+		var urlMusic2 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&Limit=0");
+		var hasMusic2 = Server.getContent(urlMusic2);
+		if (hasMusic2 == null) { return; }
+		
+		if (hasMusic2.TotalRecordCount > 0) {
+			if (Main.isMusicEnabled()) {
+				menuItems.push("Music");
+			}	
+		}
+	} else {
+		if (Main.isMusicEnabled()) {
+			menuItems.push("Music");
+		}
+	}
+
+	//Check Media Folders
+	var urlMF = Server.getItemTypeURL("&Limit=0");
+	var hasMediaFolders = Server.getContent(urlMF);
+	if (hasMediaFolders == null) { return; }
+		
+	if (hasMediaFolders.TotalRecordCount > 0) {
+		menuItems.push("Media-Folders");
+	}
+
 	return menuItems;
 }
 

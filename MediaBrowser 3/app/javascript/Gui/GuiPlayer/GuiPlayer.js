@@ -517,7 +517,6 @@ GuiPlayer.keyDown = function() {
         	GuiPlayer.setupThreeDConfiguration();
 			break;	
 		case tvKey.KEY_TOOLS:
-		case tvKey.KEY_MENU:
 			widgetAPI.blockNavigation(event);
         	if (document.getElementById("guiPlayer_Tools").style.visibility == "hidden") {
         		if (this.infoTimer != null){

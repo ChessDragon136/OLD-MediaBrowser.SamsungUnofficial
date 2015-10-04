@@ -60,6 +60,9 @@ GuiPlayer.init = function() {
 };
 
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
+	if (GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED") {
+		GuiMusicPlayer.handleStopKey();
+	}
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
 	

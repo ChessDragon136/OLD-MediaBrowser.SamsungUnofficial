@@ -21,6 +21,10 @@ GuiImagePlayer.kill = function() {
 }
 
 GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
+	alert("Page Enter : GuiImagePlayer");
+	GuiHelper.setControlButtons(null,null,null,null,null);
+	document.getElementById("Clock").style.visibility = "hidden";
+	
 	//Turn off screensaver
 	Support.screensaverOff();
 
@@ -132,7 +136,7 @@ GuiImagePlayer.keyDown = function() {
 		keyCode = "VOID";
 	}
 	
-	switch(keyCode){		
+	switch(keyCode){
 		case tvKey.KEY_STOP:   
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
@@ -140,7 +144,8 @@ GuiImagePlayer.keyDown = function() {
 			this.Timeout = null;
 			this.images = [];
 			this.overlay = [];
-			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
+			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = "";
+			document.getElementById("Clock").style.visibility = "";
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
 			widgetAPI.blockNavigation(event);
@@ -177,20 +182,10 @@ GuiImagePlayer.keyDown = function() {
 			this.Paused = false
 			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
 			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
+		case tvKey.KEY_RED:
 			GuiHelper.toggleHelp("GuiImagePlayer");
 			break;
-		case tvKey.KEY_RED:
-			alert ("RED");
-			if (this.overlayFormat == 2) {
-				this.overlayFormat = 0
-			} else {
-				this.overlayFormat = this.overlayFormat + 1
-			}
-			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
-			break;
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_GREEN:	
 			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {
 				Server.deleteFavourite(this.newItemData.Items[this.imageIdx].Id);
 				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = false;
@@ -200,6 +195,18 @@ GuiImagePlayer.keyDown = function() {
 				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = true;
 				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
+			break;
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiImagePlayer");
+			break;
+		case tvKey.KEY_YELLOW:
+			alert ("RED");
+			if (this.overlayFormat == 2) {
+				this.overlayFormat = 0
+			} else {
+				this.overlayFormat = this.overlayFormat + 1
+			}
+			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
 			break;
 	}
 }

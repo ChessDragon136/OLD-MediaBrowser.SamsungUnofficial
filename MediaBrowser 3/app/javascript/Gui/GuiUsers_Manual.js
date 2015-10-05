@@ -183,10 +183,6 @@ GuiUsers_Manual.keyDownPassword = function() {
 				document.getElementById("guiUsers_rempwdvalue").style.color = "red";
 			}
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiUsers");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

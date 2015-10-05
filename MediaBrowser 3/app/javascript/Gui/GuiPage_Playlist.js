@@ -230,10 +230,6 @@ GuiPage_Playlist.keyDown = function() {
 			widgetAPI.blockNavigation(event);
 			this.handleReturn();
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_Playlist");
-			break;
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
 			break;			

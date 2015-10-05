@@ -34,7 +34,7 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	alert("Page Enter : GuiPage_HomeTwoItems");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
@@ -338,8 +338,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 			Support.processReturnURLHistory();
 			break;
 		case tvKey.KEY_RED:
-			//this.processIndexing();
-			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
+			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
@@ -370,10 +369,6 @@ GuiPage_HomeTwoItems.keyDown = function()
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
 			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
-			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -496,6 +491,9 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;
+		case tvKey.KEY_RED:
+			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
+			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData2.Items[this.selectedItem2].MediaType == "Video") {
 				if (this.ItemData2.Items[this.selectedItem2].UserData.Played == true) {
@@ -524,10 +522,6 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			break;		
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
-			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY BOTTOM");

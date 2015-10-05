@@ -9,7 +9,7 @@ GuiHelper.toggleHelp = function(helpPage) {
 	this.helpPage = helpPage;
 	alert ("Selected page: " + helpPage + "  -  Set page: " + this.helpPage);
 	if (document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility == ""){
-		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = "hidden"
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = "hidden";
 	}
 	GuiHelper.setHelpPage(helpPage);
 	
@@ -21,8 +21,9 @@ GuiHelper.toggleHelp = function(helpPage) {
 }
 
 GuiHelper.keyDown = function() {
+	widgetAPI.blockNavigation(event);
 	if (document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility == "hidden"){
-		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = ""
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility = "";
 	}
 		
 	
@@ -57,16 +58,18 @@ GuiHelper.setHelpPage = function(helpPage) {
 
 GuiHelper.generateDisplayOneItemHelp = function() {
 	if (this.helpPage == "GuiImagePlayer") {
-		var htmlToAdd = "Return, Stop - Ends slideshow and returns the user to the previous screen <br> " +
-		"Left, Right - Move 1 image backwards or forwards <br>" +
-		"Pause - Pause automatic slideshow <br>" +
-		"Play - Resume automatic slideshow <br>" +
-		"Red - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
-		//"Green - Toggle extended Exif overlay <br>" +
-		"Yellow - Mark photo as favourite" 
+		var htmlToAdd = "Return, Stop - Ends slideshow and returns the user to the previous screen. <br> " +
+		"Left, Right - Move 1 image backwards or forwards. <br>" +
+		"Pause - Pause slideshow. <br>" +
+		"Play - Resume slideshow. <br>" +
+		"Red - Show this help message. <br>" +
+		"Green - Mark photo as a favourite. <br>" +
+		"Yellow - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
+		"Blue - When music is playing, show the music player controls. ";
 		return htmlToAdd;
 		} else {
-		var htmlToAdd = "Return - Returns the user to the previous screen. <br> " +
+		var htmlToAdd = "Tools - Show the main menu. <br> " +
+		"Return - Returns the user to the previous screen. <br> " +
 		"Up, Down, Left, Right - Navigation Control. <br>" +
 		"Enter - Select the highlighted item. <br>" +
 		"Red - Show this help message. <br>" +

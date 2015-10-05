@@ -179,7 +179,7 @@ GuiMainMenu.keyDown = function()
 			this.processReturnKey();
 			break;
 		case tvKey.KEY_RED:
-			this.toggleTestMode();
+			//this.toggleTestMode();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");

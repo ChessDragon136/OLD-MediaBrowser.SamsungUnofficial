@@ -314,7 +314,7 @@ GuiDisplay_Episodes.keyDown = function() {
 			this.playSelectedItem();
 			break;
 		case tvKey.KEY_RED:
-			this.processIndexing();
+			//this.processIndexing();
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.selectedItem > -1) {
@@ -352,10 +352,6 @@ GuiDisplay_Episodes.keyDown = function() {
 			Support.updateURLHistory("GuiDisplay_Episodes",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiDisplay_Episodes",this.ItemData.Items[this.selectedItem].Id,"EpisodeListSingle EpisodeListSelected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiDisplay_Episodes");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 

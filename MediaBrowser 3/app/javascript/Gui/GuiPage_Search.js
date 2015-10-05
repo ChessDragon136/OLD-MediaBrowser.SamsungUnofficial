@@ -266,10 +266,6 @@ GuiPage_Search.keyDown = function() {
 			widgetAPI.blockNavigation(event);
 			this.handleTools(true);
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_Search");
-			break;
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
 			break;				

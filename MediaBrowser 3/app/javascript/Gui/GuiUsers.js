@@ -272,10 +272,6 @@ GuiUsers.keyDown = function()
 			GuiNotifications.setNotification("All Users Deleted","Deletion");
 			File.deleteAllUsers();
 			break;		
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiUsers");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

@@ -595,10 +595,6 @@ GuiPage_Settings.keyDown = function() {
 			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 			GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_Settings");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 

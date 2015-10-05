@@ -147,7 +147,7 @@
 	position:absolute;
 	bottom:0px;
 	width:100%;
-	background-color:rgba(0,0,0,0.5);
+	background-color:rgba(0,0,0,0.8);
 	z-index:99999
 }
 
@@ -1488,6 +1488,6 @@
 	background-color:rgba(0,0,0,0.2);
 	
 	text-align:center;
-	z-index: 99999;
+	z-index: 9;
 
 }

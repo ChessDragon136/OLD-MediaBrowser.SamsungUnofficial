@@ -169,10 +169,6 @@ GuiPage_CastMember.keyDown = function()
 			document.getElementById(this.ItemData.Items[this.selectedItem].Id).className = "SeasonTitle";
 			GuiMainMenu.requested("GuiPage_CastMember",this.ItemData.Items[this.selectedItem].Id,"EpisodeListSingle EpisodeListSelected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_CastMember");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 

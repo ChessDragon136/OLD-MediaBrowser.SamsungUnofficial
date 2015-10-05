@@ -389,10 +389,6 @@ GuiPage_ItemDetails.keyDown = function()
 			document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle"; 
 			GuiMainMenu.requested("GuiPage_ItemDetails",this.menuItems[this.selectedItem],"FilmListSingle EpisodeListSelected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_ItemDetails");
-			break;
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.MediaType == "Video") {
 				var addSpan = "";

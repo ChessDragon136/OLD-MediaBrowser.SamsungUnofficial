@@ -23,7 +23,7 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiPage_HomeOneItem");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -215,7 +215,6 @@ GuiPage_HomeOneItem.keyDown = function() {
 			this.playSelectedItem();
 			break;
 		case tvKey.KEY_RED:
-			//this.processIndexing();
 			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;	
 		case tvKey.KEY_GREEN:
@@ -260,10 +259,6 @@ GuiPage_HomeOneItem.keyDown = function() {
 			}
 			Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
-			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");

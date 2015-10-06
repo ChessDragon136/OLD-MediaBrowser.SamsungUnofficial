@@ -136,8 +136,8 @@ GuiImagePlayer_Screensaver.stopScreensaver = function() {
 	this.ImageViewer.endSlideshow();
 	this.ImageViewer.hide();
 	widgetAPI.blockNavigation(event);
-	GuiImagePlayer_Screensaver.kill()
-	document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
+	GuiImagePlayer_Screensaver.kill();
+	document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = "";
 	//Show Page Contents
 	document.getElementById("everything").style.visibility="";
 }

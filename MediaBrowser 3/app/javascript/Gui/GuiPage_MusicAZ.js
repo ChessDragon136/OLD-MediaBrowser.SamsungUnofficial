@@ -321,7 +321,7 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "All":		
-			if (this.isTvOrMovies == 1) {	
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
 				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
 				GuiDisplay_Series.start("All Movies",url,0,0);
 			} else {
@@ -330,7 +330,7 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			}
 		break;
 		case "Unwatched":
-			if (this.isTvOrMovies == 1) {	
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
 				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true&Filters=IsUnPlayed");
 				GuiDisplay_Series.start("Unwatched Movies",url,0,0);
 			}	else {
@@ -342,10 +342,10 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			GuiTV_Upcoming.start();
 		break;
 		case "Latest":		
-			if (this.isTvOrMovies == 1) {
+			if (GuiDisplay_Series.isTvOrMovies == 1) {
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Movie&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("Latest Movies",url,0,0);
-			} else if (this.isTvOrMovies == 0){
+			} else if (GuiDisplay_Series.isTvOrMovies == 0){
 				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 				GuiDisplay_Series.start("Latest TV",url,0,0);
 			} else {
@@ -354,11 +354,11 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			}			
 		break;
 		case "Genre":
-			if (this.isTvOrMovies == 1) {	
-				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
+				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,ItemCounts&userId=" + Server.getUserID());
 				GuiDisplay_Series.start("Genre Movies",url1,0,0);
 			} else {
-				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,ItemCounts&userId=" + Server.getUserID());
 				GuiDisplay_Series.start("Genre TV",url1,0,0);
 			}		
 		break;
@@ -368,7 +368,7 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);		
 		break;
 		case"A-Z":
-			if (this.isTvOrMovies == 1) {
+			if (GuiDisplay_Series.isTvOrMovies == 1) {
 				GuiPage_MusicAZ.start("Movies");
 			} else {
 				GuiPage_MusicAZ.start("TV");

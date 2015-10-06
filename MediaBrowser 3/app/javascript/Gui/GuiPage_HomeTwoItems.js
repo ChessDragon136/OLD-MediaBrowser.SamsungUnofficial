@@ -368,7 +368,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 			break;		
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
-			break;
+			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -493,7 +493,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			break;
 		case tvKey.KEY_RED:
 			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
-			break;	
+			break;
 		case tvKey.KEY_GREEN:
 			if (this.ItemData2.Items[this.selectedItem2].MediaType == "Video") {
 				if (this.ItemData2.Items[this.selectedItem2].UserData.Played == true) {

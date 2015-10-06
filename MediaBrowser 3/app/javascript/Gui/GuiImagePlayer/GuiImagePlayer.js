@@ -24,15 +24,15 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	alert("Page Enter : GuiImagePlayer");
 	GuiHelper.setControlButtons(null,null,null,null,null);
 	document.getElementById("Clock").style.visibility = "hidden";
-	
+
 	//Turn off screensaver
 	Support.screensaverOff();
 
 	var url = "";
 	if (isPhotoCollection) {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
 	} else {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
 	}
 	
 	var result = Server.getContent(url);
@@ -136,7 +136,7 @@ GuiImagePlayer.keyDown = function() {
 		keyCode = "VOID";
 	}
 	
-	switch(keyCode){
+	switch(keyCode){		
 		case tvKey.KEY_STOP:   
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
@@ -196,9 +196,6 @@ GuiImagePlayer.keyDown = function() {
 				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
 			break;
-		case tvKey.KEY_BLUE:	
-			GuiMusicPlayer.showMusicPlayer("GuiImagePlayer");
-			break;
 		case tvKey.KEY_YELLOW:
 			alert ("RED");
 			if (this.overlayFormat == 2) {
@@ -207,6 +204,9 @@ GuiImagePlayer.keyDown = function() {
 				this.overlayFormat = this.overlayFormat + 1
 			}
 			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
+			break;
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiImagePlayer");
 			break;
 	}
 }

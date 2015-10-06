@@ -171,7 +171,7 @@ GuiDisplayOneItem.keyDown = function() {
 			break;
 		case tvKey.KEY_PLAY:
 			this.playSelectedItem();
-			break;
+			break;	
 		case tvKey.KEY_GREEN:
 			//Watched - May not be needed on this page
 			break;

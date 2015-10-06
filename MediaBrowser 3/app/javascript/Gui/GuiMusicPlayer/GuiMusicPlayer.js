@@ -174,6 +174,12 @@ GuiMusicPlayer.keyDown = function() {
 	    Support.screensaverOn();
 		Support.screensaver();
 		
+		//Don't let Return exit the app.
+		switch(keyCode) {
+		case tvKey.KEY_RETURN:
+			widgetAPI.blockNavigation(event);
+			break;
+		}
 		keyCode = "VOID";
 	}
 	

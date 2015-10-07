@@ -990,31 +990,31 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "DefaultAudioLang":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Audio Language Preference";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "PlayDefaultAudioTrack":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play default audio track regardless of language";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DefaultSubtitleLang":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Language Preference";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred subtitle language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred subtitle language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;		
 		case "SubtitleMode":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Mode";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DisplayMissingEpisodes":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Missing Episodes within Seasons";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display missing episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display missing episodes within TV seasons<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DisplayUnairedEpisodes":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Unaired Episodes within Seasons";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "GroupMovieCollections":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Group Movies into Collections";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "When displaying movie lists, movies belonging to a collection will be displayed as one grouped item<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "When displaying movie lists, movies belonging to a collection will be displayed as one grouped item<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;		
 	}
 }

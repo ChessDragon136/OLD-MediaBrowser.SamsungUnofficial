@@ -41,6 +41,7 @@ GuiMusicPlayer.init = function() {
 
 GuiMusicPlayer.showMusicPlayer = function(playedFromPage) {
 	if (this.Status != "STOPPED") {
+		GuiHelper.setControlButtons(0,0,0,0,"Return");
 		this.playedFromPage = playedFromPage;
 		document.getElementById("guiMusicPlayerDiv").style.bottom = "-60px";
 		document.getElementById("guiMusicPlayerDiv").style.visibility = "";
@@ -248,17 +249,6 @@ GuiMusicPlayer.keyDown = function() {
 		case tvKey.KEY_RW:	
 			this.handlePreviousKey();
 			break;
-		case tvKey.KEY_TOOLS:
-			widgetAPI.blockNavigation(event);
-			$('.guiMusicPlayerDiv').animate({
-				bottom: -60
-			}, 400, function() {
-				document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
-				document.getElementById("guiMusicPlayerDiv").style.bottom = "0";
-			});
-			Support.updateURLHistory("GuiMusicPlayer",this.playedFromPage,0,null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiMusicPlayer",this.playedFromPage);
-			break;
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_BLUE:	
 			alert("RETURN");
@@ -273,6 +263,11 @@ GuiMusicPlayer.keyDown = function() {
 					document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
 					document.getElementById("guiMusicPlayerDiv").style.bottom = "0";
 				});
+				
+				//Hide colour buttons if a slideshow is running.
+				if (GuiImagePlayer.ImageViewer != null){
+					GuiHelper.setControlButtons(null,null,null,null,null);
+				}
 				document.getElementById(this.playedFromPage).focus();	
 			}
 			break;

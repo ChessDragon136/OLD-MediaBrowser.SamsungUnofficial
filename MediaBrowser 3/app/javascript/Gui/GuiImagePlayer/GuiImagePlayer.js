@@ -14,16 +14,26 @@ var GuiImagePlayer = {
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM']
 }
 
+//ImageViewer.destroy doesn't work. Set it to null instead.
 GuiImagePlayer.kill = function() {
 	if (this.ImageViewer != null) {
-		this.ImageViewer.destroy();	
+		this.ImageViewer = null;	
 	}
 }
 
 GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	alert("Page Enter : GuiImagePlayer");
-	GuiHelper.setControlButtons(null,null,null,null,null);
-	document.getElementById("Clock").style.visibility = "hidden";
+	
+	//Show colour buttons on screen for a few seconds when a slideshow starts.
+	document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
+	document.getElementById("guiButtonShade").style.visibility = "";
+	GuiHelper.setControlButtons("Help","Favourite","Date/Time",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	setTimeout(function(){
+		GuiHelper.setControlButtons(null,null,null,null,null);
+		document.getElementById("Clock").style.visibility = "hidden";
+		document.getElementById("guiButtonShade").style.visibility = "hidden";
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="";
+	}, 6000);
 
 	//Turn off screensaver
 	Support.screensaverOff();

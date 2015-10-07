@@ -986,6 +986,7 @@ Support.processHomePageMenu = function (menuItem) {
 		Support.logout();
 		break;		
 	case "Log-Out_Delete":
+		alert("Log-Out_Delete");
 		File.setUserProperty("Password","");
 		Support.logout();
 		break;		

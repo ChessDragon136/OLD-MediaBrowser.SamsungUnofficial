@@ -146,13 +146,13 @@ GuiMusicPlayer.start = function(title, url, playedFromPage,isQueue,showThemeId,i
 }
 
 GuiMusicPlayer.updateSelectedItem = function() {
-	document.getElementById("guiMusicPlayerNowPlaying").style.color = "white";
+	/*document.getElementById("guiMusicPlayerNowPlaying").style.color = "white";*/
 	document.getElementById("guiMusicPlayerScreenOff").style.color = "white";
 	switch (this.selectedItem ) {
-		case 0:
+/*		case 0:
 			document.getElementById("guiMusicPlayerNowPlaying").style.color = "#27a436";
-			break;
-		case 1:
+			break;*/
+		case 0:
 			document.getElementById("guiMusicPlayerScreenOff").style.color = "#27a436";
 			break;
 		default:
@@ -203,13 +203,13 @@ GuiMusicPlayer.keyDown = function() {
 		case tvKey.KEY_LEFT:
 			this.selectedItem--;
 			if (this.selectedItem < 0) {
-				this.selectedItem = 1;
+				this.selectedItem = 0;
 			}
 			this.updateSelectedItem();
 			break;
 		case tvKey.KEY_RIGHT:
 			this.selectedItem++;
-			if (this.selectedItem > 1) {
+			if (this.selectedItem > 0) {
 				this.selectedItem = 0;
 			}
 			this.updateSelectedItem();
@@ -218,18 +218,18 @@ GuiMusicPlayer.keyDown = function() {
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER-player");
 			switch (this.selectedItem) {
-				case 0:
+				/*case 0:
 					//Hide the music player.
-/*					$('.guiMusicPlayerDiv').animate({
+					$('.guiMusicPlayerDiv').animate({
 						bottom: -60
 					}, 400, function() {
 						document.getElementById("guiMusicPlayerDiv").style.visibility = "hidden";
 						document.getElementById("guiMusicPlayerDiv").style.bottom = "0";
-					});	*/
+					});
 					//Set Focus for Key Events
 					//document.getElementById("GuiPage_Music").focus();
-					break;
-				case 1:
+					break;*/
+				case 0:
 					this.handleScreenKey();
 					break;	
 			}

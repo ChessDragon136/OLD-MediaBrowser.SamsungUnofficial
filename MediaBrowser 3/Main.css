@@ -1396,6 +1396,7 @@
 	top:23px;
 	left:240px;
 	width:80px;
+	visibility:hidden;
 }
 
 .guiMusicPlayerScreenOff {

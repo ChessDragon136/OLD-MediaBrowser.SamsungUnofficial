@@ -494,7 +494,7 @@ GuiMusicPlayer.OnStreamInfoReady = function() {
 		
 		//Truncate long song names.
 		var songName = this.queuedItems[this.currentPlayingItem].Name;;
-		if (songName.length > 50){
+		if (songName.length > 51){
 			songName = songName.substring(0,50) + "..."; 
 		}
 		

@@ -92,7 +92,7 @@ GuiPage_Music.updateDisplayedItems = function() {
 		//Truncate long song names.
 		var songName = this.AlbumData.Items[index].Name;
 		if (songName.length > 50){
-			songName = songName.substring(0,50) + "..."; 
+			songName = songName.substring(0,47) + "..."; 
 		}
 		
 		htmlToAdd += "<tr><td id=Play_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play</td><td id=Queue_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Queue</td><td id=Mix_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Mix</td>" +

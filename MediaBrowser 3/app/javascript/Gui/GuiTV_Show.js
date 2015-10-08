@@ -316,7 +316,7 @@ GuiTV_Show.keyDown = function() {
 			}
 			break;	
 		case tvKey.KEY_BLUE:	
-			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			GuiMusicPlayer.showMusicPlayer("GuiTV_Show");
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);

@@ -491,7 +491,14 @@ GuiMusicPlayer.OnStreamInfoReady = function() {
 		} else {
 			playingTitle = this.queuedItems[this.currentPlayingItem].IndexNumber+" - ";
 		}
-		document.getElementById("guiMusicPlayerTitle").innerHTML = this.queuedItems[this.currentPlayingItem].Artists + "<br>" + playingTitle + this.queuedItems[this.currentPlayingItem].Name;
+		
+		//Truncate long song names.
+		var songName = this.queuedItems[this.currentPlayingItem].Name;;
+		if (songName.length > 50){
+			songName = songName.substring(0,50) + "..."; 
+		}
+		
+		document.getElementById("guiMusicPlayerTitle").innerHTML = this.queuedItems[this.currentPlayingItem].Artists + "<br>" + playingTitle + songName;
 	} else {
 		document.getElementById("guiMusicPlayerTitle").innerHTML = "Theme Music";	
 	}

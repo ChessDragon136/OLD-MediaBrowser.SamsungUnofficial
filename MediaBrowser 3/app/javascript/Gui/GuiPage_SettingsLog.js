@@ -136,7 +136,7 @@ GuiPage_SettingsLog.keyDown = function() {
 			//Favourites - Not needed on this page!
 			break;	
 		case tvKey.KEY_BLUE:	
-			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			GuiMusicPlayer.showMusicPlayer("GuiPage_SettingsLog");
 			break;		
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);

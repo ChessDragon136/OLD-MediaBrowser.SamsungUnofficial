@@ -1,8 +1,26 @@
 * {
 	padding: 0px;
 	margin: 0px;
-	border: 0px;
-	
+	border: 0px;	
+}
+
+.splash{ 
+	position: fixed;
+	top: 0px;
+	width: 960px;
+	height: 540px;
+	z-index: 1000;
+	background-image: url('images/splash.jpg');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.splash_version{ 
+	position:absolute;
+	bottom:2px;
+	left:5px;	
+	font-size:15px;
+	color: white;
 }
 
 .pageBackground{ 
@@ -38,7 +56,7 @@
  	left: 0px; top: 0px;
    	width: 960px; height: 540px;
    	color:#f9f9f9;	
-	text-align:left; 	
+	text-align:left;
     font-size:14px;
 }
 
@@ -51,11 +69,14 @@
    	color:#f9f9f9;	
 	background-color: black; 
 	text-align:left; 
+	z-index:8;
 }
 
-.header {
+/*----------------------------------------------------------------------------------------------*/
+
+.menu {
 	position: absolute;
- 	left: 0px; top: 0px;
+ 	left: -200px; top: 0px;
  	height:540px; width:200px;
 	color:#f9f9f9;	
 	text-align:left; 	
@@ -64,28 +85,54 @@
 	border-right: 2px solid #087B26;
 }
 
-.headerLogo {
-	width:200px;
-	height:40px;
-}
-
-.headerLogoImage {
-	width:100%;
-	height:100%;
-	background-image: url('images/Logo.png');
-	background-repeat: no-repeat;
-    background-position:center;
-}
-
-.headerUserImage {
+.menu-userImage {
 	width:200px;
 	height:60px;
+	padding-top: 15px;
 	background-repeat: no-repeat;
     background-position:center;
 }
 
-.headerSelected {
-	color:#27a436;
+.menu-userName {
+	text-align:center;
+	padding-bottom:3px;
+}
+
+.menu-item {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 33px;
+	padding-left: 45px;
+}
+
+.menu-itemSelected {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 33px;
+	padding-left: 45px;
+	background-color:#444444;
+}
+
+.menu-icon {
+	position: absolute; 
+	left: 10px;
+	width: 23px;
+	height: 32px;
+	background-position: 30% 40%; 
+	background-repeat: no-repeat;
+	background-image: url('images/menu/folder-23x19.png');
+}
+
+.menu-version {
+	position:absolute;
+	padding-left:75px;
+	width:100%;
+	font-size:13px;
+	bottom:10px;
 }
 
 /*----------------------------------------------------------------------------------------------*/
@@ -97,13 +144,94 @@
 }
 
 /*----------------------------------------------------------------------------------------------*/
+
 .help {
 	position:absolute;
 	bottom:0px;
 	width:100%;
-	background-color:rgba(0,0,0,0.5);
+	background-color:rgba(0,0,0,0.8);
 	z-index:99999
 }
+
+/*----------------------------------------------------------------------------------------------*/
+
+.ButtonShade{
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	width:100%;
+	height:6%;
+	background-color:rgba(0,0,0,0.6);
+	z-index:14;
+}
+
+.RedButton{
+	position:absolute;
+	bottom:2px;
+	right:390px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_red.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:15;
+}
+
+.GreenButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_green.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:16;
+}
+
+.YellowButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_yellow.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:17;
+}
+
+.BlueButton{
+	position:absolute;
+	bottom:2px;
+	width:80px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/help_blue.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:18;
+}
+
+.ReturnButton{
+	position:absolute;
+	bottom:2px;
+	width:90px;
+	height:24px;
+	line-height:28px;
+	padding-left:26px;
+	background-image:url('images/icon_return_nor-18x18.png');
+	background-repeat: no-repeat;
+	background-position:left;
+	z-index:21;
+}
+
+/*----------------------------------------------------------------------------------------------*/
 
 .notification {
 	position:absolute;
@@ -139,10 +267,13 @@
 	left:5px;	
 }
 
-.version {
+.time {
 	position:absolute;
 	bottom:2px;
-	left:923px;	
+	left:920px;	
+	font-size:15px;
+	color: white;
+	z-index:22;
 }
 
 .GuiPage_NewServer {
@@ -615,6 +746,7 @@
 .guiDisplay_Series-Banner {
 	padding-top:15px;
 	padding-bottom:10px;
+	height:25px;
 	width:100%;
 	text-align:center;
 }
@@ -629,6 +761,22 @@
 	padding-right:30px;
 }
 
+.guiDisplay_Series-pageContent{
+	position: absolute;
+ 	left: 0px; top: 0px;
+   	width: 960px; height: 540px;
+}
+
+.guiDisplay_Series-pageTitle2{
+	font-size:22px;
+	height:25px;
+}
+
+.guiDisplay_Series-Content2{
+	padding-top:15px;
+	min-width:500px;
+	height:200px;
+}
 /*-----------------------------------------------------------------*/
 
 .SeriesContent {
@@ -885,26 +1033,6 @@
 
 /* ---------------------------------------------------------------------------   */
 
-.guiPage_Music_Poster {
-	position:absolute;
-    top:110px;
-    right:20px;
-
-	width: 325px;
-    height: 325px;
-    
-    background-repeat: no-repeat;
-    background-position:center;
-}
-
-.musicTableTd {
-	white-space:nowrap;
-    text-overflow:ellipsis; 
-    overflow: hidden; 
-	
-	border-bottom:1px solid black;
-}
-
 .videoVersions {
 	position:absolute;
 	top:200px;
@@ -991,15 +1119,31 @@
 
 .videoSubtitles1 {
 	position:absolute;
-	bottom:0px;
+	bottom:6px;
 	left:0px;
 	width:100%;
+	background-color:rgba(0,0,0,0);
 	text-align:center;
-	padding-bottom:23px;
-	color:#fff;
-	text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
-	font-family: fontstyle1;
 }
+
+.videoSubtitles2 {
+	position:absolute;
+	top:77px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	text-align:center;
+}
+
+.videoSubtitles3 {
+	position:absolute;
+	bottom:47px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	text-align:center;
+}
+
 .videoTools {
 	position:absolute;
 	bottom:0px;
@@ -1009,9 +1153,6 @@
 	text-align:left;
 	color: white;	
 	background-color:rgba(0,0,0,0.8);
-}
-#guiPlayer_Tools div {
-	padding: 2px 10px;
 }
 
 .videoToolsSlider {
@@ -1087,8 +1228,6 @@
     background-position:left;
 }
 
-
-
 .videoItemDetails {
 	position:absolute;
 	bottom:0px;
@@ -1106,20 +1245,227 @@
 
 .videoItemDetailsSubData {
 	font-size:16px;
+    width: 735px;
+}
+
+.videoItemDvdArt {
+	position:absolute;
+    bottom:0px;
+    right:45px;
+	width: 100px;
+    height: 130px;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatings {
+	position:absolute;
+    bottom:0px;
+    right: 160px;
+	width: 53px;
+    height: 48px;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsTomatoIcon {
+	position:absolute;
+    bottom:24px;
+    left: 0px;
+	width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsTomato {
+	position:absolute;
+    bottom:24px;
+    right: 0px;
+	width: 24px;
+    height: 20px;
+    color: white;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsStarIcon {
+	position:absolute;
+    bottom:0px;
+    left: 0px;
+	width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-color:rgba(0,0,0,0);
+}
+
+.videoItemRatingsStar {
+	position:absolute;
+    bottom:0px;
+    right: 0px;
+	width: 24px;
+    height: 20px;
+	color: white;
+    background-color:rgba(0,0,0,0);
 }
 
 /* ---------------------------------------------------------------------------   */
 
-.musicDiv {
+.guiMusic_Title{
+	display:inline-block;
+	font-size:22px;
+	padding-top:20px;
+	padding-left:20px;
+}
+
+.guiMusic_Subtitle{
+	display:inline-block;
+	font-size:18px;
+	padding-top:5px;
+	padding-left:30px;
+}
+
+.guiMusic_Details{
 	position:absolute;
+    top:120px;
+    left:40px;
+	width:450px;
+    height:300px; 
+}
+
+.guiMusic_Poster {
+	position:absolute;
+    bottom:130px;
+    right:30px;
+	width:325px;
+    height:290px; 
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+.guiMusic_TableTd {
+	white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+	padding-right:8px;
+	border-bottom:1px solid black;
+}
+
+.guiMusic_Globals{
+	display:block;
+	height:28px;
+	width:400px;
+	text-align:center;
+}
+
+.guiMusic_Global{
+	display:inline-block;
+	padding-right:10px;
+}
+
+.guiMusic_Options{
+	padding-left:20px;
+	padding-top:10px;
+}
+
+
+/* ---------------------------------------------------------------------------   */
+
+.guiMusicPlayerDiv {
+	position:absolute;
+	height:60px;
 	bottom:0px;
 	width:100%;
 	height:62px;
 	text-align:left;	
-	background-color: #303030;
+	background-color:#303030;
 	border-top: 2px solid #087B26;
 	display:inline-block;
 	vertical-align:middle;
+	z-index:20;
+}
+
+.guiMusicPlayerTitle {
+	position:absolute;
+	top:7px;
+	left:10px;
+	width:200px;
+}
+
+.guiMusicPlayerNowPlaying {
+	position:absolute;
+	top:23px;
+	left:240px;
+	width:80px;
+	visibility:hidden;
+}
+
+.guiMusicPlayerScreenOff {
+	position:absolute;
+	top:23px;
+	left:320px;
+	width:60px;
+}
+
+.guiMusicPlayerTime {
+	position:absolute;
+	top:23px;
+	left:390px;
+	width:100px;
+}
+
+.guiMusicPlayerPlay {
+	position:absolute;
+	top:20px;
+	left:495px;;
+	width:23px;
+    height:19px;
+	background-image:url('images/musicplayer/play-23x19.png');
+	background-repeat:no-repeat;
+    background-position:center;
+}
+
+.guiMusicPlayerStop {
+	position:absolute;
+	top:20px;
+	left:525px;
+	width:23px;
+    height:19px;
+	background-image:url('images/musicplayer/stop-23x19.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.guiMusicPlayerPrevious {
+	position:absolute;
+	top:20px;
+	left:555px;
+	width:23px;
+    height:19px;
+	background-image:url('images/musicplayer/skip-previous-23x19.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.guiMusicPlayerPause {
+	position:absolute;
+	top:20px;
+	left:585px;
+	width:23px;
+    height:19px;
+	background-image:url('images/musicplayer/pause-23x19.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.guiMusicPlayerNext {
+	position:absolute;
+	top:20px;
+	left:615px;
+	width:23px;
+    height:19px;
+	background-image:url('images/musicplayer/skip-next-23x19.png');
+	background-repeat: no-repeat;
+    background-position:center;
 }
 
 .red {
@@ -1213,9 +1559,7 @@
 	bottom:0px;
 	left:0px;
 	width:100%;
-	background-color:rgba(0,0,0,0.2);
-	
+	background-color:rgba(0,0,0,0.4);
 	text-align:center;
-	z-index: 99999;
-
+	z-index: 9;
 }

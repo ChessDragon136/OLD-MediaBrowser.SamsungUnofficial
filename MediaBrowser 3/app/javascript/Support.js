@@ -27,6 +27,8 @@ Support.clock = function() {
     var m=today.getMinutes();
     if (m<10) {m = "0" + m;};
     document.getElementById('Clock').innerHTML = h+":"+m;
+    document.getElementById('guiPlayer_clock').innerHTML = h+":"+m;
+    document.getElementById('guiPlayer_clock2').innerHTML = h+":"+m;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 
@@ -35,8 +37,8 @@ Support.logout = function() {
 	//Turn off screensaver
 	Support.screensaverOff();
 	
-	document.getElementById("headerUserImage").style.backgroundImage = "";
-	document.getElementById("headerTypes").innerHTML = "";
+	document.getElementById("menuUserImage").style.backgroundImage = "";
+	document.getElementById("menuItems").innerHTML = "";
 	Server.setUserID("");
 	Server.setUserName("");
 	Server.Logout();
@@ -269,8 +271,8 @@ Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,Div
 				default:
 					break;
 				}
-				
-				if (Array[index].ImageTags.Primary) {			
+
+				if (Array[index].ImageTags.Primary) {
 					var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0); 
 					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
 				} else {
@@ -680,9 +682,9 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	startParams[2] = (startParams[2] === undefined) ? null : startParams[2];
 	startParams[3] = (startParams[3] === undefined) ? null : startParams[3];
 	
-	alert (ItemData.Items[selectedItem].CollectionType)
-	alert (ItemData.Items[selectedItem].MediaType)
-	alert (ItemData.Items[selectedItem].Type)
+	alert ("playSelectedItem: CollectionType "+ItemData.Items[selectedItem].CollectionType);
+	alert ("playSelectedItem: MediaType "+ItemData.Items[selectedItem].MediaType);
+	alert ("playSelectedItem: Type "+ItemData.Items[selectedItem].Type);
 	if (ItemData.Items[selectedItem].MediaType == "Folder") {
 		//Catch Folder - Do Nothing!
 	} else if (ItemData.Items[selectedItem].MediaType == "Video") {
@@ -749,17 +751,15 @@ Support.generateMainMenu = function() {
 	var menuItems = [];
 	
 	menuItems.push("Home");
-	menuItems.push("Favourites");
 	
-	//Check Media Folders
-	var urlMF = Server.getItemTypeURL("&Limit=0");
-	var hasMediaFolders = Server.getContent(urlMF);
-	if (hasMediaFolders == null) { return; }
-		
-	if (hasMediaFolders.TotalRecordCount > 0) {
-		menuItems.push("Media-Folders");
+	//Check Favourites
+	var urlFav = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
+	var hasFavourites = Server.getContent(urlFav);
+	if (hasFavourites == null) { return; }
+	
+	if (hasFavourites.TotalRecordCount > 0) {
+		menuItems.push("Favourites");
 	}
-	
 	
 	//Check TV
 	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
@@ -778,6 +778,16 @@ Support.generateMainMenu = function() {
 	if (hasMovies.TotalRecordCount > 0) {
 		menuItems.push("Movies");
 	}
+	
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
+	}
+	
 	//Check Music
 	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
 	var hasMusic = Server.getContent(urlMusic);
@@ -834,7 +844,41 @@ Support.generateMainMenu = function() {
 		}
 	}
 	
-	//Check Collection
+	//Check Media Folders
+	var urlMF = Server.getItemTypeURL("&Limit=0");
+	var hasMediaFolders = Server.getContent(urlMF);
+	if (hasMediaFolders == null) { return; }
+		
+	if (hasMediaFolders.TotalRecordCount > 0) {
+		menuItems.push("Media-Folders");
+	}
+
+	return menuItems;
+}
+
+Support.generateTopMenu = function() {
+	
+	var menuItems = [];
+	
+	//Check TV
+	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
+	var hasTV = Server.getContent(urlTV);
+	if (hasTV == null) { return; }
+		
+	if (hasTV.TotalRecordCount > 0) {
+		menuItems.push("TV");
+	}
+		
+	//Check Movies
+	var urlMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&Recursive=true&Limit=0");
+	var hasMovies = Server.getContent(urlMovies);
+	if (hasMovies == null) { return; }
+		
+	if (hasMovies.TotalRecordCount > 0) {
+		menuItems.push("Movies");
+	}
+	
+	//Check Collections
 	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
 	var hasCollections = Server.getContent(urlCollections);
 	if (hasCollections == null) { return; }
@@ -842,6 +886,37 @@ Support.generateMainMenu = function() {
 	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
 		menuItems.push("Collections");
 	}
+	
+	//Check Music
+	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
+	var hasMusic = Server.getContent(urlMusic);
+	if (hasMusic == null) { return; }
+	
+	if (hasMusic.TotalRecordCount == 0) {
+		var urlMusic2 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&Limit=0");
+		var hasMusic2 = Server.getContent(urlMusic2);
+		if (hasMusic2 == null) { return; }
+		
+		if (hasMusic2.TotalRecordCount > 0) {
+			if (Main.isMusicEnabled()) {
+				menuItems.push("Music");
+			}	
+		}
+	} else {
+		if (Main.isMusicEnabled()) {
+			menuItems.push("Music");
+		}
+	}
+
+	//Check Media Folders
+	var urlMF = Server.getItemTypeURL("&Limit=0");
+	var hasMediaFolders = Server.getContent(urlMF);
+	if (hasMediaFolders == null) { return; }
+		
+	if (hasMediaFolders.TotalRecordCount > 0) {
+		menuItems.push("Media-Folders");
+	}
+
 	return menuItems;
 }
 
@@ -911,6 +986,7 @@ Support.processHomePageMenu = function (menuItem) {
 		Support.logout();
 		break;		
 	case "Log-Out_Delete":
+		alert("Log-Out_Delete");
 		File.setUserProperty("Password","");
 		Support.logout();
 		break;		

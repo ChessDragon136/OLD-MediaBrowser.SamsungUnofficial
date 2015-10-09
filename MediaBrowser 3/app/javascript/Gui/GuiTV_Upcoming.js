@@ -28,6 +28,9 @@ GuiTV_Upcoming.getMaxDisplayBottom = function() {
 }
 
 GuiTV_Upcoming.start = function() {
+	alert("Page Enter : GuiTV_Upcoming");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Load Data
 	var url = Server.getCustomURL("/Shows/Upcoming?format=json&Limit=40&UserId=" + Server.getUserID());
 	var ItemData = Server.getContent(url);
@@ -330,7 +333,6 @@ GuiTV_Upcoming.keyDown = function()
 			this.processSelectedItem(false);
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);	
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -2) {		
@@ -353,10 +355,6 @@ GuiTV_Upcoming.keyDown = function()
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiTV_Upcoming");
 			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiTV_Upcoming");
-			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -490,7 +488,6 @@ GuiTV_Upcoming.bottomKeyDown = function()
 			this.processSelectedItem(true);
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiTV_Upcoming",null,null,null,null,this.selectedItem2,this.topLeftItem2,false);				
 			GuiMainMenu.requested("GuiTV_UpcomingBottom",this.divprepend2 + this.upcomingData[this.selectedDayItem][this.selectedItem2].Id);
@@ -502,10 +499,6 @@ GuiTV_Upcoming.bottomKeyDown = function()
 			break;	
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiTV_Upcoming");
-			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiTV_Upcoming");
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY BOTTOM");
@@ -534,7 +527,7 @@ GuiTV_Upcoming.processSelectedItem = function (isBottom) {
 					
 		break;
 		case "Genre":
-			var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName&userId=" + Server.getUserID());
+			var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,ItemCounts&userId=" + Server.getUserID());
 			GuiDisplay_Series.start("Genre TV",url1,0,0);	
 		break;
 		}

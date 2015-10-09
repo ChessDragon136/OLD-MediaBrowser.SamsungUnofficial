@@ -14,21 +14,35 @@ var GuiImagePlayer = {
         effectNames : ['FADE1', 'FADE2', 'BLIND', 'SPIRAL','CHECKER', 'LINEAR', 'STAIRS', 'WIPE', 'RANDOM']
 }
 
+//ImageViewer.destroy doesn't work. Set it to null instead.
 GuiImagePlayer.kill = function() {
 	if (this.ImageViewer != null) {
-		this.ImageViewer.destroy();	
+		this.ImageViewer = null;	
 	}
 }
 
 GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
+	alert("Page Enter : GuiImagePlayer");
+	
+	//Show colour buttons on screen for a few seconds when a slideshow starts.
+	document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
+	document.getElementById("guiButtonShade").style.visibility = "";
+	GuiHelper.setControlButtons("Help","Favourite","Date/Time",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	setTimeout(function(){
+		GuiHelper.setControlButtons(null,null,null,null,null);
+		document.getElementById("Clock").style.visibility = "hidden";
+		document.getElementById("guiButtonShade").style.visibility = "hidden";
+		document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="";
+	}, 6000);
+
 	//Turn off screensaver
 	Support.screensaverOff();
 
 	var url = "";
 	if (isPhotoCollection) {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
 	} else {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
 	}
 	
 	var result = Server.getContent(url);
@@ -140,7 +154,8 @@ GuiImagePlayer.keyDown = function() {
 			this.Timeout = null;
 			this.images = [];
 			this.overlay = [];
-			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = ""
+			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = "";
+			document.getElementById("Clock").style.visibility = "";
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
 			widgetAPI.blockNavigation(event);
@@ -177,20 +192,10 @@ GuiImagePlayer.keyDown = function() {
 			this.Paused = false
 			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
 			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
+		case tvKey.KEY_RED:
 			GuiHelper.toggleHelp("GuiImagePlayer");
 			break;
-		case tvKey.KEY_RED:
-			alert ("RED");
-			if (this.overlayFormat == 2) {
-				this.overlayFormat = 0
-			} else {
-				this.overlayFormat = this.overlayFormat + 1
-			}
-			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
-			break;
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_GREEN:	
 			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {
 				Server.deleteFavourite(this.newItemData.Items[this.imageIdx].Id);
 				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = false;
@@ -200,6 +205,18 @@ GuiImagePlayer.keyDown = function() {
 				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = true;
 				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
+			break;
+		case tvKey.KEY_YELLOW:
+			alert ("RED");
+			if (this.overlayFormat == 2) {
+				this.overlayFormat = 0
+			} else {
+				this.overlayFormat = this.overlayFormat + 1
+			}
+			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
+			break;
+		case tvKey.KEY_BLUE:	
+			GuiMusicPlayer.showMusicPlayer("GuiImagePlayer");
 			break;
 	}
 }

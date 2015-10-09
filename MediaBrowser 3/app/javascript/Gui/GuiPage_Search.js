@@ -16,6 +16,9 @@ GuiPage_Search.getMaxDisplay = function() {
 }
 
 GuiPage_Search.start = function(title, url) {
+	alert("Page Enter : GuiPage_Search");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Reset Properties
 	this.ItemData = null;
 	this.selectedItem = 0;
@@ -260,14 +263,9 @@ GuiPage_Search.keyDown = function() {
 			this.processSelectedItem();
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			this.handleTools(true);
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_Search");
-			break;
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
 			break;				

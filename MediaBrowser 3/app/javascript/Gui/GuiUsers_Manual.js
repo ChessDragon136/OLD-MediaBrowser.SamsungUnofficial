@@ -1,15 +1,24 @@
 var GuiUsers_Manual = {
+	UserData : null,
 	selectedItem : 0, //0 = User, 1 = Password
 	rememberPassword : false
 }
 
 GuiUsers_Manual.start = function() {
+	alert("Page Enter : GuiUsers_Manual");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	
 	//Reset Properties
 	this.selectedItem = 0;
 	this.rememberPassword = false;
 	
 	document.getElementById("NotificationText").innerHTML = "";
 	document.getElementById("Notifications").style.visibility = "hidden";
+	
+	//Load Data
+	var url = Server.getServerAddr() + "/Users/Public?format=json";
+	this.UserData = Server.getContent(url);
+	if (this.UserData == null) { return; }
 	
 	//Change Display
 	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
@@ -29,7 +38,7 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
     if (authenticateSuccess) {   	
     	document.getElementById("NoKeyInput").focus();
     	
-    	//Add Username & Password to DB for settings purpose - Password is blanked!
+    	//Check if this user is already in the DB.
     	var userInFile = false;
     	var fileJson = JSON.parse(File.loadFile()); 
 		for (var index = 0; index < fileJson.Servers[File.getServerEntry()].Users.length; index++) {
@@ -39,12 +48,14 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
 			}
 		}
     	
+		//Otherwise add them.
 		if (userInFile == false) {
+			alert("Need to add the user to the DB");
 			//Add Username & Password to DB - Save password only if rememberPassword = true
 			if (this.rememberPassword == true) {
-				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,pwdSHA1,this.rememberPassword);
+				File.addUser(Server.UserID,user,pwdSHA1,this.rememberPassword);
 			} else {
-				File.addUser(this.UserData[this.selectedUser].Id,this.UserData[this.selectedUser].Name,"",this.rememberPassword);
+				File.addUser(Server.UserID,user,"",this.rememberPassword);
 			}
 		}
 			
@@ -180,10 +191,6 @@ GuiUsers_Manual.keyDownPassword = function() {
 				document.getElementById("guiUsers_rempwdvalue").style.color = "red";
 			}
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiUsers");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

@@ -34,6 +34,9 @@ GuiPage_MusicArtist.getMaxDisplay2 = function() {
 }
 
 GuiPage_MusicArtist.start = function(title1, url1) {
+	alert("Page Enter : GuiPage_MusicArtist");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Save Start Vars
 	Support.pageLoadTimes("GuiPage_MusicArtist","Start",true);
 	this.startParams = [title1,url1];
@@ -55,7 +58,7 @@ GuiPage_MusicArtist.start = function(title1, url1) {
 	
 	//Update Padding on pageContent
 	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content></div></div>" +
-			"<div style='padding-top:260px;text-align:center;'><p id=pageTitle2 style='font-size:22px;'></p><div id=Content2 style='min-width:500px;'></div></div>";
+			"<div style='padding-top:260px;text-align:center;'><p id=pageTitle2 class='guiDisplay_Series-pageTitle2'></p><div id=Content2 class='guiDisplay_Series-Content2'></div></div>";
 	
 	//Set banner Styling
 	document.getElementById("bannerSelection").style.paddingTop="10px";
@@ -219,7 +222,6 @@ GuiPage_MusicArtist.keyDown = function() {
 			this.processTopMenuUpKey();
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -1) {		
@@ -479,7 +481,6 @@ GuiPage_MusicArtist.bottomKeyDown = function() {
 			GuiMusicPlayer.showPlayer();
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -1) {		

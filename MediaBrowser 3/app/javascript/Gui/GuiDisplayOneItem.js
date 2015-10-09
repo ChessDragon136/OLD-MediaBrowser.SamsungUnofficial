@@ -19,7 +19,10 @@ GuiDisplayOneItem.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
-GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {	
+GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
+	alert("Page Enter : GuiDisplayOneItem");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Save Start Params	
 	this.startParams = [title,url];
 	
@@ -179,15 +182,10 @@ GuiDisplayOneItem.keyDown = function() {
 			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiDisplayOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiDisplayOneItem",this.ItemData.Items[this.selectedItem].Id);
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiDisplayOneItem");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 

@@ -13,6 +13,9 @@ GuiPage_CastMember.getMaxDisplay = function() {
 }
 
 GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiPage_CastMember");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Save Start Params
 	this.startParams = [title,url];
 	
@@ -161,16 +164,11 @@ GuiPage_CastMember.keyDown = function()
 			GuiMusicPlayer.showMusicPlayer("GuiPage_CastMember");
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_CastMember",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			document.getElementById(this.ItemData.Items[this.selectedItem].Id).className = "SeasonTitle";
 			GuiMainMenu.requested("GuiPage_CastMember",this.ItemData.Items[this.selectedItem].Id,"EpisodeListSingle EpisodeListSelected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_CastMember");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 

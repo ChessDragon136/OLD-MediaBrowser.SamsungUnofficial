@@ -25,7 +25,7 @@ var GuiPage_Settings = {
 		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
-		TVSettingsName : ["Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
+		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
 		TVSettingsDefaults : [60,false,false,false,false,150],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","GroupMovieCollections","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
@@ -42,17 +42,17 @@ var GuiPage_Settings = {
 		View2Options : [], 
 		View2Values : [], 
 
-		TvConnectionOptions : ["120MB/s","100MB/s","80MB/s","60MB/s","40MB/s","30MB/s","20MB/s","15MB/s","10MB/s","8MB/s","6MB/s","5MB/s","4MB/s","3MB/s","2MB/s","1MB/s","0.5MB/s"], 
+		TvConnectionOptions : ["120Mb/s","100Mb/s","80Mb/s","60Mb/s","40Mb/s","30Mb/s","20Mb/s","15Mb/s","10Mb/s","8Mb/s","6Mb/s","5Mb/s","4Mb/s","3Mb/s","2Mb/s","1Mb/s","0.5Mb/s"], 
 		TvConnectionValues : [120,100,80,60,40,30,20,15,10,8,6,5,4,3,2,1,0.5], 
 		
 		ItemPagingOptions : [100,150,200,300,500],
 		ItemPagingValues : [100,150,200,300,500],
 		
-		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
-		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px", "24px", "20px", "16px"],
+		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
+		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
 		
-		SubtitleColourOptions: ["White","Yellow","Red","Green","Blue"],
-		SubtitleColourValues: ["white","yellow","red","green","blue"],
+		SubtitleColourOptions: ["White","Red","Green","Blue"],
+		SubtitleColourValues: ["white","red","green","blue"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],
@@ -97,6 +97,9 @@ GuiPage_Settings.initiateViewValues = function() {
 }
 
 GuiPage_Settings.start = function(viewToDisplay) {	
+	alert("Page Enter : GuiPage_Settings");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Reset Vars
 	this.selectedItem = 0;
 	this.selectedBannerItem = 0;
@@ -585,18 +588,13 @@ GuiPage_Settings.keyDown = function() {
 			//Favourites - Not needed on this page!
 			break;	
 		case tvKey.KEY_BLUE:	
-			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			GuiMusicPlayer.showMusicPlayer("GuiPage_Settings");
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 			GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_Settings");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
@@ -881,7 +879,6 @@ GuiPage_Settings.bottomKeyDown = function() {
 			Support.logout();
 			break;		
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			document.getElementById("Value"+this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
 			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
@@ -920,7 +917,7 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "LargerView":	
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Larger View";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enabling this changes the TV & Movies view from 9 items across to 7 items accross, allowing for larger images for each item.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enabling this changes the TV & Movies view from 9 items across to 7 items across, allowing for larger images for each item.";
 			break;
 		case "AudioTheme":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play Audio Theme";
@@ -968,8 +965,8 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during screensaver playback until the next one is displayed.";
 			break;		
 		case "Bitrate":
-			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Bitrate";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Enter a maximum bitrate that your network can manage";
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Max Bitrate";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use this setting to select the maximum video bitrate your network can handle. If a video bitrate is higher than this, the video will be transcoded to use the max bitrate setting here.";
 			break;
 		case "Dolby":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Enable Dolby Digital Playback";
@@ -993,31 +990,31 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "DefaultAudioLang":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Audio Language Preference";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred audio language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "PlayDefaultAudioTrack":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Play default audio track regardless of language";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Will play the default audio track even if it doesn't match your language setting.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DefaultSubtitleLang":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Language Preference";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred subtitle language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the preferred subtitle language.<br><br>If your language is not listed, you will need to change the setting via the web app which has a full list of languages.<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;		
 		case "SubtitleMode":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Subtitle Mode";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Select the default behaviour of when subtitles are loaded<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DisplayMissingEpisodes":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Missing Episodes within Seasons";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display missing episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display missing episodes within TV seasons<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "DisplayUnairedEpisodes":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Display Unaired Episodes within Seasons";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Display unaired episodes within TV seasons<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;	
 		case "GroupMovieCollections":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Group Movies into Collections";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "When displaying movie lists, movies belonging to a collection will be displayed as one grouped item<br><br>This is a server option and will affect your MediaBrowser experience on all clients";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "When displaying movie lists, movies belonging to a collection will be displayed as one grouped item<br><br>This is a server option and will affect your Emby experience on all clients";
 			break;		
 	}
 }

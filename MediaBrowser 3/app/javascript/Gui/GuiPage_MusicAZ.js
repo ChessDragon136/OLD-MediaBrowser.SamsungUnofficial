@@ -3,7 +3,10 @@ var GuiPage_MusicAZ = {
 		selectedItem : 0,
 		topLeftItem : 0,
 		
-		bannerItems : ["Latest","Recent","Frequent","Album","Album Artist", "Artist"],
+		bannerItems : [],
+		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre", "A-Z"],
+		movieBannerItems : ["All","Unwatched","Latest","Genre", "A-Z"],
+		musicBannerItems : ["Recent","Frequent","Album","Album Artist", "Artist"],
 		selectedBannerItem : 0,
 		
 		MAXCOLUMNCOUNT : 10,
@@ -18,8 +21,24 @@ GuiPage_MusicAZ.getMaxDisplay = function() {
 
 
 GuiPage_MusicAZ.start = function(entryView) {
+	alert("Page Enter : GuiPage_MusicAZ");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Save Start Vars
 	this.startParams = [entryView];
+	
+	switch (entryView) {
+	case "TV":
+		this.bannerItems = this.tvBannerItems;
+		break;
+	case "Movies":
+		this.bannerItems = this.movieBannerItems;
+		break;
+	default:
+		this.bannerItems = this.musicBannerItems;
+		break;
+	}
+		
 	
 	//Reset Vars
 	this.selectedItem = 0;
@@ -169,7 +188,6 @@ GuiPage_MusicAZ.keyDown = function() {
 			this.processTopMenuUpKey();
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -1) {		
@@ -302,23 +320,68 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 	alert ("TopMenuEnterKey");
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
-		case "Latest":
-			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Audio&Limit=21&fields=SortName,Genres");
-			GuiDisplay_Series.start("Latest Music",url,0,0);
-		break;	
-		case "Recent":
-			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Audio&Limit=21&Filters=IsPlayed&Recursive=true&fields=SortName,Genres");
+		case "All":		
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
+				GuiDisplay_Series.start("All Movies",url,0,0);
+			} else {
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
+				GuiDisplay_Series.start("All TV",url,0,0);
+			}
+		break;
+		case "Unwatched":
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true&Filters=IsUnPlayed");
+				GuiDisplay_Series.start("Unwatched Movies",url,0,0);
+			}	else {
+				var url = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&isPlayed=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks&recursive=true");
+				GuiDisplay_Series.start("Unwatched TV",url,0,0);
+			}
+		break;
+		case "Upcoming":
+			GuiTV_Upcoming.start();
+		break;
+		case "Latest":		
+			if (GuiDisplay_Series.isTvOrMovies == 1) {
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Movie&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
+				GuiDisplay_Series.start("Latest Movies",url,0,0);
+			} else if (GuiDisplay_Series.isTvOrMovies == 0){
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
+				GuiDisplay_Series.start("Latest TV",url,0,0);
+			} else {
+				var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Audio&Limit=21&fields=SortName,Genres");
+				GuiDisplay_Series.start("Latest Music",url,0,0);
+			}			
+		break;
+		case "Genre":
+			if (GuiDisplay_Series.isTvOrMovies == 1) {	
+				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,ItemCounts&userId=" + Server.getUserID());
+				GuiDisplay_Series.start("Genre Movies",url1,0,0);
+			} else {
+				var url1 = Server.getCustomURL("/Genres?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,ItemCounts&userId=" + Server.getUserID());
+				GuiDisplay_Series.start("Genre TV",url1,0,0);
+			}		
+		break;
+		case "Album":	
+		case "Album Artist":	
+		case "Artist":	
+			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);		
+		break;
+		case"A-Z":
+			if (GuiDisplay_Series.isTvOrMovies == 1) {
+				GuiPage_MusicAZ.start("Movies");
+			} else {
+				GuiPage_MusicAZ.start("TV");
+			}
+			break;
+		case "Recent": //Music Only
+			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&IncludeItemTypes=Audio&Filters=IsPlayed&Limit=21&Recursive=true&fields=SortName,Genres");
 			GuiDisplay_Series.start("Recent Music",url,0,0);
 			break;
 		case "Frequent": //Music Only
 			var url = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items?format=json&SortBy=PlayCount&SortOrder=Descending&IncludeItemTypes=Audio&Limit=21&Filters=IsPlayed&Recursive=true&fields=SortName,Genres");
 			GuiDisplay_Series.start("Frequent Music",url,0,0);
-			break;		
-		case "Album":	
-		case "Album Artist":	
-		case "Artist":	
-			GuiPage_MusicAZ.start(this.bannerItems[this.selectedBannerItem]);	
-			break;
+			break;	
 		}	
 	} else {
 		var urlString = (this.selectedItem == 0) ? "&NameLessThan=A" : "&NameStartsWith=" + this.Letters[this.selectedItem];
@@ -331,13 +394,21 @@ GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 			GuiDisplay_Series.start("Album Music",url,0,0);
 		break;
 		case "Album Artist":
-			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
+			var url1 = Server.getCustomURL("/Artists/AlbumArtists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres,ItemCounts&userId=" + Server.getUserID() + urlString);
 			GuiPage_MusicArtist.start("Album Artist",url1);
 			break;
 		case "Artist":
-			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres&userId=" + Server.getUserID() + urlString);
+			var url = Server.getCustomURL("/Artists?format=json&SortBy=SortName&SortOrder=Ascending&Recursive=true&ExcludeLocationTypes=Virtual&Fields=ParentId,SortName,Genres,ItemCounts&userId=" + Server.getUserID() + urlString);
 			GuiDisplay_Series.start("Artist Music",url,0,0);
 			break;
+		case "TV":				
+			var url = Server.getCustomURL("/Items?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Series&Recursive=true&CollapseBoxSetItems=false&fields=SortName,Overview,Genres,RunTimeTicks&userId=" + Server.getUserID() + urlString);
+			GuiDisplay_Series.start("Letter TV",url,0,0);		
+			break;	
+		case "Movies":				
+			var url = Server.getCustomURL("/Items?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Recursive=true&CollapseBoxSetItems=false&fields=SortName,Overview,Genres,RunTimeTicks&userId=" + Server.getUserID() + urlString);
+			GuiDisplay_Series.start("Letter Movies",url,0,0);		
+			break;		
 		default:
 			break;
 		}

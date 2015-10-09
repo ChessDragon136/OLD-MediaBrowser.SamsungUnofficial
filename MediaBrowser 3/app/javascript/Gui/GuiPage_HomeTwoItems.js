@@ -33,6 +33,9 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 }
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
+	alert("Page Enter : GuiPage_HomeTwoItems");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
 	alert (url1)
@@ -102,7 +105,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		document.getElementById("Center").style.width = "760px";
 		
 		//Generate Banner Items
-		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(2);
+		this.menuItems = GuiMainMenu.menuItemsHomePages;
 		
 		//Generate Banner display
 		for (var index = 0; index < this.menuItems.length; index++) {
@@ -315,7 +318,6 @@ GuiPage_HomeTwoItems.keyDown = function()
 			this.playSelectedItem(this.ItemData.Items,true);
 			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);	
 			//Return added here - deleted in MainMenu if user does return
 			if (this.selectedItem == -2) {		
@@ -335,6 +337,9 @@ GuiPage_HomeTwoItems.keyDown = function()
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;
+		case tvKey.KEY_RED:
+			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
+			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
 				if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
@@ -363,10 +368,6 @@ GuiPage_HomeTwoItems.keyDown = function()
 			break;		
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
-			break;
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
@@ -481,7 +482,6 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			this.playSelectedItem(this.ItemData2.Items,false);
 			break;	
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY BOTTOM");
 			widgetAPI.blockNavigation(event);
 			Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem2,this.topLeftItem2,false);				
 			GuiMainMenu.requested("GuiPage_HomeTwoItemsBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);
@@ -490,6 +490,9 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			alert("RETURN BOTTOM");
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
+			break;
+		case tvKey.KEY_RED:
+			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;
 		case tvKey.KEY_GREEN:
 			if (this.ItemData2.Items[this.selectedItem2].MediaType == "Video") {
@@ -519,10 +522,6 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			break;		
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeTwoItems");
-			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY BOTTOM");

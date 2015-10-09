@@ -13,7 +13,10 @@ GuiPage_SettingsLog.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
-GuiPage_SettingsLog.start = function() {	
+GuiPage_SettingsLog.start = function() {
+	alert("Page Enter : GuiPage_SettingsLog");
+	GuiHelper.setControlButtons("Clear Log",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Reset Vars
 	this.selectedBannerItem = 3; //match Logs
 	
@@ -133,15 +136,12 @@ GuiPage_SettingsLog.keyDown = function() {
 			//Favourites - Not needed on this page!
 			break;	
 		case tvKey.KEY_BLUE:	
-			GuiMusicPlayer.showMusicPlayer("GuiPage_Music");
+			GuiMusicPlayer.showMusicPlayer("GuiPage_SettingsLog");
 			break;		
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
 			GuiMainMenu.requested("GuiPage_SettingsLog",null);
 			break;	
-		case tvKey.KEY_INFO:
-			GuiHelper.toggleHelp("GuiPage_SettingsLog");
-			break;
 		case tvKey.KEY_EXIT:
 			widgetAPI.sendExitEvent(); 
 			break;

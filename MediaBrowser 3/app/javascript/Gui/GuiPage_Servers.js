@@ -13,6 +13,9 @@ GuiPage_Servers.getMaxDisplay = function() {
 }
 
 GuiPage_Servers.start = function(runAutoLogin) {
+	alert("Page Enter : GuiPage_Servers");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	
 	//Reset Properties
 	this.selectedItem = 0;
 	this.topLeftItem = 0; 

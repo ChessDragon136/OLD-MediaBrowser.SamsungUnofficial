@@ -179,6 +179,7 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 		}
 	}
 	xmlHttp.setRequestHeader("Content-Type", 'application/json; charset=UTF-8');	
+	//xmlHttp.setRequestHeader("Accept-Charset", 'utf-8');
 	return xmlHttp;
 }
 

@@ -22,6 +22,9 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 }
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
+	alert("Page Enter : GuiPage_HomeOneItem");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	
 	//Save Start Params	
 	this.startParams = [title,url];
 	
@@ -70,7 +73,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		document.getElementById("Center").style.width = "760px";
 
 		//Generate Banner Items - Mreove Home Page
-		this.menuItems = GuiMainMenu.menuItemsHomePages.slice(2); 
+		this.menuItems = GuiMainMenu.menuItemsHomePages; 
 		
 		//Generate Banner display
 		for (var index = 0; index < this.menuItems.length; index++) {
@@ -113,7 +116,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		
 		//As no content focus on menu bar and null null means user can't return off the menu bar
 		GuiMainMenu.requested(null,null);
-	}	
+	}
 }
 
 GuiPage_HomeOneItem.updateDisplayedItems = function() {
@@ -212,7 +215,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 			this.playSelectedItem();
 			break;
 		case tvKey.KEY_RED:
-			this.processIndexing();
+			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
@@ -242,9 +245,8 @@ GuiPage_HomeOneItem.keyDown = function() {
 			break;	
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_HomeOneItem");
-			break;			
+			break;
 		case tvKey.KEY_TOOLS:
-			alert ("TOOLS KEY");
 			widgetAPI.blockNavigation(event);
 			if (this.selectedItem == -1) {
 				if (this.selectedBannerItem != this.menuItems.length-1) {
@@ -257,10 +259,6 @@ GuiPage_HomeOneItem.keyDown = function() {
 			}
 			Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
 			GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
-			break;	
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");

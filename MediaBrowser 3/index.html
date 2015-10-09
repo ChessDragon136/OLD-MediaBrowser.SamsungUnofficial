@@ -59,7 +59,6 @@
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Playlist.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_AddToPlaylist.js"></script>
 		<script language="javascript" type="text/javascript" src="app/javascript/Gui/GuiPage_Search.js"></script>
-		<script language="javascript" type="text/javascript" src="app/javascript/Support/Download.js"></script>
 		
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
         <object id="pluginObjectAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
@@ -127,24 +126,28 @@
 		<script language="javascript" type="text/javascript" src="$MANAGER_WIDGET/Common/IME/ime2.js"></script>
 		<script type="text/javascript" language="javascript" src="$MANAGER_WIDGET/Common/API/CImageViewer.js"></script>
 		<script type="text/javascript" src="$MANAGER_WIDGET/Common/af/2.0.0/loader.js"></script>
-		<!-- Plugins -->
-		
-		<div id="imageView" class="page" style="visibility:hidden"></div>
-		<div id='imageView_Info' class='videoInfo' style='visibility:hidden'></div>
-		
-		<!-- TODO: your code here -->
-		
+
 		<div id='GuiImagePlayer_ScreensaverOverlay' class='screensaveroverlay'></div>
 		<div id="everything">	
+		
+			<!-- Image Viewer -->
+			<div id="imageView" class="imageView" style="visibility:hidden"></div>
+			<!-- <div id='imageView_Info' class='videoInfo' style='visibility:hidden'></div> -->
+			
+			<!-- Splash Screen -->
+			<div id="splashscreen" class="splash">
+			<div id="splashscreen_version" class="splash_version"></div>
+			</div>
+		
 			<div id="pageBackgroundHolder" class="pageBackground"></div>
 			<div id="pageBackground" style = "display:none" class="pageBackground"></div>
 			<div id="pageBackgroundFade" class="pageBackgroundFade"></div>
 			
 			<div id="page" class="page">
-				<div id="pageContent"></div>		
+				<div id='pageContent' class='guiDisplay_Series-pageContent'></div>		
 						
 				<div id="Counter" class="counter"></div>
-				<div id="Clock" class="version"></div>
+				<div id="Clock" class="time"></div>
 				<div id="Help" class="help" style="visibility:hidden">
 					<div id="HelpTitle" style="font-size:18px"></div>
 					<div id="HelpContent"></div>
@@ -157,20 +160,31 @@
 				 <form style='padding-top:10px;padding-left:40px;'><input id='guiPlayListNew' style='z-index:10;' type='text' size='50' value=''/></form>
 				</div>
 				
-				<div id='guiMusicPlayerDiv' class='musicDiv' style='visibility:hidden;height:60px'>
-					<div id='guiMusicPlayerTitle' style='display:inline-block;margin-left:10px;width:250px;'></div>
-					<div id='guiMusicPlayerTime'  style='display:inline-block;width:130px;'></div>	
-						<div id='guiMusicPlayerPause' style='display:inline-block;'> Pause </div>
-						<div id='guiMusicPlayerPlay' style='display:inline-block;'> Play </div>
-						<div id='guiMusicPlayerStop' style='display:inline-block;'> Stop </div>
-						<div id='guiMusicPlayerPrevious' style='display:inline-block;'> Previous </div>
-						<div id='guiMusicPlayerNext' style='display:inline-block;'> Next </div>
-						<div id='guiMusicPlayerScreenOff' style='display:inline-block;'> Screen</div>	
-						<!--  <div id='guiMusicPlayerPlaylist' style='display:inline-block;'> Playlist </div>
-						<div id='guiMusicPlayerShowPlaylist' class='musicPlaylist' style='visibility:hidden'>
-							<div id='guiMusicPlayerShowPlaylistContent'></div>
-						</div>	 -->				
-				</div>	
+				<!--  Music Player -->
+				<div id='guiMusicPlayerDiv' class='guiMusicPlayerDiv' style='visibility:hidden'>
+					<div id='guiMusicPlayerTitle' class='guiMusicPlayerTitle'></div>
+					<div id='guiMusicPlayerNowPlaying' class='guiMusicPlayerNowPlaying'>Now Playing</div>	
+					<div id='guiMusicPlayerScreenOff' class='guiMusicPlayerScreenOff'> Screen</div>
+					<div id='guiMusicPlayerTime'  class='guiMusicPlayerTime'></div>	
+					<div id='guiMusicPlayerPlay' class='guiMusicPlayerPlay'></div>
+					<div id='guiMusicPlayerStop' class='guiMusicPlayerStop'></div>
+					<div id='guiMusicPlayerPrevious' class='guiMusicPlayerPrevious'></div>
+					<div id='guiMusicPlayerPause' class='guiMusicPlayerPause'></div>
+					<div id='guiMusicPlayerNext' class='guiMusicPlayerNext'></div>
+					<!--  <div id='guiMusicPlayerPlaylist' style='display:inline-block;'> Playlist </div>
+					<div id='guiMusicPlayerShowPlaylist' class='musicPlaylist' style='visibility:hidden'>
+						<div id='guiMusicPlayerShowPlaylistContent'></div>
+					</div>	 -->				
+				</div>
+				
+				<!--  Coloured remote buttons -->
+				<div id='guiButtonShade' class='ButtonShade' style="visibility:hidden"></div>
+				<div id='guiRedButton' class='RedButton' style="visibility:hidden"></div>
+				<div id='guiGreenButton' class='GreenButton' style="visibility:hidden"></div>
+				<div id='guiYellowButton' class='YellowButton' style="visibility:hidden"></div>
+				<div id='guiBlueButton' class='BlueButton' style="visibility:hidden"></div>
+				<div id='guiReturnButton' class='ReturnButton' style="visibility:hidden"></div>	
+				
 			</div>	
 			<!-- MUST KEEP OUTSIDE OF page div else its hidden during video playback -->	
 			<div id="Notifications" class="notification" style="visibility:hidden">
@@ -187,7 +201,15 @@
 				<div id='guiPlayer_ItemDetails_Title' class='videoItemDetailsTitle'></div>
 				<div id='guiPlayer_ItemDetails_SubData' class='videoItemDetailsSubData'></div>
 				<div id='guiPlayer_ItemDetails_Overview' class='videoItemDetailsSubData'></div>
+				<div id='guiPlayer_clock' class='time'></div>
 			</div>
+			<div id='guiPlayer_ItemDetails2' class='videoItemDetails' style='visibility:hidden'>
+				<div id='guiPlayer_ItemDetails_Title2' class='videoItemDetailsTitle'></div>
+				<div id='guiPlayer_ItemDetails_SubData2' class='videoItemDetailsSubData'></div>
+				<div id='guiPlayer_clock2' class='time'></div>
+			</div>
+			<div id='guiPlayer_DvdArt' class='videoItemDvdArt' style='visibility:hidden'></div>
+			<div id='guiPlayer_Ratings' class='videoItemRatings' style='visibility:hidden'></div>
 			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
@@ -198,15 +220,11 @@
 			</div>
 	
 			<!--  Menu -->
-			<div id="header" class ="header" style="visibility:hidden">
-				<div class="headerLogo">
-					<div style='text-align:center;font-size:26px; padding-top:2px;'>Emby</div>	
-				</div>
-				<div id=headerUserImage class=headerUserImage></div>	
-				<div class="headerMenu">
-					<div id="headerTypes"></div>	
-				</div>	
-				<div id='headerVersion' style='padding-left:75px; width:100%; font-size:15px; position:absolute;bottom:10px;'></div>	  
+			<div id='menu' class='menu' style='visibility:hidden''>
+				<div id='menuUserImage' class='menu-userImage'></div>
+				<div id='menuUserName' class='menu-userName'></div>
+				<div id='menuItems'></div>	
+				<div id='menuVersion' class='menu-version'></div>	  
 			</div>
 		</div> <!-- Everything Div -->
 	</body>

@@ -53,7 +53,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     	    	this.framerate = 30;
     	    	this.level = 120;			//  Level 4  (HEVC is x30 not x10 like h264)
     	    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
-		break;			
+    	    	break;			
     	    case "h265":
     	    	this.codec = true;
     	    	this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
@@ -338,7 +338,129 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 GuiPlayer_TranscodeParams.getAudioParameters = function(audiocodec) {
 	switch (Main.getModelYear()) {
 	case "H":
+		switch (audiocodec) {
+		case "aac":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "mp3":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "mp2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "ac3":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmav2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmapro":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmavoice":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "dca":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "eac3":	
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "pcm":	
+		case "pcm_s16le":	
+		case "pcm_s24le":
+		case "pcm_s32le":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 2;
+			break;	
+		default:
+			this.audiocodec = false;
+			this.audiocontainer = null;
+			this.audiochannels = null;
+			break;
+		}
+		break;	
     case "F":
+		switch (audiocodec) {
+		case "aac":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "mp3":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "mp2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "ac3":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmav2":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmapro":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "wmavoice":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "dca":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 7;
+			break;
+		case "eac3":	
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 6;
+			break;
+		case "pcm":	
+		case "pcm_s16le":	
+		case "pcm_s24le":
+		case "pcm_s32le":
+			this.audiocodec = true;
+			this.audiocontainer = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx"];
+			this.audiochannels = 2;
+			break;	
+		default:
+			this.audiocodec = false;
+			this.audiocontainer = null;
+			this.audiochannels = null;
+			break;
+		}
+		break;	
     case "E":
 		switch (audiocodec) {
 		case "aac":

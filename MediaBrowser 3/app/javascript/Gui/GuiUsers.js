@@ -16,6 +16,9 @@ GuiUsers.getMaxDisplay = function() {
 }
 
 GuiUsers.start = function(runAutoLogin) {
+	alert("Page Enter : GuiUsers");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	
 	//Reset Properties
 	File.setUserEntry(null);
 	this.selectedUser = 0;
@@ -38,29 +41,25 @@ GuiUsers.start = function(runAutoLogin) {
 	//Load File Data
 	if (runAutoLogin == true) {
 		var fileJson = JSON.parse(File.loadFile()); 
+		//Look at each user in the local users file.
 		for (var index = 0; index < fileJson.Servers[File.getServerEntry()].Users.length; index++) {
-			if (this.UserData.length == 1 || fileJson.Servers[File.getServerEntry()].Users[index].Default == true) {
+			//If they are the default users log them in automatically.
+			if (fileJson.Servers[File.getServerEntry()].Users[index].Default == true) {
 				var userId = fileJson.Servers[File.getServerEntry()].Users[index].UserId;
-				//check if user exists on the server!
-				for (var index2 = 0; index2 < this.UserData.length; index2++) {
-					if (this.UserData[index2].Id == userId) {
-						var User = fileJson.Servers[File.getServerEntry()].Users[index].UserName;
-		    			var Password = fileJson.Servers[File.getServerEntry()].Users[index].Password;
-						//Authenticate with MB3 - if fail somehow bail?					
-						var authenticateSuccess = Server.Authenticate(userId, User, Password);		
-						if (authenticateSuccess) {
-							autoLogin = true;
-							//Set File User Entry
-							File.setUserEntry(index);
-							//Change Focus and call function in GuiMain to initiate the page!
-							GuiMainMenu.start();
-						} else {
-							//Delete user from DB here - makes life much simpler to delete and read on success!!!
-							File.deleteUser(index);				
-						}	
-						break;
-					}
-				}
+				var User = fileJson.Servers[File.getServerEntry()].Users[index].UserName;
+    			var Password = fileJson.Servers[File.getServerEntry()].Users[index].Password;
+				//Try to authenticate.					
+				var authenticateSuccess = Server.Authenticate(userId, User, Password);		
+				if (authenticateSuccess) {
+					autoLogin = true;
+					//Set File User Entry
+					File.setUserEntry(index);
+					//Change Focus and call function in GuiMain to initiate the page!
+					GuiMainMenu.start();
+				} else {
+					//Delete user from DB here - makes life much simpler to delete and read on success!!!
+					File.deleteUser(index);				
+				}	
 				break;
 			}
 		}
@@ -269,10 +268,6 @@ GuiUsers.keyDown = function()
 			GuiNotifications.setNotification("All Users Deleted","Deletion");
 			File.deleteAllUsers();
 			break;		
-		case tvKey.KEY_INFO:
-			alert ("INFO KEY");
-			GuiHelper.toggleHelp("GuiUsers");
-			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();

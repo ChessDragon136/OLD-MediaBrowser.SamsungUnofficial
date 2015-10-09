@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 
 var Main =
 {
-		version : "v0.588",
+		version : "v0.593m",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -25,43 +25,43 @@ var Main =
 
 Main.getModelYear = function() {
 	return this.modelYear;
-}
+};
 
 Main.isMusicEnabled = function() {
 	return this.enableMusic;
-}
+};
 
 Main.isLiveTVEnabled = function() {
 	return this.enableLiveTV;
-}
+};
 
 Main.isPhotoEnabled = function() {
 	return this.enablePhoto;
-}
+};
 
 Main.isCollectionsEnabled = function() {
 	return this.enableCollections;
-}
+};
 
 Main.isChannelsEnabled = function() {
 	return this.enableChannels;
-}
+};
 
 Main.isScreensaverEnabled = function() {
 	return this.enableScreensaver;
-}
+};
 
 Main.getRequiredServerVersion = function() {
 	return this.requiredServerVersion;
-}
+};
 
 Main.getVersion = function() {
 	return this.version;
-}
+};
 
 Main.getIsScreensaverRunning = function() {
 	return this.isScreensaverRunning;
-}
+};
 
 Main.setIsScreensaverRunning = function() {
 	if (this.isScreensaverRunning == false) {
@@ -69,16 +69,14 @@ Main.setIsScreensaverRunning = function() {
 	} else {
 		this.isScreensaverRunning = false;
 	}
-}
-
-
+};
 
 Main.onLoad = function()
 {	
 	//Setup Logging
 	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
-	FileLog.write("---------------------------------------------------------------------")
-	FileLog.write("MB3 Application Started")
+	FileLog.write("---------------------------------------------------------------------");
+	FileLog.write("MB3 Application Started");
 	
 	//Delete Old style Settings File
 	File.deleteOldSettingsFile();
@@ -86,12 +84,10 @@ Main.onLoad = function()
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
 	
-	//Register Tools Key
-	pluginAPI.registKey(tvKey.KEY_TOOLS);
-	pluginAPI.registKey(tvKey.KEY_3D); 
+	window.onShow = Main.initKeys;
 	
 	//Set Version Number & initialte clock
-	document.getElementById("headerVersion").innerHTML = this.version;
+	document.getElementById("menuVersion").innerHTML = this.version;
 	Support.clock();
 	
 	//Set DeviceID & Device Name
@@ -105,7 +101,12 @@ Main.onLoad = function()
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
 	
 	//Get the model year - Used for transcoding
-	this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	if (pluginTV.GetProductCode(0).substring(0,2) == "HT" || pluginTV.GetProductCode(0).substring(0,2) == "BD"){
+		this.modelYear = pluginTV.GetProductCode(0).substring(3,4);
+	} else {
+		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
+	}
+	
 	alert ("Model Year: " + this.modelYear);
 	
 	if (phyConnection && http && gateway) {
@@ -162,7 +163,19 @@ Main.onLoad = function()
 		document.getElementById("pageContent").innerHTML = "You have no network connectivity to the TV - Please check the settings on the TV";
 	}
 	widgetAPI.sendReadyEvent();
+	Support.clock();
+	document.getElementById("splashscreen_version").innerHTML = Main.version;
+	setTimeout(function(){
+		document.getElementById("splashscreen").style.visibility="hidden";
+	}, 2500);
 };
+
+Main.initKeys = function() {
+    alert('initKeys called');
+	pluginAPI.registKey(tvKey.KEY_TOOLS);
+	pluginAPI.registKey(tvKey.KEY_3D); 
+}
+
 
 Main.onUnload = function()
 {
@@ -171,4 +184,5 @@ Main.onUnload = function()
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();
 	pluginAPI.unregistKey(tvKey.KEY_TOOLS);
+	pluginAPI.unregistKey(tvKey.KEY_3D);
 };

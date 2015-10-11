@@ -81,6 +81,10 @@ GuiPage_Contributors.keyDown = function() {
 	}
 	
 	switch(keyCode) {
+		case tvKey.KEY_LEFT:
+			alert("LEFT");
+			this.openMenu();
+			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
 			widgetAPI.blockNavigation(event);
@@ -91,12 +95,16 @@ GuiPage_Contributors.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			Support.updateURLHistory("GuiPage_Contributors",null,null,null,null,null,null,null);
-			GuiMainMenu.requested("GuiPage_Contributors",null);
+			this.openMenu();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
 			break;
 	}
+}
+
+GuiPage_Contributors.openMenu = function() {
+	Support.updateURLHistory("GuiPage_Contributors",null,null,null,null,null,null,null);
+	GuiMainMenu.requested("GuiPage_Contributors",null);
 }

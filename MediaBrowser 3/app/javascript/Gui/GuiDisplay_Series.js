@@ -442,17 +442,7 @@ GuiDisplay_Series.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			if (this.selectedItem == -1) {
-				if (this.selectedBannerItem != this.bannerItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id);
+			this.openMenu();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
@@ -536,13 +526,27 @@ GuiDisplay_Series.playSelectedItem = function () {
 	Support.playSelectedItem("GuiDisplay_Series",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
+GuiDisplay_Series.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id);
+}
+
 GuiDisplay_Series.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
-			this.selectedBannerItem = 0;
+		if (this.selectedBannerItem == -1) { //Going left from the end of the top menu.
+			this.openMenu();
 		}
-		this.updateSelectedBannerItems();	
+		this.updateSelectedBannerItems();
+	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){ //Going left from the first column.
+		this.openMenu();
 	} else {
 		this.selectedItem--;
 		if (this.selectedItem < 0) {

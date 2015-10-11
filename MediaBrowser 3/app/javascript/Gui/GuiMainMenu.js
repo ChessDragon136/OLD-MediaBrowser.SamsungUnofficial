@@ -172,6 +172,7 @@ GuiMainMenu.keyDown = function()
 			alert("ENTER");
 			this.processSelectedItems();
 			break;	
+		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);

@@ -320,8 +320,7 @@ GuiTV_Show.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			Support.updateURLHistory("GuiTV_Show",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiTV_Show",this.ItemData.Items[this.selectedItem].Id,"ShowListSingle EpisodeListSelected","ShowListSingle");
+			this.openMenu();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
@@ -423,13 +422,29 @@ GuiTV_Show.processChannelUpKey = function() {
 	}
 }
 
+GuiTV_Show.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			this.selectedBannerItem = 0;
+			document.getElementById("playAll").style.color = "#f9f9f9";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiTV_Show",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	GuiMainMenu.requested("GuiTV_Show",this.ItemData.Items[this.selectedItem].Id,"ShowListSingle EpisodeListSelected","ShowListSingle");
+}
+
 GuiTV_Show.processLeftKey = function() {
 	if (this.selectedItem == -1) {
-		if (this.selectedBannerItem == 1) {
-			this.selectedBannerItem = 0;
-			this.updateSelectedBannerItems();
+		this.selectedBannerItem--;
+		if (this.selectedBannerItem == -1) {
+			this.openMenu(); //Going left from the Play All / Shuffle All menu.
 		}
-	}	
+		this.updateSelectedBannerItems();
+	} else {
+		this.openMenu(); //There's no left/right in the list of series, always open the menu.
+	}
 }
 
 GuiTV_Show.processRightKey = function() {

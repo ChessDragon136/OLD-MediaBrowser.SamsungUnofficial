@@ -223,18 +223,7 @@ GuiPage_MusicArtist.keyDown = function() {
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			//Return added here - deleted in MainMenu if user does return
-			if (this.selectedItem == -1) {		
-				if (this.selectedBannerItem != this.bannerItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_MusicArtist",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,true);
-			GuiMainMenu.requested("GuiPage_MusicArtist",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+			this.openMenu();
 			break;
 		case tvKey.KEY_RETURN:
 			clearTimeout(this.timeout)
@@ -256,16 +245,30 @@ GuiPage_MusicArtist.keyDown = function() {
 	}
 }
 
+GuiPage_MusicArtist.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+		Support.updateURLHistory("GuiPage_MusicArtist",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,true);
+		GuiMainMenu.requested("GuiPage_MusicArtist",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+}
+
 GuiPage_MusicArtist.processTopMenuLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
-			this.selectedBannerItem = 0;
+		if (this.selectedBannerItem == -1) { //Going left from the end of the top menu.
+			this.openMenu();
 		}
 		this.updateSelectedBannerItems();	
+	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){ //Going left from the first column.
+			this.openMenu();	
 	} else {
 		this.selectedItem--;
-		if (this.selectedItem < 0) {
+		if (this.selectedItem == -1) {
 			this.selectedItem = 0;
 		} else {
 			if (this.selectedItem < this.topLeftItem) {
@@ -433,8 +436,12 @@ GuiPage_MusicArtist.bottomKeyDown = function() {
 		case tvKey.KEY_LEFT:
 			alert("LEFT BOTTOM");	
 			this.selectedItem2--;
-			if (this.selectedItem2 < 0) {
-				this.selectedItem2++;
+			if (this.selectedItem2 == -1) {
+				this.selectedItem2 = 0; //Going left from bottom items row.
+				//Open the menu
+				Support.updateURLHistory("GuiPage_MusicArtist",this.startParams[0],this.startParams[1],null,null,this.selectedItem2,this.topLeftItem2,false);
+				GuiMainMenu.requested("GuiPage_MusicArtistBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);
+				
 			} else {
 				if (this.selectedItem2 < this.topLeftItem2) {
 					this.topLeftItem2--;

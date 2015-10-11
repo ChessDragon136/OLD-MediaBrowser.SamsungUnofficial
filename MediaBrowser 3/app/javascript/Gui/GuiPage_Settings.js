@@ -592,14 +592,24 @@ GuiPage_Settings.keyDown = function() {
 			break;		
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
-			GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
+			this.openMenu();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
 			break;
 	}
+}
+
+GuiPage_Settings.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			this.selectedBannerItem == 0;
+		}
+		this.selectedItem = 0;		
+	}
+	document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
+	GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 }
 
 GuiPage_Settings.processUpKey = function() {
@@ -649,11 +659,14 @@ GuiPage_Settings.processDownKey = function() {
 GuiPage_Settings.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
+		if (this.selectedBannerItem == -1) {
 			this.selectedBannerItem = 0;
+			this.openMenu();
 		} else {
 			this.updateSelectedBannerItems();	
 		}	
+	} else {
+		this.openMenu();
 	}
 }
 

@@ -1,10 +1,10 @@
 var GuiPage_Playlist = {				
 		AlbumData : null,
 		
-		selectedItem : 0,
+		selectedItem : 0, //the currently selected topMenuItem.
 		topLeftItem : 0,
 		
-		selectedItem2 : 0,
+		selectedItem2 : 0, //the currently selected playItem.
 		
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 12, //Max = 12, causes graphical jump due to large html element, couldn't find issue,
@@ -13,6 +13,7 @@ var GuiPage_Playlist = {
 		
 		topMenuItems : ["PlayAll","ShuffleAll","Delete"],
 		playItems : ["PlayFrom_","Play_","View_","Remove_"]
+
 }
 
 GuiPage_Playlist.getMaxDisplay = function() {
@@ -101,9 +102,9 @@ GuiPage_Playlist.updateDisplayedItems = function() {
 				TrackDetails = this.AlbumData.Items[index].ParentIndexNumber+"." + this.AlbumData.Items[index].IndexNumber;
 			}
 		
-			htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Remove</td>" +
-					"<td class='musicTableTd'>"+TrackDetails+ "</td><td id="+ this.AlbumData.Items[index].Id +" class='musicTableTd'>" + this.AlbumData.Items[index].Name + "</td>" +
-							"<td class='musicTableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";	
+			htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Remove</td>" +
+					"<td class='guiMusic_TableTd'>"+TrackDetails+ "</td><td id="+ this.AlbumData.Items[index].Id +" class='guiMusic_TableTd'>" + this.AlbumData.Items[index].Name + "</td>" +
+							"<td class='guiMusic_TableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";	
 		}
 	} else {
 		htmlToAdd = "<table><th style='width:100px'></th><th style='width:33px'></th><th style='width:36px'></th><th style='width:60px'></th><th style='width:150px'></th><th style='width:50px'></th><th style='width:250px'></th><th style='width:65px'></th>";
@@ -113,13 +114,13 @@ GuiPage_Playlist.updateDisplayedItems = function() {
 				var epNo = Support.getNameFormat(null,this.AlbumData.Items[index].ParentIndexNumber,null,this.AlbumData.Items[index].IndexNumber);
 				var seriesName = (this.AlbumData.Items[index].SeriesName !== undefined)? this.AlbumData.Items[index].SeriesName : "Unknown";
 				
-				htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Remove</td>" +
-						"<td id="+ this.AlbumData.Items[index].Id +" class='musicTableTd'>" + seriesName + "</td><td id=epNo_"+ this.AlbumData.Items[index].Id +" class='musicTableTd'>" + epNo + "</td><td id=epName_"+ this.AlbumData.Items[index].Id +" class='musicTableTd'>" + this.AlbumData.Items[index].Name + "</td>" +
-								"<td class='musicTableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";		
+				htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Remove</td>" +
+						"<td id="+ this.AlbumData.Items[index].Id +" class='guiMusic_TableTd'>" + seriesName + "</td><td id=epNo_"+ this.AlbumData.Items[index].Id +" class='guiMusic_TableTd'>" + epNo + "</td><td id=epName_"+ this.AlbumData.Items[index].Id +" class='guiMusic_TableTd'>" + this.AlbumData.Items[index].Name + "</td>" +
+								"<td class='guiMusic_TableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";		
 			} else {		
-				htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='musicTableTd'>Remove</td>" +
-						"<td id="+ this.AlbumData.Items[index].Id +" class='musicTableTd'colspan=3 >" + this.AlbumData.Items[index].Name + "</td>" +
-								"<td class='musicTableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";		
+				htmlToAdd += "<tr><td id=PlayFrom_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play From Here</td><td id=Play_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Play</td><td id=View_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>View</td><td id=Remove_"+this.AlbumData.Items[index].Id+" class='guiMusic_TableTd'>Remove</td>" +
+						"<td id="+ this.AlbumData.Items[index].Id +" class='guiMusic_TableTd'colspan=3 >" + this.AlbumData.Items[index].Name + "</td>" +
+								"<td class='guiMusic_TableTd'>"+Support.convertTicksToTimeSingle(this.AlbumData.Items[index].RunTimeTicks/10000,true)+"</td></tr>";		
 			}
 		}
 	}
@@ -129,18 +130,18 @@ GuiPage_Playlist.updateDisplayedItems = function() {
 //Function sets CSS Properties so show which user is selected
 GuiPage_Playlist.updateSelectedItems = function () {
 	if (this.selectedItem == -1) {	
-		//Sets Correct Item To Red
+		//Sets Correct Item To Green
 		for (var index = 0; index < this.topMenuItems.length; index++) {
 			if (index == this.selectedItem2) {
-				document.getElementById(this.topMenuItems[index]).className = "#27a436";
+				document.getElementById(this.topMenuItems[index]).style.color = "#27a436";
 			} else {
-				document.getElementById(this.topMenuItems[index]).className = "";
+				document.getElementById(this.topMenuItems[index]).style.color = "white";
 			}
 		}		
 	} else {
 		//Resets original Item to White
 		for (var index = 0; index < this.topMenuItems.length; index++) {
-			document.getElementById(this.topMenuItems[index]).className = "";
+			document.getElementById(this.topMenuItems[index]).style.color = "white";
 		}
 		
 		//Finds correct items to set Red / Green
@@ -149,15 +150,15 @@ GuiPage_Playlist.updateSelectedItems = function () {
 				document.getElementById(this.AlbumData.Items[index].Id).style.color = "green";
 				for (var index2 = 0; index2 < this.playItems.length; index2++) {
 					if (index2 == this.selectedItem2) {
-						document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "musicTableTd red";
+						document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "guiMusic_TableTd red";
 					} else {
-						document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "musicTableTd";
+						document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "guiMusic_TableTd";
 					}
 				}
 			} else {
 				document.getElementById(this.AlbumData.Items[index].Id).style.color = "white";
 				for (var index2 = 0; index2 < this.playItems.length; index2++) {
-					document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "musicTableTd";
+					document.getElementById(this.playItems[index2]+this.AlbumData.Items[index].Id).className = "guiMusic_TableTd";
 				}
 			}
 		}
@@ -228,7 +229,7 @@ GuiPage_Playlist.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			this.handleReturn();
+			this.openMenu();
 			break;	
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
@@ -243,21 +244,13 @@ GuiPage_Playlist.keyDown = function() {
 	}
 }
 
-GuiPage_Playlist.handleReturn = function() {
+GuiPage_Playlist.openMenu = function() {
 	Support.updateURLHistory("GuiPage_Playlist",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,true);
 	
 	if (this.selectedItem == -1) {
-		for (var index = 0; index<this.playItems.length;index++) {
-			document.getElementById(this.topMenuItems[index]).className = "";
-		}
-		this.selectedItem2 = 0;
-		GuiMainMenu.requested("GuiPage_Playlist",this.topMenuItems[0],"#27a436");
+		GuiMainMenu.requested("GuiPage_Playlist",this.topMenuItems[this.selectedItem],"guiMusic_Global green");
 	} else {
-		for (var index = 0; index<this.playItems.length;index++) {
-			document.getElementById(this.playItems[index]+this.AlbumData.Items[this.selectedItem].Id).className = "musicTableTd";
-		}
-		this.selectedItem2 = 0;
-		GuiMainMenu.requested("GuiPage_Playlist","Play_"+this.AlbumData.Items[this.selectedItem].Id,"musicTableTd red");
+		GuiMainMenu.requested("GuiPage_Playlist",this.playItems[this.selectedItem2]+this.AlbumData.Items[this.selectedItem].Id,"guiMusic_TableTd green");
 	}
 }
 
@@ -272,7 +265,7 @@ GuiPage_Playlist.processUpKey = function() {
 		if (this.selectedItem == -1) {
 			document.getElementById(this.AlbumData.Items[0].Id).style.color = "white";
 			for (var index = 0; index < this.playItems.length; index++) {
-				document.getElementById(this.playItems[index]+this.AlbumData.Items[0].Id).className = "musicTableTd";
+				document.getElementById(this.playItems[index]+this.AlbumData.Items[0].Id).className = "guiMusic_TableTd";
 			}
 		}
 		if (this.selectedItem < this.topLeftItem) {
@@ -285,7 +278,6 @@ GuiPage_Playlist.processUpKey = function() {
 		}
 		this.updateSelectedItems();
 	}
-	
 }
 
 GuiPage_Playlist.processDownKey = function() {
@@ -310,8 +302,9 @@ GuiPage_Playlist.processDownKey = function() {
 
 GuiPage_Playlist.processLeftKey = function() {
 	this.selectedItem2--;
-	if (this.selectedItem2 < 0) {
-		this.selectedItem2++;
+	if (this.selectedItem2 == -1) {
+		this.selectedItem2 = 0;
+		this.openMenu();
 	} else {
 		this.updateSelectedItems();
 	}

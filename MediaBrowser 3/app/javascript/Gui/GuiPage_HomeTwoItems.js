@@ -220,29 +220,8 @@ GuiPage_HomeTwoItems.keyDown = function()
 	switch(keyCode)
 	{
 		case tvKey.KEY_LEFT:
-			alert("LEFT");	
-			if (this.selectedItem == -2) {
-				this.selectedBannerItem--;
-				if (this.selectedBannerItem < 0) {
-					this.selectedBannerItem = 0;
-				}
-				this.updateSelectedBannerItems();	
-			} else {
-				this.selectedItem--;
-				if (this.selectedItem < 0) {
-					this.selectedItem = 0;
-				} else {
-					if (this.selectedItem < this.topLeftItem) {
-						this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
-						if (this.topLeftItem < 0) {
-							this.topLeftItem = 0;
-						}
-						this.updateDisplayedItems();
-					}
-				}
-				this.updateSelectedItems();
-			}
-			
+			alert("LEFT");
+			this.processLeftKey();
 			break;
 		case tvKey.KEY_RIGHT:
 			alert("RIGHT");	
@@ -319,18 +298,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);	
-			//Return added here - deleted in MainMenu if user does return
-			if (this.selectedItem == -2) {		
-				if (this.selectedBannerItem != this.menuItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
-			GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+			GuiPage_HomeTwoItems.openMenu();
 			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
@@ -376,6 +344,42 @@ GuiPage_HomeTwoItems.keyDown = function()
 	}
 }
 
+GuiPage_HomeTwoItems.openMenu = function() {
+	if (this.selectedItem == -2) {		
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		} 
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
+	GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+}
+
+GuiPage_HomeTwoItems.processLeftKey = function() {
+	if (this.selectedItem == -2) {
+		this.selectedBannerItem--;
+		if (this.selectedBannerItem == -1) {
+			this.openMenu(); //Going left from the end of the banner menu.
+		}
+		this.updateSelectedBannerItems();	
+	} else {
+		this.selectedItem--;
+		if (this.selectedItem == -1) {
+			this.selectedItem = 0;
+			this.openMenu(); //Going left from top items row.
+		} else {
+			if (this.selectedItem < this.topLeftItem) {
+				this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
+				if (this.topLeftItem < 0) {
+					this.topLeftItem = 0;
+				}
+				this.updateDisplayedItems();
+			}
+		}
+		this.updateSelectedItems();
+	}
+}
 
 //---------------------------------------------------------------------------------------------------
 //      BOTTOM ITEMS HANDLERS
@@ -426,8 +430,11 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 		case tvKey.KEY_LEFT:
 			alert("LEFT BOTTOM");	
 			this.selectedItem2--;
-			if (this.selectedItem2 < 0) {
-				this.selectedItem2++;
+			if (this.selectedItem2 == -1) {
+				this.selectedItem2 = 0; //Going left from bottom items row.
+				//Open the menu
+				Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem2,this.topLeftItem2,false);				
+				GuiMainMenu.requested("GuiPage_HomeTwoItemsBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);
 			} else {
 				if (this.selectedItem2 < this.topLeftItem2) {
 					this.topLeftItem2--;

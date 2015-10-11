@@ -248,17 +248,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			if (this.selectedItem == -1) {
-				if (this.selectedBannerItem != this.menuItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem";		
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
+			this.openMenu();
 			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
@@ -281,16 +271,30 @@ GuiPage_HomeOneItem.playSelectedItem = function () {
 	Support.playSelectedItem("GuiPage_HomeOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
+GuiPage_HomeOneItem.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
+}
+
 GuiPage_HomeOneItem.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
-			this.selectedBannerItem = 0;
+		if (this.selectedBannerItem == -1) {
+			this.openMenu(); //Going left from the end of the banner menu.
 		}
 		this.updateSelectedBannerItems();	
+	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){
+			this.openMenu(); //Going left from anywhere in the first column.
 	} else {
 		this.selectedItem--;
-		if (this.selectedItem < 0) {
+		if (this.selectedItem == -1) {
 			this.selectedItem = 0;
 		} else {
 			if (this.selectedItem < this.topLeftItem) {

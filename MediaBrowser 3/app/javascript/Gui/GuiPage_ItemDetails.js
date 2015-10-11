@@ -358,10 +358,8 @@ GuiPage_ItemDetails.keyDown = function()
 			}
 		break;
 		case tvKey.KEY_LEFT:
-			alert ("RIGHT");
-			if (this.ItemData.Type == "Episode") {
+			alert ("LEFT");
 				this.processLeftKey();
-			}
 			break;
 		case tvKey.KEY_RIGHT:
 			alert ("RIGHT");
@@ -385,9 +383,7 @@ GuiPage_ItemDetails.keyDown = function()
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-			document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle"; 
-			GuiMainMenu.requested("GuiPage_ItemDetails",this.menuItems[this.selectedItem],"FilmListSingle EpisodeListSelected");
+			this.openMenu();
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.MediaType == "Video") {
@@ -427,16 +423,14 @@ GuiPage_ItemDetails.keyDown = function()
 	}
 };
 
+GuiPage_ItemDetails.openMenu = function() {
+	Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
+	document.getElementById(this.menuItems[this.selectedItem]).className = "FilmListSingle"; 
+	GuiMainMenu.requested("GuiPage_ItemDetails",this.menuItems[this.selectedItem],"FilmListSingle EpisodeListSelected");
+}
+
 GuiPage_ItemDetails.processLeftKey = function() {
-	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Play" || this.menuItems[this.selectedItem] == "guiTV_Episode_Resume" ) {
-		if (this.AdjacentData.Items.length == 2 && (this.AdjacentData.Items[0].IndexNumber < this.ItemData.IndexNumber)) {
-			var url = Server.getItemInfoURL(this.AdjacentData.Items[0].Id);
-			GuiPage_ItemDetails.start(this.AdjacentData.Items[0].Name,url,0);
-		} else if (this.AdjacentData.Items.length > 2) {
-			var url = Server.getItemInfoURL(this.AdjacentData.Items[0].Id);
-			GuiPage_ItemDetails.start(this.AdjacentData.Items[0].Name,url,0);
-		}
-	}
+		this.openMenu();
 };
 
 GuiPage_ItemDetails.processRightKey = function() {

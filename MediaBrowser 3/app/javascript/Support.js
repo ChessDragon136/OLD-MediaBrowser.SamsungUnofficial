@@ -779,15 +779,6 @@ Support.generateMainMenu = function() {
 		menuItems.push("Movies");
 	}
 	
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
-	}
-	
 	//Check Music
 	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
 	var hasMusic = Server.getContent(urlMusic);
@@ -807,6 +798,15 @@ Support.generateMainMenu = function() {
 		if (Main.isMusicEnabled()) {
 			menuItems.push("Music");
 		}
+	}
+	
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
 	}
 	
 	//Check Images No API Support Currently
@@ -878,15 +878,6 @@ Support.generateTopMenu = function() {
 		menuItems.push("Movies");
 	}
 	
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
-	}
-	
 	//Check Music
 	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
 	var hasMusic = Server.getContent(urlMusic);
@@ -908,6 +899,15 @@ Support.generateTopMenu = function() {
 		}
 	}
 
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
+	}
+	
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");
 	var hasMediaFolders = Server.getContent(urlMF);
@@ -1357,3 +1357,17 @@ Support.getStarRatingImage = function(rating) {
 		break;
 	} 
 }
+
+Support.isPower = function(a,b) {
+		if ( a == 0) {
+			return true;
+		}
+		//This is a brain dead way of doing this. I expect you can do better! 
+		for (var i = 0; i < 1000; i++){
+			if (a/i == b){
+				return true;
+				break;
+			}
+		}
+		return false;	
+};

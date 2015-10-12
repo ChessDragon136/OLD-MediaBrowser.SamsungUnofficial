@@ -22,13 +22,15 @@ var Support = {
 }
 
 Support.clock = function() {
-    var today=new Date();
-    var h=today.getHours();
-    var m=today.getMinutes();
-    if (m<10) {m = "0" + m;};
-    document.getElementById('Clock').innerHTML = h+":"+m;
-    document.getElementById('guiPlayer_clock').innerHTML = h+":"+m;
-    document.getElementById('guiPlayer_clock2').innerHTML = h+":"+m;
+	var time = document.getElementById("pluginTime");
+	var a = time.ConvertEpochToLocalTime(time.GetEpochTime());
+	var b = a.split("/");
+	var h = b[3];
+	var m = b[4];
+	var t = h+":"+m;
+	document.getElementById('Clock').innerHTML = t;
+    document.getElementById('guiPlayer_clock').innerHTML = t;
+    document.getElementById('guiPlayer_clock2').innerHTML = t;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 
@@ -62,13 +64,6 @@ Support.updateHomePageURLs = function (title,url,title2Name,isURL1) {
 }
 
 Support.updateURLHistory = function(page,title,url,title2,url2,selectedItem,topLeftItem,isTop) {
-	//Check to stop episodes to episode scrolling from adding to the return array
-	if (page == "GuiPage_ItemDetails" && this.previousPageDetails[this.previousPageDetails.length-1][0] == "GuiPage_ItemDetails") {
-		//Pop the last one and add the current page
-		//Thus if you play a video and return it returns to the latest Episode Page, not the one you entered on
-		this.previousPageDetails.pop();
-	}
-	
 	//Only add new page if going to new page (if url's are the same don't add) - Length must be greater than 0
 	if (this.previousPageDetails.length > 0) {
 		//If greater than 0 check if page isnt the same as previous page

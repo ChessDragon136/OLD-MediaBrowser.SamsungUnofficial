@@ -21,11 +21,11 @@ GuiUsers_Manual.start = function() {
 	if (this.UserData == null) { return; }
 	
 	//Change Display
-	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
+	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer12key'> \
 		<p style='padding-bottom:5px'>Username</p> \
-		<form><input id='user' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<form><input id='user' style='z-index:10;' type='text' size='40' value=''/></form> \
 		<p style='padding-bottom:5px'>Password</p> \
-		<form><input id='pass' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<form><input id='pass' style='z-index:10;' type='text' size='40' value=''/></form> \
 		<br><span id='guiUsers_rempwd'>Remember Password </span> : <span id='guiUsers_rempwdvalue'>" + this.rememberPassword + "</span> \
 		</div>";
 	
@@ -70,7 +70,7 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
 }
 
 //////////////////////////////////////////////////////////////////
-//  Input method for entering user password                     //
+//  Input method for entering user password.                    //
 //////////////////////////////////////////////////////////////////
 var GuiUsers_Manual_Input  = function(id) {   
     var imeReady = function(imeObject) {    	
@@ -80,6 +80,18 @@ var GuiUsers_Manual_Input  = function(id) {
     
     var ime = new IMEShell(id, imeReady,'num');
     ime.setKeypadPos(680,90);
+	ime.setKeypadChangeFunc('qwerty',onSwitchToQwerty);
+	ime.setKeypadChangeFunc('12key',onSwitchTo12key);
+	
+	function onSwitchToQwerty(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("pageContent").className = "GuiPage_NewServerQwerty";
+	}
+	
+	function onSwitchTo12key(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("pageContent").className = "GuiPage_NewServer12key";
+	}
            
     var installFocusKeyCallbacks = function () {
         ime.setKeyFunc(tvKey.KEY_ENTER, function (keyCode) {

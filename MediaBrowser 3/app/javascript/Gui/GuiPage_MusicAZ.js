@@ -266,7 +266,11 @@ GuiPage_MusicAZ.processTopMenuRightKey = function() {
 }
 
 GuiPage_MusicAZ.processTopMenuUpKey = function() {
-	this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT;
+	if (this.selectedItem > (this.MAXCOLUMNCOUNT *2) -1){
+		this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT +1; //Moving up from the bottom row.
+	} else {
+		this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT; //Moving up to the top row or the menu.
+	}
 	if (this.selectedItem < 0) {
 		this.selectedBannerItem = 0;
 		this.selectedItem = -1;
@@ -292,7 +296,12 @@ GuiPage_MusicAZ.processTopMenuDownKey = function() {
 		this.selectedBannerItem = -1;
 		this.updateSelectedBannerItems();
 	} else {
-		this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
+		if (this.selectedItem < this.MAXCOLUMNCOUNT +1){
+			this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT; //Moving down from the top row.
+		} else {
+			this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT -1; //Moving down to the bottom row.
+		}
+		
 		if (this.selectedItem >= this.Letters.length) {
 			if (this.totalRecordCount > this.Letters.length) {
 				this.loadMoreItems();

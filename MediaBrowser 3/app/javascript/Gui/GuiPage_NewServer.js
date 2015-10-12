@@ -10,7 +10,7 @@ GuiPage_NewServer.start = function() {
 	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Insert html into page
-	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
+	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer12key'> \
 		<p style='padding-bottom:5px;'>Please enter the IP address & port number below</p> \
 		<form><input id='1' type='text' size='5'  maxlength='3' value=''/>. \
 		<input id='2' type='text' size='5'  maxlength='3' value=''/>. \
@@ -23,8 +23,8 @@ GuiPage_NewServer.start = function() {
 		</div>";
 	
 	//Set Backdrop
-	imgsrc =  "images/hd-splash.jpg";
-	document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+	//imgsrc =  "images/hd-splash.jpg";
+	//document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
 
 	//Prepare all input elements for IME
 	GuiPage_NewServer.createInputObjects();

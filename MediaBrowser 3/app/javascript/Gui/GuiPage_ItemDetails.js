@@ -436,9 +436,11 @@ GuiPage_ItemDetails.processLeftKey = function() {
 GuiPage_ItemDetails.processRightKey = function() {
 	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Play" || this.menuItems[this.selectedItem] == "guiTV_Episode_Resume" ) {
 		if (this.AdjacentData.Items.length == 2 && (this.AdjacentData.Items[1].IndexNumber > this.ItemData.IndexNumber)) {
+			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 			var url = Server.getItemInfoURL(this.AdjacentData.Items[1].Id);
 			GuiPage_ItemDetails.start(this.AdjacentData.Items[1].Name,url,0);
 		} else if (this.AdjacentData.Items.length > 2) {
+			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 			var url = Server.getItemInfoURL(this.AdjacentData.Items[2].Id);
 			GuiPage_ItemDetails.start(this.AdjacentData.Items[2].Name,url,0);
 		}

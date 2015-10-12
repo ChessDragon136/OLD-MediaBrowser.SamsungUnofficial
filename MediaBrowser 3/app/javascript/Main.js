@@ -1,10 +1,10 @@
 var widgetAPI = new Common.API.Widget();
 var pluginAPI = new Common.API.Plugin();
 var tvKey = new Common.API.TVKeyValue();
-
+	
 var Main =
 {
-		version : "v0.593n",
+		version : "v0.593p",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -86,9 +86,9 @@ Main.onLoad = function()
 	
 	window.onShow = Main.initKeys;
 	
-	//Set Version Number & initialte clock
+	//Set Version Number & initialise clock
 	document.getElementById("menuVersion").innerHTML = this.version;
-	Support.clock();
+	//Support.clock();
 	
 	//Set DeviceID & Device Name
 	var NNaviPlugin = document.getElementById("pluginObjectNNavi");

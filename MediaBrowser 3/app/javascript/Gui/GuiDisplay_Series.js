@@ -596,7 +596,7 @@ GuiDisplay_Series.processRightKey = function() {
 GuiDisplay_Series.processUpKey = function() {
 	this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT;
 	if (this.selectedItem < 0) {
-		if (this.isAllorFolder == 0 ) {
+		if (this.isAllorFolder == 0 && this.startParams[0] != "All Collections" ) {
 			this.selectedBannerItem = 0;
 			this.selectedItem = -1;
 			//Hide red - If Music use different styles

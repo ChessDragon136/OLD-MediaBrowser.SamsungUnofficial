@@ -340,8 +340,6 @@ Server.createPlaylist = function(name, ids, mediaType) {
 
 Server.deletePlaylist = function(playlistId) {
 	var url = this.serverAddr + "/Items/"+playlistId;
-	alert (url);
-	http://192.168.1.108:8096/Items/d85957fd88b68eb725ee10055a9d520b
 	xmlHttp = new XMLHttpRequest();
 	if (xmlHttp) {
 		xmlHttp.open("DELETE", url , true); //must be true!

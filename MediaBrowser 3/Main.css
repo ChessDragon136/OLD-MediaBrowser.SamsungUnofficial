@@ -276,11 +276,19 @@
 	z-index:22;
 }
 
-.GuiPage_NewServer {
-	position:relative;
-	top:130px;
-	left:40px;
-	width:600px;
+.GuiPage_NewServer12key {
+	position:absolute;
+	top:50px;
+	left:90px;
+	width:350px;
+	text-align:center;
+}
+
+.GuiPage_NewServerQwerty {
+	position:absolute;
+	top:50px;
+	left:5px;
+	width:350px;
 	text-align:center;
 }
 
@@ -488,7 +496,7 @@
 }
 
 .EpisodeListSelected {
-	background-color:rgba(0,0,0,0.9);
+	background-color:rgba(70,70,70,0.9);
 }
 
 .guiPage_Settings_Title{
@@ -975,7 +983,7 @@
     max-height:235px;
     width:170px;  
     z-index:9000;
-    background-color:rgba(0,0,0,0.3);
+    background-color:rgba(40,40,40,0.8);
 }
 
 .guiFilm_Poster {
@@ -1508,55 +1516,26 @@
 	overflow: hidden;
 }
 /* ---------------------------------------------------------------------------- */
-.playlistContainerOne {
+
+.playlistContainer12key {
 	position: absolute;
-	top: 180px;
-	left:265px;
-	height: 200px;
-	width:430px;
+	top:    100px;
+	left:   240px;
+	width:  430px;
 	background-color: #303030;
 	border: 2px solid #087B26;
 }
 
-.playlistContainerTwo {
+.playlistContainerQwerty {
 	position: absolute;
-	top: 170px;
-	left:265px;
-	height: 220px;
-	width:430px;
+	top:   100px;
+	left:    5px;
+	width: 415px;
 	background-color: #303030;
 	border: 2px solid #087B26;
 }
 
-.playlistContainerThree {
-	position: absolute;
-	top: 160px;
-	left:265px;
-	height: 240px;
-	width:430px;
-	background-color: #303030;
-	border: 2px solid #087B26;
-}
-
-.playlistContainerFour {
-	position: absolute;
-	top: 150px;
-	left:265px;
-	height: 260px;
-	width:430px;
-	background-color: #303030;
-	border: 2px solid #087B26;
-}
-
-.playlistContainerFive {
-	position: absolute;
-	top: 140px;
-	left:265px;
-	height: 280px;
-	width:430px;
-	background-color: #303030;
-	border: 2px solid #087B26;
-}
+/* ---------------------------------------------------------------------------- */
 
 .screensaveroverlay {
 	position:absolute;

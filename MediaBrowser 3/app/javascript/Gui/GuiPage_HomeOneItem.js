@@ -23,7 +23,7 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiPage_HomeOneItem");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 	
 	//Save Start Params	
 	this.startParams = [title,url];

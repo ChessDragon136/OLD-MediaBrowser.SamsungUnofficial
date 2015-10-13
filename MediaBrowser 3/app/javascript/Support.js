@@ -22,15 +22,18 @@ var Support = {
 }
 
 Support.clock = function() {
-	var time = document.getElementById("pluginTime");
-	var a = time.ConvertEpochToLocalTime(time.GetEpochTime());
-	var b = a.split("/");
-	var h = b[3];
-	var m = b[4];
-	var t = h+":"+m;
-	document.getElementById('Clock').innerHTML = t;
-    document.getElementById('guiPlayer_clock').innerHTML = t;
-    document.getElementById('guiPlayer_clock2').innerHTML = t;
+	var date = new Date();
+    var h=date.getHours(); 
+    var offset = File.getUserProperty("ClockOffset");
+    h = h+offset;
+	if (h<0) {h = h + 24;};
+	if (h<10) {h = "0" + h;};
+    var m=date.getMinutes(); 
+	if (m<10) {m = "0" + m;};
+	var time = h+':'+m;
+	document.getElementById('Clock').innerHTML = time;
+    document.getElementById('guiPlayer_clock').innerHTML = time;
+    document.getElementById('guiPlayer_clock2').innerHTML = time;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 

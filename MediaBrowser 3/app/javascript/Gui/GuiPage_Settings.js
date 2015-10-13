@@ -20,9 +20,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
+		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime","ClockOffset"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: ","Clock Offset: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000,0],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
 		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
@@ -59,6 +59,9 @@ var GuiPage_Settings = {
 		
 		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
 		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
+		
+		ClockOffsetOptions : ["+12 hour", "+11 hours", "+10 hours", "+9 hours", "+8 hours", "+7 hours", "+6 hours", "+5 hours", "+4 hours", "+3 hours", "+2 hours", "+1 hours","0 hours", "-1 hour", "-2 hours", "-3 hours", "-4 hours", "-5 hours", "-6 hours", "-7 hours", "-8 hours", "-9 hours", "-10 hours", "-11 hours", "-12 hours"],
+		ClockOffsetValues : [12,11,10,9,8,7,6,5,4,3,2,1,0,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12],
 		
 		//Also used for Image Player - Different setting!
 		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
@@ -280,7 +283,15 @@ GuiPage_Settings.updateDisplayedItems = function() {
 					break;
 				}
 			}
-			break;		
+			break;
+		case "ClockOffset":
+			for (var index2 = 0; index2 < this.ClockOffsetValues.length; index2++) {
+				if (this.ClockOffsetValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+					Setting = this.ClockOffsetOptions[index2];
+					break;
+				}
+			}
+			break;
 		case "Dolby":
 		case "DTS":	
 		case "TranscodeDSeries":
@@ -498,6 +509,9 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "ScreensaverImageTime":
 		case "ImagePlayerImageTime":		
 			this.CurrentSubSettings = this.ScreensaverImageTimeOptions;
+			break;	
+		case "ClockOffset":
+			this.CurrentSubSettings = this.ClockOffsetOptions;
 			break;	
 		case "ItemPaging":
 			this.CurrentSubSettings = this.ItemPagingOptions;
@@ -746,7 +760,11 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "ScreensaverImageTime":
 		this.UserData.ScreensaverImageTime = this.ScreensaverImageTimeValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ScreensaverImageTimeOptions[this.selectedSubItem];
-		break;	
+		break;
+	case "ClockOffset":
+		this.UserData.ClockOffset = this.ClockOffsetValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ClockOffsetOptions[this.selectedSubItem];
+		break;
 	case "Dolby":
 	case "DTS":
 	case "TranscodeDSeries":
@@ -976,7 +994,11 @@ GuiPage_Settings.setOverview = function() {
 		case "ScreensaverImageTime":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Rotate Speed";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during screensaver playback until the next one is displayed.";
-			break;		
+			break;
+		case "ClockOffset":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Clock Offset";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Some devices report their system time incorectly. Use this option to apply a correction.";
+			break;	
 		case "Bitrate":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Max Bitrate";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use this setting to select the maximum video bitrate your network can handle. If a video bitrate is higher than this, the video will be transcoded to use the max bitrate setting here.";

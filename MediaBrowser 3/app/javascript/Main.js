@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v0.593q",
+		version : "v0.593r",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -77,18 +77,16 @@ Main.onLoad = function()
 	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
 	FileLog.write("---------------------------------------------------------------------");
 	FileLog.write("MB3 Application Started");
-	
-	//Delete Old style Settings File
-	File.deleteOldSettingsFile();
-	
+
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
 	
-	window.onShow = Main.initKeys;
+	window.onShow = Main.initKeys();
+	alert("initKeys returned");
 	
 	//Set Version Number & initialise clock
 	document.getElementById("menuVersion").innerHTML = this.version;
-	//Support.clock();
+	Support.clock();
 	
 	//Set DeviceID & Device Name
 	var NNaviPlugin = document.getElementById("pluginObjectNNavi");
@@ -171,9 +169,9 @@ Main.onLoad = function()
 };
 
 Main.initKeys = function() {
-    alert('initKeys called');
 	pluginAPI.registKey(tvKey.KEY_TOOLS);
 	pluginAPI.registKey(tvKey.KEY_3D); 
+	return;
 }
 
 

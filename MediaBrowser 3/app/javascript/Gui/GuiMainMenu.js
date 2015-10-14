@@ -78,6 +78,9 @@ GuiMainMenu.start = function() {
 	} else {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);
 	}
+	
+	//Set the clock ticking.
+	Support.clock();
 }
 
 //Entry Point when called from any page displaying the menu
@@ -137,7 +140,7 @@ GuiMainMenu.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}

@@ -1,10 +1,10 @@
 var GuiPage_Music = {				
 		AlbumData : null,
 		
-		selectedItem : 0, //the currently selected topMenuItem.
+		selectedItem : 0, //Vertical
 		topLeftItem : 0,
 		
-		selectedItem2 : 0, //the currently selected playItem.
+		selectedItem2 : 0, //Horizontal
 		
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 15,
@@ -25,7 +25,7 @@ GuiPage_Music.getMaxDisplay = function() {
 
 GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
 	alert("Page Enter : GuiPage_Music");
-	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params
 	this.startParams = [title,url];

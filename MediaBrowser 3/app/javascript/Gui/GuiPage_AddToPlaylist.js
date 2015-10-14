@@ -97,7 +97,7 @@ GuiPage_AddToPlaylist.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -234,6 +234,13 @@ var GuiPage_AddToPlaylist_Input  = function(id) {
 	        alert("Enter key pressed");    
 	        
 	        var playlist = document.getElementById("guiPlayListNew").value;
+	        if (playlist == "") {
+	        	document.getElementById("guiPlayListResult").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>Enter a playlist name or press Return to cancel.</div>";
+	        	setTimeout(function(){
+	        		document.getElementById("guiPlayListResult").innerHTML = "";
+		    	}, 3000);
+	        	return;
+	        }
 	        ime.setString("");
 	        
 	        //Check playlist name doesnt already exist!

@@ -6,6 +6,7 @@ var GuiUsers = {
 	rememberPassword : true,
 	
 	selectedUser : 0,
+	selectedRow : 0,
 	topLeftItem : 0, 
 	MAXCOLUMNCOUNT : 3,
 	MAXROWCOUNT : 1
@@ -17,11 +18,12 @@ GuiUsers.getMaxDisplay = function() {
 
 GuiUsers.start = function(runAutoLogin) {
 	alert("Page Enter : GuiUsers");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons(null,null,null,null,"Exit  ");
 	
 	//Reset Properties
 	File.setUserEntry(null);
 	this.selectedUser = 0;
+	this.selectedRow = 0;
 	this.topLeftItem = 0; 
 	this.isManualEntry = false;
 	this.rememberPassword = true;
@@ -68,14 +70,15 @@ GuiUsers.start = function(runAutoLogin) {
 	if (autoLogin == false) {
 		//Change Display
 		document.getElementById("pageContent").className = "";
-		document.getElementById("pageContent").innerHTML = "<div style='padding-top:60px;text-align:center'>" +
+		document.getElementById("pageContent").innerHTML = "<div style='padding-top:50px;text-align:center'>" +
 			"<div id=guiUsers_allusers></div>" +
 			"<div id='guiUsers_pwd' style='visibility:hidden'>" +
 			"<br>Password:    <input id='guiUsers_Password' type='text' size='20'/>" +
 			"<br><span id='guiUsers_rempwd'>Remember Password </span> : <span id='guiUsers_rempwdvalue'>" + this.rememberPassword + "</span>" + 
 	    	"</div><br>" +
-	    	"<div id='ManualLogin'>Manual Login</div> " +
-	    	"<div><br>Pressing the Info button will bring up Help on all pages<br>Pressing the Tools button will select the menu bar once logged in</div>" +
+	    	"<div id='ManualLogin'>Manual Login</div>" +
+	    	"<div id='ChangeServer'>Change Server</div> " +
+	    	"<div><br>Available options for each page are shown at the bottom.<br>Once logged in, move left on any page to access the main menu.</div>" +
 	    	"</div>";
 		
 		if (this.UserData.length != 0) {
@@ -179,7 +182,7 @@ GuiUsers.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -192,22 +195,36 @@ GuiUsers.keyDown = function()
 			widgetAPI.sendReturnEvent();
 			break;
 		case tvKey.KEY_UP:
-			if (this.isManualEntry == true) {
-				this.isManualEntry = false;
-				document.getElementById("ManualLogin").style.color = "#f9f9f9";
+			this.selectedRow--;
+			if (this.selectedRow < 1) {
+				this.selectedRow = 0;
+				document.getElementById("ManualLogin").className = "offWhite";
 				GuiUsers.updateSelectedUser();
+			} else if (this.selectedRow == 1) {
+				this.isManualEntry = true;
+				document.getElementById("ManualLogin").className = "green";
+				document.getElementById("ChangeServer").className = "offWhite";
+				document.getElementById(this.UserData[this.selectedUser].Id).className = "User"; 
+			} else if (this.selectedRow == 2) {
+				document.getElementById("ManualLogin").className = "offWhite";
+				document.getElementById("ChangeServer").className = "green";
 			}
 			break;
 		case tvKey.KEY_DOWN:
-			if (this.isManualEntry == false) {
+			this.selectedRow++;
+			if (this.selectedRow == 1) {
 				this.isManualEntry = true;
-				document.getElementById("ManualLogin").style.color = "red";
+				document.getElementById("ManualLogin").className = "green";
+				document.getElementById("ChangeServer").className = "offWhite";
 				document.getElementById(this.UserData[this.selectedUser].Id).className = "User"; 
+			} else if (this.selectedRow == 2) {
+				document.getElementById("ManualLogin").className = "offWhite";
+				document.getElementById("ChangeServer").className = "green";
 			}
-			break;	
+			break;
 		case tvKey.KEY_LEFT:
 			alert("LEFT");
-			if (this.isManualEntry == false) {
+			if (this.selectedRow == 0) {
 				this.selectedUser--;
 				if (this.selectedUser < 0) {
 					this.selectedUser = this.UserData.length - 1;
@@ -231,7 +248,7 @@ GuiUsers.keyDown = function()
 			break;
 		case tvKey.KEY_RIGHT:
 			alert("RIGHT");	
-			if (this.isManualEntry == false) {
+			if (this.selectedRow == 0) {
 				this.selectedUser++;
 				if (this.selectedUser >= this.UserData.length) {
 					this.selectedUser = 0;
@@ -249,11 +266,13 @@ GuiUsers.keyDown = function()
 		case tvKey.KEY_ENTER:
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");
-			if (this.isManualEntry == false) {
+			if (this.selectedRow == 0) {
 				GuiUsers.processSelectedUser();
-			} else {
+			} else if (this.selectedRow == 1) {
 				GuiUsers_Manual.start();
-			}	
+			} else if (this.selectedRow == 2) {
+				GuiPage_Servers.start();
+			}
 			break;	
 		case tvKey.KEY_BLUE:
 			Server.setServerAddr("");
@@ -268,6 +287,11 @@ GuiUsers.keyDown = function()
 			GuiNotifications.setNotification("All Users Deleted","Deletion");
 			File.deleteAllUsers();
 			break;		
+		case tvKey.RETURN:
+			alert ("RETURN KEY");
+			widgetAPI.blockNavigation(event);
+        	GuiUsers.start();
+			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent();
@@ -317,8 +341,9 @@ var GuiUsers_Input  = function(id) {
         	document.getElementById("GuiUsers_Pwd").focus();
         });
         
-        ime.setKeyFunc(tvKey.KEY_INFO, function (keyCode) {
-        	GuiHelper.toggleHelp("GuiUsers");	
+        ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
+        	widgetAPI.blockNavigation(event);
+        	GuiUsers.start();
         });
         
         ime.setKeyFunc(tvKey.KEY_EXIT, function (keyCode) {
@@ -347,7 +372,7 @@ GuiUsers.IMEAuthenticate = function(password) {
 	} else {
 		//Wrong password - Reset IME focus and notifty user
 		document.getElementById("guiUsers_Password").focus();
-		GuiNotifications.setNotification("Wrong Password or Network Error");
+		GuiNotifications.setNotification("Bad password or network error.","Logon Error");
 	}  
 }
 
@@ -358,7 +383,7 @@ GuiUsers.keyDownPassword = function() {
 		if (document.getElementById("Notifications").style.visibility == "") {
 			document.getElementById("Notifications").style.visibility = "hidden";
 			document.getElementById("NotificationText").innerHTML = "";
-			
+			widgetAPI.blockNavigation(event);
 			//Change keycode so it does nothing!
 			keyCode = "VOID";
 		}
@@ -410,10 +435,6 @@ GuiUsers.keyDownPassword = function() {
 					document.getElementById("guiUsers_rempwdvalue").style.color = "red";
 				}
 				break;	
-			case tvKey.KEY_INFO:
-				alert ("INFO KEY");
-				GuiHelper.toggleHelp("GuiUsers");
-				break;
 			case tvKey.KEY_EXIT:
 				alert ("EXIT KEY");
 				widgetAPI.sendExitEvent();

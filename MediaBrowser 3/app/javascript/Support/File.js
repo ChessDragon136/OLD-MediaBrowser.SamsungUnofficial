@@ -129,7 +129,9 @@ File.deleteServer = function (index) {
 		}
 		
 		if (fileJson.Servers.length == 0) {
-			GuiPage_IP.showGUI();
+			GuiPage_NewServer.start();
+		} else {
+			GuiPage_Servers.start();
 		}
 	}	
 }
@@ -277,7 +279,9 @@ File.getUserProperty = function(property) {
 	if (openRead) {
 		var fileJson = JSON.parse(openRead.readLine()); //Read line as only 1 and skips line break!
 		fileSystemObj.closeCommonFile(openRead);	
-
+		if (!fileJson.Servers[this.ServerEntry].Users[this.UserEntry]) { //In case we're not logged in yet.
+			return null;
+		}
 		if (fileJson.Servers[this.ServerEntry].Users[this.UserEntry][property] === undefined) {
 			//Get System Default
 			for (var index = 0; index < GuiPage_Settings.Settings.length; index++) {

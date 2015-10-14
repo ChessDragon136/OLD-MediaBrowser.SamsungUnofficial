@@ -278,10 +278,15 @@
 
 .GuiPage_NewServer12key {
 	position:absolute;
+	padding:30px;
 	top:50px;
-	left:90px;
-	width:350px;
+	left:120px;
+	width:370px;
+	height:150px;
 	text-align:center;
+	background-image:url('images/newServerBackground.png');
+	background-repeat: no-repeat;
+    background-position:center;
 }
 
 .GuiPage_NewServerQwerty {
@@ -1486,6 +1491,10 @@
 
 .blue {
 	color:#66CCFF;
+}
+
+.offWhite {
+	color:#f9f9f9;
 }
 
 .musicPlaylist {

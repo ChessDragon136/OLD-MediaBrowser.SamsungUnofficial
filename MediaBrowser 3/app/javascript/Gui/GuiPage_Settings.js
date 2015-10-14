@@ -20,13 +20,13 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime","ClockOffset"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: ","Clock Offset: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000,0],
+		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
 		
-		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
-		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
-		TVSettingsDefaults : [60,false,false,false,false,150],
+		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging","ClockOffset"],
+		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: ","Clock Offset: "],
+		TVSettingsDefaults : [60,false,false,false,false,150,0],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","GroupMovieCollections","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
 		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ","Group Movies into Collections: ","Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
@@ -60,11 +60,11 @@ var GuiPage_Settings = {
 		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
 		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
 		
-		ClockOffsetOptions : ["+12 hour", "+11 hours", "+10 hours", "+9 hours", "+8 hours", "+7 hours", "+6 hours", "+5 hours", "+4 hours", "+3 hours", "+2 hours", "+1 hours","0 hours", "-1 hour", "-2 hours", "-3 hours", "-4 hours", "-5 hours", "-6 hours", "-7 hours", "-8 hours", "-9 hours", "-10 hours", "-11 hours", "-12 hours"],
+		ClockOffsetOptions : ["+12 hour", "+11 hours", "+10 hours", "+9 hours", "+8 hours", "+7 hours", "+6 hours", "+5 hours", "+4 hours", "+3 hours", "+2 hours", "+1 hour","0 hours", "-1 hour", "-2 hours", "-3 hours", "-4 hours", "-5 hours", "-6 hours", "-7 hours", "-8 hours", "-9 hours", "-10 hours", "-11 hours", "-12 hours"],
 		ClockOffsetValues : [12,11,10,9,8,7,6,5,4,3,2,1,0,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12],
 		
 		//Also used for Image Player - Different setting!
-		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
+		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minute", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
 		ScreensaverImageTimeValues : [300000,120000,60000,30000,20000,10000,5000],
 		
 		LanguageOptions : ["None","English","French","German","Spanish","Italian"],
@@ -286,7 +286,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 			break;
 		case "ClockOffset":
 			for (var index2 = 0; index2 < this.ClockOffsetValues.length; index2++) {
-				if (this.ClockOffsetValues[index2] == this.UserData[this.currentViewSettings[index]]) {
+				if (this.ClockOffsetValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
 					Setting = this.ClockOffsetOptions[index2];
 					break;
 				}
@@ -550,7 +550,7 @@ GuiPage_Settings.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -762,7 +762,7 @@ GuiPage_Settings.processSelectedSubItem = function() {
 		this.CurrentSettingValue = this.ScreensaverImageTimeOptions[this.selectedSubItem];
 		break;
 	case "ClockOffset":
-		this.UserData.ClockOffset = this.ClockOffsetValues[this.selectedSubItem];
+		this.AllData.TV.ClockOffset = this.ClockOffsetValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ClockOffsetOptions[this.selectedSubItem];
 		break;
 	case "Dolby":
@@ -854,7 +854,7 @@ GuiPage_Settings.bottomKeyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}

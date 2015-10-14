@@ -160,15 +160,15 @@ GuiHelper.setControlButtons = function(redText,greenText,yellowText,blueText,ret
 	}
 	
 	//Add the offset values to item's standard position.
-	var redPos = (redText == null) ? 0 : 325;
+	var redPos = (redText == null) ? 0 : 315;
 	redPos = redPos + redOffset + greenOffset + yellowOffset + blueOffset + returnOffset;
-	var greenPos = (greenText == null) ? 0 : 255;
+	var greenPos = (greenText == null) ? 0 : 245;
 	greenPos = greenPos + greenOffset + yellowOffset + blueOffset + returnOffset;
-	var yellowPos = (yellowText == null) ? 0 : 170;
+	var yellowPos = (yellowText == null) ? 0 : 160;
 	yellowPos = yellowPos + yellowOffset + blueOffset + returnOffset;
-	var bluePos = (blueText == null) ? 0 : 100;
+	var bluePos = (blueText == null) ? 0 : 90;
 	bluePos = bluePos + blueOffset + returnOffset;
-	var returnPos = (returnText == null) ? 0 : 10;
+	var returnPos = (returnText == null) ? 0 : 0;
 	returnPos = returnPos + returnOffset;
 	
 	//This section moves the items right if some are not being displayed.

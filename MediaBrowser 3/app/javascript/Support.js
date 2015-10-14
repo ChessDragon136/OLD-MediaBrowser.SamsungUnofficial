@@ -23,10 +23,11 @@ var Support = {
 
 Support.clock = function() {
 	var date = new Date();
-    var h=date.getHours(); 
-    var offset = File.getUserProperty("ClockOffset");
+    var h=date.getHours();
+    var offset = File.getTVProperty("ClockOffset");
     h = h+offset;
 	if (h<0) {h = h + 24;};
+	if (h>23){h = h - 24;};
 	if (h<10) {h = "0" + h;};
     var m=date.getMinutes(); 
 	if (m<10) {m = "0" + m;};
@@ -1105,7 +1106,7 @@ Support.noitemskeyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}

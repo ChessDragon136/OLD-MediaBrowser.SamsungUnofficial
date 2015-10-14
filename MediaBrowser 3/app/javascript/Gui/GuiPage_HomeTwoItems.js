@@ -34,7 +34,7 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	alert("Page Enter : GuiPage_HomeTwoItems");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
@@ -197,7 +197,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -405,7 +405,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -518,11 +518,11 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			if (this.selectedItem > -1) {
 				if (this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData2.Items[this.selectedItem2].Id);
-					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = false;
+					this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite = false;
 					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData2.Items[this.selectedItem2].Id);
-					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = true;
+					this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite = true;
 					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
 			}

@@ -78,9 +78,6 @@ GuiMainMenu.start = function() {
 	} else {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);
 	}
-	
-	//Set the clock ticking.
-	Support.clock();
 }
 
 //Entry Point when called from any page displaying the menu

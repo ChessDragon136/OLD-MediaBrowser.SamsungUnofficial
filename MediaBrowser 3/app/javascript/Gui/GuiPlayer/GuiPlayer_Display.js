@@ -1,6 +1,7 @@
 var GuiPlayer_Display = {	
 		PlayerData : null,
 		playingMediaSource : null,
+		playingMediaSourceIndex : null,
 		playingTranscodeStatus : null,
 		playingVideoIndex : null,
 		playingAudioIndex : null,
@@ -12,7 +13,6 @@ var GuiPlayer_Display = {
 		videoToolsOptions : [],
 		videoToolsSelectedItem : 0,
 		subtitleIndexes : [], 
-
 		
 		audioIndexes : [],
 		chapterIndexes : [], 
@@ -26,9 +26,10 @@ var GuiPlayer_Display = {
 		sliderCurrentTime : 0
 };
 
-GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtranscodestatus, offsetSeconds, playingVideoIndex, playingAudioIndex, playingSubtitleIndex) {
+GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtranscodestatus,offsetSeconds,playingVideoIndex,playingAudioIndex,playingSubtitleIndex,playingmediasourceindex) {
 	this.PlayerData = playerdata;
 	this.playingMediaSource = playingmediasource;
+	this.playingMediaSourceIndex = playingmediasourceindex;
 	this.playingTranscodeStatus = playingtranscodestatus;
 	this.offsetSeconds = offsetSeconds;
 	this.playingVideoIndex = playingVideoIndex;
@@ -140,9 +141,9 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
         	document.getElementById("guiPlayer_Ratings").innerHTML += "<div class='videoItemRatingsStarIcon' style=background-image:url("+starsImage+")></div>";
        		document.getElementById("guiPlayer_Ratings").innerHTML += "<div class='videoItemRatingsStar'>"+stars+"</div>";
     	}
-   }
-
-   var videoName = this.playingMediaSource.Name;
+    }
+    
+   	var videoName = this.playingMediaSource.Name;
     document.getElementById("guiPlayer_ItemDetails_Title").innerHTML = fileInfo;
     document.getElementById("guiPlayer_ItemDetails_Title2").innerHTML = fileInfo;
     document.getElementById("guiPlayer_ItemDetails_SubData").innerHTML = videoName + " : " + this.playingTranscodeStatus; 
@@ -475,8 +476,8 @@ GuiPlayer_Display.keyDownToolsSub = function() {
 					
 					//Check if first index - If it is need to stream copy audio track
 					var isFirstAudioIndex = (this.videoToolsSubOptions[this.videoToolsSelectedItemSub] == this.audioIndexes[0]) ? true : false;
-					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id, this.playingMediaSource,this.playingMediaSourceIndex, this.playingVideoIndex, this.videoToolsSubOptions[this.videoToolsSelectedItemSub],isFirstAudioIndex);
-					GuiPlayer.startPlayback(transcodeResult, this.currentTime);
+					var transcodeResult = GuiPlayer_Transcoding.start(this.PlayerData.Id,this.playingMediaSource,this.playingMediaSourceIndex,this.playingVideoIndex,this.videoToolsSubOptions[this.videoToolsSelectedItemSub],isFirstAudioIndex,this.playingSubtitleIndex);
+					GuiPlayer.startPlayback(transcodeResult, GuiPlayer.currentTime);
 				} else {
 					//Do Nothing!
 					document.getElementById("GuiPlayer").focus();

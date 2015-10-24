@@ -29,7 +29,7 @@ GuiHelper.keyDown = function() {
 	}
 	
 	switch(keyCode) {
-		case tvKey.KEY_RED:
+		case tvKey.KEY_YELLOW:
 		case tvKey.KEY_RETURN:
 			
 			//Stops Return causing the app to exit when closing help text.

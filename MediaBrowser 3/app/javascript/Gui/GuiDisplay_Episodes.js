@@ -36,7 +36,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 	
-	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Latest Page Fix
 	this.isLatest = false;
@@ -103,36 +103,41 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 GuiDisplay_Episodes.updateDisplayedItems = function() {
 	var htmlToAdd = "";
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++) {		
-		title = "";
+		var title = "";
 		if (this.ItemData.Items[index].IndexNumber === undefined) {
 			title = this.ItemData.Items[index].Name;
 		} else {
 			title = this.ItemData.Items[index].IndexNumber + " - " + this.ItemData.Items[index].Name;
 		}
-
-		if (this.ItemData.Items[index].UserData.Played == true) {
-			if (this.ItemData.Items[index].ImageTags.Primary) {			
-				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleWatched'>"+ title +"</div><div class='ShowListSingleWatched'></div></div>";
-			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleWatched'>"+ title +"</div><div class='ShowListSingleWatched'></div></div>";
-			}
-		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
-			imageMissingOrUnaired = (Support.FutureDate(this.ItemData.Items[index].PremiereDate) == true) ? "ShowListSingleUnaired" : "ShowListSingleMissing";	
-			if (this.ItemData.Items[index].ImageTags.Primary) {			
-				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleVirtual'>"+ title +"</div><div class='"+imageMissingOrUnaired+"'></div></div>";
-			} else {
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitleVirtual'>"+ title +"</div><div class='"+imageMissingOrUnaired+"'></div></div>";
-			}
+		
+		htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'>";
+		
+		if (this.ItemData.Items[index].ImageTags.Primary) {			
+			var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);
+			htmlToAdd += "<div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div>";
 		} else {
-			if (this.ItemData.Items[index].ImageTags.Primary) {			
-				var imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",100,46,0,false,0);	
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitle'>"+ title +"</div></div>"; // 
-			} else {  //
-				htmlToAdd += "<div id=" + this.ItemData.Items[index].Id + " class='EpisodeListSingle'><div class='EpisodeListSingleImage'></div><div id=title_" + this.ItemData.Items[index].Id + " class='EpisodeListSingleTitle'>"+ title +"</div></div>";
-			}
+			htmlToAdd += "<div class='EpisodeListSingleImage'></div>";
 		}
+		
+		htmlToAdd += "<div id=title_" + this.ItemData.Items[index].Id;
+		
+		if (this.ItemData.Items[index].UserData.Played == true) {
+			htmlToAdd += " class='EpisodeListSingleTitleWatched'>"+ title +"</div>";
+		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
+			htmlToAdd += " class='EpisodeListSingleTitleVirtual'>"+ title +"</div>";
+		} else {
+			htmlToAdd += " class='EpisodeListSingleTitle'>"+ title +"</div>";
+		}
+		if (this.ItemData.Items[index].UserData.IsFavorite == true) {
+			htmlToAdd += "<div class='ShowListSingleFav'></div>";
+		}
+		if (this.ItemData.Items[index].UserData.Played == true) {
+			htmlToAdd += "<div class='ShowListSingleWatched'></div>";
+		}else if (this.ItemData.Items[index].LocationType == "Virtual"){
+			htmlToAdd += "<div class='"+imageMissingOrUnaired+"'></div>";
+		}
+		htmlToAdd += "</div>";
+
 	}
 	document.getElementById("Content").innerHTML = htmlToAdd;
 	
@@ -149,7 +154,9 @@ GuiDisplay_Episodes.updateDisplayedItems = function() {
 	}
 }
 
-
+GuiDisplay_Episodes.updateOneDisplayedItem = function() {
+	Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"",this.isResume,this.genreType,false,"GuiDisplay_Episodes",false);
+}
 
 //Function sets CSS Properties so show which user is selected
 GuiDisplay_Episodes.updateSelectedItems = function () {
@@ -313,9 +320,6 @@ GuiDisplay_Episodes.keyDown = function() {
 		case tvKey.KEY_PLAY:
 			this.playSelectedItem();
 			break;
-		case tvKey.KEY_RED:
-			//this.processIndexing();
-			break;	
 		case tvKey.KEY_GREEN:
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].MediaType == "Video") {
@@ -326,22 +330,21 @@ GuiDisplay_Episodes.keyDown = function() {
 						Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
 						this.ItemData.Items[this.selectedItem].UserData.Played = true
 					}
-					this.updateDisplayedItems();
-					this.updateSelectedItems();
+					Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"",this.isResume,this.genreType,false,"GuiDisplay_Episodes",false);
 				}
 			}
 			break;
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_RED:	
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
-					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
+					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
-					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
+				Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"",this.isResume,this.genreType,false,"GuiDisplay_Episodes",false);
 			}
 			break;		
 		case tvKey.KEY_BLUE:	

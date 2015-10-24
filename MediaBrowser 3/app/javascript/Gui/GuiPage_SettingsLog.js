@@ -61,16 +61,24 @@ GuiPage_SettingsLog.updateDisplayedItems = function() {
 GuiPage_SettingsLog.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index == this.selectedBannerItem) {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green";
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem green";
 			}		
 		} else {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				if (index == 3) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				}
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				if (index == 3) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				}
 			}
 		}
 	}
@@ -170,9 +178,15 @@ GuiPage_SettingsLog.processLeftKey = function() {
 	this.selectedBannerItem--;
 	if (this.selectedBannerItem < 0) {
 		this.selectedBannerItem = 0;
+		this.openMenu();
 	} else {
 		this.updateSelectedBannerItems();	
 	}	
+}
+
+GuiPage_SettingsLog.openMenu = function() {
+	document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+	GuiMainMenu.requested("GuiPage_SettingsLog","bannerItem0","guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green");
 }
 
 GuiPage_SettingsLog.processRightKey = function() {
@@ -185,7 +199,7 @@ GuiPage_SettingsLog.processRightKey = function() {
 }
 
 GuiPage_SettingsLog.processSelectedItem = function() {
-	if (this.bannerItems[this.selectedBannerItem] != "Logs") {
+	if (this.bannerItems[this.selectedBannerItem] != "Log") {
 		GuiPage_Settings.start(this.bannerItems[this.selectedBannerItem]);
 	}
 }

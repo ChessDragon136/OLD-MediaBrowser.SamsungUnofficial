@@ -4,7 +4,8 @@ var GuiPage_Settings = {
 		ServerUserData : null,
 
 		selectedItem : 0,
-		selectedBannerItem : 0,
+		currentPage : 0,
+		selectedBannerItem : -1,
 		selectedSubItem : 0,
 		topLeftItem : 0,
 		MAXCOLUMNCOUNT : 1,
@@ -105,7 +106,8 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	
 	//Reset Vars
 	this.selectedItem = 0;
-	this.selectedBannerItem = 0;
+	this.currentPage = 0;
+	this.selectedBannerItem = -1;
 	this.selectedSubItem = 0;
 	this.topLeftItem = 0;
 	
@@ -145,12 +147,14 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	//Set default view as the User Settings Page
 	if (viewToDisplay == null || viewToDisplay === undefined || viewToDisplay == "User Settings") {
 		this.currentView = "User Settings";
+		this.currentPage = 0;
 		this.currentViewSettings = this.Settings;
 		this.currentViewSettingsName = this.SettingsName;
 		this.currentViewSettingsDefaults = this.SettingsDefaults;
-		document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
+		document.getElementById("guiTV_Show_Title").innerHTML = "User Settings for "+this.UserData.UserName;
 	} else if (viewToDisplay == "TV Settings") {
 		this.currentView = "TV Settings";
+		this.currentPage = 2;
 		this.currentViewSettings = this.TVSettings;
 		this.currentViewSettingsName = this.TVSettingsName;
 		this.currentViewSettingsDefaults = this.TVSettingsDefaults;
@@ -158,6 +162,7 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	} else {
 		//Set default view as the User Settings Page
 		this.currentView = "Server Settings";
+		this.currentPage = 1;
 		this.currentViewSettings = this.ServerSettings;
 		this.currentViewSettingsName = this.ServerSettingsName;
 		this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
@@ -167,6 +172,7 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	//Update Displayed & Updates Settings
 	this.updateDisplayedItems();
 	this.updateSelectedItems();
+	this.updateSelectedBannerItems();
 	
 	document.getElementById("GuiPage_Settings").focus();
 }
@@ -407,19 +413,28 @@ GuiPage_Settings.updateSelectedItems = function() {
 GuiPage_Settings.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index == this.selectedBannerItem) {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green";
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem green";
 			}		
 		} else {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				if (index == this.currentPage) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				}
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				if (index == this.currentPage) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				}
 			}
 		}
 	}
+	//Update the counter in the bottom left.
 	if (this.selectedItem == -1) {
 		document.getElementById("Counter").innerHTML = (this.selectedBannerItem + 1) + "/" + (this.bannerItems.length);
 	} else {
@@ -432,25 +447,25 @@ GuiPage_Settings.processSelectedItem = function() {
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "User Settings":
-			//Set default view as the User Settings Page
+			this.currentPage = 0;
 			this.currentViewSettings = this.Settings;
 			this.currentViewSettingsName = this.SettingsName;
 			this.currentViewSettingsDefaults = this.SettingsDefaults;
-			document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
-			break;
-		case "TV Settings":
-			//Set default view as the User Settings Page
-			this.currentViewSettings = this.TVSettings;
-			this.currentViewSettingsName = this.TVSettingsName;
-			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
-			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
+			document.getElementById("guiTV_Show_Title").innerHTML = "User Settings for "+this.UserData.UserName;
 			break;
 		case "Server Settings":
-			//Set default view as the User Settings Page
+			this.currentPage = 1;
 			this.currentViewSettings = this.ServerSettings;
 			this.currentViewSettingsName = this.ServerSettingsName;
 			this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
 			document.getElementById("guiTV_Show_Title").innerHTML = "Server Settings for "+this.UserData.UserName;
+			break;
+		case "TV Settings":
+			this.currentPage = 2;
+			this.currentViewSettings = this.TVSettings;
+			this.currentViewSettingsName = this.TVSettingsName;
+			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
+			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
 			break;	
 		case "Log":
 			GuiPage_SettingsLog.start();
@@ -617,13 +632,16 @@ GuiPage_Settings.keyDown = function() {
 
 GuiPage_Settings.openMenu = function() {
 	if (this.selectedItem == -1) {
-		if (this.selectedBannerItem == -1) {
-			this.selectedBannerItem == 0;
+		if (this.currentPage == 0){
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+		} else {
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
 		}
-		this.selectedItem = 0;		
+		GuiMainMenu.requested("GuiPage_Settings","bannerItem0","guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green");
+	} else {
+		document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
+		GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 	}
-	document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
-	GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 }
 
 GuiPage_Settings.processUpKey = function() {

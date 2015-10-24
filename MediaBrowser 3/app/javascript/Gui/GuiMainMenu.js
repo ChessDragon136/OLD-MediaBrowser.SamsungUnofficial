@@ -105,7 +105,17 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 	document.getElementById("menu").style.visibility = "";
 	$('.menu').animate({
 		left: 0
-	}, 400, function() {
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.page').animate({
+		left: 200
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.pageBackground').animate({
+		left: 200
+	}, 300, function() {
 		//animate complete.
 	});
 
@@ -192,11 +202,22 @@ GuiMainMenu.keyDown = function()
 GuiMainMenu.processSelectedItems = function() {
 	$('.menu').animate({
 		left: -200
-	}, 400, function() {
+	}, 300, function() {
 		document.getElementById("menu").style.visibility = "hidden";
 	});
-	
-	Support.processHomePageMenu(this.menuItems[this.selectedMainMenuItem]);
+	$('.page').animate({
+		left: 0
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.pageBackground').animate({
+		left: 0
+	}, 300, function() {
+		//animate complete.
+	});
+	setTimeout(function(){
+		Support.processHomePageMenu(GuiMainMenu.menuItems[GuiMainMenu.selectedMainMenuItem]);
+	}, 310);
 }
 
 GuiMainMenu.processReturnKey = function() {
@@ -214,8 +235,18 @@ GuiMainMenu.processReturnKey = function() {
 		//Hide Menu
 		$('.menu').animate({
 			left: -200
-		}, 400, function() {
+		}, 300, function() {
 			document.getElementById("menu").style.visibility = "hidden";
+		});
+		$('.page').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		$('.pageBackground').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
 		});
 		
 		if (this.pageSelected == "GuiMusicPlayer") {

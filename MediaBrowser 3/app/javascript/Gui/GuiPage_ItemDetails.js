@@ -23,7 +23,7 @@ GuiPage_ItemDetails.getMaxDisplay2 = function() {
 
 GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 	alert("Page Enter : GuiPage_ItemDetails");
-	GuiHelper.setControlButtons(null,"Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params
 	this.startParams = [title,url];
@@ -198,9 +198,8 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem) {
 		}
 	}
 	
-	if (this.ItemData.UserData.Played) {
-		document.getElementById("guiTV_Show_Title").innerHTML += "<span class='itemPageWatched' style='padding-left:20px;'></span>";
-	}
+	//Set watched and favourite status
+	GuiPage_ItemDetails.updateItemUserStatus(this.ItemData);
 	
 	//Update Overview
 	if (this.ItemData.Overview != null) {
@@ -387,31 +386,25 @@ GuiPage_ItemDetails.keyDown = function()
 			break;	
 		case tvKey.KEY_GREEN:
 			if (this.ItemData.MediaType == "Video") {
-				var addSpan = "";
 				if (this.ItemData.UserData.Played == true) {
 					Server.deleteWatchedStatus(this.ItemData.Id);
 					this.ItemData.UserData.Played = false;
 				} else {
-					addSpan = "<span class='itemPageWatched' style='padding-left:20px;'></span>";
 					Server.setWatchedStatus(this.ItemData.Id);
 					this.ItemData.UserData.Played = true;
 				}
-				
-				var title = Support.getNameFormat("", this.ItemData.ParentIndexNumber, this.ItemData.Name, this.ItemData.IndexNumber);
-				document.getElementById("guiTV_Show_Title").innerHTML = (this.ItemData.Type == "Episode") ? title : this.ItemData.Name;
-				document.getElementById("guiTV_Show_Title").innerHTML += addSpan;
+				GuiPage_ItemDetails.updateItemUserStatus(this.ItemData);
 			}
 			break;	
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_RED:	
 			if (this.ItemData.UserData.IsFavorite == true) {
 				Server.deleteFavourite(this.ItemData.Id);
 				this.ItemData.UserData.IsFavorite = false;
-				GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 			} else {
 				Server.setFavourite(this.ItemData.Id);
 				this.ItemData.UserData.IsFavorite = true;
-				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
+			GuiPage_ItemDetails.updateItemUserStatus(this.ItemData);
 			break;				
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiPage_ItemDetails");
@@ -422,6 +415,20 @@ GuiPage_ItemDetails.keyDown = function()
 			break;
 	}
 };
+
+GuiPage_ItemDetails.updateItemUserStatus = function(item) { //Watched and Favourite status
+	var addSpan = "";
+	if (item.UserData.IsFavorite == true && this.ItemData.UserData.Played == true) {
+		addSpan = "<span class='itemPageFavourite' style='padding-left:20px;'></span><span class='itemPageWatched' style='padding-left:20px;'></span>";
+	} else if (item.UserData.Played == true) {
+		addSpan = "<span class='itemPageWatched' style='padding-left:20px;'></span>";
+	} else if (item.UserData.IsFavorite == true) {
+		addSpan = "<span class='itemPageFavourite' style='padding-left:20px;'></span>";
+	}
+	var title = Support.getNameFormat("", this.ItemData.ParentIndexNumber, this.ItemData.Name, this.ItemData.IndexNumber);
+	document.getElementById("guiTV_Show_Title").innerHTML = (this.ItemData.Type == "Episode") ? title : this.ItemData.Name;
+	document.getElementById("guiTV_Show_Title").innerHTML += addSpan;
+}
 
 GuiPage_ItemDetails.openMenu = function() {
 	Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);

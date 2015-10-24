@@ -18,6 +18,7 @@ var GuiPlayer = {
 		offsetSeconds : 0, //For transcode, this holds the position the transcode started in the file
 		
 		playingMediaSource : null,
+		playingMediaSourceIndex : null,
 		playingURL : null,
 		playingTranscodeStatus : null,
 		playingVideoIndex : null,
@@ -135,7 +136,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
     this.offsetSeconds = (this.PlayMethod == "Transcode") ? resumeTicksSamsung : 0;
 
     //Set up GuiPlayer_Display
-    GuiPlayer_Display.setDisplay(this.PlayerData, this.playingMediaSource, this.playingTranscodeStatus, this.offsetSeconds, this.playingVideoIndex, this.playingAudioIndex, this.playingSubtitleIndex);
+    GuiPlayer_Display.setDisplay(this.PlayerData,this.playingMediaSource,this.playingTranscodeStatus,this.offsetSeconds,this.playingVideoIndex,this.playingAudioIndex,this.playingSubtitleIndex,this.playingMediaSourceIndex);
     
 	//Set Resolution Display
 	this.setDisplaySize();

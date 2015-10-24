@@ -39,6 +39,14 @@ Server.setUserName = function(UserName) {
 	this.UserName = UserName;
 }
 
+Server.setUserFavourites = function(UserFavourites) {
+	this.UserFavourites = UserFavourites;
+}
+
+Server.getUserFavourites = function(UserFavourites) {
+	return this.UserFavourites;
+}
+
 Server.setDevice = function(Device) {
 	this.Device = Device;
 }
@@ -302,7 +310,7 @@ Server.deleteWatchedStatus = function(id) {
 
 
 //------------------------------------------------------------
-//       Item Watched Status Functions
+//       Item Favourite Status Functions
 //------------------------------------------------------------
 
 Server.setFavourite = function(id) {

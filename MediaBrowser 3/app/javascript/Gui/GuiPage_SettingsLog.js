@@ -6,7 +6,7 @@ var GuiPage_SettingsLog = {
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 20,
 		
-		bannerItems : ["User Settings","Server Settings","TV Settings","Log"],
+		bannerItems : ["User Settings","Server Settings","TV Settings","Log","About"],
 }
 
 GuiPage_SettingsLog.getMaxDisplay = function() {
@@ -37,9 +37,9 @@ GuiPage_SettingsLog.start = function() {
 	//Create Banner Items
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index != this.bannerItems.length-1) {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";			
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";			
 		} else {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";					
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";					
 		}
 	}
 	
@@ -199,7 +199,10 @@ GuiPage_SettingsLog.processRightKey = function() {
 }
 
 GuiPage_SettingsLog.processSelectedItem = function() {
-	if (this.bannerItems[this.selectedBannerItem] != "Log") {
+	if (this.bannerItems[this.selectedBannerItem] == "About") {
+		Support.updateURLHistory("GuiPage_Settings",null,null,null,null,0,0,null);
+		GuiPage_Contributors.start();
+	} else if (this.bannerItems[this.selectedBannerItem] != "Log") {
 		GuiPage_Settings.start(this.bannerItems[this.selectedBannerItem]);
 	}
 }

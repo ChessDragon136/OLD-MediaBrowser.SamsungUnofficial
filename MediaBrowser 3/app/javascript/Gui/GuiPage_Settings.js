@@ -11,7 +11,7 @@ var GuiPage_Settings = {
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 10,
 		
-		bannerItems : ["User Settings","Server Settings","TV Settings","Log"],
+		bannerItems : ["User Settings","Server Settings","TV Settings","Log","About"],
 		currentView : null,
 		currentViewSettings : null,
 		currentViewSettingsName : null,
@@ -138,9 +138,9 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	//Create Banner Items
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index != this.bannerItems.length-1) {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";			
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";			
 		} else {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";					
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";					
 		}
 	}
 
@@ -469,6 +469,11 @@ GuiPage_Settings.processSelectedItem = function() {
 			break;	
 		case "Log":
 			GuiPage_SettingsLog.start();
+			return;
+			break;
+		case "About":
+			Support.updateURLHistory("GuiPage_Settings",null,null,null,null,0,0,null);
+			GuiPage_Contributors.start();
 			return;
 			break;
 		}
@@ -1003,11 +1008,11 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "ScreensaverImages":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Image Source";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The screensaver can use images wither from photo's you have added to your library or tv & movie images.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The screensaver can use images either from photos you have added to your library or tv & movie images.";
 			break;
 		case "ScreensaverTimeout":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Timeout";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity until the screensaver kicks in.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity before the screensaver starts.";
 			break;	
 		case "ScreensaverImageTime":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Rotate Speed";

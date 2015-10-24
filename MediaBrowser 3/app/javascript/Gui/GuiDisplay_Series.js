@@ -202,7 +202,7 @@ GuiDisplay_Series.updateDisplayedItems = function() {
 }
 
 GuiDisplay_Series.updateOneDisplayedItem = function() {
-	Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"Content",this.isResume,this.genreTypefalse,"GuiDisplay_Series",false);
+	Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"",this.isResume,this.genreTypefalse,"GuiDisplay_Series",false);
 }
 
 //Function sets CSS Properties so show which user is selected
@@ -420,11 +420,7 @@ GuiDisplay_Series.keyDown = function() {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
 				}
-/*				setTimeout(function(){
-					GuiDisplay_Series.updateDisplayedItems();
-					GuiDisplay_Series.updateSelectedItems();
-	    		}, 250);*/
-				Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"Content",this.isResume,this.genreTypefalse,"GuiDisplay_Series",false);
+				Support.updateOneDisplayedItem(this.ItemData.Items[this.selectedItem],"",this.isResume,this.genreTypefalse,"GuiDisplay_Series",false);
 			}
 			break;
 		case tvKey.KEY_BLUE:	
@@ -531,7 +527,7 @@ GuiDisplay_Series.toggleWatchedStatus = function () {
 				GuiDisplay_Series.updateSelectedItems();
 			}, 250);
 			break;
-	/*	case "TV": //Mark all episode of all seasons as watched
+	/*	case "TV": //Mark all episodes of all seasons as watched (disabled)
 			if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
 				var urlSeasons = Server.getChildItemsURL(this.ItemData.Items[this.selectedItem].Id,"&IncludeItemTypes=Season&fields=SortName");
 				var seasons = Server.getContent(urlSeasons);
@@ -577,7 +573,7 @@ GuiDisplay_Series.openMenu = function() {
 		}
 	} else {
 		Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id);
+		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id,(File.getUserProperty("LargerView") == true) ? "SeriesPortraitLarge SelectedTV" : "SeriesPortrait SelectedTV");
 	}
 }
 

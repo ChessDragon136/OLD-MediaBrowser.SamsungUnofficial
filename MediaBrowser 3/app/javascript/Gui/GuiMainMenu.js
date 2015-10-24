@@ -55,8 +55,8 @@ GuiMainMenu.start = function() {
 	htmlToAdd += "<div id=Search class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Search-23x19.png)'></div>Search</div>";
 	this.menuItems.push("Settings");
 	htmlToAdd += "<div id=Settings class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Settings-23x19.png)'></div>Settings</div>";
-	this.menuItems.push("Contributors");
-	htmlToAdd += "<div id=Contributors class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
+	//this.menuItems.push("Contributors");
+	//htmlToAdd += "<div id=Contributors class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Logout-23x19.png)'></div>Log Out</div>";	
 	this.menuItems.push("Log-Out_Delete");

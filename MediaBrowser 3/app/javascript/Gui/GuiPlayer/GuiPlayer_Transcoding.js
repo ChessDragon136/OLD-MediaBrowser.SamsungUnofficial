@@ -201,14 +201,14 @@ GuiPlayer_Transcoding.checkFrameRate = function(maxFrameRate) {
 }
 
 GuiPlayer_Transcoding.checkLevel = function(maxLevel) {
+	var level = this.MediaSource.MediaStreams[this.videoIndex].Level;
 	if (maxLevel == null) {
 		return false;
 	} if (maxLevel == true) {
 		return true;
 	} else {
 		var level = this.MediaSource.MediaStreams[this.videoIndex].Level;
-		level = (level.length == 1) ? level * 10 : level; //If only 1 long, multiply by 10 to make it correct!
-
+		level = (level < 10) ? level * 10 : level; //If only 1 long, multiply by 10 to make it correct!
 		if (level <= maxLevel && level >= 0) {
 			return true;
 		} else {

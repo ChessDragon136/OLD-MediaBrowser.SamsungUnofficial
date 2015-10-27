@@ -12,7 +12,8 @@ var GuiDisplayOneItem = {
 		genreType : "",
 		
 		startParams : [],
-		isLatest : false
+		isLatest : false,
+		backdropTimeout : null
 }
 
 GuiDisplayOneItem.getMaxDisplay = function() {
@@ -27,6 +28,11 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	this.startParams = [title,url];
 	
 	alert (url);
+	
+	//Set background
+	this.backdropTimeout = setTimeout(function(){
+		Support.fadeImage("images/lensflare2-960x540.jpg");
+	}, 500);
 	
 	//Reset Values
 	this.indexSeekPos = -1;
@@ -193,10 +199,12 @@ GuiDisplayOneItem.keyDown = function() {
 }
 
 GuiDisplayOneItem.processSelectedItem = function() {
+	clearTimeout(this.backdropTimeout);
 	Support.processSelectedItem("GuiDisplayOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null,this.genreType,this.isLatest); 
 }
 
 GuiDisplayOneItem.playSelectedItem = function () {
+	clearTimeout(this.backdropTimeout);
 	Support.playSelectedItem("GuiDisplayOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 

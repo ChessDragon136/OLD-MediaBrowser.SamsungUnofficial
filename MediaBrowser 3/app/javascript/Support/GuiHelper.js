@@ -76,18 +76,18 @@ GuiHelper.generateDisplayOneItemHelp = function() {
 		"Left, Right - Move 1 image backwards or forwards. <br>" +
 		"Pause - Pause slideshow. <br>" +
 		"Play - Resume slideshow. <br>" +
-		"Red - Show this help message. <br>" +
-		"Green - Mark photo as a favourite. <br>" +
-		"Yellow - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
+		"Red - Mark photo as a favourite. <br>" +
+		"Green - Toggle Date/Time overlay; None | Date | Date : Time <br>" +
+		"Yellow - Show this help message. <br>" +
 		"Blue - When music is playing, show the music player controls. ";
 		} else {
 		var htmlToAdd = "Tools - Show the main menu. <br> " +
 		"Return - Returns the user to the previous screen. <br> " +
 		"Up, Down, Left, Right - Navigation Control. <br>" +
 		"Enter - Select the highlighted item. <br>" +
-		"Red - Show this help message. <br>" +
+		"Red - Add or remove an item on the favourites page. <br>" +
 		"Green - Mark a video item as watched or unwatched. <br>" +
-		"Yellow - Add or remove an item on the favourites page. <br>" +
+		"Yellow - Show this help message. <br>" +
 		"Blue - When music is playing, show the music player controls. <br>" +
 		"Ch. Up/Down - Skips one page of content. ";
 	}
@@ -160,13 +160,13 @@ GuiHelper.setControlButtons = function(redText,greenText,yellowText,blueText,ret
 	}
 	
 	//Add the offset values to item's standard position.
-	var redPos = (redText == null) ? 0 : 315;
+	var redPos = (redText == null) ? 0 : 312;
 	redPos = redPos + redOffset + greenOffset + yellowOffset + blueOffset + returnOffset;
-	var greenPos = (greenText == null) ? 0 : 245;
+	var greenPos = (greenText == null) ? 0 : 242;
 	greenPos = greenPos + greenOffset + yellowOffset + blueOffset + returnOffset;
-	var yellowPos = (yellowText == null) ? 0 : 160;
+	var yellowPos = (yellowText == null) ? 0 : 157;
 	yellowPos = yellowPos + yellowOffset + blueOffset + returnOffset;
-	var bluePos = (blueText == null) ? 0 : 90;
+	var bluePos = (blueText == null) ? 0 : 87;
 	bluePos = bluePos + blueOffset + returnOffset;
 	var returnPos = (returnText == null) ? 0 : 0;
 	returnPos = returnPos + returnOffset;

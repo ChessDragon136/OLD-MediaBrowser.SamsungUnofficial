@@ -59,8 +59,8 @@ GuiMainMenu.start = function() {
 	//htmlToAdd += "<div id=Contributors class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Logout-23x19.png)'></div>Log Out</div>";	
-	this.menuItems.push("Log-Out_Delete");
-	htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
+	//this.menuItems.push("Log-Out_Delete");
+	//htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
 	document.getElementById("menuItems").innerHTML += htmlToAdd;
 	
 	//Turn On Screensaver
@@ -181,7 +181,10 @@ GuiMainMenu.keyDown = function()
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");
 			this.processSelectedItems();
-			break;	
+			break;
+		case tvKey.KEY_PLAY:
+			this.playSelectedItem();
+			break;
 		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_TOOLS:
@@ -218,6 +221,42 @@ GuiMainMenu.processSelectedItems = function() {
 	setTimeout(function(){
 		Support.processHomePageMenu(GuiMainMenu.menuItems[GuiMainMenu.selectedMainMenuItem]);
 	}, 310);
+}
+
+GuiMainMenu.playSelectedItem = function() {
+	//Pressing play on Photos in the main menu plays a random slideshow.
+	if (this.menuItems[this.selectedMainMenuItem] == "Photos") {
+		//Close the menu
+		$('.menu').animate({
+			left: -200
+		}, 300, function() {
+			document.getElementById("menu").style.visibility = "hidden";
+		});
+		$('.page').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		$('.pageBackground').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		var photosFolderId = Server.getPhotosFolderId();
+		if (photosFolderId == null){
+			return;
+		}
+		//Get the Media Folders collection.
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
+		var ItemData = Server.getContent(url);
+		//Find the Photos items and play start a slideshow.
+		for (var i = 0; i < ItemData.Items.length; i++){
+			if (ItemData.Items[i].Id == photosFolderId) {
+				GuiImagePlayer.start(ItemData,i,true);
+			}
+		}
+		
+	}
 }
 
 GuiMainMenu.processReturnKey = function() {

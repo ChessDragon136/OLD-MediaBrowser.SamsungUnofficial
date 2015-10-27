@@ -310,7 +310,7 @@ GuiDisplay_Series.updateSelectedItems = function () {
 				Support.fadeImage(imgsrc);
 			}
 		}
-	}, 800);
+	}, 1000);
 }
 
 GuiDisplay_Series.updateSelectedBannerItems = function() {

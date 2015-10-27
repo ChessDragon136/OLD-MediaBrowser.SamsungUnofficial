@@ -12,7 +12,8 @@ var GuiPage_MusicAZ = {
 		MAXCOLUMNCOUNT : 10,
 		MAXROWCOUNT : 4,
 
-		startParams : []
+		startParams : [],
+		backdropTimeout : null
 }
 
 GuiPage_MusicAZ.getMaxDisplay = function() {
@@ -36,6 +37,9 @@ GuiPage_MusicAZ.start = function(entryView) {
 		break;
 	default:
 		this.bannerItems = this.musicBannerItems;
+		this.backdropTimeout = setTimeout(function(){
+			Support.fadeImage("images/music-960x540.jpg");
+		}, 500);	
 		break;
 	}
 		
@@ -43,7 +47,7 @@ GuiPage_MusicAZ.start = function(entryView) {
 	//Reset Vars
 	this.selectedItem = 0;
 	this.topLeftItem = 0;
-
+	
 	//Proceed as Normal	
 	//Update Padding on pageContent
 	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content style='padding-top:20px;'></div></div>" +
@@ -330,6 +334,7 @@ GuiPage_MusicAZ.processTopMenuDownKey = function() {
 
 GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 	alert ("TopMenuEnterKey");
+	clearTimeout(this.backdropTimeout);
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "All":		

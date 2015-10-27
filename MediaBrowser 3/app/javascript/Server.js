@@ -191,6 +191,35 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 	return xmlHttp;
 }
 
+Server.getPhotosFolderId = function () {
+	var photosFolderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			if (topFolder.Items[index].CollectionType == "photos") {
+				photosFolderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return photosFolderId;
+}
+
+Server.getHomeVideosFolderId = function () {
+	var homeVideosFolderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			alert(topFolder.Items[index].CollectionType);
+			if (topFolder.Items[index].CollectionType == "homevideos") {
+				homeVideosFolderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return homeVideosFolderId;
+}
+
 //------------------------------------------------------------
 //      Settings Functions
 //------------------------------------------------------------

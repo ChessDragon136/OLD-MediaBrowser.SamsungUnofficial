@@ -24,6 +24,22 @@ GuiMainMenu.start = function() {
 	this.menuItems.length = 0;
 	this.menuItemsHomePages.length = 0;
 	
+	//Set user View Styles
+	var photosFolderId = Server.getPhotosFolderId(); //Is null when the enhanced photos view is disabled.
+	if (photosFolderId == null){
+		Main.setPhotoEnabled(false);
+	} else {
+		Main.setPhotoEnabled(true);
+	}
+	FileLog.write("Show enhanced photos view = "+Main.isPhotoEnabled());
+	var tvFolderId = Server.getTvFolderId(); //Is null when the enhanced TV view is disabled.
+	if (tvFolderId == null){
+		Main.setTvEnabled(false);
+	} else {
+		Main.setTvEnabled(true);
+	}
+	FileLog.write("Show enhanced TV view = "+Main.isTvEnabled());
+	
 	//Generate main menu items
 	this.menuItemsHomePages = Support.generateTopMenu(); 
 	this.menuItems = Support.generateMainMenu();

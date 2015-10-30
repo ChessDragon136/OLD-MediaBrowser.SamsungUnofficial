@@ -30,9 +30,9 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	alert (url);
 	
 	//Set background
-/*	this.backdropTimeout = setTimeout(function(){
+	this.backdropTimeout = setTimeout(function(){
 		Support.fadeImage("images/lensflare2-960x540.jpg");
-	}, 500);*/
+	}, 1000);
 	
 	//Reset Values
 	this.indexSeekPos = -1;

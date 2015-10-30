@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0d",
+		version : "v1.0.0e",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -14,8 +14,9 @@ var Main =
 		forceDeleteSettings : false,
 		
 		enableMusic : true,
+		enableTv : false,
 		enableLiveTV : false,
-		enablePhoto : true,
+		enablePhoto : false,
 		enableCollections : true,
 		enableChannels : false,
 		
@@ -35,8 +36,20 @@ Main.isLiveTVEnabled = function() {
 	return this.enableLiveTV;
 };
 
+Main.isTvEnabled = function() {
+	return this.enableTv;
+}
+
+Main.setTvEnabled = function(status) {
+	this.enableTv = status;
+}
+
 Main.isPhotoEnabled = function() {
 	return this.enablePhoto;
+};
+
+Main.setPhotoEnabled = function(status) {
+	this.enablePhoto = status;
 };
 
 Main.isCollectionsEnabled = function() {
@@ -76,7 +89,7 @@ Main.onLoad = function()
 	//Setup Logging
 	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
 	FileLog.write("---------------------------------------------------------------------");
-	FileLog.write("MB3 Application Started");
+	FileLog.write("Emby Application Started");
 
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();

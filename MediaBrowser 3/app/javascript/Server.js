@@ -192,32 +192,47 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 }
 
 Server.getPhotosFolderId = function () {
-	var photosFolderId = null;
+	var folderId = null;
 	var topFolderUrl = Server.getItemTypeURL("");
 	var topFolder = Server.getContent(topFolderUrl);
 	for (var index = 0; index < topFolder.Items.length; index++) {
 		if (topFolder.Items[index].Type == "CollectionFolder"){
 			if (topFolder.Items[index].CollectionType == "photos") {
-				photosFolderId = topFolder.Items[index].Id;
+				folderId = topFolder.Items[index].Id;
 			}
 		}
 	}
-	return photosFolderId;
+	return folderId;
+}
+
+Server.getTvFolderId = function () {
+	var folderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			alert(topFolder.Items[index].CollectionType);
+			if (topFolder.Items[index].CollectionType == "tvshows") {
+				folderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return folderId;
 }
 
 Server.getHomeVideosFolderId = function () {
-	var homeVideosFolderId = null;
+	var folderId = null;
 	var topFolderUrl = Server.getItemTypeURL("");
 	var topFolder = Server.getContent(topFolderUrl);
 	for (var index = 0; index < topFolder.Items.length; index++) {
 		if (topFolder.Items[index].Type == "CollectionFolder"){
 			alert(topFolder.Items[index].CollectionType);
 			if (topFolder.Items[index].CollectionType == "homevideos") {
-				homeVideosFolderId = topFolder.Items[index].Id;
+				folderId = topFolder.Items[index].Id;
 			}
 		}
 	}
-	return homeVideosFolderId;
+	return folderId;
 }
 
 //------------------------------------------------------------

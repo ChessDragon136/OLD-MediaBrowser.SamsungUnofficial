@@ -83,9 +83,9 @@ GuiPage_Photos.updateDisplayedItems = function() {
 		var title = Items[this.topLeftItem+i].Name;
 		if (Items[this.topLeftItem+i].Type == "PhotoAlbum" || Items[this.topLeftItem+i].Type == "Folder") {
 			if (!Items[this.topLeftItem+i].ImageTags.Primary) { //A plain old folder won't have an image so look for some PhotoAlbums in it and use that instead.
-				folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&recursive=false&ParentId="+Items[this.topLeftItem+i].Id);
+				folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
 				folderContent = Server.getContent(folderContentUrl);
-				if (folderContent != null) {
+				if (folderContent.Items.length > 0) {
 					for (var c = 0; c < folderContent.Items.length; c++) {
 						if (folderContent.Items[c].ImageTags.Thumb) {
 							imgsrc = Server.getImageURL(folderContent.Items[c].Id,"Thumb",(i==0?510:250),(i==0?510:250),0,false,0);
@@ -105,7 +105,7 @@ GuiPage_Photos.updateDisplayedItems = function() {
 					}
 				} else {
 					imgsrc = "images/EmptyFolder-75x61.png";
-					htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem>"+ title + "</div>";
+					htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 					if (Items[this.topLeftItem+i].UserData.IsFavorite){
 						htmlToAdd += "<div class=favItem></div>";
 					}

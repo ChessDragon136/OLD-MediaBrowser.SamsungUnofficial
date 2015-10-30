@@ -955,8 +955,8 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		}
 		
 	}
-	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
+		alert("CollectionType: "+ItemData.Items[selectedItem].CollectionType);
 		switch (ItemData.Items[selectedItem].CollectionType) {
 		case "boxsets":	
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
@@ -980,17 +980,8 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			}
 			break;
 		case "photos" :
-			//Handle as a folder
-			if (Main.isPhotoEnabled()){
-				var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName");
-				if (page == "GuiPage_Photos"){
-					GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
-				} else {
-					GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
-				}
-			} else {
-				Support.removeLatestURL();
-			}
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName");
+			GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;
 		case "playlists":
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
@@ -1006,8 +997,8 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			break;
 		}
 	} else {
+		alert("Type: "+ItemData.Items[selectedItem].Type);
 		switch (ItemData.Items[selectedItem].Type) {
-		case "CollectionFolder":
 		case "ManualCollectionsFolder":
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 			GuiDisplay_Series.start("All Collections",url,0,0);
@@ -1024,7 +1015,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			} else {
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
 				GuiTV_Show.start(ItemData.Items[selectedItem].Name,url,0,0);
-			}	
+			}
 			break;		
 		case "Movie":
 			var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
@@ -1050,14 +1041,15 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].Type);
 			break;	
 		case "Folder":
-		case "PhotoAlbum":	
+		case "PhotoAlbum":
+		case "CollectionFolder":	
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName,ParentId");
 			if (page == "GuiPage_Photos"){
 				GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
 			} else {
 				GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			}
-			break;	
+			break;
 		case "Channel":
 			var url = Server.getCustomURL("/Channels/"+ItemData.Items[selectedItem].Id+"/Items?userId="+Server.getUserID()+"&fields=SortName&format=json");	
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
@@ -1188,7 +1180,7 @@ Support.generateMainMenu = function() {
 	var hasTV = Server.getContent(urlTV);
 	if (hasTV == null) { return; }
 		
-	if (hasTV.TotalRecordCount > 0) {
+	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
 		menuItems.push("TV");
 	}
 		
@@ -1226,8 +1218,7 @@ Support.generateMainMenu = function() {
 	var urlPhotos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=PhotoAlbum&Recursive=true&Limit=0");
 	var hasPhotos = Server.getContent(urlPhotos);
 	if (hasPhotos == null) { return; }
-	
-	if (hasPhotos.TotalRecordCount > 0) {
+	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
 		menuItems.push("Photos");
 	}
 	
@@ -1303,7 +1294,7 @@ Support.generateTopMenu = function() {
 	var hasTV = Server.getContent(urlTV);
 	if (hasTV == null) { return; }
 		
-	if (hasTV.TotalRecordCount > 0) {
+	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
 		menuItems.push("TV");
 	}
 		
@@ -1342,7 +1333,7 @@ Support.generateTopMenu = function() {
 	var hasPhotos = Server.getContent(urlPhotos);
 	if (hasPhotos == null) { return; }
 	
-	if (hasPhotos.TotalRecordCount > 0) {
+	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
 		menuItems.push("Photos");
 	}
 
@@ -1419,7 +1410,7 @@ Support.processHomePageMenu = function (menuItem) {
 		break;		
 	case "Photos":
 		var photosFolderId = Server.getPhotosFolderId();
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=PrimaryImageAspectRatio,SortName,SyncInfo&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=SortName&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
 		GuiPage_Photos.start("Photos",url,0,0);
 		break;
 	case "Home-Movies":

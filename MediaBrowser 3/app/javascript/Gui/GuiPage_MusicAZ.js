@@ -37,9 +37,9 @@ GuiPage_MusicAZ.start = function(entryView) {
 		break;
 	default:
 		this.bannerItems = this.musicBannerItems;
-		this.backdropTimeout = setTimeout(function(){
+/*		this.backdropTimeout = setTimeout(function(){
 			Support.fadeImage("images/music-960x540.jpg");
-		}, 500);	
+		}, 500);*/
 		break;
 	}
 		

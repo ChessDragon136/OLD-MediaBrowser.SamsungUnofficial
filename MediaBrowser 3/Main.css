@@ -1,7 +1,13 @@
+@font-face {
+	font-family:Lato-Regular;
+	src:url('fonts/Lato-Regular.ttf');
+}
+
 * {
 	padding: 0px;
 	margin: 0px;
-	border: 0px;	
+	border: 0px;
+	font-family:Lato-Regular;
 }
 
 .splash{ 
@@ -103,7 +109,7 @@
 	left: 0px; top: 0px;
 	width: 155px;
 	height: 32px;
-	line-height: 33px;
+	line-height: 29px;
 	padding-left: 45px;
 }
 
@@ -112,7 +118,7 @@
 	left: 0px; top: 0px;
 	width: 155px;
 	height: 32px;
-	line-height: 33px;
+	line-height: 29px;
 	padding-left: 45px;
 	background-color:#444444;
 }
@@ -263,14 +269,14 @@
 
 .counter {
 	position:absolute;
-	bottom:2px;
+	bottom:4px;
 	left:5px;	
 }
 
 .time {
 	position:absolute;
-	bottom:2px;
-	left:920px;	
+	bottom:4px;
+	right:5px;
 	font-size:15px;
 	color: white;
 	z-index:22;
@@ -741,6 +747,7 @@
 	width:900px;
 	left:30px;
 }
+
 .photoTable{
 	border: 2px solid transparent;
 }
@@ -766,8 +773,8 @@
     bottom:0px;
     width:100%;
     text-align:left;
-    padding-left:0px;
-    background-color:rgba(0,0,0,0.7);
+    padding-left:2px;
+    background-color:rgba(0,0,0,0.8);
 }
 
 .menuItemWithProgress {
@@ -776,7 +783,7 @@
     width:100%;
     text-align:left;
     padding-left:2px;
-    background-color:rgba(0,0,0,0.7);
+    background-color:rgba(0,0,0,0.8);
 }
 
 .menuProgressBar {
@@ -785,7 +792,7 @@
 	position:absolute;
 	bottom:1px;
     left:0px;
-    background-color:rgba(0,0,0,0.7);
+    background-color:rgba(0,0,0,0.8);
 }
 
 .menuProgressBar_Current {
@@ -798,8 +805,8 @@
 
 .genreItemCount {
 	position:absolute;
-	top:0px;
-	right:0px;
+	top:1px;
+	right:2px;
 	width:25px;
 	height:25px;
 	line-height:25px;

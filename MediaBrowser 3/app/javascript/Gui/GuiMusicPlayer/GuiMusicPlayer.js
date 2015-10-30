@@ -268,7 +268,7 @@ GuiMusicPlayer.keyDown = function() {
 				if (GuiImagePlayer.ImageViewer != null){
 					GuiHelper.setControlButtons(null,null,null,null,null);
 				} else if (this.playedFromPage == "GuiPage_HomeOneItem" || this.playedFromPage == "GuiPage_HomeTwoItems"){
-					GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
+					GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 				}
 				document.getElementById(this.playedFromPage).focus();	
 			}

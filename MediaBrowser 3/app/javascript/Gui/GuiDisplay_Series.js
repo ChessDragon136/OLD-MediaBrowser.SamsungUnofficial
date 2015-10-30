@@ -109,7 +109,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		this.MAXROWCOUNT = 3;
 		this.isTvOrMovies = 2;
 		this.bannerItems = this.musicBannerItems;
-		document.getElementById("SeriesContent").style.top="400px";
+		document.getElementById("SeriesContent").style.top="440px";
 		document.getElementById("SeriesOverview").style.height="0px";	
 	}
 	

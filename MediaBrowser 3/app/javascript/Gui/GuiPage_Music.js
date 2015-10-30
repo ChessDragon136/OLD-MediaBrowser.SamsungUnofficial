@@ -313,7 +313,7 @@ GuiPage_Music.processSelectedItem = function() {
 			GuiMusicPlayer.start("Album",url + "&Fields=MediaSources","GuiPage_Music",false);
 			break;	
 		}
-		GuiHelper.setControlButtons(null,null,"Favourite","Music","Return");
+		GuiHelper.setControlButtons(0,0,0,"Music","Return");
 	} else {
 		switch (this.selectedItem2) {
 		case 0:

@@ -82,21 +82,21 @@ GuiPage_Photos.updateDisplayedItems = function() {
 		var imgsrc = "";
 		var title = Items[this.topLeftItem+i].Name;
 		if (Items[this.topLeftItem+i].Type == "PhotoAlbum" || Items[this.topLeftItem+i].Type == "Folder") {
+			var photosUrl = Server.getItemTypeURL("&IncludeItemTypes=photo&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
+			var photos = Server.getContent(photosUrl);
+			var photosCount = photos.TotalRecordCount;
 			if (!Items[this.topLeftItem+i].ImageTags.Primary) { //A plain old folder won't have an image so look for some PhotoAlbums in it and use that instead.
-				folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
-				folderContent = Server.getContent(folderContentUrl);
+				var folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
+				var folderContent = Server.getContent(folderContentUrl);
 				if (folderContent.Items.length > 0) {
 					for (var c = 0; c < folderContent.Items.length; c++) {
 						if (folderContent.Items[c].ImageTags.Thumb) {
 							imgsrc = Server.getImageURL(folderContent.Items[c].Id,"Thumb",(i==0?510:250),(i==0?510:250),0,false,0);
-							htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
+							htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 							if (Items[this.topLeftItem+i].UserData.IsFavorite){
 								htmlToAdd += "<div class=favItem></div>";
 							}
-							var itemCount = Items[this.topLeftItem+i].ChildCount;
-							if (itemCount) {
-								htmlToAdd += "<div class=genreItemCount>"+itemCount+"</div>";
-							}
+							htmlToAdd += "<div class=photoItemCount>"+photosCount+"</div>";
 							htmlToAdd += "</div></td>";
 						}
 						if (imgsrc != ""){
@@ -105,36 +105,33 @@ GuiPage_Photos.updateDisplayedItems = function() {
 					}
 				} else {
 					imgsrc = "images/EmptyFolder-75x61.png";
-					htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
+					htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 					if (Items[this.topLeftItem+i].UserData.IsFavorite){
 						htmlToAdd += "<div class=favItem></div>";
 					}
-					var itemCount = Items[this.topLeftItem+i].ChildCount;
-					if (itemCount) {
-						htmlToAdd += "<div class=genreItemCount>"+itemCount+"</div>";
-					}
+					htmlToAdd += "<div class=photoItemCount>"+photosCount+"</div>";
 					htmlToAdd += "</div></td>";
 				}
 			} else if (Items[this.topLeftItem+i].ImageTags.Thumb) { //It's a PhotoAlbum.
 				imgsrc = Server.getImageURL(Items[this.topLeftItem+i].Id,"Thumb",(i==0?510:250),(i==0?510:250),0,false,0);
-				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
+				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 				if (Items[this.topLeftItem+i].UserData.IsFavorite){
 					htmlToAdd += "<div class=favItem></div>";
 				}
 				var itemCount = Items[this.topLeftItem+i].ChildCount;
 				if (itemCount) {
-					htmlToAdd += "<div class=genreItemCount>"+itemCount+"</div>";
+					htmlToAdd += "<div class=photoItemCount>"+itemCount+"</div>";
 				}
 				htmlToAdd += "</div></td>";
 			} else {
 				imgsrc = "images/EmptyFolder-75x61.png";
-				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem>"+ title + "</div>";
+				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 				if (Items[this.topLeftItem+i].UserData.IsFavorite){
 					htmlToAdd += "<div class=favItem></div>";
 				}
 				var itemCount = Items[this.topLeftItem+i].ChildCount;
 				if (itemCount) {
-					htmlToAdd += "<div class=genreItemCount>"+itemCount+"</div>";
+					htmlToAdd += "<div class=photoItemCount>"+itemCount+"</div>";
 				}
 				htmlToAdd += "</div></td>";
 			}
@@ -146,7 +143,7 @@ GuiPage_Photos.updateDisplayedItems = function() {
 			} else { 
 				imgsrc = "images/film-54x60.png";
 			}
-			htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=menuItem>"+ title + "</div>";
+			htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
 			if (Items[this.topLeftItem+i].UserData.IsFavorite){
 				htmlToAdd += "<div class=favItem></div>";
 			}
@@ -175,58 +172,16 @@ GuiPage_Photos.updateDisplayedItems = function() {
 
 GuiPage_Photos.updateOneDisplayedItem = function(item,selectedItem) {
 	var htmlToAdd = "";	
-	//var imgsrc = "";
-	//var title = item.Name;
-/*	if (item.Type == "PhotoAlbum" || item.Type == "Folder") {
-		if (!item.ImageTags.Primary) { //Look at sub folders for an image
-			folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&recursive=true&ParentId="+item.Id);
-			folderContent = Server.getContent(folderContentUrl);
-			for (var c = 0; c < folderContent.Items.length; c++) {
-				if (folderContent.Items[c].Type == "PhotoAlbum") {
-					if (folderContent.Items[c].ImageTags.Thumb) {
-						if (selectedItem == 0){
-							imgsrc = Server.getImageURL(folderContent.Items[c].Id,"Thumb",510,510,0,false,0);
-							document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-							htmlToAdd += "<div class=menuItem style=font-size:18px>"+ title + "</div>";
-						} else {
-							imgsrc = Server.getImageURL(folderContent.Items[c].Id,"Thumb",250,250,0,false,0);
-							document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-							htmlToAdd += "<div class=menuItem>"+ title + "</div>";
-						}
-					}
-					break;
-				}	
-			}
-		} else if (item.ImageTags.Thumb) {
-			if (selectedItem == 0) {
-				imgsrc = Server.getImageURL(item.Id,"Thumb",510,510,0,false,0);
-				document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-				htmlToAdd += "<div class=menuItem style=font-size:18px>"+ title + "</div>";
-			} else {
-				imgsrc = Server.getImageURL(item.Id,"Thumb",250,250,0,false,0);
-				document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-				htmlToAdd += "<div class=menuItem>"+ title + "</div>";
-			}
-		}
-	} else { //It's a photo
-		if (selectedItem == 0){
-			imgsrc = Server.getImageURL(item.Id,"Primary",440,440,0,false,0);
-			document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-		} else {
-			imgsrc = Server.getImageURL(item.Id,"Primary",220,220,0,false,0);
-			document.getElementById(item.Id).style.backgroundImage="url('" + imgsrc + "')";
-		}
-	}*/
 	if (item.Type == "PhotoAlbum" || item.Type == "Folder") {
 		var title = item.Name;
-		htmlToAdd += "<div class=menuItem>"+ title + "</div>";
+		htmlToAdd += "<div class=photoTitle style=font-size:"+(this.selectedItem==this.topLeftItem?18:14)+"px>"+ title + "</div>";
 	}
 	if (item.UserData.IsFavorite){
 		htmlToAdd += "<div class=favItem></div>";
 	}
 	var itemCount = item.ChildCount;
 	if (itemCount) {
-		htmlToAdd += "<div class=genreItemCount>"+itemCount+"</div>";
+		htmlToAdd += "<div class=photoItemCount>"+itemCount+"</div>";
 	}
 	document.getElementById(item.Id).innerHTML = htmlToAdd;
 }
@@ -344,6 +299,7 @@ GuiPage_Photos.playSelectedItem = function () {
 
 GuiPage_Photos.openMenu = function() {
 	Support.updateURLHistory("GuiPage_Photos",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	alert(this.selectedItem);
 	GuiMainMenu.requested("GuiPage_Photos",this.ItemData.Items[this.selectedItem].Id);
 }
 
@@ -352,17 +308,18 @@ GuiPage_Photos.processLeftKey = function() {
 		this.openMenu();
 	} else if (this.selectedItem - this.topLeftItem == 5) {
 		this.selectedItem = this.topLeftItem;
+		this.updateSelectedItems();
 	} else {
 		this.selectedItem--;
-			if (this.selectedItem < this.topLeftItem) {
-				this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
-				if (this.topLeftItem < 0) {
-					this.topLeftItem = 0;
-				}
-				this.updateDisplayedItems();
+		if (this.selectedItem < this.topLeftItem) {
+			this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
+			if (this.topLeftItem < 0) {
+				this.topLeftItem = 0;
 			}
+			this.updateDisplayedItems();
+		}
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
 
 GuiPage_Photos.processRightKey = function() {

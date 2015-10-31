@@ -31,14 +31,14 @@ GuiMainMenu.start = function() {
 	} else {
 		Main.setPhotoEnabled(true);
 	}
-	FileLog.write("Show enhanced photos view = "+Main.isPhotoEnabled());
+	FileLog.write("Show enhanced photos view: "+Main.isPhotoEnabled());
 	var tvFolderId = Server.getTvFolderId(); //Is null when the enhanced TV view is disabled.
 	if (tvFolderId == null){
 		Main.setTvEnabled(false);
 	} else {
 		Main.setTvEnabled(true);
 	}
-	FileLog.write("Show enhanced TV view = "+Main.isTvEnabled());
+	FileLog.write("Show enhanced TV view: "+Main.isTvEnabled());
 	
 	//Generate main menu items
 	this.menuItemsHomePages = Support.generateTopMenu(); 

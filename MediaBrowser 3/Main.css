@@ -768,6 +768,22 @@
     background-position:center;
 }
 
+.photoTitle {	
+	position:absolute;
+    bottom:0px;
+    width:100%;
+    text-align:left;
+    background-color:rgba(0,0,0,0.3);
+}
+
+.photoItemCount {
+	position:absolute;
+	top:1px;
+	right:1px;
+	text-align:right;
+	background-color:rgba(0,0,0,0.3);
+}
+
 .menuItem {	
 	position:absolute;
     bottom:0px;

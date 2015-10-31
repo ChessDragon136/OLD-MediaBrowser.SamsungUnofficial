@@ -5,7 +5,7 @@ var GuiImagePlayer = {
 		Timeout : null,
 		Paused : false,
 		
-		overlayFormat : 1, // 0 - date, 1 - date:time, 2 - off 
+		overlayFormat : 0, // 0 - date, 1 - date:time, 2 - off 
 		
 		images : [],
 		overlay : [],

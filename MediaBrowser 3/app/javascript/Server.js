@@ -482,6 +482,7 @@ Server.Authenticate = function(UserId, UserName, Password) {
     	this.AuthenticationToken = session.AccessToken;
     	this.setUserID(session.User.Id);
     	this.setUserName(UserName);
+		FileLog.write("User "+ UserName +" authenticated. ");
     	return true;
     }
 }
@@ -500,6 +501,7 @@ Server.Logout = function() {
 	GuiImagePlayer.kill();
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();
+	FileLog.write("---------------------------------------------------------------------");
 }
 
 //------------------------------------------------------------
@@ -513,7 +515,9 @@ Server.getContent = function(url) {
 		xmlHttp.send(null);
 		    
 		if (xmlHttp.status != 200) {
-			alert ("Server NOT 200 - Logout");
+			FileLog.write("Server NOT 200 - Logout");
+			FileLog.write(url);
+			FileLog.write("HTTP Status was "+xmlHttp.status);
 			Server.Logout();
 			GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
 			GuiUsers.start(true);

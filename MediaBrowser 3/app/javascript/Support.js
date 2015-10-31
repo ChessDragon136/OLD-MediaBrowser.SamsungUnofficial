@@ -42,7 +42,7 @@ Support.logout = function() {
 
 	//Turn off screensaver
 	Support.screensaverOff();
-	
+	FileLog.write("User "+ Server.getUserName() + " logged out.");
 	document.getElementById("menuUserImage").style.backgroundImage = "";
 	document.getElementById("menuItems").innerHTML = "";
 	Server.setUserID("");
@@ -1244,7 +1244,6 @@ Support.generateMainMenu = function() {
 	var urlVideos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Video&Recursive=true&Limit=0");
 	var hasVideos = Server.getContent(urlVideos);
 	if (hasVideos == null) { return; }
-	
 	if (hasVideos.TotalRecordCount > 0) {
 		menuItems.push("Home-Movies");
 	}
@@ -1410,13 +1409,17 @@ Support.processHomePageMenu = function (menuItem) {
 		break;		
 	case "Photos":
 		var photosFolderId = Server.getPhotosFolderId();
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=SortName&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
-		GuiPage_Photos.start("Photos",url,0,0);
+		if (photosFolderId != null){
+			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=SortName&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
+			GuiPage_Photos.start("Photos",url,0,0);
+		}
 		break;
 	case "Home-Movies":
 		var homeVideosFolderId = Server.getHomeVideosFolderId();
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName&ParentId="+homeVideosFolderId);
-		GuiDisplayOneItem.start("Home Movies",url,0,0);
+		if (homeVideosFolderId != null){
+			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName&ParentId="+homeVideosFolderId);
+			GuiDisplayOneItem.start("Home Movies",url,0,0);
+		}
 		break;
 	case "Search":
 		GuiPage_Search.start();

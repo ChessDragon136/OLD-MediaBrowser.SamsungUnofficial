@@ -12,7 +12,8 @@ var GuiPage_MusicAZ = {
 		MAXCOLUMNCOUNT : 10,
 		MAXROWCOUNT : 4,
 
-		startParams : []
+		startParams : [],
+		backdropTimeout : null
 }
 
 GuiPage_MusicAZ.getMaxDisplay = function() {
@@ -36,6 +37,9 @@ GuiPage_MusicAZ.start = function(entryView) {
 		break;
 	default:
 		this.bannerItems = this.musicBannerItems;
+		this.backdropTimeout = setTimeout(function(){
+			Support.fadeImage("images/music-960x540.jpg");
+		}, 1000);
 		break;
 	}
 		
@@ -43,7 +47,7 @@ GuiPage_MusicAZ.start = function(entryView) {
 	//Reset Vars
 	this.selectedItem = 0;
 	this.topLeftItem = 0;
-
+	
 	//Proceed as Normal	
 	//Update Padding on pageContent
 	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='SeriesCenter'><div id=Content style='padding-top:20px;'></div></div>" +
@@ -142,7 +146,7 @@ GuiPage_MusicAZ.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -189,18 +193,7 @@ GuiPage_MusicAZ.keyDown = function() {
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			//Return added here - deleted in MainMenu if user does return
-			if (this.selectedItem == -1) {		
-				if (this.selectedBannerItem != this.bannerItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_MusicAZ",this.startParams[0],null,null,null,this.selectedItem,this.topLeftItem,true);
-			GuiMainMenu.requested("GuiPage_MusicAZ",this.Letters[this.selectedItem]);
+			this.openMenu();
 			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
@@ -217,13 +210,27 @@ GuiPage_MusicAZ.keyDown = function() {
 	}
 }
 
+GuiPage_MusicAZ.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiPage_MusicAZ",this.startParams[0],null,null,null,this.selectedItem,this.topLeftItem,true);
+	GuiMainMenu.requested("GuiPage_MusicAZ",this.Letters[this.selectedItem]);
+}
+
 GuiPage_MusicAZ.processTopMenuLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
-			this.selectedBannerItem = 0;
+		if (this.selectedBannerItem == -1) { //Going left from the end of the top menu.
+			this.openMenu();
 		}
-		this.updateSelectedBannerItems();	
+		this.updateSelectedBannerItems();
+	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){ //Going left from the first column.
+		this.openMenu();
 	} else {
 		this.selectedItem--;
 		if (this.selectedItem < 0) {
@@ -263,7 +270,11 @@ GuiPage_MusicAZ.processTopMenuRightKey = function() {
 }
 
 GuiPage_MusicAZ.processTopMenuUpKey = function() {
-	this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT;
+	if (this.selectedItem > (this.MAXCOLUMNCOUNT *2) -1){
+		this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT +1; //Moving up from the bottom row.
+	} else {
+		this.selectedItem = this.selectedItem - this.MAXCOLUMNCOUNT; //Moving up to the top row or the menu.
+	}
 	if (this.selectedItem < 0) {
 		this.selectedBannerItem = 0;
 		this.selectedItem = -1;
@@ -289,7 +300,12 @@ GuiPage_MusicAZ.processTopMenuDownKey = function() {
 		this.selectedBannerItem = -1;
 		this.updateSelectedBannerItems();
 	} else {
-		this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT;
+		if (this.selectedItem < this.MAXCOLUMNCOUNT +1){
+			this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT; //Moving down from the top row.
+		} else {
+			this.selectedItem = this.selectedItem + this.MAXCOLUMNCOUNT -1; //Moving down to the bottom row.
+		}
+		
 		if (this.selectedItem >= this.Letters.length) {
 			if (this.totalRecordCount > this.Letters.length) {
 				this.loadMoreItems();
@@ -318,6 +334,7 @@ GuiPage_MusicAZ.processTopMenuDownKey = function() {
 
 GuiPage_MusicAZ.processTopMenuEnterKey = function() {
 	alert ("TopMenuEnterKey");
+	clearTimeout(this.backdropTimeout);
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "All":		

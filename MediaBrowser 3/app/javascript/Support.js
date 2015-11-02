@@ -22,13 +22,19 @@ var Support = {
 }
 
 Support.clock = function() {
-    var today=new Date();
-    var h=today.getHours();
-    var m=today.getMinutes();
-    if (m<10) {m = "0" + m;};
-    document.getElementById('Clock').innerHTML = h+":"+m;
-    document.getElementById('guiPlayer_clock').innerHTML = h+":"+m;
-    document.getElementById('guiPlayer_clock2').innerHTML = h+":"+m;
+	var date = new Date();
+    var h=date.getHours();
+    var offset = File.getTVProperty("ClockOffset");
+    h = h+offset;
+	if (h<0) {h = h + 24;};
+	if (h>23){h = h - 24;};
+	if (h<10) {h = "0" + h;};
+    var m=date.getMinutes(); 
+	if (m<10) {m = "0" + m;};
+	var time = h+':'+m;
+	document.getElementById('Clock').innerHTML = time;
+    document.getElementById('guiPlayer_clock').innerHTML = time;
+    document.getElementById('guiPlayer_clock2').innerHTML = time;
     this.clockVar = setTimeout(function(){Support.clock();},900);
 }
 
@@ -36,7 +42,7 @@ Support.logout = function() {
 
 	//Turn off screensaver
 	Support.screensaverOff();
-	
+	FileLog.write("User "+ Server.getUserName() + " logged out.");
 	document.getElementById("menuUserImage").style.backgroundImage = "";
 	document.getElementById("menuItems").innerHTML = "";
 	Server.setUserID("");
@@ -62,13 +68,6 @@ Support.updateHomePageURLs = function (title,url,title2Name,isURL1) {
 }
 
 Support.updateURLHistory = function(page,title,url,title2,url2,selectedItem,topLeftItem,isTop) {
-	//Check to stop episodes to episode scrolling from adding to the return array
-	if (page == "GuiPage_ItemDetails" && this.previousPageDetails[this.previousPageDetails.length-1][0] == "GuiPage_ItemDetails") {
-		//Pop the last one and add the current page
-		//Thus if you play a video and return it returns to the latest Episode Page, not the one you entered on
-		this.previousPageDetails.pop();
-	}
-	
 	//Only add new page if going to new page (if url's are the same don't add) - Length must be greater than 0
 	if (this.previousPageDetails.length > 0) {
 		//If greater than 0 check if page isnt the same as previous page
@@ -158,7 +157,10 @@ Support.processReturnURLHistory = function() {
 				break;	
 			case "GuiPage_CastMember": 	
 				GuiPage_CastMember.start(title,url,selectedItem,topLeftItem);
-				break;	
+				break;
+			case "GuiPage_Photos":
+				GuiPage_Photos.start(title,url,selectedItem,topLeftItem);
+				break;
 			case "GuiPage_PhotoNavigation":
 				GuiPage_PhotoNavigation.start(title,url,selectedItem,topLeftItem);
 				break;	
@@ -167,7 +169,10 @@ Support.processReturnURLHistory = function() {
 				break;	
 			case "GuiPage_Search":
 				GuiPage_Search.start(title,url);
-				break;		
+				break;
+			case "GuiPage_Settings": 	
+				GuiPage_Settings.start();
+				break;	
 			default:
 				break;
 		}
@@ -227,206 +232,606 @@ Support.processIndexing = function(ItemsArray) {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
-Support.updateDisplayedItems = function(Array,selectedItemID,startPos,endPos,DivIdUpdate,DivIdPrepend, isResume,Genre,showBackdrop) {
-	var htmlToAdd = "";
+Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,DivIdUpdate,DivIdPrepend,isResume,Genre,showBackdrop) {
+	var htmlToAdd = "";	
 	for (var index = startPos; index < endPos; index++) {
-		progress = Math.round((220 / 100) * Math.round(Array[index].UserData.PlayedPercentage));
+		progress = Math.round((220 / 100) * Math.round(Items[index].UserData.PlayedPercentage));
 		if (isResume == true) {
 			//Calculate Width of Progress Bar
-			if (Array[index].Type == "Episode") {
-				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);			
-				if (Array[index].SeriesThumbImageTag) {
-					title = this.getNameFormat("", Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);
-					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,false);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>" + title +"</div></div>";	
-				} else if (Array[index].ImageTags.Primary) {	
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";
+			if (Items[index].Type == "Episode") {
+				var title = this.getNameFormat(Items[index].SeriesName, Items[index].ParentIndexNumber, Items[index].Name, Items[index].IndexNumber);		
+				var imgsrc = "";
+				if (Items[index].SeriesThumbImageTag) {
+					title = this.getNameFormat("", Items[index].ParentIndexNumber, Items[index].Name, Items[index].IndexNumber);
+					imgsrc = Server.getImageURL(Items[index].SeriesId,"Thumb",220,125,0,false);
+				} else if (Items[index].ImageTags.Primary) {	
+					imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false);
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItem>"+ title + "</div></div>";
+					imgsrc = "images/collection.png";
 				}
+				//Add watched and favourite overlays.
+				htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div>";
+				if (Items[index].UserData.Played) {
+					htmlToAdd += "<div class=genreItemCount>&#10003</div>";	
+				}
+				if (Items[index].UserData.IsFavorite) {
+					htmlToAdd += "<div class=favItem></div>";
+				}
+				htmlToAdd += "<div class=menuItemWithProgress>" + title +"</div></div>";
+	
 			} else {
-				var title = Array[index].Name;
-				if (Array[index].ImageTags.Thumb) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress></div></div>";	
-				} else if (Array[index].BackdropImageTags.length > 0) {	
-					var imgsrc = Server.getImageURL(Array[index].Id,"Backdrop",220,125,Array[index].UserData.PlayCount,Array[index].UserData.Played);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";	
+				var title = Items[index].Name;
+				if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,Items[index].UserData.PlayCount,Items[index].UserData.Played);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress></div></div>";	
+				} else if (Items[index].BackdropImageTags.length > 0) {	
+					var imgsrc = Server.getImageURL(Items[index].Id,"Backdrop",220,125,Items[index].UserData.PlayCount,Items[index].UserData.Played);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/collection.png)><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(images/collection.png)><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";
 				}
 			}			
 		} else {
-			if (Array[index].Type == "Genre") {	
+			//----------------------------------------------------------------------------------------------
+			if (Items[index].Type == "Genre") {	
 				var itemCount = 0;
 				
 				switch (Genre) {
 				case "Movie":
-					itemCount = Array[index].MovieCount;
+					itemCount = Items[index].MovieCount;
 					break;
 				case "Series":
-					itemCount = Array[index].SeriesCount;
+					itemCount = Items[index].SeriesCount;
 					break;
 				default:
 					break;
 				}
-
-				if (Array[index].ImageTags.Primary) {
-					var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0); 
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
+				//Add a slightly larger div as a frame that items can move up and down inside of.
+				if (File.getUserProperty("LargerView") == true) {
+					htmlToAdd += "<div class=SeriesPortraitFrameLarge id=Frame"+ Items[index].Id + ">";
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+itemCount+"</div></div>";
+					htmlToAdd += "<div class=SeriesPortraitFrame id=Frame"+ Items[index].Id + ">";
 				}
-			} else if (Array[index].Type == "Episode") {
-				var title = this.getNameFormat(Array[index].SeriesName, Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);	
+				//Normal item div goes inside the frame.
+				if (Items[index].ImageTags.Primary) {
+					var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+itemCount+"</div></div>";
+				}
+				//close the frame div.
+				htmlToAdd += "</div>";
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Episode") {
+				var title = this.getNameFormat(Items[index].SeriesName, Items[index].ParentIndexNumber, Items[index].Name, Items[index].IndexNumber);	
 				
 				var imageData = "";	
-				if (Array[index].SeriesThumbImageTag) {	
-					var imgsrc = Server.getImageURL(Array[index].SeriesId,"Thumb",220,125,0,Array[index].UserData.Played,0);
+				if (Items[index].SeriesThumbImageTag) {	
+					var imgsrc = Server.getImageURL(Items[index].SeriesId,"Thumb",220,125,0,Items[index].UserData.Played,0);
 					imageData = "background-image:url(" +imgsrc+ ")";
-					title = this.getNameFormat("", Array[index].ParentIndexNumber, Array[index].Name, Array[index].IndexNumber);
-				} else 	if (Array[index].ImageTags.Primary) {	
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,Array[index].UserData.Played,0);	
+					title = this.getNameFormat("", Items[index].ParentIndexNumber, Items[index].Name, Items[index].IndexNumber);
+				} else 	if (Items[index].ImageTags.Primary) {	
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,Items[index].UserData.Played,0);	
 					imageData = "background-image:url(" +imgsrc+ ")";
 				} else {
 					imageData = "background-color:rgba(0,0,0,0.5)";
 				}
-				
-				if (Array[index].UserData.Played > 0) {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style="+imageData+"><div class=genreItemCount>&#10003</div><div class=menuItem>"+ title + "</div></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style="+imageData+"><div class=menuItem>"+ title + "</div></div>";	
+				//Add watched and favourite overlays.
+				htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style="+imageData+">";
+				if (Items[index].UserData.Played) {
+					htmlToAdd += "<div class=genreItemCount>&#10003</div>";	
 				}
-				
-			} else if (Array[index].Type == "MusicAlbum"){
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Primary) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",112,112,Array[index].UserData.PlayCount,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Array[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=genreItemCount>"+Array[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
-				} 
-			}  else if (Array[index].Type == "MusicArtist"){
-				var title = Array[index].Name;		
-				var count = Array[index].SongCount;
-				
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",112,112,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/artist.png)><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
-				} 
-			} else if (Array[index].Type == "Audio"){
-				var title = Array[index].Name;		
-				if (Array[index].AlbumPrimaryImageTag) {	
-					var imgsrc = Server.getImageURL(Array[index].AlbumId,"Primary",112,112,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(images/album.png)><div class=menuItem>"+ title + "</div></div>";
+				if (Items[index].UserData.IsFavorite) {
+					htmlToAdd += "<div class=favItem></div>";
 				}
-			} else if (Array[index].Type == "Series" || Array[index].Type == "Movie" || Array[index].Type == "BoxSet") {
-				var title = Array[index].Name;	
+				htmlToAdd += "<div class=menuItem>"+ title + "</div></div>";	
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "MusicAlbum"){
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Primary) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",112,112,Items[index].UserData.PlayCount,false,0);
+					if (Items[index].UserData.IsFavorite) {
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=favItem></div><div class=genreItemCount>"+Items[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
+					} else {
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+Items[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";	
+					}	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(images/album.png)><div class=genreItemCount>"+Items[index].RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div></div>";
+				} 
+			//----------------------------------------------------------------------------------------------
+			}  else if (Items[index].Type == "MusicArtist"){
+				var title = Items[index].Name;		
+				var count = Items[index].SongCount;
+				
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",112,112,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(images/artist.png)><div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Audio"){
+				var title = Items[index].Name;
+				if (Items[index].AlbumPrimaryImageTag) {	
+					var imgsrc = Server.getImageURL(Items[index].AlbumId,"Primary",112,112,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(images/album.png)><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Series" || Items[index].Type == "Movie" || Items[index].Type == "BoxSet") {
+				alert(Items[index].Type+": "+Items[index].Name);
+				var title = Items[index].Name;
 				if (showBackdrop == true) {
-					if (Array[index].ImageTags.Thumb) {		
-						var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";
-					} else if (Array[index].BackdropImageTags.length > 0) {
-						var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+					if (Items[index].ImageTags.Thumb) {		
+						var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")>";
+					} else if (Items[index].BackdropImageTags.length > 0) {
+						var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Backdrop",220,125,0,false,0,Items[index].BackdropImageTags.length);
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div>";
 					} else {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
+						htmlToAdd += "<div style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div>";				
 					}
 				} else {
-					if (Array[index].ImageTags.Primary) {
-						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Array[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Array[index].Id,"Primary",96,140,0,false,0); 
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";
+					//Add a slightly larger div as a frame that items can move up and down inside of.
+					if (File.getUserProperty("LargerView") == true) {
+						htmlToAdd += "<div class=SeriesPortraitFrameLarge id=Frame"+ Items[index].Id + ">";
 					} else {
-						htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div></div>";				
+						htmlToAdd += "<div class=SeriesPortraitFrame id=Frame"+ Items[index].Id + ">";
 					}
-				}	
-			} else if (Array[index].Type == "TvChannel") {
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
-				} 
-			} else if (Array[index].Type == "Season") {
-				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Primary",114,165,Array[index].UserData.PlayCount,Array[index].UserData.Played,Array[index].UserData.PlayedPercentage,Array[index].BackdropImageTags.length);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";	
-				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);></div>";
+					//Normal item div goes inside the frame.
+					if (Items[index].ImageTags.Primary) {
+						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")>";
+					} else {
+						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div>";				
+					}
 				}
-			} else if (Array[index].Type == "Channel") {
-				var title = Array[index].Name;	 
-				if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				//Add watched and favourite overlays.
+				if (Items[index].UserData.Played) {
+					htmlToAdd += "<div class=genreItemCount>&#10003</div>";	
+				} else if (Items[index].UserData.UnplayedItemCount > 0){
+					htmlToAdd += "<div class=genreItemCount>"+Items[index].UserData.UnplayedItemCount+"</div>";
 				}
-				else if (Array[index].ImageTags.Thumb) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				if (Items[index].UserData.IsFavorite) {
+					htmlToAdd += "<div class=favItem></div>";
+				}
+				htmlToAdd += "</div>";
+
+				if (showBackdrop != true) {
+					htmlToAdd += "</div>"; //close the frame div.
+				}
+			//----------------------------------------------------------------------------------------------	
+			} else if (Items[index].Type == "TvChannel") {
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Season") {
+				if (Items[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Primary",114,165,Items[index].UserData.PlayCount,Items[index].UserData.Played,Items[index].UserData.PlayedPercentage,Items[index].BackdropImageTags.length);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Channel") {
+				var title = Items[index].Name;	 
+				if (Items[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Backdrop",220,125,0,false,0,Items[index].BackdropImageTags.length);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				}
+				else if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
 				}
 				else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}
-			} else if (Array[index].Type == "ChannelFolderItem") {
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "ChannelFolderItem") {
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}
-			} else if (Array[index].Type == "ChannelVideoItem") {
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "ChannelVideoItem") {
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}
-			} else if (Array[index].Type == "Playlist" || Array[index].Type == "CollectionFolder" ) {
-				var title = Array[index].Name;	
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
-				} else if (Array[index].ImageTags.Thumb) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
-				} else if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Playlist" || Items[index].Type == "CollectionFolder" ) {
+				var title = Items[index].Name;	
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else if (Items[index].ImageTags.Thumb) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else if (Items[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Backdrop",220,125,0,false,0,Items[index].BackdropImageTags.length);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}
-			}  else if (Array[index].Type == "Photo") {
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Primary) {			
-					var imgsrc = Server.getImageURL(Array[index].Id,"Primary",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+			//----------------------------------------------------------------------------------------------
+			}  else if (Items[index].Type == "Photo") {
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem></div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
-				} 
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			}  else if (Items[index].Type == "Folder") {
+				var title = Items[index].Name;
+				if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				} else if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+/*				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";*/
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(images/EmptyFolder-75x61.png)><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			}  else if (Items[index].Type == "PhotoAlbum") {
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				} else if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				}
+			//----------------------------------------------------------------------------------------------
+			} else if (Items[index].Type == "Video") {
+				var title = Items[index].Name;	
+				if (Items[index].ImageTags.Primary) {			
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				} else if (Items[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Backdrop",220,125,0,false,0,Items[index].BackdropImageTags.length);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				} else {
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+				}			
+			//----------------------------------------------------------------------------------------------
 			} else {
-				var title = Array[index].Name;		
-				if (Array[index].ImageTags.Thumb) {		
-					var imgsrc = Server.getImageURL(Array[index].Id,"Thumb",220,125,0,false,0);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
-				} else if (Array[index].BackdropImageTags.length > 0) {			
-					var imgsrc = Server.getBackgroundImageURL(Array[index].Id,"Backdrop",220,125,0,false,0,Array[index].BackdropImageTags.length);
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
+				alert("Unhandled Item type: "+Items[index].Type)
+				var title = Items[index].Name;		
+				if (Items[index].ImageTags.Thumb) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Thumb",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";
+				} else if (Items[index].BackdropImageTags.length > 0) {			
+					var imgsrc = Server.getBackgroundImageURL(Items[index].Id,"Backdrop",220,125,0,false,0,Items[index].BackdropImageTags.length);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuItem>"+ title + "</div></div>";	
 				} else {
-					htmlToAdd += "<div id="+ DivIdPrepend + Array[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=menuItem>"+ title + "</div></div>";
 				}			
 			}	 	
 		}
     }
-	
 	document.getElementById(DivIdUpdate).innerHTML = htmlToAdd;
+}
+
+Support.updateOneDisplayedItem = function(item,DivIdPrepend,isResume,Genre,showBackdrop,sendingPage,updateImages) {
+	var imgsrc = "";
+	var backgroundColor = "";
+	var innerHTML = "";
+	progress = Math.round((220 / 100) * Math.round(item.UserData.PlayedPercentage));
+	if (isResume == true) {
+		//Calculate Width of Progress Bar
+		if (item.Type == "Episode") {
+			alert("Update a "+item.Type + "with progress.");
+			var title = this.getNameFormat(item.SeriesName, item.ParentIndexNumber, item.Name, item.IndexNumber);		
+			if (item.SeriesThumbImageTag) {
+				title = this.getNameFormat("", item.ParentIndexNumber, item.Name, item.IndexNumber);
+				imgsrc = Server.getImageURL(item.SeriesId,"Thumb",220,125,0,false);
+			} else if (item.ImageTags.Primary) {	
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false);
+			} else {
+				imgsrc = "images/collection.png";
+			}
+			innerHTML += "<div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div>";
+			//Add watched and favourite overlays.
+			if (item.UserData.Played) {
+				innerHTML += "<div class=genreItemCount>&#10003</div>";	
+			}
+			if (item.UserData.IsFavorite) {
+				innerHTML += "<div class=favItem></div>";
+			}
+			innerHTML += "<div class=menuItemWithProgress>" + title +"</div>";
+		} else {
+			alert("Update a "+item.Type + "with progress.");
+			var title = item.Name;
+			if (item.ImageTags.Thumb) {		
+				imgsrc = Server.getImageURL(item.Id,"Thumb",220,125,item.UserData.PlayCount,item.UserData.Played); 
+				innerHTML += "<div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress></div>";	
+			} else if (item.BackdropImageTags.length > 0) {	
+				imgsrc = Server.getImageURL(item.Id,"Backdrop",220,125,item.UserData.PlayCount,item.UserData.Played);
+				innerHTML += "<div id="+ DivIdPrepend + item.Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div>";	
+			} else {
+				imgsrc = "images/collection.png";
+				innerHTML += "<div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div>";
+			}
+		}			
+	} else {
+		if (item.Type == "Genre") {	
+			alert("Update a "+item.Type);
+			var itemCount = 0;
+			switch (Genre) {
+			case "Movie":
+				itemCount = item.MovieCount;
+				break;
+			case "Series":
+				itemCount = item.SeriesCount;
+				break;
+			default:
+				break;
+			}
+			if (item.ImageTags.Primary) {
+				imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(item.Id,"Primary",119,178,0,false,0) : Server.getImageURL(item.Id,"Primary",96,140,0,false,0); 
+				innerHTML += "<div class=genreItemCount>"+itemCount+"</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=genreItemCount>"+itemCount+"</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Episode" && sendingPage == "GuiDisplay_Episodes") {
+			alert("Update a "+item.Type);
+			var title = "";
+			if (item.IndexNumber === undefined) {
+				title = item.Name;
+			} else {
+				title = item.IndexNumber + " - " + item.Name;
+			}
+			
+			innerHTML += "<div id=" + item.Id + " class='EpisodeListSingle'>";
+			
+			if (item.ImageTags.Primary) {			
+				var epImgsrc = Server.getImageURL(item.Id,"Primary",100,46,0,false,0);
+				innerHTML += "<div class='EpisodeListSingleImage' style=background-image:url(" +epImgsrc+ ")></div>";
+			} else {
+				innerHTML += "<div class='EpisodeListSingleImage'></div>";
+			}
+			
+			innerHTML += "<div id=title_" + item.Id;
+			
+			if (item.UserData.Played == true) {
+				innerHTML += " class='EpisodeListSingleTitleWatched'>"+ title +"</div>";
+			}else if (item.LocationType == "Virtual"){
+				innerHTML += " class='EpisodeListSingleTitleVirtual'>"+ title +"</div>";
+			} else {
+				innerHTML += " class='EpisodeListSingleTitle'>"+ title +"</div>";
+			}
+			if (item.UserData.IsFavorite == true) {
+				innerHTML += "<div class='ShowListSingleFav'></div>";
+			}
+			if (item.UserData.Played == true) {
+				innerHTML += "<div class='ShowListSingleWatched'></div>";
+			}else if (item.LocationType == "Virtual"){
+				innerHTML += "<div class='"+imageMissingOrUnaired+"'></div>";
+			}
+			innerHTML += "</div>";
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Episode") {
+			alert("Update a "+item.Type);
+			var title = this.getNameFormat(item.SeriesName, item.ParentIndexNumber, item.Name, item.IndexNumber);	
+			if (item.SeriesThumbImageTag) {	
+				imgsrc = Server.getImageURL(item.SeriesId,"Thumb",220,125,0,item.UserData.Played,0);
+				title = this.getNameFormat("", item.ParentIndexNumber, item.Name, item.IndexNumber);
+			} else 	if (item.ImageTags.Primary) {	
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,item.UserData.Played,0);	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+			}
+			//Add watched and favourite overlays.
+			if (item.UserData.Played) {
+				innerHTML += "<div class=genreItemCount>&#10003</div>";	
+			}
+			if (item.UserData.IsFavorite) {
+				innerHTML += "<div class=favItem></div>";
+			}
+			innerHTML += "<div class=menuItem>"+ title + "</div>";
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "MusicAlbum"){
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Primary) {		
+				imgsrc = Server.getImageURL(item.Id,"Primary",112,112,item.UserData.PlayCount,false,0);
+				if (item.UserData.IsFavorite) {
+					innerHTML += "<div class=favItem></div><div class=genreItemCount>"+item.RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div>";
+				} else {
+					innerHTML += "<div class=genreItemCount>"+item.RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div>";	
+				}	
+			} else {
+				imgsrc = "images/album.png";
+				innerHTML += "<div class=genreItemCount>"+item.RecursiveItemCount+"</div><div class=menuItem>"+ title + "</div>";
+			} 
+		//----------------------------------------------------------------------------------------------
+		}  else if (item.Type == "MusicArtist"){
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			var count = item.SongCount;
+			
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",112,112,0,false,0);
+				innerHTML += "<div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div>";	
+			} else {
+				imgsrc = "images/artist.png";
+				innerHTML += "<div class=genreItemCount>"+count+"</div><div class=menuItem>"+ title + "</div>";
+			} 
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Audio"){
+			alert("Update a "+item.Type);
+			var title = item.Name;
+			if (item.AlbumPrimaryImageTag) {	
+				imgsrc = Server.getImageURL(item.AlbumId,"Primary",112,112,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				imgsrc = "images/album.png";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Series" || item.Type == "Movie" || item.Type == "BoxSet") {
+			alert("Update a "+item.Type);
+			var title = item.Name;
+			if (showBackdrop == true) {
+				if (item.ImageTags.Thumb) {		
+					imgsrc = Server.getImageURL(item.Id,"Thumb",220,125,0,false,0);
+				} else if (item.BackdropImageTags.length > 0) {
+					imgsrc = Server.getBackgroundImageURL(item.Id,"Backdrop",220,125,0,false,0,item.BackdropImageTags.length);
+					innerHTML += "<div class=menuItem>"+ title + "</div>";
+				} else {
+					backgroundColor = "rgba(0,0,0,0.5)";
+					innerHTML += "<div class=menuItem>"+ title + "</div>";				
+				}
+			} else {
+				if (item.ImageTags.Primary) {
+					imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(item.Id,"Primary",119,178,0,false,0) : Server.getImageURL(item.Id,"Primary",96,140,0,false,0); 
+				} else {
+					backgroundColor = "rgba(0,0,0,0.5)";
+					innerHTML += "<div class=menuItem>"+ title + "</div>";				
+				}
+			}
+			//Add watched and favourite overlays.
+			if (item.UserData.Played) {
+				innerHTML += "<div class=genreItemCount>&#10003</div>";	
+			} else if (item.UserData.UnplayedItemCount > 0){
+				innerHTML += "<div class=genreItemCount>"+item.UserData.UnplayedItemCount+"</div>";
+			}
+			if (item.UserData.IsFavorite) {
+				innerHTML += "<div class=favItem></div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "TvChannel") {
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			} 
+		} else if (item.Type == "Season") {
+			if (item.BackdropImageTags.length > 0) {			
+				imgsrc = Server.getBackgroundImageURL(item.Id,"Primary",114,165,item.UserData.PlayCount,item.UserData.Played,item.UserData.PlayedPercentage,item.BackdropImageTags.length);
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Channel") {
+			alert("Update a "+item.Type);
+			var title = item.Name;	 
+			if (item.BackdropImageTags.length > 0) {			
+				imgsrc = Server.getBackgroundImageURL(item.Id,"Backdrop",220,125,0,false,0,item.BackdropImageTags.length);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			}
+			else if (item.ImageTags.Thumb) {		
+				imgsrc = Server.getImageURL(item.Id,"Thumb",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+			else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "ChannelFolderItem") {
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "ChannelVideoItem") {
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		} else if (item.Type == "Playlist" || item.Type == "CollectionFolder" ) {
+			alert("Update a "+item.Type);
+			var title = item.Name;	
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else if (item.ImageTags.Thumb) {			
+				imgsrc = Server.getImageURL(item.Id,"Thumb",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else if (item.BackdropImageTags.length > 0) {			
+				imgsrc = Server.getBackgroundImageURL(item.Id,"Backdrop",220,125,0,false,0,item.BackdropImageTags.length);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}
+		//----------------------------------------------------------------------------------------------
+		}  else if (item.Type == "Photo") {
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Primary) {			
+				imgsrc = Server.getImageURL(item.Id,"Primary",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			} 
+		//----------------------------------------------------------------------------------------------
+		} else {
+			alert("Update a "+item.Type);
+			var title = item.Name;		
+			if (item.ImageTags.Thumb) {		
+				imgsrc = Server.getImageURL(item.Id,"Thumb",220,125,0,false,0);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			} else if (item.BackdropImageTags.length > 0) {			
+				imgsrc = Server.getBackgroundImageURL(item.Id,"Backdrop",220,125,0,false,0,item.BackdropImageTags.length);
+				innerHTML += "<div class=menuItem>"+ title + "</div>";	
+			} else {
+				backgroundColor = "rgba(0,0,0,0.5)";
+				innerHTML += "<div class=menuItem>"+ title + "</div>";
+			}			
+		}	 	
+	}
+	var divId = DivIdPrepend + item.Id;
+	if (updateImages){
+		document.getElementById(divId).style.backgroundImage = "url(" +imgsrc+ ")";
+	}
+	if (backgroundColor){
+		document.getElementById(divId).style.backgroundColor = backgroundColor;
+	}
+	if (innerHTML){
+		document.getElementById(divId).innerHTML = innerHTML;
+	}	
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -513,7 +918,7 @@ Support.getNameFormat = function(SeriesName, SeriesNo, EpisodeName, EpisodeNo) {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 
 //ByPass Counter required for views that have 2 lists (Like Home Page) so I only display the counter of the active list
-Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter, totalRecordCount) {
+Support.updateSelectedNEW = function(Array,selectedItemID,startPos,endPos,strIfSelected,strIfNot,DivIdPrepend,dontUpdateCounter,totalRecordCount) {
 	for (var index = startPos; index < endPos; index++){	
 		if (index == selectedItemID) {
 			document.getElementById(DivIdPrepend + Array[index].Id).className = strIfSelected;			
@@ -550,8 +955,8 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 		}
 		
 	}
-	
 	if (ItemData.Items[selectedItem].CollectionType != null) {
+		alert("CollectionType: "+ItemData.Items[selectedItem].CollectionType);
 		switch (ItemData.Items[selectedItem].CollectionType) {
 		case "boxsets":	
 			//URL Below IS TEMPORARY TO GRAB SERIES OR FILMS ONLY - IN FUTURE SHOULD DISPLAY ALL
@@ -575,26 +980,25 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			}
 			break;
 		case "photos" :
-			//Handle as a folder
-			if (Main.isPhotoEnabled()){
-				var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
-				GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
-			} else {
-				Support.removeLatestURL();
-			}
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName");
+			GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;
 		case "playlists":
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
 			break;	
 		default:
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName");
-			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName");
+			if (page == "GuiPage_Photos"){
+				GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
+			} else {
+				GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
+			}
 			break;
 		}
 	} else {
+		alert("Type: "+ItemData.Items[selectedItem].Type);
 		switch (ItemData.Items[selectedItem].Type) {
-		case "CollectionFolder":
 		case "ManualCollectionsFolder":
 			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&fields=ParentId,SortName,Overview,Genres,RunTimeTicks");
 			GuiDisplay_Series.start("All Collections",url,0,0);
@@ -611,7 +1015,7 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			} else {
 				var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
 				GuiTV_Show.start(ItemData.Items[selectedItem].Name,url,0,0);
-			}	
+			}
 			break;		
 		case "Movie":
 			var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,null);
@@ -637,10 +1041,15 @@ Support.processSelectedItem = function(page,ItemData,startParams,selectedItem,to
 			GuiPage_Music.start(ItemData.Items[selectedItem].Name,url,ItemData.Items[selectedItem].Type);
 			break;	
 		case "Folder":
-		case "PhotoAlbum":	
-			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=SortName,ParentId");
-			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
-			break;	
+		case "PhotoAlbum":
+		case "CollectionFolder":	
+			var url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName,ParentId");
+			if (page == "GuiPage_Photos"){
+				GuiPage_Photos.start(ItemData.Items[selectedItem].Name,url,0,0);
+			} else {
+				GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
+			}
+			break;
 		case "Channel":
 			var url = Server.getCustomURL("/Channels/"+ItemData.Items[selectedItem].Id+"/Items?userId="+Server.getUserID()+"&fields=SortName&format=json");	
 			GuiDisplayOneItem.start(ItemData.Items[selectedItem].Name,url,0,0);
@@ -685,8 +1094,13 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	alert ("playSelectedItem: CollectionType "+ItemData.Items[selectedItem].CollectionType);
 	alert ("playSelectedItem: MediaType "+ItemData.Items[selectedItem].MediaType);
 	alert ("playSelectedItem: Type "+ItemData.Items[selectedItem].Type);
-	if (ItemData.Items[selectedItem].MediaType == "Folder") {
+	if (ItemData.Items[selectedItem].Type == "Folder") {
 		//Catch Folder - Do Nothing!
+		alert(page);
+		if (page == "GuiPage_Photos") {
+			Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
+			GuiImagePlayer.start(ItemData,selectedItem,true);	
+		}
 	} else if (ItemData.Items[selectedItem].MediaType == "Video") {
 		Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 		var url = Server.getItemInfoURL(ItemData.Items[selectedItem].Id,"&ExcludeLocationTypes=Virtual");
@@ -766,7 +1180,7 @@ Support.generateMainMenu = function() {
 	var hasTV = Server.getContent(urlTV);
 	if (hasTV == null) { return; }
 		
-	if (hasTV.TotalRecordCount > 0) {
+	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
 		menuItems.push("TV");
 	}
 		
@@ -777,15 +1191,6 @@ Support.generateMainMenu = function() {
 		
 	if (hasMovies.TotalRecordCount > 0) {
 		menuItems.push("Movies");
-	}
-	
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
 	}
 	
 	//Check Music
@@ -809,7 +1214,22 @@ Support.generateMainMenu = function() {
 		}
 	}
 	
-	//Check Images No API Support Currently
+	//Check Images
+	var urlPhotos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=PhotoAlbum&Recursive=true&Limit=0");
+	var hasPhotos = Server.getContent(urlPhotos);
+	if (hasPhotos == null) { return; }
+	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
+		menuItems.push("Photos");
+	}
+	
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
+	}
 	
 	//Check Server Playlists
 	var urlPlaylists = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Playlist&Recursive=true&Limit=0");
@@ -818,6 +1238,14 @@ Support.generateMainMenu = function() {
 	
 	if (hasPlaylists.TotalRecordCount > 0) {
 		menuItems.push("Playlists");
+	}
+	
+	//Check Home Movies
+	var urlVideos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Video&Recursive=true&Limit=0");
+	var hasVideos = Server.getContent(urlVideos);
+	if (hasVideos == null) { return; }
+	if (hasVideos.TotalRecordCount > 0) {
+		menuItems.push("Home-Movies");
 	}
 	
 	//Check Live TV
@@ -865,7 +1293,7 @@ Support.generateTopMenu = function() {
 	var hasTV = Server.getContent(urlTV);
 	if (hasTV == null) { return; }
 		
-	if (hasTV.TotalRecordCount > 0) {
+	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
 		menuItems.push("TV");
 	}
 		
@@ -876,15 +1304,6 @@ Support.generateTopMenu = function() {
 		
 	if (hasMovies.TotalRecordCount > 0) {
 		menuItems.push("Movies");
-	}
-	
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
 	}
 	
 	//Check Music
@@ -907,7 +1326,25 @@ Support.generateTopMenu = function() {
 			menuItems.push("Music");
 		}
 	}
+	
+	//Check Images
+	var urlPhotos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=PhotoAlbum&Recursive=true&Limit=0");
+	var hasPhotos = Server.getContent(urlPhotos);
+	if (hasPhotos == null) { return; }
+	
+	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
+		menuItems.push("Photos");
+	}
 
+	//Check Collections
+	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
+	var hasCollections = Server.getContent(urlCollections);
+	if (hasCollections == null) { return; }
+
+	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
+		menuItems.push("Collections");
+	}
+	
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");
 	var hasMediaFolders = Server.getContent(urlMF);
@@ -970,8 +1407,19 @@ Support.processHomePageMenu = function (menuItem) {
 		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=SortName&IncludeItemTypes=Playlist&Recursive=true");
 		GuiDisplayOneItem.start("Playlists", url,0,0);
 		break;		
-	case "Images":	
-		//No API Support Currently
+	case "Photos":
+		var photosFolderId = Server.getPhotosFolderId();
+		if (photosFolderId != null){
+			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=SortName&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
+			GuiPage_Photos.start("Photos",url,0,0);
+		}
+		break;
+	case "Home-Movies":
+		var homeVideosFolderId = Server.getHomeVideosFolderId();
+		if (homeVideosFolderId != null){
+			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName&ParentId="+homeVideosFolderId);
+			GuiDisplayOneItem.start("Home Movies",url,0,0);
+		}
 		break;
 	case "Search":
 		GuiPage_Search.start();
@@ -983,6 +1431,10 @@ Support.processHomePageMenu = function (menuItem) {
 		GuiPage_Contributors.start();
 		break;		
 	case "Log-Out":
+		if (File.getUserProperty("ForgetSavedPassword")) {
+			File.setUserProperty("Password","");
+			File.setUserProperty("ForgetSavedPassword",false);
+		}
 		Support.logout();
 		break;		
 	case "Log-Out_Delete":
@@ -1002,8 +1454,10 @@ Support.parseSearchTerm = function(searchTermString) {
 Support.fadeImage = function(imgsrc) {
 	var bg = $('#pageBackground').css('background-image');
 	if (bg != "none") { // catch initial entry from user page to app!
-		bg = bg.replace('url(','').replace(')','');
-		
+		bg = bg.replace('url(','').slice(0, -1);
+		if (bg.substring(0,5) == "'file") {
+			bg = bg.substring(bg.indexOf("images")).slice(0, -1);
+		}
 		//Do nothing!
 		if (bg != imgsrc) {
 			var imgHolder = new Image();  
@@ -1034,8 +1488,22 @@ Support.fadeImage = function(imgsrc) {
 	    };
 	    img.src = imgsrc
 	}
+}
 
-	
+Support.randomBackground = function() {
+	//var backdropTimeout = setTimeout(function(){
+		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
+		var randomImageData = Server.getContent(randomImageURL);
+		if (randomImageData == null) { return; }
+		
+		for (var index = 0; index < randomImageData.Items.length; index++) {
+			if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
+				var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+				Support.fadeImage(imgsrc);
+				break;
+			}
+		}
+	//}, 1000);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -1107,7 +1575,7 @@ Support.noitemskeyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -1357,3 +1825,17 @@ Support.getStarRatingImage = function(rating) {
 		break;
 	} 
 }
+
+Support.isPower = function(a,b) {
+		if ( a == 0) {
+			return true;
+		}
+		//This is a brain dead way of doing this. I expect you can do better! 
+		for (var i = 0; i < 1000; i++){
+			if (a/i == b){
+				return true;
+				break;
+			}
+		}
+		return false;	
+};

@@ -1,10 +1,10 @@
 var widgetAPI = new Common.API.Widget();
 var pluginAPI = new Common.API.Plugin();
 var tvKey = new Common.API.TVKeyValue();
-
+	
 var Main =
 {
-		version : "v0.593m",
+		version : "v1.0.0f",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -14,8 +14,9 @@ var Main =
 		forceDeleteSettings : false,
 		
 		enableMusic : true,
+		enableTv : false,
 		enableLiveTV : false,
-		enablePhoto : true,
+		enablePhoto : false,
 		enableCollections : true,
 		enableChannels : false,
 		
@@ -35,8 +36,20 @@ Main.isLiveTVEnabled = function() {
 	return this.enableLiveTV;
 };
 
+Main.isTvEnabled = function() {
+	return this.enableTv;
+}
+
+Main.setTvEnabled = function(status) {
+	this.enableTv = status;
+}
+
 Main.isPhotoEnabled = function() {
 	return this.enablePhoto;
+};
+
+Main.setPhotoEnabled = function(status) {
+	this.enablePhoto = status;
 };
 
 Main.isCollectionsEnabled = function() {
@@ -76,17 +89,15 @@ Main.onLoad = function()
 	//Setup Logging
 	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
 	FileLog.write("---------------------------------------------------------------------");
-	FileLog.write("MB3 Application Started");
-	
-	//Delete Old style Settings File
-	File.deleteOldSettingsFile();
-	
+	FileLog.write("Emby Application Started");
+
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
 	
-	window.onShow = Main.initKeys;
+	window.onShow = Main.initKeys();
+	alert("initKeys returned");
 	
-	//Set Version Number & initialte clock
+	//Set Version Number & initialise clock
 	document.getElementById("menuVersion").innerHTML = this.version;
 	Support.clock();
 	
@@ -171,9 +182,9 @@ Main.onLoad = function()
 };
 
 Main.initKeys = function() {
-    alert('initKeys called');
 	pluginAPI.registKey(tvKey.KEY_TOOLS);
 	pluginAPI.registKey(tvKey.KEY_3D); 
+	return;
 }
 
 

@@ -12,7 +12,8 @@ var GuiDisplayOneItem = {
 		genreType : "",
 		
 		startParams : [],
-		isLatest : false
+		isLatest : false,
+		backdropTimeout : null
 }
 
 GuiDisplayOneItem.getMaxDisplay = function() {
@@ -27,6 +28,11 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	this.startParams = [title,url];
 	
 	alert (url);
+	
+	//Set background
+	this.backdropTimeout = setTimeout(function(){
+		Support.fadeImage("images/lensflare2-960x540.jpg");
+	}, 1000);
 	
 	//Reset Values
 	this.indexSeekPos = -1;
@@ -113,7 +119,7 @@ GuiDisplayOneItem.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -180,12 +186,11 @@ GuiDisplayOneItem.keyDown = function() {
 			break;	
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiDisplayOneItem");
-			break;		
+			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			Support.updateURLHistory("GuiDisplayOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiDisplayOneItem",this.ItemData.Items[this.selectedItem].Id);
-			break;	
+			this.openMenu();
+			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
@@ -194,27 +199,39 @@ GuiDisplayOneItem.keyDown = function() {
 }
 
 GuiDisplayOneItem.processSelectedItem = function() {
+	clearTimeout(this.backdropTimeout);
 	Support.processSelectedItem("GuiDisplayOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null,this.genreType,this.isLatest); 
 }
 
 GuiDisplayOneItem.playSelectedItem = function () {
+	clearTimeout(this.backdropTimeout);
 	Support.playSelectedItem("GuiDisplayOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
+GuiDisplayOneItem.openMenu = function() {
+	Support.updateURLHistory("GuiDisplayOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	GuiMainMenu.requested("GuiDisplayOneItem",this.ItemData.Items[this.selectedItem].Id);
+}
+
 GuiDisplayOneItem.processLeftKey = function() {
-	this.selectedItem--;
-	if (this.selectedItem < 0) {
-		this.selectedItem = 0;
+	if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){
+		this.openMenu(); //Going left from anywhere in the first column.
 	} else {
-		if (this.selectedItem < this.topLeftItem) {
-			this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
-			if (this.topLeftItem < 0) {
-				this.topLeftItem = 0;
+		this.selectedItem--;
+		if (this.selectedItem == -1) {
+			this.selectedItem = 0;
+			this.openMenu();
+		} else {
+			if (this.selectedItem < this.topLeftItem) {
+				this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
+				if (this.topLeftItem < 0) {
+					this.topLeftItem = 0;
+				}
+				this.updateDisplayedItems();
 			}
-			this.updateDisplayedItems();
 		}
+		this.updateSelectedItems();
 	}
-	this.updateSelectedItems();
 }
 
 GuiDisplayOneItem.processRightKey = function() {

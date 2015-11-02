@@ -211,7 +211,7 @@ GuiPage_Search.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -264,7 +264,7 @@ GuiPage_Search.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			this.handleTools(true);
+			this.openMenu(true);
 			break;	
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
@@ -279,7 +279,7 @@ GuiPage_Search.keyDown = function() {
 	}
 }
 
-GuiPage_Search.handleTools = function(hasData) {
+GuiPage_Search.openMenu = function(hasData) {
 	if (hasData) {
 		Support.updateURLHistory("GuiPage_Search",this.startParams[0],this.startParams[1],null,null,0,0,null);
 		
@@ -338,8 +338,9 @@ GuiPage_Search.processDownKey = function() {
 
 GuiPage_Search.processLeftKey = function() {
 	this.selectedItem2--;
-	if (this.selectedItem2 < 0) {
-		this.selectedItem2++;
+	if (this.selectedItem2 == -1) {
+		this.selectedItem2 = 0;
+		this.openMenu(true);
 	} else {
 		this.updateSelectedItems();
 	}

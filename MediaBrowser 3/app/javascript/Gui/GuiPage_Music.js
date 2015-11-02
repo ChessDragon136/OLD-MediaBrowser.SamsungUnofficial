@@ -1,10 +1,10 @@
 var GuiPage_Music = {				
 		AlbumData : null,
 		
-		selectedItem : 0,
+		selectedItem : 0, //Vertical
 		topLeftItem : 0,
 		
-		selectedItem2 : 0,
+		selectedItem2 : 0, //Horizontal
 		
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 15,
@@ -25,7 +25,7 @@ GuiPage_Music.getMaxDisplay = function() {
 
 GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
 	alert("Page Enter : GuiPage_Music");
-	GuiHelper.setControlButtons(null,null,"Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params
 	this.startParams = [title,url];
@@ -105,13 +105,7 @@ GuiPage_Music.updateDisplayedItems = function() {
 //Function sets CSS Properties so show which user is selected
 GuiPage_Music.updateSelectedItems = function () {
 	if (this.selectedItem == -1) {		
-		//Resets original Items to White
-		document.getElementById(this.AlbumData.Items[0].Id).style.color = "white";
-		for (var index = 0; index < this.playItems.length; index++) {
-			document.getElementById(this.playItems[index]+this.AlbumData.Items[0].Id).className = "guiMusic_TableTd";
-		}
-		
-		//Sets Correct Item To Red
+		//Sets Correct Item To Green
 		for (var index = 0; index < this.topMenuItems.length; index++) {
 			if (index == this.selectedItem2) {
 				document.getElementById(this.topMenuItems[index]).style.color = "#27a436";
@@ -198,7 +192,7 @@ GuiPage_Music.keyDown = function() {
 			break;	
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			this.handleReturn();
+			this.openMenu();
 			break;	
 		case tvKey.KEY_YELLOW:	
 			//Favourites - May not be needed on this page
@@ -213,21 +207,13 @@ GuiPage_Music.keyDown = function() {
 	}
 }
 
-GuiPage_Music.handleReturn = function() {
+GuiPage_Music.openMenu = function() {
 	Support.updateURLHistory("GuiPage_Music",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,true);
 	
 	if (this.selectedItem == -1) {
-		for (var index = 0; index<this.playItems.length;index++) {
-			document.getElementById(this.topMenuItems[index]).className = "";
-		}
-		this.selectedItem2 = 0;
-		GuiMainMenu.requested("GuiPage_Music",this.topMenuItems[0],"#27a436");
+		GuiMainMenu.requested("GuiPage_Music",this.topMenuItems[this.selectedItem],"guiMusic_Global green");
 	} else {
-		for (var index = 0; index<this.playItems.length;index++) {
-			document.getElementById(this.playItems[index]+this.AlbumData.Items[this.selectedItem].Id).className = "musicTableTd";
-		}
-		this.selectedItem2 = 0;
-		GuiMainMenu.requested("GuiPage_Music","Play_"+this.AlbumData.Items[this.selectedItem].Id,"musicTableTd red");
+		GuiMainMenu.requested("GuiPage_Music",this.playItems[this.selectedItem2]+this.AlbumData.Items[this.selectedItem].Id,"guiMusic_TableTd green");
 	}
 }
 
@@ -235,10 +221,16 @@ GuiPage_Music.processUpKey = function() {
 	this.selectedItem--;
 	if (this.selectedItem < -1) {
 		this.selectedItem = -1;
-	} else if (this.selectedItem == -1) {
-		this.selectedItem2 = 0;
-		this.updateSelectedItems();
 	} else {
+		if (this.selectedItem == -1 && this.selectedItem2 >= 3) {
+			this.selectedItem2 = 2;
+		}
+		if (this.selectedItem == -1) {
+			document.getElementById(this.AlbumData.Items[0].Id).style.color = "white";
+			for (var index = 0; index < this.playItems.length; index++) {
+				document.getElementById(this.playItems[index]+this.AlbumData.Items[0].Id).className = "guiMusic_TableTd";
+			}
+		}
 		if (this.selectedItem < this.topLeftItem) {
 			if (this.topLeftItem - this.MAXCOLUMNCOUNT < 0) {
 				this.topLeftItem = 0;
@@ -249,7 +241,6 @@ GuiPage_Music.processUpKey = function() {
 		}
 		this.updateSelectedItems();
 	}
-	
 }
 
 GuiPage_Music.processDownKey = function() {
@@ -274,8 +265,9 @@ GuiPage_Music.processDownKey = function() {
 
 GuiPage_Music.processLeftKey = function() {
 	this.selectedItem2--;
-	if (this.selectedItem2 < 0) {
-		this.selectedItem2++;
+	if (this.selectedItem2 == -1) {
+		this.selectedItem2 = 0;
+		this.openMenu();
 	} else {
 		this.updateSelectedItems();
 	}
@@ -321,7 +313,7 @@ GuiPage_Music.processSelectedItem = function() {
 			GuiMusicPlayer.start("Album",url + "&Fields=MediaSources","GuiPage_Music",false);
 			break;	
 		}
-		GuiHelper.setControlButtons(null,null,"Favourite","Music","Return");
+		GuiHelper.setControlButtons(0,0,0,"Music","Return");
 	} else {
 		switch (this.selectedItem2) {
 		case 0:

@@ -17,7 +17,7 @@ GuiNotifications.setNotification = function (Message, Title,alterHeight) {
 		document.getElementById("Notifications").style.left = "355px";
 	}
 	
-	if (Message.length > 30) {
+/*	if (Message.length > 30) {
 		var brpoint = 30;
 		newmessage = "";
 		while (brpoint < Message.length) {
@@ -27,13 +27,14 @@ GuiNotifications.setNotification = function (Message, Title,alterHeight) {
 			} else {
 				newmessage += Message.substring((brpoint-30),brpoint);
 			}
+			alert(newmessage);
 			brpoint = brpoint + 30;
 		}
 		newmessage += Message.substring((brpoint-30), Message.length);
 		Message = newmessage;
-	}
+	}*/
 	
-	document.getElementById("NotificationText").innerHTML = "<p class=notificationTitle>" + Title + "</p><p>"+Message+"</p>";
+	document.getElementById("NotificationText").innerHTML = "<p class=notificationTitle>" + Title + "</p><p><br>"+Message+"</p>";
 	document.getElementById("Notifications").style.visibility ="";
 	
 	if (Title != "Test Mode") {

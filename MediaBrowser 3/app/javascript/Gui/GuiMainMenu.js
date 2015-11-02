@@ -24,6 +24,22 @@ GuiMainMenu.start = function() {
 	this.menuItems.length = 0;
 	this.menuItemsHomePages.length = 0;
 	
+	//Set user View Styles
+	var photosFolderId = Server.getPhotosFolderId(); //Is null when the enhanced photos view is disabled.
+	if (photosFolderId == null){
+		Main.setPhotoEnabled(false);
+	} else {
+		Main.setPhotoEnabled(true);
+	}
+	FileLog.write("Show enhanced photos view: "+Main.isPhotoEnabled());
+	var tvFolderId = Server.getTvFolderId(); //Is null when the enhanced TV view is disabled.
+	if (tvFolderId == null){
+		Main.setTvEnabled(false);
+	} else {
+		Main.setTvEnabled(true);
+	}
+	FileLog.write("Show enhanced TV view: "+Main.isTvEnabled());
+	
 	//Generate main menu items
 	this.menuItemsHomePages = Support.generateTopMenu(); 
 	this.menuItems = Support.generateMainMenu();
@@ -55,12 +71,12 @@ GuiMainMenu.start = function() {
 	htmlToAdd += "<div id=Search class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Search-23x19.png)'></div>Search</div>";
 	this.menuItems.push("Settings");
 	htmlToAdd += "<div id=Settings class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Settings-23x19.png)'></div>Settings</div>";
-	this.menuItems.push("Contributors");
-	htmlToAdd += "<div id=Contributors class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
+	//this.menuItems.push("Contributors");
+	//htmlToAdd += "<div id=Contributors class='menu-item'><div id='menu-Icon' class='menu-icon'style='background-image:url(images/menu/Code-23x19.png)'></div>Contributors</div>";
 	this.menuItems.push("Log-Out");
 	htmlToAdd += "<div id=Log-Out class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Logout-23x19.png)'></div>Log Out</div>";	
-	this.menuItems.push("Log-Out_Delete");
-	htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
+	//this.menuItems.push("Log-Out_Delete");
+	//htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
 	document.getElementById("menuItems").innerHTML += htmlToAdd;
 	
 	//Turn On Screensaver
@@ -105,7 +121,17 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 	document.getElementById("menu").style.visibility = "";
 	$('.menu').animate({
 		left: 0
-	}, 400, function() {
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.page').animate({
+		left: 200
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.pageBackground').animate({
+		left: 200
+	}, 300, function() {
 		//animate complete.
 	});
 
@@ -137,7 +163,7 @@ GuiMainMenu.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -171,7 +197,11 @@ GuiMainMenu.keyDown = function()
 		case tvKey.KEY_PANEL_ENTER:
 			alert("ENTER");
 			this.processSelectedItems();
-			break;	
+			break;
+		case tvKey.KEY_PLAY:
+			this.playSelectedItem();
+			break;
+		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_RETURN:
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
@@ -191,11 +221,58 @@ GuiMainMenu.keyDown = function()
 GuiMainMenu.processSelectedItems = function() {
 	$('.menu').animate({
 		left: -200
-	}, 400, function() {
+	}, 300, function() {
 		document.getElementById("menu").style.visibility = "hidden";
 	});
-	
-	Support.processHomePageMenu(this.menuItems[this.selectedMainMenuItem]);
+	$('.page').animate({
+		left: 0
+	}, 300, function() {
+		//animate complete.
+	});
+	$('.pageBackground').animate({
+		left: 0
+	}, 300, function() {
+		//animate complete.
+	});
+	setTimeout(function(){
+		Support.processHomePageMenu(GuiMainMenu.menuItems[GuiMainMenu.selectedMainMenuItem]);
+	}, 310);
+}
+
+GuiMainMenu.playSelectedItem = function() {
+	//Pressing play on Photos in the main menu plays a random slideshow.
+	if (this.menuItems[this.selectedMainMenuItem] == "Photos") {
+		//Close the menu
+		$('.menu').animate({
+			left: -200
+		}, 300, function() {
+			document.getElementById("menu").style.visibility = "hidden";
+		});
+		$('.page').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		$('.pageBackground').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		var photosFolderId = Server.getPhotosFolderId();
+		if (photosFolderId == null){
+			return;
+		}
+		//Get the Media Folders collection.
+		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
+		var ItemData = Server.getContent(url);
+		//Find the Photos items and play start a slideshow.
+		for (var i = 0; i < ItemData.Items.length; i++){
+			if (ItemData.Items[i].Id == photosFolderId) {
+				GuiImagePlayer.start(ItemData,i,true);
+			}
+		}
+		
+	}
 }
 
 GuiMainMenu.processReturnKey = function() {
@@ -213,8 +290,18 @@ GuiMainMenu.processReturnKey = function() {
 		//Hide Menu
 		$('.menu').animate({
 			left: -200
-		}, 400, function() {
+		}, 300, function() {
 			document.getElementById("menu").style.visibility = "hidden";
+		});
+		$('.page').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
+		});
+		$('.pageBackground').animate({
+			left: 0
+		}, 300, function() {
+			//animate complete.
 		});
 		
 		if (this.pageSelected == "GuiMusicPlayer") {

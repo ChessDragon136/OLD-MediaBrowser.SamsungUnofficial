@@ -14,7 +14,7 @@ GuiPage_Servers.getMaxDisplay = function() {
 
 GuiPage_Servers.start = function(runAutoLogin) {
 	alert("Page Enter : GuiPage_Servers");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Default",null,null,"Delete","Return");
 	
 	//Reset Properties
 	this.selectedItem = 0;
@@ -80,7 +80,7 @@ GuiPage_Servers.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -88,9 +88,9 @@ GuiPage_Servers.keyDown = function()
 	switch(keyCode)
 	{
 		case tvKey.KEY_RETURN:
-		case tvKey.KEY_PANEL_RETURN:
 			alert("RETURN");
-			widgetAPI.sendReturnEvent();
+			widgetAPI.blockNavigation(event);
+	    	GuiUsers.start();
 			break;
 		case tvKey.KEY_LEFT:
 			alert("LEFT");	

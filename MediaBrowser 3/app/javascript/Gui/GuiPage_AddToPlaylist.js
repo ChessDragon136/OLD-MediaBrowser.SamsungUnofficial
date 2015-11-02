@@ -36,32 +36,18 @@ GuiPage_AddToPlaylist.start=function(itemId, playedFromPage, mediaType) {
 	if (this.ItemData == null) { return; }
 	
 	//Set window size based on item count
-	switch (this.ItemData.Items.length) {
-	case 0:	
-	case 1:
-		document.getElementById("guiPlayListContainer").className = "playlistContainerOne";
-		break;
-	case 2:
-		document.getElementById("guiPlayListContainer").className = "playlistContainerTwo";
-		break;
-	case 3:
-		document.getElementById("guiPlayListContainer").className = "playlistContainerThree";
-		break;
-	case 4:
-		document.getElementById("guiPlayListContainer").className = "playlistContainerFour";
-		break;
-	default:
-		document.getElementById("guiPlayListContainer").className = "playlistContainerFive";
-		break;
+	if (this.ItemData.Items.length < 6){
+		document.getElementById("guiPlayListContainer").style.height = (this.ItemData.Items.length*20)+200 +"px";
+	} else {
+		document.getElementById("guiPlayListContainer").style.height = "280px";
 	}
 	
-	//Create IME - Call focus to get its attention
-	new GuiPage_AddToPlaylist_Input();
+	//Create IME - Send it the name of the thing to focus.
+	new GuiPage_AddToPlaylist_Input("guiPlayListNew");
 
 	if (this.ItemData.Items.length == 0) {
-		document.getElementById("guiPlayListExisting").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>You have no existing playlists you can add this to</div>";
+		document.getElementById("guiPlayListExisting").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>You have no existing "+ this.mediaType.toLowerCase() +" playlists.</div>";
 		Support.screensaverOff(); // Must turn off as not possible to catch keys!
-		document.getElementById("guiPlayListNew").focus();	
 	} else {
 		for (var index = 0; index < this.ItemData.Items.length; index++) {
 			url2 = Server.getCustomURL("/Playlists/" + this.ItemData.Items[index].Id+"/Items?format=json&userId="+Server.getUserID());
@@ -79,9 +65,6 @@ GuiPage_AddToPlaylist.start=function(itemId, playedFromPage, mediaType) {
 		
 		this.updateDisplayedItems();
 		this.updateSelectedItems();
-		
-		//Set Focus
-		document.getElementById("GuiPage_AddToPlaylist").focus();
 	}
 	
 	//Display Playlist Div
@@ -114,7 +97,7 @@ GuiPage_AddToPlaylist.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -165,11 +148,20 @@ GuiPage_AddToPlaylist.processSelectedItem = function() {
 		//Send update to server
 		Server.addToPlaylist(this.ItemData.Items[this.selectedItem].Id,this.itemId);
 		
-		//Dont get a refresh from server, assumes communication works. 
+		//Don't get a refresh from server, assumes communication works. 
 		this.hasItemInPlaylist[this.selectedItem] = true;
 		this.updateDisplayedItems();
 		this.updateSelectedItems();
+		document.getElementById("guiPlayListResult").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>The "+ this.mediaType.toLowerCase() +" was added to the playlist.</div>";
+	} else {
+		return;
 	}
+	//Close
+	setTimeout(function(){
+		document.getElementById("guiPlayListContainer").style.visibility = "hidden";
+		document.getElementById("guiPlayListResult").innerHTML = "";
+		document.getElementById(GuiPage_AddToPlaylist.playedFromPage).focus();
+	}, 2000);
 }
 
 GuiPage_AddToPlaylist.processUpKey = function() {
@@ -214,51 +206,81 @@ GuiPage_AddToPlaylist.processDownKey = function() {
 
 
 //////////////////////////////////////////////////////////////////
-//Input method for entering user password                     //
+//  Input method for entering new playlist name.                //
 //////////////////////////////////////////////////////////////////
-var GuiPage_AddToPlaylist_Input  = function() {   
-var imeReady = function(imeObject) {    	
-	installFocusKeyCallbacks();  
-}
+var GuiPage_AddToPlaylist_Input  = function(id) {   
+    var imeReady = function(imeObject) {    	
+    	installFocusKeyCallbacks(); 
+    	document.getElementById(id).focus();
+    }
 
-var ime = new IMEShell("guiPlayListNew", imeReady,'en');
-ime.setKeypadPos(680,90);
-    
-var installFocusKeyCallbacks = function () {
-    ime.setKeyFunc(tvKey.KEY_ENTER, function (keyCode) {
-        alert("Enter key pressed");    
-        
-        var playlist = document.getElementById("guiPlayListNew").value;
-        ime.setString("");
-        
-        //Check playlist name doesnt already exist!
-        
-        //Sent Server Request
-        Server.createPlaylist(playlist,GuiPage_AddToPlaylist.itemId, GuiPage_AddToPlaylist.mediaType);
-        
-        //Reload page!
-        GuiPage_AddToPlaylist.start(GuiPage_AddToPlaylist.itemId,GuiPage_AddToPlaylist.playedFromPage,GuiPage_AddToPlaylist.mediaType);     
-    });
-    
-    ime.setKeyFunc(tvKey.KEY_UP, function (keyCode) {
-    	Support.screensaver();
-    	
-    	if (GuiPage_AddToPlaylist.ItemData.Items.length > 0 ) {
-    		GuiPage_AddToPlaylist.updateSelectedItems();
-    		document.getElementById("GuiPage_AddToPlaylist").focus();
-    	}  	
-    });
-    
-    ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
-    	widgetAPI.blockNavigation(event);
-    	//Handle Return
-    	Support.screensaver();
-    	document.getElementById("guiPlayListContainer").style.visibility = "hidden";
-		document.getElementById(GuiPage_AddToPlaylist.playedFromPage).focus();
-    });
-       
-    ime.setKeyFunc(tvKey.KEY_EXIT, function (keyCode) {
-    	widgetAPI.sendExitEvent();
-    });      
-}   
+	var ime = new IMEShell("guiPlayListNew", imeReady,this);
+	ime.setKeypadPos(680,90);
+	ime.setKeypadChangeFunc('qwerty',onSwitchToQwerty);
+	ime.setKeypadChangeFunc('12key',onSwitchTo12key);
+	
+	function onSwitchToQwerty(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("guiPlayListContainer").className = "playlistContainerQwerty";
+	}
+	
+	function onSwitchTo12key(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("guiPlayListContainer").className = "playlistContainer12key";
+	}
+	    
+	var installFocusKeyCallbacks = function () {
+	    ime.setKeyFunc(tvKey.KEY_ENTER, function (keyCode) {
+	        alert("Enter key pressed");    
+	        
+	        var playlist = document.getElementById("guiPlayListNew").value;
+	        if (playlist == "") {
+	        	document.getElementById("guiPlayListResult").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>Enter a playlist name or press Return to cancel.</div>";
+	        	setTimeout(function(){
+	        		document.getElementById("guiPlayListResult").innerHTML = "";
+		    	}, 3000);
+	        	return;
+	        }
+	        ime.setString("");
+	        
+	        //Check playlist name doesnt already exist!
+	        
+	        //Sent Server Request
+	        Server.createPlaylist(playlist,GuiPage_AddToPlaylist.itemId, GuiPage_AddToPlaylist.mediaType);
+	        
+	        document.getElementById("guiPlayListResult").innerHTML = "<div style='padding-top:10px;padding-left:40px;'>The playlist was created.</div>";
+	        
+	    	//Close
+	    	setTimeout(function(){
+	    		document.getElementById("guiPlayListContainer").style.visibility = "hidden";
+	    		document.getElementById("guiPlayListResult").innerHTML = "";
+	    		document.getElementById(GuiPage_AddToPlaylist.playedFromPage).focus();
+	    	}, 2000);
+	    	
+	    	//Reload page!
+	        //GuiPage_AddToPlaylist.start(GuiPage_AddToPlaylist.itemId,GuiPage_AddToPlaylist.playedFromPage,GuiPage_AddToPlaylist.mediaType);    
+	        
+	    });
+	    
+	    ime.setKeyFunc(tvKey.KEY_UP, function (keyCode) {
+	    	Support.screensaver();
+	    	
+	    	if (GuiPage_AddToPlaylist.ItemData.Items.length > 0 ) {
+	    		GuiPage_AddToPlaylist.updateSelectedItems();
+	    		document.getElementById("GuiPage_AddToPlaylist").focus();
+	    	}  	
+	    });
+	    
+	    ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
+	    	widgetAPI.blockNavigation(event);
+	    	//Handle Return
+	    	Support.screensaver();
+	    	document.getElementById("guiPlayListContainer").style.visibility = "hidden";
+			document.getElementById(GuiPage_AddToPlaylist.playedFromPage).focus();
+	    });
+	       
+	    ime.setKeyFunc(tvKey.KEY_EXIT, function (keyCode) {
+	    	widgetAPI.sendExitEvent();
+	    });      
+	}
 }

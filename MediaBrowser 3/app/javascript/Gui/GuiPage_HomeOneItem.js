@@ -23,7 +23,7 @@ GuiPage_HomeOneItem.getMaxDisplay = function() {
 
 GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiPage_HomeOneItem");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -155,7 +155,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -214,7 +214,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 		case tvKey.KEY_PLAY:
 			this.playSelectedItem();
 			break;
-		case tvKey.KEY_RED:
+		case tvKey.KEY_YELLOW:
 			GuiHelper.toggleHelp("GuiPage_HomeOneItem");
 			break;	
 		case tvKey.KEY_GREEN:
@@ -226,21 +226,25 @@ GuiPage_HomeOneItem.keyDown = function() {
 					Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.Played = true
 				}
-				this.updateDisplayedItems();
-				this.updateSelectedItems();
+				setTimeout(function(){
+					GuiPage_HomeOneItem.updateDisplayedItems();
+					GuiPage_HomeOneItem.updateSelectedItems();
+	    		}, 200);
 			}
 			break;
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_RED:	
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
-					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
-					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
+				setTimeout(function(){
+					GuiPage_HomeOneItem.updateDisplayedItems();
+					GuiPage_HomeOneItem.updateSelectedItems();
+	    		}, 200);
 			}
 			break;	
 		case tvKey.KEY_BLUE:	
@@ -248,17 +252,7 @@ GuiPage_HomeOneItem.keyDown = function() {
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			if (this.selectedItem == -1) {
-				if (this.selectedBannerItem != this.menuItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).class = "guiDisplay_Series-BannerItem";		
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-			GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
+			this.openMenu();
 			break;
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
@@ -281,16 +275,30 @@ GuiPage_HomeOneItem.playSelectedItem = function () {
 	Support.playSelectedItem("GuiPage_HomeOneItem",this.ItemData,this.startParams,this.selectedItem,this.topLeftItem,null);
 }
 
+GuiPage_HomeOneItem.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+	GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
+}
+
 GuiPage_HomeOneItem.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
-			this.selectedBannerItem = 0;
+		if (this.selectedBannerItem == -1) {
+			this.openMenu(); //Going left from the end of the banner menu.
 		}
 		this.updateSelectedBannerItems();	
+	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){
+			this.openMenu(); //Going left from anywhere in the first column.
 	} else {
 		this.selectedItem--;
-		if (this.selectedItem < 0) {
+		if (this.selectedItem == -1) {
 			this.selectedItem = 0;
 		} else {
 			if (this.selectedItem < this.topLeftItem) {

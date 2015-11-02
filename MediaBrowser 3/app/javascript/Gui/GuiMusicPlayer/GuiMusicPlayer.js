@@ -267,6 +267,8 @@ GuiMusicPlayer.keyDown = function() {
 				//Hide colour buttons if a slideshow is running.
 				if (GuiImagePlayer.ImageViewer != null){
 					GuiHelper.setControlButtons(null,null,null,null,null);
+				} else if (this.playedFromPage == "GuiPage_HomeOneItem" || this.playedFromPage == "GuiPage_HomeTwoItems"){
+					GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 				}
 				document.getElementById(this.playedFromPage).focus();	
 			}

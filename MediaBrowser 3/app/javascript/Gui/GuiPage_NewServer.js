@@ -7,24 +7,25 @@ var GuiPage_NewServer = {
 
 GuiPage_NewServer.start = function() {
 	alert("Page Enter : GuiPage_NewServer");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons(null,null,null,null,"Return");
 	
 	//Insert html into page
-	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
-		<p style='padding-bottom:5px;'>Please enter the IP address & port number below</p> \
+	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer12key'> \
+		<p style='padding-bottom:5px;'>Enter the IP address & port number of your Emby server. <br>(You can leave the port blank for 8096)</p> \
 		<form><input id='1' type='text' size='5'  maxlength='3' value=''/>. \
 		<input id='2' type='text' size='5'  maxlength='3' value=''/>. \
 		<input id='3' type='text' size='5'  maxlength='3' value=''/>. \
 		<input id='4' type='text' size='5'  maxlength='3' value=''/>: \
 		<input id='port' type='text' size='8'  maxlength='5'/></form> \ \
 		<p style='padding-top:10px;padding-bottom:5px'>OR</p> \
-		<p style='padding-bottom:5px'>Enter in your host name here without 'http://' and including ':' and Port No.</p> \
+		<p style='padding-bottom:5px'>Enter your server hostname here without http:// and <br>including : and port number.</p> \
 		<form><input id='host' style='z-index:10;' type='text' size='50' value=''/></form> \
 		</div>";
 	
 	//Set Backdrop
-	imgsrc =  "images/hd-splash.jpg";
-	document.getElementById("pageBackground").style.backgroundImage="url(" + imgsrc + ")";
+	if (document.getElementById("splashscreen").style.visibility != "hidden") {
+		document.getElementById("splashscreen").style.visibility="hidden";
+	}
 
 	//Prepare all input elements for IME
 	GuiPage_NewServer.createInputObjects();
@@ -104,7 +105,7 @@ var GuiPage_NewServer_Input  = function(id,previousId, nextId) {
             	//Check if host is empty
             	if (host == "") {
             		//not valid
-                	GuiNotifications.setNotification("Please enter in your server details","Incorrect Details",true);
+                	GuiNotifications.setNotification("Please re-enter your server details.","Incorrect Details",true);
             	} else {
             		document.getElementById("pageContent").focus();                                   
                     //Timeout required to allow notification command above to be displayed              

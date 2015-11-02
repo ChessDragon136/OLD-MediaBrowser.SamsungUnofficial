@@ -5,7 +5,7 @@ var GuiImagePlayer = {
 		Timeout : null,
 		Paused : false,
 		
-		overlayFormat : 1, // 0 - date, 1 - date:time, 2 - off 
+		overlayFormat : 0, // 0 - date, 1 - date:time, 2 - off 
 		
 		images : [],
 		overlay : [],
@@ -27,7 +27,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	//Show colour buttons on screen for a few seconds when a slideshow starts.
 	document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
 	document.getElementById("guiButtonShade").style.visibility = "";
-	GuiHelper.setControlButtons("Help","Favourite","Date/Time",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Favourite","Date/Time","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	setTimeout(function(){
 		GuiHelper.setControlButtons(null,null,null,null,null);
 		document.getElementById("Clock").style.visibility = "hidden";
@@ -141,7 +141,7 @@ GuiImagePlayer.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -192,10 +192,7 @@ GuiImagePlayer.keyDown = function() {
 			this.Paused = false
 			GuiImagePlayer.prepImage(GuiImagePlayer.imageIdx);
 			break;
-		case tvKey.KEY_RED:
-			GuiHelper.toggleHelp("GuiImagePlayer");
-			break;
-		case tvKey.KEY_GREEN:	
+		case tvKey.KEY_RED:	
 			if (this.newItemData.Items[this.imageIdx].UserData.IsFavorite == true) {
 				Server.deleteFavourite(this.newItemData.Items[this.imageIdx].Id);
 				this.newItemData.Items[this.imageIdx].UserData.IsFavorite = false;
@@ -206,14 +203,16 @@ GuiImagePlayer.keyDown = function() {
 				GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 			}
 			break;
-		case tvKey.KEY_YELLOW:
-			alert ("RED");
+		case tvKey.KEY_GREEN:
 			if (this.overlayFormat == 2) {
 				this.overlayFormat = 0
 			} else {
 				this.overlayFormat = this.overlayFormat + 1
 			}
 			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
+			break;
+		case tvKey.KEY_YELLOW:
+			GuiHelper.toggleHelp("GuiImagePlayer");
 			break;
 		case tvKey.KEY_BLUE:	
 			GuiMusicPlayer.showMusicPlayer("GuiImagePlayer");

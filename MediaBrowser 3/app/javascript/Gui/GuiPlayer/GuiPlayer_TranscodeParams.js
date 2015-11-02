@@ -33,7 +33,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     			this.resolution = [1920,1080];
     			this.bitrate = 30720000;
     			this.framerate = 30;
-    			this.level = true;
+    			this.level = 41;
     			this.profile = true;
     			break;
     		case "h264":
@@ -42,7 +42,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     			this.resolution = [1920,1080];
     			this.bitrate = 50720000;
     			this.framerate = 30;
-    			this.level = 51;
+    			this.level = 41;
     			this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
     			break;
     	    case "hevc":    	    
@@ -69,7 +69,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     	    	this.resolution = [1920,1080];
     	    	this.bitrate = 60720000;
     	    	this.framerate = 30;
-    	    	this.level = 51;
+    	    	this.level = 41;
     	    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
     	    	break;
     		case "wmv2":
@@ -127,7 +127,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = true;
+				this.level = 41;
 				this.profile = true;
 				break;
 			case "h264":
@@ -136,7 +136,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = 51;
+				this.level = 41;
 				this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
 				break;
 		    case "mvc":	
@@ -145,7 +145,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 		    	this.resolution = [1920,1080];
 		    	this.bitrate = 62914560;
 		    	this.framerate = 30;
-		    	this.level = 51;
+		    	this.level = 41;
 		    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
 		    	break;
 			case "wmv2":
@@ -203,7 +203,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = true;
+				this.level = 41;
 				this.profile = true;
 				break;
 			case "h264":
@@ -212,7 +212,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = 51;
+				this.level = 41;
 				this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
 				break;
 		    case "mvc":	
@@ -221,7 +221,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 		    	this.resolution = [1920,1080];
 		    	this.bitrate = 41943040;
 		    	this.framerate = 30;
-		    	this.level = 51;
+		    	this.level = 41;
 		    	this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
 		    	break;
 			case "wmv2":
@@ -280,7 +280,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 			this.resolution = [1920,1080];
 			this.bitrate = 8192000;
 			this.framerate = 30;
-			this.level = true;
+			this.level = 41;
 			this.profile = true;
 			break;
 		case "h264":	
@@ -289,7 +289,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 			this.resolution = [1920,1080];
 			this.bitrate = 37500000;
 			this.framerate = 30;
-			this.level = 51;
+			this.level = 41;
 			this.profile = ["Base","Constrained Baseline","Baseline","Main","High"];
 			break;
 		case "wmv2":

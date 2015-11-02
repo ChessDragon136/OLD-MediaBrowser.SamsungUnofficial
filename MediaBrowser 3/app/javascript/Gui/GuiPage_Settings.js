@@ -4,13 +4,14 @@ var GuiPage_Settings = {
 		ServerUserData : null,
 
 		selectedItem : 0,
-		selectedBannerItem : 0,
+		currentPage : 0,
+		selectedBannerItem : -1,
 		selectedSubItem : 0,
 		topLeftItem : 0,
 		MAXCOLUMNCOUNT : 1,
 		MAXROWCOUNT : 10,
 		
-		bannerItems : ["User Settings","Server Settings","TV Settings","Log"],
+		bannerItems : ["User Settings","Server Settings","TV Settings","Log","About"],
 		currentView : null,
 		currentViewSettings : null,
 		currentViewSettingsName : null,
@@ -20,13 +21,13 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: "],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000],
+		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime","ForgetSavedPassword"],
+		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: ", "Forget Password at Log Out:"],
+		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000,false],
 		
-		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging"],
-		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: "],
-		TVSettingsDefaults : [60,false,false,false,false,150],
+		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging","ClockOffset"],
+		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: ","Clock Offset: "],
+		TVSettingsDefaults : [60,false,false,false,false,150,0],
 		
 		ServerSettings : ["DisplayMissingEpisodes","DisplayUnairedEpisodes","GroupMovieCollections","DefaultAudioLang","PlayDefaultAudioTrack","DefaultSubtitleLang", "SubtitleMode"],
 		ServerSettingsName : ["Display Missing Episodes: ", "Display Unaired Episodes: ","Group Movies into Collections: ","Default Audio Language: ","Play default audio track regardless of language: ", "Default Subtitle Language: ","Subtitle Mode:"], 
@@ -60,8 +61,11 @@ var GuiPage_Settings = {
 		ScreensaverTimeoutOptions : ["20 Minutes", "10 Minutes", "5 Minutes", "2 Minutes", "1 Minute"],
 		ScreensaverTimeoutValues : [1200000,600000,300000,120000,60000],
 		
+		ClockOffsetOptions : ["+12 hour", "+11 hours", "+10 hours", "+9 hours", "+8 hours", "+7 hours", "+6 hours", "+5 hours", "+4 hours", "+3 hours", "+2 hours", "+1 hour","0 hours", "-1 hour", "-2 hours", "-3 hours", "-4 hours", "-5 hours", "-6 hours", "-7 hours", "-8 hours", "-9 hours", "-10 hours", "-11 hours", "-12 hours"],
+		ClockOffsetValues : [12,11,10,9,8,7,6,5,4,3,2,1,0,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12],
+		
 		//Also used for Image Player - Different setting!
-		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minutes", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
+		ScreensaverImageTimeOptions : ["5 Minutes", "2 Minutes", "1 Minute", "30 Seconds", "20 Seconds", "10 Seconds", "5 Seconds"],
 		ScreensaverImageTimeValues : [300000,120000,60000,30000,20000,10000,5000],
 		
 		LanguageOptions : ["None","English","French","German","Spanish","Italian"],
@@ -102,7 +106,8 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	
 	//Reset Vars
 	this.selectedItem = 0;
-	this.selectedBannerItem = 0;
+	this.currentPage = 0;
+	this.selectedBannerItem = -1;
 	this.selectedSubItem = 0;
 	this.topLeftItem = 0;
 	
@@ -133,21 +138,23 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	//Create Banner Items
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index != this.bannerItems.length-1) {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";			
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";			
 		} else {
-			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ').toUpperCase()+"</div>";					
+			document.getElementById("bannerSelection").innerHTML += "<div id='bannerItem" + index + "' class='guiDisplay_Series-BannerItem'>"+this.bannerItems[index].replace(/-/g, ' ')+"</div>";					
 		}
 	}
 
 	//Set default view as the User Settings Page
 	if (viewToDisplay == null || viewToDisplay === undefined || viewToDisplay == "User Settings") {
 		this.currentView = "User Settings";
+		this.currentPage = 0;
 		this.currentViewSettings = this.Settings;
 		this.currentViewSettingsName = this.SettingsName;
 		this.currentViewSettingsDefaults = this.SettingsDefaults;
-		document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
+		document.getElementById("guiTV_Show_Title").innerHTML = "User Settings for "+this.UserData.UserName;
 	} else if (viewToDisplay == "TV Settings") {
 		this.currentView = "TV Settings";
+		this.currentPage = 2;
 		this.currentViewSettings = this.TVSettings;
 		this.currentViewSettingsName = this.TVSettingsName;
 		this.currentViewSettingsDefaults = this.TVSettingsDefaults;
@@ -155,6 +162,7 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	} else {
 		//Set default view as the User Settings Page
 		this.currentView = "Server Settings";
+		this.currentPage = 1;
 		this.currentViewSettings = this.ServerSettings;
 		this.currentViewSettingsName = this.ServerSettingsName;
 		this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
@@ -164,6 +172,7 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	//Update Displayed & Updates Settings
 	this.updateDisplayedItems();
 	this.updateSelectedItems();
+	this.updateSelectedBannerItems();
 	
 	document.getElementById("GuiPage_Settings").focus();
 }
@@ -216,7 +225,8 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		case "SeasonLabel":
 		case "AutoPlay":
 		case "ShowDisc":	
-		case "LargerView":	
+		case "LargerView":
+		case "ForgetSavedPassword":
 			for (var index2 = 0; index2 < this.DefaultValues.length; index2++) {
 				if (this.DefaultValues[index2] == this.UserData[this.currentViewSettings[index]]) {
 					Setting = this.DefaultOptions[index2];
@@ -280,7 +290,15 @@ GuiPage_Settings.updateDisplayedItems = function() {
 					break;
 				}
 			}
-			break;		
+			break;
+		case "ClockOffset":
+			for (var index2 = 0; index2 < this.ClockOffsetValues.length; index2++) {
+				if (this.ClockOffsetValues[index2] == this.AllData.TV[this.currentViewSettings[index]]) {
+					Setting = this.ClockOffsetOptions[index2];
+					break;
+				}
+			}
+			break;
 		case "Dolby":
 		case "DTS":	
 		case "TranscodeDSeries":
@@ -396,19 +414,28 @@ GuiPage_Settings.updateSelectedItems = function() {
 GuiPage_Settings.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.bannerItems.length; index++) {
 		if (index == this.selectedBannerItem) {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green";
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem green";
 			}		
 		} else {
-			if (index != this.bannerItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+			if (index != this.bannerItems.length-1) { //Don't put padding on the last one.
+				if (index == this.currentPage) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+				}
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				if (index == this.currentPage) {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem blue";
+				} else {
+					document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem";
+				}
 			}
 		}
 	}
+	//Update the counter in the bottom left.
 	if (this.selectedItem == -1) {
 		document.getElementById("Counter").innerHTML = (this.selectedBannerItem + 1) + "/" + (this.bannerItems.length);
 	} else {
@@ -421,28 +448,33 @@ GuiPage_Settings.processSelectedItem = function() {
 	if (this.selectedItem == -1) {
 		switch (this.bannerItems[this.selectedBannerItem]) {
 		case "User Settings":
-			//Set default view as the User Settings Page
+			this.currentPage = 0;
 			this.currentViewSettings = this.Settings;
 			this.currentViewSettingsName = this.SettingsName;
 			this.currentViewSettingsDefaults = this.SettingsDefaults;
-			document.getElementById("guiTV_Show_Title").innerHTML = "Client Settings for "+this.UserData.UserName;
-			break;
-		case "TV Settings":
-			//Set default view as the User Settings Page
-			this.currentViewSettings = this.TVSettings;
-			this.currentViewSettingsName = this.TVSettingsName;
-			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
-			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
+			document.getElementById("guiTV_Show_Title").innerHTML = "User Settings for "+this.UserData.UserName;
 			break;
 		case "Server Settings":
-			//Set default view as the User Settings Page
+			this.currentPage = 1;
 			this.currentViewSettings = this.ServerSettings;
 			this.currentViewSettingsName = this.ServerSettingsName;
 			this.currentViewSettingsDefaults = this.ServerSettingsDefaults;
 			document.getElementById("guiTV_Show_Title").innerHTML = "Server Settings for "+this.UserData.UserName;
+			break;
+		case "TV Settings":
+			this.currentPage = 2;
+			this.currentViewSettings = this.TVSettings;
+			this.currentViewSettingsName = this.TVSettingsName;
+			this.currentViewSettingsDefaults = this.TVSettingsDefaults;
+			document.getElementById("guiTV_Show_Title").innerHTML = "TV Settings for " + Server.getDevice();
 			break;	
 		case "Log":
 			GuiPage_SettingsLog.start();
+			return;
+			break;
+		case "About":
+			Support.updateURLHistory("GuiPage_Settings",null,null,null,null,0,0,null);
+			GuiPage_Contributors.start();
 			return;
 			break;
 		}
@@ -474,7 +506,8 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "PlayDefaultAudioTrack":
 		case "ShowDisc":	
 		case "AACtoDolby":	
-		case "LargerView":		
+		case "LargerView":
+		case "ForgetSavedPassword":
 			this.CurrentSubSettings = this.DefaultOptions;
 			break;
 		case "View1":
@@ -498,6 +531,9 @@ GuiPage_Settings.processSelectedItem = function() {
 		case "ScreensaverImageTime":
 		case "ImagePlayerImageTime":		
 			this.CurrentSubSettings = this.ScreensaverImageTimeOptions;
+			break;	
+		case "ClockOffset":
+			this.CurrentSubSettings = this.ClockOffsetOptions;
 			break;	
 		case "ItemPaging":
 			this.CurrentSubSettings = this.ItemPagingOptions;
@@ -536,7 +572,7 @@ GuiPage_Settings.keyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -592,13 +628,26 @@ GuiPage_Settings.keyDown = function() {
 			break;		
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
-			document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
-			GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
+			this.openMenu();
 			break;	
 		case tvKey.KEY_EXIT:
 			alert ("EXIT KEY");
 			widgetAPI.sendExitEvent(); 
 			break;
+	}
+}
+
+GuiPage_Settings.openMenu = function() {
+	if (this.selectedItem == -1) {
+		if (this.currentPage == 0){
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding blue";
+		} else {
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		}
+		GuiMainMenu.requested("GuiPage_Settings","bannerItem0","guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding green");
+	} else {
+		document.getElementById(this.selectedItem).className = "guiSettingsTD GuiPage_Setting_UnSelected";
+		GuiMainMenu.requested("GuiPage_Settings",this.selectedItem,"guiSettingsTD GuiPage_Setting_Selected");
 	}
 }
 
@@ -649,11 +698,14 @@ GuiPage_Settings.processDownKey = function() {
 GuiPage_Settings.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
-		if (this.selectedBannerItem < 0) {
+		if (this.selectedBannerItem == -1) {
 			this.selectedBannerItem = 0;
+			this.openMenu();
 		} else {
 			this.updateSelectedBannerItems();	
 		}	
+	} else {
+		this.openMenu();
 	}
 }
 
@@ -692,7 +744,8 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "SeasonLabel":	
 	case "AutoPlay":
 	case "ShowDisc":	
-	case "LargerView":		
+	case "LargerView":
+	case "ForgetSavedPassword":
 		this.UserData[this.currentViewSettings[this.selectedItem]] = this.DefaultValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.DefaultOptions[this.selectedSubItem];
 		break;
@@ -733,7 +786,11 @@ GuiPage_Settings.processSelectedSubItem = function() {
 	case "ScreensaverImageTime":
 		this.UserData.ScreensaverImageTime = this.ScreensaverImageTimeValues[this.selectedSubItem];
 		this.CurrentSettingValue = this.ScreensaverImageTimeOptions[this.selectedSubItem];
-		break;	
+		break;
+	case "ClockOffset":
+		this.AllData.TV.ClockOffset = this.ClockOffsetValues[this.selectedSubItem];
+		this.CurrentSettingValue = this.ClockOffsetOptions[this.selectedSubItem];
+		break;
 	case "Dolby":
 	case "DTS":
 	case "TranscodeDSeries":
@@ -823,7 +880,7 @@ GuiPage_Settings.bottomKeyDown = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -954,16 +1011,24 @@ GuiPage_Settings.setOverview = function() {
 			break;	
 		case "ScreensaverImages":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Image Source";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The screensaver can use images wither from photo's you have added to your library or tv & movie images.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The screensaver can use images either from photos you have added to your library or tv & movie images.";
 			break;
 		case "ScreensaverTimeout":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Timeout";
-			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity until the screensaver kicks in.";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of inactivity before the screensaver starts.";
 			break;	
 		case "ScreensaverImageTime":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Screensaver Rotate Speed";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "The amount of time an image is shown during screensaver playback until the next one is displayed.";
-			break;		
+			break;
+		case "ForgetSavedPassword":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Forget Saved Password at Next Log Out";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "To remove your saved password, select this option and log out.";
+			break;
+		case "ClockOffset":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Clock Offset";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Some devices report their system time incorectly. Use this option to apply a correction.";
+			break;	
 		case "Bitrate":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Max Bitrate";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Use this setting to select the maximum video bitrate your network can handle. If a video bitrate is higher than this, the video will be transcoded to use the max bitrate setting here.";

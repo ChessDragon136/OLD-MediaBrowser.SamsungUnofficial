@@ -113,7 +113,7 @@ GuiPage_CastMember.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -135,9 +135,12 @@ GuiPage_CastMember.keyDown = function()
 	
 	switch(keyCode)
 	{
-		//Need Logout Key
+		case tvKey.KEY_LEFT:
+			alert("LEFT");
+			this.openMenu();
+			break;
 		case tvKey.KEY_UP:
-			alert("LEFT");	
+			alert("UP");	
 			this.processUpKey();
 			break;
 		case tvKey.KEY_DOWN:
@@ -174,6 +177,11 @@ GuiPage_CastMember.keyDown = function()
 			widgetAPI.sendExitEvent(); 
 			break;
 	}
+}
+
+GuiPage_CastMember.openMenu = function() {
+	Support.updateURLHistory("GuiPage_CastMember",null,null,null,null,null,null,null);
+	GuiMainMenu.requested("GuiPage_CastMember",null);
 }
 
 GuiPage_CastMember.processSelectedItem = function() {	

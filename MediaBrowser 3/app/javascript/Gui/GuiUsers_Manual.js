@@ -6,7 +6,7 @@ var GuiUsers_Manual = {
 
 GuiUsers_Manual.start = function() {
 	alert("Page Enter : GuiUsers_Manual");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons(null,null,null,null,"Return");
 	
 	//Reset Properties
 	this.selectedItem = 0;
@@ -21,11 +21,11 @@ GuiUsers_Manual.start = function() {
 	if (this.UserData == null) { return; }
 	
 	//Change Display
-	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer'> \
+	document.getElementById("pageContent").innerHTML = "<div class='GuiPage_NewServer12key'> \
 		<p style='padding-bottom:5px'>Username</p> \
-		<form><input id='user' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<form><input id='user' style='z-index:10;' type='text' size='40' value=''/></form> \
 		<p style='padding-bottom:5px'>Password</p> \
-		<form><input id='pass' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<form><input id='pass' style='z-index:10;' type='text' size='40' value=''/></form> \
 		<br><span id='guiUsers_rempwd'>Remember Password </span> : <span id='guiUsers_rempwdvalue'>" + this.rememberPassword + "</span> \
 		</div>";
 	
@@ -65,12 +65,12 @@ GuiUsers_Manual.IMEAuthenticate = function(user, password) {
     			
     	alert ("Authentication Failed");		
     	document.getElementById("user").focus();
-    	GuiNotifications.setNotification("Wrong User / Password Combination or Network Error");
+    	GuiNotifications.setNotification("Wrong username, bad password or network error.","Logon Error",true);
     }     		
 }
 
 //////////////////////////////////////////////////////////////////
-//  Input method for entering user password                     //
+//  Input method for entering user password.                    //
 //////////////////////////////////////////////////////////////////
 var GuiUsers_Manual_Input  = function(id) {   
     var imeReady = function(imeObject) {    	
@@ -80,6 +80,18 @@ var GuiUsers_Manual_Input  = function(id) {
     
     var ime = new IMEShell(id, imeReady,'num');
     ime.setKeypadPos(680,90);
+/*	ime.setKeypadChangeFunc('qwerty',onSwitchToQwerty);
+	ime.setKeypadChangeFunc('12key',onSwitchTo12key);
+	
+	function onSwitchToQwerty(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("pageContent").className = "GuiPage_NewServerQwerty";
+	}
+	
+	function onSwitchTo12key(arg){
+		alert("IME selected:"+arg);
+		document.getElementById("pageContent").className = "GuiPage_NewServer12key";
+	}*/
            
     var installFocusKeyCallbacks = function () {
         ime.setKeyFunc(tvKey.KEY_ENTER, function (keyCode) {
@@ -98,7 +110,7 @@ var GuiUsers_Manual_Input  = function(id) {
         });
         
         ime.setKeyFunc(tvKey.KEY_DOWN, function (keyCode) {
-            alert("Enter key pressed");  
+            alert("Down key pressed");  
             if (GuiUsers_Manual.selectedItem == 0) {
             	//Set IME to Password field
             	GuiUsers_Manual.selectedItem++;
@@ -111,7 +123,7 @@ var GuiUsers_Manual_Input  = function(id) {
         });
         
         ime.setKeyFunc(tvKey.KEY_UP, function (keyCode) {
-            alert("Enter key pressed");  
+            alert("Up key pressed");  
             if (GuiUsers_Manual.selectedItem == 1) {
             	//Set IME to Password field
             	GuiUsers_Manual.selectedItem--;
@@ -121,8 +133,13 @@ var GuiUsers_Manual_Input  = function(id) {
         });
         
         //Keycode to abort login from password screen      
-        ime.setKeyFunc(tvKey.KEY_INFO, function (keyCode) {
-        	GuiHelper.toggleHelp("GuiUsers_Manual");	
+        ime.setKeyFunc(tvKey.KEY_RETURN, function (keyCode) {
+        	widgetAPI.blockNavigation(event);
+        	var fileJson = JSON.parse(File.loadFile());    
+    	    if (fileJson.Servers.length > 0) {
+    	    	document.getElementById("pageContent").focus();
+    	    	GuiUsers.start();
+    	    }
         });
         
         ime.setKeyFunc(tvKey.KEY_EXIT, function (keyCode) {
@@ -139,7 +156,7 @@ GuiUsers_Manual.keyDownPassword = function() {
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}

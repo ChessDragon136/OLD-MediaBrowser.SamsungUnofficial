@@ -34,7 +34,7 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	alert("Page Enter : GuiPage_HomeTwoItems");
-	GuiHelper.setControlButtons("Help","Watched","Favourite",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit");
+	GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
@@ -197,7 +197,7 @@ GuiPage_HomeTwoItems.keyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -220,29 +220,8 @@ GuiPage_HomeTwoItems.keyDown = function()
 	switch(keyCode)
 	{
 		case tvKey.KEY_LEFT:
-			alert("LEFT");	
-			if (this.selectedItem == -2) {
-				this.selectedBannerItem--;
-				if (this.selectedBannerItem < 0) {
-					this.selectedBannerItem = 0;
-				}
-				this.updateSelectedBannerItems();	
-			} else {
-				this.selectedItem--;
-				if (this.selectedItem < 0) {
-					this.selectedItem = 0;
-				} else {
-					if (this.selectedItem < this.topLeftItem) {
-						this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
-						if (this.topLeftItem < 0) {
-							this.topLeftItem = 0;
-						}
-						this.updateDisplayedItems();
-					}
-				}
-				this.updateSelectedItems();
-			}
-			
+			alert("LEFT");
+			this.processLeftKey();
 			break;
 		case tvKey.KEY_RIGHT:
 			alert("RIGHT");	
@@ -319,25 +298,14 @@ GuiPage_HomeTwoItems.keyDown = function()
 			break;
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);	
-			//Return added here - deleted in MainMenu if user does return
-			if (this.selectedItem == -2) {		
-				if (this.selectedBannerItem != this.menuItems.length-1) {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-				} else {
-					document.getElementById("bannerItem"+this.selectedBannerItem).className = "guiDisplay_Series-BannerItem";
-				}
-				this.selectedItem = 0;
-				this.topLeftItem = 0;
-			}
-			Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
-			GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+			GuiPage_HomeTwoItems.openMenu();
 			break;
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;
-		case tvKey.KEY_RED:
+		case tvKey.KEY_YELLOW:
 			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;	
 		case tvKey.KEY_GREEN:
@@ -349,21 +317,25 @@ GuiPage_HomeTwoItems.keyDown = function()
 					Server.setWatchedStatus(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.Played = true
 				}
-				this.updateDisplayedItems();
-				this.updateSelectedItems();
+				setTimeout(function(){
+					GuiPage_HomeTwoItems.updateDisplayedItems();
+					GuiPage_HomeTwoItems.updateSelectedItems();
+				}, 250);
 			}
 			break;	
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_RED:	
 			if (this.selectedItem > -1) {
 				if (this.ItemData.Items[this.selectedItem].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = false;
-					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
 				} else {
 					Server.setFavourite(this.ItemData.Items[this.selectedItem].Id);
 					this.ItemData.Items[this.selectedItem].UserData.IsFavorite = true;
-					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
 				}
+				setTimeout(function(){
+					GuiPage_HomeTwoItems.updateDisplayedItems();
+					GuiPage_HomeTwoItems.updateSelectedItems();
+				}, 250);
 			}
 			break;		
 		case tvKey.KEY_BLUE:	
@@ -376,6 +348,42 @@ GuiPage_HomeTwoItems.keyDown = function()
 	}
 }
 
+GuiPage_HomeTwoItems.openMenu = function() {
+	if (this.selectedItem == -2) {		
+		if (this.selectedBannerItem == -1) {
+			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		} 
+		this.selectedItem = 0;
+		this.topLeftItem = 0;
+	}
+	Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
+	GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
+}
+
+GuiPage_HomeTwoItems.processLeftKey = function() {
+	if (this.selectedItem == -2) {
+		this.selectedBannerItem--;
+		if (this.selectedBannerItem == -1) {
+			this.openMenu(); //Going left from the end of the banner menu.
+		}
+		this.updateSelectedBannerItems();	
+	} else {
+		this.selectedItem--;
+		if (this.selectedItem == -1) {
+			this.selectedItem = 0;
+			this.openMenu(); //Going left from top items row.
+		} else {
+			if (this.selectedItem < this.topLeftItem) {
+				this.topLeftItem = this.selectedItem - (this.getMaxDisplay() - 1);
+				if (this.topLeftItem < 0) {
+					this.topLeftItem = 0;
+				}
+				this.updateDisplayedItems();
+			}
+		}
+		this.updateSelectedItems();
+	}
+}
 
 //---------------------------------------------------------------------------------------------------
 //      BOTTOM ITEMS HANDLERS
@@ -401,7 +409,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 	if (document.getElementById("Notifications").style.visibility == "") {
 		document.getElementById("Notifications").style.visibility = "hidden";
 		document.getElementById("NotificationText").innerHTML = "";
-		
+		widgetAPI.blockNavigation(event);
 		//Change keycode so it does nothing!
 		keyCode = "VOID";
 	}
@@ -426,8 +434,11 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 		case tvKey.KEY_LEFT:
 			alert("LEFT BOTTOM");	
 			this.selectedItem2--;
-			if (this.selectedItem2 < 0) {
-				this.selectedItem2++;
+			if (this.selectedItem2 == -1) {
+				this.selectedItem2 = 0; //Going left from bottom items row.
+				//Open the menu
+				Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem2,this.topLeftItem2,false);				
+				GuiMainMenu.requested("GuiPage_HomeTwoItemsBottom",this.divprepend2 + this.ItemData2.Items[this.selectedItem2].Id);
 			} else {
 				if (this.selectedItem2 < this.topLeftItem2) {
 					this.topLeftItem2--;
@@ -491,7 +502,7 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;
-		case tvKey.KEY_RED:
+		case tvKey.KEY_YELLOW:
 			GuiHelper.toggleHelp("GuiPage_HomeTwoItems");
 			break;
 		case tvKey.KEY_GREEN:
@@ -503,21 +514,25 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 					Server.setWatchedStatus(this.ItemData2.Items[this.selectedItem2].Id);
 					this.ItemData2.Items[this.selectedItem2].UserData.Played = true
 				}
-				this.updateDisplayedItems2();
-				this.updateSelectedItems2();
+				setTimeout(function(){
+					GuiPage_HomeTwoItems.updateDisplayedItems2();
+					GuiPage_HomeTwoItems.updateSelectedItems2();
+				}, 250);
 			}
 			break;
-		case tvKey.KEY_YELLOW:	
+		case tvKey.KEY_RED:	
 			if (this.selectedItem > -1) {
 				if (this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite == true) {
 					Server.deleteFavourite(this.ItemData2.Items[this.selectedItem2].Id);
-					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = false;
-					GuiNotifications.setNotification ("Item has been removed from<br>favourites","Favourites");
+					this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite = false;
 				} else {
 					Server.setFavourite(this.ItemData2.Items[this.selectedItem2].Id);
-					this.ItemData.Items2[this.selectedItem2].UserData.IsFavorite = true;
-					GuiNotifications.setNotification ("Item has been added to<br>favourites","Favourites");
+					this.ItemData2.Items[this.selectedItem2].UserData.IsFavorite = true;
 				}
+				setTimeout(function(){
+					GuiPage_HomeTwoItems.updateDisplayedItems2();
+					GuiPage_HomeTwoItems.updateSelectedItems2();
+				}, 250);
 			}
 			break;		
 		case tvKey.KEY_BLUE:	

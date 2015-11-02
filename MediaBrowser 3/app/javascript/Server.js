@@ -39,6 +39,14 @@ Server.setUserName = function(UserName) {
 	this.UserName = UserName;
 }
 
+Server.setUserFavourites = function(UserFavourites) {
+	this.UserFavourites = UserFavourites;
+}
+
+Server.getUserFavourites = function(UserFavourites) {
+	return this.UserFavourites;
+}
+
 Server.setDevice = function(Device) {
 	this.Device = Device;
 }
@@ -183,6 +191,50 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 	return xmlHttp;
 }
 
+Server.getPhotosFolderId = function () {
+	var folderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			if (topFolder.Items[index].CollectionType == "photos") {
+				folderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return folderId;
+}
+
+Server.getTvFolderId = function () {
+	var folderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			alert(topFolder.Items[index].CollectionType);
+			if (topFolder.Items[index].CollectionType == "tvshows") {
+				folderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return folderId;
+}
+
+Server.getHomeVideosFolderId = function () {
+	var folderId = null;
+	var topFolderUrl = Server.getItemTypeURL("");
+	var topFolder = Server.getContent(topFolderUrl);
+	for (var index = 0; index < topFolder.Items.length; index++) {
+		if (topFolder.Items[index].Type == "CollectionFolder"){
+			alert(topFolder.Items[index].CollectionType);
+			if (topFolder.Items[index].CollectionType == "homevideos") {
+				folderId = topFolder.Items[index].Id;
+			}
+		}
+	}
+	return folderId;
+}
+
 //------------------------------------------------------------
 //      Settings Functions
 //------------------------------------------------------------
@@ -302,7 +354,7 @@ Server.deleteWatchedStatus = function(id) {
 
 
 //------------------------------------------------------------
-//       Item Watched Status Functions
+//       Item Favourite Status Functions
 //------------------------------------------------------------
 
 Server.setFavourite = function(id) {
@@ -340,8 +392,6 @@ Server.createPlaylist = function(name, ids, mediaType) {
 
 Server.deletePlaylist = function(playlistId) {
 	var url = this.serverAddr + "/Items/"+playlistId;
-	alert (url);
-	http://192.168.1.108:8096/Items/d85957fd88b68eb725ee10055a9d520b
 	xmlHttp = new XMLHttpRequest();
 	if (xmlHttp) {
 		xmlHttp.open("DELETE", url , true); //must be true!
@@ -432,6 +482,7 @@ Server.Authenticate = function(UserId, UserName, Password) {
     	this.AuthenticationToken = session.AccessToken;
     	this.setUserID(session.User.Id);
     	this.setUserName(UserName);
+		FileLog.write("User "+ UserName +" authenticated. ");
     	return true;
     }
 }
@@ -450,6 +501,7 @@ Server.Logout = function() {
 	GuiImagePlayer.kill();
 	GuiMusicPlayer.stopOnAppExit();
 	GuiPlayer.stopOnAppExit();
+	FileLog.write("---------------------------------------------------------------------");
 }
 
 //------------------------------------------------------------
@@ -463,7 +515,9 @@ Server.getContent = function(url) {
 		xmlHttp.send(null);
 		    
 		if (xmlHttp.status != 200) {
-			alert ("Server NOT 200 - Logout");
+			FileLog.write("Server NOT 200 - Logout");
+			FileLog.write(url);
+			FileLog.write("HTTP Status was "+xmlHttp.status);
 			Server.Logout();
 			GuiNotifications.setNotification("Not 200<br>User: " + Server.getUserName() + "<br>Token: " + Server.getAuthToken(),"Server Error",false);
 			GuiUsers.start(true);

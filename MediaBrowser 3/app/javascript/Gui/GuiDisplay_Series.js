@@ -214,10 +214,10 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	} else {
 		if (File.getUserProperty("LargerView") == true) {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge SelectedTV","SeriesPortraitLarge","",false,this.totalRecordCount);
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge Selected","SeriesPortraitLarge","",false,this.totalRecordCount);
 		} else {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait SelectedTV","SeriesPortrait","",false,this.totalRecordCount);
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","",false,this.totalRecordCount);
 		}
 		
 	}
@@ -510,9 +510,7 @@ GuiDisplay_Series.processSelectedItem = function() {
 
 GuiDisplay_Series.toggleWatchedStatus = function () {
 	if (this.selectedItem > -1) {
-		alert(this.startParams[0]);
 		var titleArray = this.startParams[0].split(" ");
-		alert(titleArray[1]);
 		switch (titleArray[1]) {
 		case "Movies":
 			if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
@@ -573,7 +571,7 @@ GuiDisplay_Series.openMenu = function() {
 		}
 	} else {
 		Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id,(File.getUserProperty("LargerView") == true) ? "SeriesPortraitLarge SelectedTV" : "SeriesPortrait SelectedTV");
+		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id,(File.getUserProperty("LargerView") == true) ? "SeriesPortraitLarge Selected" : "SeriesPortrait Selected");
 	}
 }
 

@@ -101,13 +101,8 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		if (GuiImagePlayer.imagesToUse == "Media") {
 			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
 		} else {
-			if (GuiImagePlayer.overlayFormat == 2) {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
-			} else {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 1);
-			}
-		}
-			
+			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 2);
+		} 
 		
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;

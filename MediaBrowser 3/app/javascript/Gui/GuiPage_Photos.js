@@ -81,60 +81,29 @@ GuiPage_Photos.updateDisplayedItems = function() {
 	for (var i = 0; i < Math.min(this.getMaxDisplay(),Items.length-this.topLeftItem); i++) {
 		var imgsrc = "";
 		var title = Items[this.topLeftItem+i].Name;
-		if (Items[this.topLeftItem+i].Type == "PhotoAlbum" || Items[this.topLeftItem+i].Type == "Folder") {
-			var photosUrl = Server.getItemTypeURL("&IncludeItemTypes=photo&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
+		if (Items[this.topLeftItem+i].Type == "PhotoAlbum" || Items[this.topLeftItem+i].Type == "Folder"){
+			var photosUrl = Server.getItemTypeURL("&IncludeItemTypes=photo&Limit=1&SortBy=SortName&SortOrder=Ascending&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
 			var photos = Server.getContent(photosUrl);
-			var photosCount = photos.TotalRecordCount;
-			if (!Items[this.topLeftItem+i].ImageTags.Primary) { //A plain old folder won't have an image so look for some PhotoAlbums in it and use that instead.
-				var folderContentUrl = Server.getItemTypeURL("&IncludeItemTypes=PhotoAlbum&SortBy=SortName&SortOrder=Ascending&fields=ParentId,SortName&Recursive=true&ParentId="+Items[this.topLeftItem+i].Id);
-				var folderContent = Server.getContent(folderContentUrl);
-				if (folderContent.Items.length > 0) {
-					for (var c = 0; c < folderContent.Items.length; c++) {
-						if (folderContent.Items[c].ImageTags.Thumb) {
-							imgsrc = Server.getImageURL(folderContent.Items[c].Id,"Thumb",(i==0?510:250),(i==0?510:250),0,false,0);
-							htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
-							if (Items[this.topLeftItem+i].UserData.IsFavorite){
-								htmlToAdd += "<div class=favItem></div>";
-							}
-							htmlToAdd += "<div class=photoItemCount>"+photosCount+"</div>";
-							htmlToAdd += "</div></td>";
-						}
-						if (imgsrc != ""){
-							break; //exit as soon as possible
-						}
+			var photosCount = 0;
+			if (photos){
+				photosCount = photos.TotalRecordCount;
+				if(photos.Items[0]){
+					if(photos.Items[0].ImageTags.Primary){			
+						imgsrc = Server.getImageURL(photos.Items[0].Id,"Primary",(i==0?440:220),(i==0?440:220),0,false,0);
 					}
-				} else {
-					imgsrc = "images/EmptyFolder-75x61.png";
-					htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
-					if (Items[this.topLeftItem+i].UserData.IsFavorite){
-						htmlToAdd += "<div class=favItem></div>";
-					}
-					htmlToAdd += "<div class=photoItemCount>"+photosCount+"</div>";
-					htmlToAdd += "</div></td>";
 				}
-			} else if (Items[this.topLeftItem+i].ImageTags.Thumb) { //It's a PhotoAlbum.
-				imgsrc = Server.getImageURL(Items[this.topLeftItem+i].Id,"Thumb",(i==0?510:250),(i==0?510:250),0,false,0);
-				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
-				if (Items[this.topLeftItem+i].UserData.IsFavorite){
-					htmlToAdd += "<div class=favItem></div>";
-				}
-				var itemCount = Items[this.topLeftItem+i].ChildCount;
-				if (itemCount) {
-					htmlToAdd += "<div class=photoItemCount>"+itemCount+"</div>";
-				}
-				htmlToAdd += "</div></td>";
-			} else {
-				imgsrc = "images/EmptyFolder-75x61.png";
-				htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
-				if (Items[this.topLeftItem+i].UserData.IsFavorite){
-					htmlToAdd += "<div class=favItem></div>";
-				}
-				var itemCount = Items[this.topLeftItem+i].ChildCount;
-				if (itemCount) {
-					htmlToAdd += "<div class=photoItemCount>"+itemCount+"</div>";
-				}
-				htmlToAdd += "</div></td>";
 			}
+			if (imgsrc == ""){
+				imgsrc = "images/EmptyFolder-75x61.png";
+			}
+			htmlToAdd += (i==0?"<td class=photoThumbLarge colspan=2 rowspan=2>":"<td class=photoThumbSmall>")+"<div id="+ DivIdPrepend + Items[this.topLeftItem+i].Id + " style=background-color:rgba(0,0,0,0.5);background-image:url(" +imgsrc+ ");width:"+(i==0?286:135)+"px;height:"+(i==0?286:135)+"px><div class=photoTitle style=font-size:"+(i==0?18:14)+"px>"+ title + "</div>";
+			if (Items[this.topLeftItem+i].UserData.IsFavorite){
+				htmlToAdd += "<div class=favItem></div>";
+			}
+			if (photosCount > 0) {
+				htmlToAdd += "<div class=photoItemCount>"+photosCount+"</div>";
+			}
+			htmlToAdd += "</div></td>";
 		} else if (Items[this.topLeftItem+i].Type == "Video") {
 			if (Items[this.topLeftItem+i].ImageTags.Primary){
 				imgsrc = Server.getImageURL(Items[this.topLeftItem+i].Id,"Primary",(i==0?440:220),(i==0?440:220),0,false,0);

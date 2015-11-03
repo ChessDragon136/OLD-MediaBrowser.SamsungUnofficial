@@ -644,7 +644,7 @@
     z-index:2;
 }
 
-.SeriesPortraitFrame {
+/* .SeriesPortraitFrame {
 	position:relative;
 	top: 0px;
 	left: 0px;
@@ -680,6 +680,40 @@
     height: 152px;
 	background-repeat: no-repeat;
     background-position:top;
+} */
+
+.SeriesPortrait {
+	width: 90px;
+    height: 140px;
+    display:inline-block;
+    position:relative; 
+
+    margin:3px;
+    border:2px solid transparent;
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-repeat: no-repeat;
+    background-position:center;
+}
+
+.SeriesPortraitLarge {
+	width: 119px;
+    height: 178px;
+    display:inline-block;
+    position:relative; 
+
+    margin:3px;
+    border:2px solid transparent;
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-repeat: no-repeat;
+    background-position:center;
 }
 
 .SelectedTV {
@@ -770,14 +804,18 @@
 
 .photoTitle {	
 	position:absolute;
+	padding-left:3px;
+	left:0px;
     bottom:0px;
-    width:100%;
+    width:99%;
     text-align:left;
     background-color:rgba(0,0,0,0.3);
 }
 
 .photoItemCount {
 	position:absolute;
+	border-radius:5px;
+	padding:3px;
 	top:1px;
 	right:1px;
 	text-align:right;
@@ -1608,6 +1646,10 @@
 }
 
 .green {
+	color:#27a436;
+}
+
+.BannerSelected {
 	color:#27a436;
 }
 

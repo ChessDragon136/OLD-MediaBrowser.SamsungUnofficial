@@ -33,7 +33,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     			this.resolution = [1920,1080];
     			this.bitrate = 30720000;
     			this.framerate = 30;
-    			this.level = 41;
+    			this.level = true;
     			this.profile = true;
     			break;
     		case "h264":
@@ -111,6 +111,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
     		}
     		break;	
         case "F":
+        case "B":
     		switch (codec) {
 			case "mpeg2video":
 				this.codec = true;
@@ -127,13 +128,13 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = 41;
+				this.level = true;
 				this.profile = true;
 				break;
 			case "h264":
 				this.codec = true;
 				this.container = ["asf","avi","mkv","mp4","3gpp","mpg","mpeg","ts","m4v","m2ts","mov","vro","tp","trp","flv","vob","svi","mts","divx","wmv"];
-				this.resolution = [1920,1080];
+				this.resolution = [1920,1088];
 				this.bitrate = 30720000;
 				this.framerate = 30;
 				this.level = 41;
@@ -203,7 +204,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 				this.resolution = [1920,1080];
 				this.bitrate = 30720000;
 				this.framerate = 30;
-				this.level = 41;
+				this.level = true;
 				this.profile = true;
 				break;
 			case "h264":
@@ -280,7 +281,7 @@ GuiPlayer_TranscodeParams.getParameters = function(codec) {
 			this.resolution = [1920,1080];
 			this.bitrate = 8192000;
 			this.framerate = 30;
-			this.level = 41;
+			this.level = true;
 			this.profile = true;
 			break;
 		case "h264":	

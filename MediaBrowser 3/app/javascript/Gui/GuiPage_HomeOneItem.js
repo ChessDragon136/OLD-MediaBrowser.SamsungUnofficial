@@ -134,9 +134,9 @@ GuiPage_HomeOneItem.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.menuItems.length; index++) {
 		if (index == this.selectedBannerItem) {
 			if (index != this.menuItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding BannerSelected";
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem BannerSelected";
 			}		
 		} else {
 			if (index != this.menuItems.length-1) {
@@ -277,23 +277,27 @@ GuiPage_HomeOneItem.playSelectedItem = function () {
 
 GuiPage_HomeOneItem.openMenu = function() {
 	if (this.selectedItem == -1) {
-		if (this.selectedBannerItem == -1) {
-			document.getElementById("bannerItem0").class = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
+		Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+		if (this.selectedBannerItem == this.menuItems.length-1) {
+			GuiMainMenu.requested("GuiPage_HomeOneItem","bannerItem"+this.selectedBannerItem,"guiDisplay_Series-BannerItem BannerSelected");
+		} else {
+			GuiMainMenu.requested("GuiPage_HomeOneItem","bannerItem"+this.selectedBannerItem,"guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding BannerSelected");
 		}
-		this.selectedItem = 0;
-		this.topLeftItem = 0;
+	} else {
+		Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
+		GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
 	}
-	Support.updateURLHistory("GuiPage_HomeOneItem",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-	GuiMainMenu.requested("GuiPage_HomeOneItem",this.ItemData.Items[this.selectedItem].Id);
 }
 
 GuiPage_HomeOneItem.processLeftKey = function() {
 	if (this.selectedItem == -1) {
 		this.selectedBannerItem--;
 		if (this.selectedBannerItem == -1) {
+			this.selectedBannerItem = 0;
 			this.openMenu(); //Going left from the end of the banner menu.
+		} else {
+			this.updateSelectedBannerItems();	
 		}
-		this.updateSelectedBannerItems();	
 	} else if (Support.isPower(this.selectedItem, this.MAXCOLUMNCOUNT)){
 			this.openMenu(); //Going left from anywhere in the first column.
 	} else {

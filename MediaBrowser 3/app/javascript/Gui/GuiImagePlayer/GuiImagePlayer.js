@@ -7,6 +7,8 @@ var GuiImagePlayer = {
 		
 		overlayFormat : 0, // 0 - date, 1 - date:time, 2 - off 
 		
+		photos : [],
+		
 		images : [],
 		overlay : [],
         imageIdx : 0,		// Image index
@@ -40,9 +42,9 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 
 	var url = "";
 	if (isPhotoCollection) {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=2500");	
 	} else {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=2500");	
 	}
 	
 	var result = Server.getContent(url);
@@ -87,13 +89,39 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	//Start Slide Show
 	this.ImageViewer.show();
 	this.setSlideshowMode();
+	//this.setNormalMode();
 }
 
 // Set normal mode
 // You can play images on the area you set.
 GuiImagePlayer.setNormalMode = function() {
-	this.ImageViewer.endSlideshow();
-    playImage();
+	
+	sf.service.ImageViewer.setPosition({
+		left: 0,
+		top: 0,
+		width: 3000,
+		height: 3000,
+	});
+	
+	sf.service.ImageViewer.show();
+	
+	for (var i=0; i < this.newItemData.Items.length; i++){
+		var ImageUrl = Server.getImageURL(this.newItemData.Items[i].Id,"Primary",3000,3000,0,false,0);
+		this.photos[i] = {
+		        url: ImageUrl,
+		        width: 3000,
+		        height: 3000,
+		        filename: this.newItemData.Items[i].name,
+		        date: '2011/06/24'	
+		}
+	}
+	
+	// Draw the image in the specified area defined by "setPosition" function.
+	sf.service.ImageViewer.draw(this.photos[0]);
+	
+	
+	//this.ImageViewer.endSlideshow();
+    //playImage();
 }
 
 // Set Slideshow mode

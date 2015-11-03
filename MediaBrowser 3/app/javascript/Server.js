@@ -211,7 +211,6 @@ Server.getTvFolderId = function () {
 	var topFolder = Server.getContent(topFolderUrl);
 	for (var index = 0; index < topFolder.Items.length; index++) {
 		if (topFolder.Items[index].Type == "CollectionFolder"){
-			alert(topFolder.Items[index].CollectionType);
 			if (topFolder.Items[index].CollectionType == "tvshows") {
 				folderId = topFolder.Items[index].Id;
 			}
@@ -226,7 +225,6 @@ Server.getHomeVideosFolderId = function () {
 	var topFolder = Server.getContent(topFolderUrl);
 	for (var index = 0; index < topFolder.Items.length; index++) {
 		if (topFolder.Items[index].Type == "CollectionFolder"){
-			alert(topFolder.Items[index].CollectionType);
 			if (topFolder.Items[index].CollectionType == "homevideos") {
 				folderId = topFolder.Items[index].Id;
 			}

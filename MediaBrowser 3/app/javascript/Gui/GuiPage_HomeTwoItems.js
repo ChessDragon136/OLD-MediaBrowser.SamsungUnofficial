@@ -175,9 +175,9 @@ GuiPage_HomeTwoItems.updateSelectedBannerItems = function() {
 	for (var index = 0; index < this.menuItems.length; index++) {
 		if (index == this.selectedBannerItem) {
 			if (index != this.menuItems.length-1) {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding BannerSelected";
 			} else {
-				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem red";
+				document.getElementById("bannerItem"+index).className = "guiDisplay_Series-BannerItem BannerSelected";
 			}		
 		} else {
 			if (index != this.menuItems.length-1) {
@@ -350,23 +350,27 @@ GuiPage_HomeTwoItems.keyDown = function()
 
 GuiPage_HomeTwoItems.openMenu = function() {
 	if (this.selectedItem == -2) {		
-		if (this.selectedBannerItem == -1) {
-			document.getElementById("bannerItem0").className = "guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding";
-		} 
-		this.selectedItem = 0;
-		this.topLeftItem = 0;
+		Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
+		if (this.selectedBannerItem == this.menuItems.length-1) {
+			GuiMainMenu.requested("GuiPage_HomeTwoItems","bannerItem"+this.selectedBannerItem,"guiDisplay_Series-BannerItem BannerSelected");
+		} else {
+			GuiMainMenu.requested("GuiPage_HomeTwoItems","bannerItem"+this.selectedBannerItem,"guiDisplay_Series-BannerItem guiDisplay_Series-BannerItemPadding BannerSelected");
+		}
+	} else {
+		Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
+		GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
 	}
-	Support.updateURLHistory("GuiPage_HomeTwoItems",this.startParams[0],this.startParams[1],this.startParams[2],this.startParams[3],this.selectedItem,this.topLeftItem,true);
-	GuiMainMenu.requested("GuiPage_HomeTwoItems",this.divprepend1 + this.ItemData.Items[this.selectedItem].Id);
 }
 
 GuiPage_HomeTwoItems.processLeftKey = function() {
 	if (this.selectedItem == -2) {
 		this.selectedBannerItem--;
 		if (this.selectedBannerItem == -1) {
+			this.selectedBannerItem = 0;
 			this.openMenu(); //Going left from the end of the banner menu.
-		}
-		this.updateSelectedBannerItems();	
+		} else {
+			this.updateSelectedBannerItems();
+		}	
 	} else {
 		this.selectedItem--;
 		if (this.selectedItem == -1) {
@@ -380,8 +384,8 @@ GuiPage_HomeTwoItems.processLeftKey = function() {
 				}
 				this.updateDisplayedItems();
 			}
+			this.updateSelectedItems();
 		}
-		this.updateSelectedItems();
 	}
 }
 
@@ -446,9 +450,9 @@ GuiPage_HomeTwoItems.bottomKeyDown = function()
 						this.topLeftItem2 = 0;
 					}
 					this.updateDisplayedItems2();
-				}			
+				}	
+				this.updateSelectedItems2();
 			}
-			this.updateSelectedItems2();
 			break;
 		case tvKey.KEY_RIGHT:
 			alert("RIGHT BOTTOM");	

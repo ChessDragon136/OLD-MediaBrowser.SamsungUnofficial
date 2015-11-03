@@ -113,6 +113,7 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 		} else {
 			this.pageSelectedClass = pageSelectedClass;
 		}
+		alert("pageSelectedId: "+pageSelectedId);
 		document.getElementById(pageSelectedId).className = document.getElementById(pageSelectedId).className.replace("Selected","");
 		document.getElementById(pageSelectedId).className = document.getElementById(pageSelectedId).className.replace("EpisodeListSelected","");
 	}

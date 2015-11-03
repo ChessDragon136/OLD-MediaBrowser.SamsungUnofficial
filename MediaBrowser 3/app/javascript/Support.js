@@ -360,7 +360,7 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 				}
 			//----------------------------------------------------------------------------------------------
 			} else if (Items[index].Type == "Series" || Items[index].Type == "Movie" || Items[index].Type == "BoxSet") {
-				alert(Items[index].Type+": "+Items[index].Name);
+				//alert(Items[index].Type+": "+Items[index].Name);
 				var title = Items[index].Name;
 				if (showBackdrop == true) {
 					if (Items[index].ImageTags.Thumb) {		
@@ -374,11 +374,11 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 					}
 				} else {
 					//Add a slightly larger div as a frame that items can move up and down inside of.
-					if (File.getUserProperty("LargerView") == true) {
+/*					if (File.getUserProperty("LargerView") == true) {
 						htmlToAdd += "<div class=SeriesPortraitFrameLarge id=Frame"+ Items[index].Id + ">";
 					} else {
 						htmlToAdd += "<div class=SeriesPortraitFrame id=Frame"+ Items[index].Id + ">";
-					}
+					}*/
 					//Normal item div goes inside the frame.
 					if (Items[index].ImageTags.Primary) {
 						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
@@ -398,9 +398,9 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 				}
 				htmlToAdd += "</div>";
 
-				if (showBackdrop != true) {
+/*				if (showBackdrop != true) {
 					htmlToAdd += "</div>"; //close the frame div.
-				}
+				}*/
 			//----------------------------------------------------------------------------------------------	
 			} else if (Items[index].Type == "TvChannel") {
 				var title = Items[index].Name;		
@@ -1244,7 +1244,7 @@ Support.generateMainMenu = function() {
 	var urlVideos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Video&Recursive=true&Limit=0");
 	var hasVideos = Server.getContent(urlVideos);
 	if (hasVideos == null) { return; }
-	if (hasVideos.TotalRecordCount > 0) {
+	if (hasVideos.TotalRecordCount > 0 && Server.getHomeVideosFolderId() != null) {
 		menuItems.push("Home-Movies");
 	}
 	

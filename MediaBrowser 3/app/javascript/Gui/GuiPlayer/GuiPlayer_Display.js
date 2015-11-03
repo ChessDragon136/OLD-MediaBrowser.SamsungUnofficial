@@ -550,9 +550,33 @@ GuiPlayer_Display.updateDisplayedItemsSub = function() {
 			} else {
 				var Name = "";
 				if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language !== undefined) {
-					if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "eng"){
+/*					if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "eng"){
 						Name = "English";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "fre"){
+						Name = "French";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "ger"){
+						Name = "German";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "spa"){
+						Name = "Spanish";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "ita"){
+						Name = "Italian";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "dan"){
+						Name = "Danish";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "dut"){
+						Name = "Dutch";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "fin"){
+						Name = "Finnish";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "nor"){
+						Name = "Norwegian";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "por"){
+						Name = "Portuguese";
+					} else if (this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language == "swe"){
+						Name = "Swedish";
 					} else {
+						Name = this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language;
+					}*/
+					Name = getLanguageName(this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language);
+					if (Name === undefined) {
 						Name = this.playingMediaSource.MediaStreams[this.videoToolsSubOptions[index]].Language;
 					}
 				} else {

@@ -24,6 +24,10 @@ var GuiPage_HomeTwoItems = {
 		backdropTimeout : null
 }
 
+GuiPage_HomeTwoItems.onFocus = function() {
+	GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
+}
+
 GuiPage_HomeTwoItems.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
@@ -34,7 +38,6 @@ GuiPage_HomeTwoItems.getMaxDisplayBottom = function() {
 
 GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,topLeftItem,isTop) {
 	alert("Page Enter : GuiPage_HomeTwoItems");
-	GuiHelper.setControlButtons("Favourite","Watched","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Exit  ");
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
@@ -138,13 +141,13 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		var randomImageData = Server.getContent(randomImageURL);
 		if (randomImageData == null) { return; }
 			
-		for (var index = 0; index < randomImageData.Items.length; index++) {
+/*		for (var index = 0; index < randomImageData.Items.length; index++) {
 			if (randomImageData.Items[index].BackdropImageTags.length > 0) {
 				var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
 				Support.fadeImage(imgsrc);
 				break;
-				}
 			}
+		}*/
 		
 	} else if (this.ItemData.Items.length > 0 && this.ItemData2.Items.length == 0) {
 		GuiPage_HomeOneItem.start(title1,url1,0,0);

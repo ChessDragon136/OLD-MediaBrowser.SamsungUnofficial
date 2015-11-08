@@ -16,6 +16,10 @@ var GuiDisplay_Episodes = {
 		isLatest : false
 }
 
+GuiDisplay_Episodes.onFocus = function() {
+	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiDisplay_Episodes.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
@@ -35,8 +39,6 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 	//Load Data
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
-	
-	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Latest Page Fix
 	this.isLatest = false;
@@ -185,10 +187,18 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 			
 		}
 		
-		if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-			htmlImage = Support.getStarRatingImage(this.ItemData.Items[this.selectedItem].CommunityRating);
-			htmlSubData += "<td class='MetadataItemSmallLong'>" + htmlImage;
-				+ "</td>";
+		var stars = this.ItemData.Items[this.selectedItem].CommunityRating;
+		var starsImage = "";
+		if (stars){
+	    	if (stars <3.1){
+	    		starsImage = "images/star_empty-24x24.png"; 
+	    	} else if (stars >=3.1 && stars < 6.5) {
+	    		starsImage = "images/star_half-24x24.png";
+	    	} else {
+	    		starsImage = "images/star_full-24x24.png";
+	    	}
+	    	htmlSubData += "<td class=MetadataItemVSmall style=background-image:url("+starsImage+")></td>";
+	    	htmlSubData += "<td class=MetadataItemVSmall>" + stars + "</td>";
 		}
 		if (this.ItemData.Items[this.selectedItem].PremiereDate !== undefined) {
 			htmlSubData += "<td class='MetadataItemSmall'>" + Support.AirDate(this.ItemData.Items[this.selectedItem].PremiereDate, this.ItemData.Items[this.selectedItem].Type) 

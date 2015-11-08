@@ -17,6 +17,10 @@ var GuiTV_Show = {
 		isLatest : false
 }
 
+GuiTV_Show.onFocus = function() {
+	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiTV_Show.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
@@ -28,7 +32,6 @@ GuiTV_Show.GetDetail = function(itemid) {
 
 GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {	
 	alert("Page Enter : GuiTV_Show");
-	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -154,10 +157,18 @@ GuiTV_Show.updateDisplayedItems = function() {
 	//document.getElementById("ShowTitle").innerHTML = "";
 	var htmlforTitle = "";
 	htmlforTitle += this.ShowData.Name + "<div style='display:inline-block; position:absolute; height:22px; bottom:0px'><table style='font-size:14px;padding-left:10px;'><tr>";
-	if (this.ShowData.CommunityRating !== undefined) {
-		htmlImage = Support.getStarRatingImage(this.ShowData.CommunityRating);
-		htmlforTitle += "<td class='MetadataItemSmallLong'>" + htmlImage;
-			+ "</td>";
+	var stars = this.ShowData.CommunityRating;
+	var starsImage = "";
+	if (stars){
+    	if (stars <3.1){
+    		starsImage = "images/star_empty-24x24.png"; 
+    	} else if (stars >=3.1 && stars < 6.5) {
+    		starsImage = "images/star_half-24x24.png";
+    	} else {
+    		starsImage = "images/star_full-24x24.png";
+    	}
+    	htmlforTitle += "<td class=MetadataItemVSmall style=background-image:url("+starsImage+")></td>";
+    	htmlforTitle += "<td class=MetadataItemVSmall>" + stars + "</td>";
 	}
 	if (this.ShowData.OfficialRating !== undefined) {
 		htmlforTitle += "<td class='MetadataItemSmall'>" + this.ShowData.OfficialRating

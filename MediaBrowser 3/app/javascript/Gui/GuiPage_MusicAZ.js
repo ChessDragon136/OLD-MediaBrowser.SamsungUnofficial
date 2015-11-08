@@ -16,6 +16,10 @@ var GuiPage_MusicAZ = {
 		backdropTimeout : null
 }
 
+GuiPage_MusicAZ.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_MusicAZ.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
@@ -23,7 +27,6 @@ GuiPage_MusicAZ.getMaxDisplay = function() {
 
 GuiPage_MusicAZ.start = function(entryView) {
 	alert("Page Enter : GuiPage_MusicAZ");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Vars
 	this.startParams = [entryView];
@@ -37,9 +40,9 @@ GuiPage_MusicAZ.start = function(entryView) {
 		break;
 	default:
 		this.bannerItems = this.musicBannerItems;
-		this.backdropTimeout = setTimeout(function(){
+/*		this.backdropTimeout = setTimeout(function(){
 			Support.fadeImage("images/music-960x540.jpg");
-		}, 1000);
+		}, 1000);*/
 		break;
 	}
 		

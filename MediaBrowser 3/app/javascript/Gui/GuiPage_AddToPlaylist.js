@@ -15,13 +15,16 @@ var GuiPage_AddToPlaylist = {
 		MAXROWCOUNT : 5
 }
 
+GuiPage_AddToPlaylist.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_AddToPlaylist.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiPage_AddToPlaylist.start=function(itemId, playedFromPage, mediaType) {
 	alert("Page Enter : GuiPage_AddToPlaylist");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Update page called from
 	this.playedFromPage = playedFromPage;

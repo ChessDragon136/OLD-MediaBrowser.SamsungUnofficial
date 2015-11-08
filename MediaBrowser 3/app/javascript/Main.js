@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0g",
+		version : "v1.0.0h",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -117,7 +117,9 @@ Main.onLoad = function()
 	} else {
 		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
 	}
-	
+/*	if (this.modelYear == "B"){
+		this.modelYear = "D";
+	}*/
 	alert ("Model Year: " + this.modelYear);
 	
 	if (phyConnection && http && gateway) {

@@ -5,6 +5,7 @@ var GuiDisplay_Series = {
 		totalRecordCount : null,
 		
 		currentView : "",
+		currentMediaType : "",
 		
 		selectedItem : 0,
 		selectedBannerItem : 0,
@@ -26,6 +27,16 @@ var GuiDisplay_Series = {
 		
 		startParams : [],
 		isLatest : false
+}
+
+GuiDisplay_Series.onFocus = function() {
+	switch (this.currentMediaType) {
+	case "Movies":
+		GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	break;
+	default:
+		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");	
+	}
 }
 
 GuiDisplay_Series.getMaxDisplay = function() {
@@ -74,10 +85,10 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	//Split Name - 1st Element = View, 2nd = Type (Collections being the odd one out!)
 	var titleArray = title.split(" ");
 	this.currentView = titleArray[0];
+	this.currentMediaType = titleArray[1];
 	
-	switch (titleArray[1]) {
+	switch (this.currentMediaType) {
 	case "TV":
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 0;
 		this.bannerItems = this.tvBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -86,7 +97,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Movies":
-		GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 1;
 		this.bannerItems = this.movieBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -95,7 +105,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Collections":
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = -1;
 		if (File.getUserProperty("LargerView") == true) {
 			document.getElementById("SeriesContent").style.top="426px";
@@ -104,7 +113,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		break;
 	case "Music":
 	default:
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.MAXCOLUMNCOUNT = 7;
 		this.MAXROWCOUNT = 3;
 		this.isTvOrMovies = 2;
@@ -224,57 +232,71 @@ GuiDisplay_Series.updateSelectedItems = function () {
 			
 	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<div style='display:inline-block; position:absolute; height:22px; bottom:0px'><table style='font-size:14px;padding-left:10px;'><tr>";
 	
+	var toms = this.ItemData.Items[this.selectedItem].CriticRating;
+	var stars = this.ItemData.Items[this.selectedItem].CommunityRating;
+	var tomsImage = "";
+	var starsImage = "";
+	if (toms){
+		if (toms > 59){
+			tomsImage = "images/fresh-24x24.png";
+		} else {
+			tomsImage = "images/rotten-24x24.png";
+		}
+		htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url("+tomsImage+")></td>";
+		htmlForTitle += "<td class=MetadataItemVSmall )>" + toms + "%</td>";
+	}
+	if (stars){
+    	if (stars <3.1){
+    		starsImage = "images/star_empty-24x24.png"; 
+    	} else if (stars >=3.1 && stars < 6.5) {
+    		starsImage = "images/star_half-24x24.png";
+    	} else {
+    		starsImage = "images/star_full-24x24.png";
+    	}
+    	htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url("+starsImage+")></td>";
+    	htmlForTitle += "<td class=MetadataItemVSmall>" + stars + "</td>";
+	}
+	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
 		//"" is required to ensure type string is stored!
 		text =  "" + Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate);
 
 		if (text.indexOf("Present") > -1) {
-			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text
-			+ "</td>";
+			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text + "</td>";
 		} else {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + text
-			+ "</td>";
+			htmlForTitle += "<td class='MetadataItemSmall'>" + text + "</td>";
 		}
-		
-		
 	}
-	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlImage = Support.getStarRatingImage(this.ItemData.Items[this.selectedItem].CommunityRating);
-		htmlForTitle += "<td class='MetadataItemSmallLong'>" + htmlImage;
-			+ "</td>";
-	}
+	
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle +="<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].OfficialRating 
-			+ "</td>";
+		htmlForTitle +="<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].OfficialRating + "</td>";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isAllorFolder == 1) {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Items" 
-			+ "</td>";	
+			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Items</td>";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Item" 
-				+ "</td>";	
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Item</td>";	
 			}
 		}
 		if (this.isTvOrMovies == 2) {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
-				+ "</td>";	
+			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs</td>";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
-				+ "</td>";	
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song</td>";	
 			}
 		} else {
 			if (this.ItemData.Items[this.selectedItem].SeasonCount !== undefined) {
 				if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
-					+ "</td>";					
+					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Season</td>";					
 				} else {
-					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
-					+ "</td>";
+					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons</td>";
 				}
 			}		
 		}	
+	}
+	
+	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
+		htmlForTitle += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + "</td>";
 	}
 
 	htmlForTitle += "</tr></table></div>";

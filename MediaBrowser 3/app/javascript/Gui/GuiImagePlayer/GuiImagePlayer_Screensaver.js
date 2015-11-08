@@ -30,6 +30,12 @@ GuiImagePlayer_Screensaver.start = function() {
 	//Hide helper page if shown
 	GuiHelper.keyDown();
 	
+	//Hide the trailer PiP window if shown
+	if (Main.getModelYear() != "D") {
+		sf.service.VideoPlayer.stop();
+		sf.service.VideoPlayer.hide();
+	}
+	
 	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
 	
 	if (this.imagesToUse == "Media") {

@@ -1156,8 +1156,8 @@ Support.scrollingText = function(divToScroll) {
 		    } else {
 		    	Support.scrollpos = pos;
 		    }	    
-		}, 500);
-	}, 2000);	
+		}, 350);
+	}, 10000);	
 }
 
 Support.generateMainMenu = function() {

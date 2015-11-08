@@ -75,6 +75,10 @@ var GuiPage_Settings = {
 		SubtitleModeValues : ["Default","OnlyForced", "Always", "None"]
 }
 
+GuiPage_Settings.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_Settings.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
@@ -102,7 +106,6 @@ GuiPage_Settings.initiateViewValues = function() {
 
 GuiPage_Settings.start = function(viewToDisplay) {	
 	alert("Page Enter : GuiPage_Settings");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Vars
 	this.selectedItem = 0;
@@ -128,6 +131,7 @@ GuiPage_Settings.start = function(viewToDisplay) {
 	if (this.ServerUserData == null) { return; }
 	
 	document.getElementById("pageContent").className = "";
+	document.getElementById("pageContent").style.color = "white"; 
 	document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id='guiTV_Show_Title' class='guiPage_Settings_Title'></div>" +
 		"<div id='guiPage_Settings_Settings' class='guiPage_Settings_Settings'></div>" +
 		"<div id='guiPage_Settings_Overview' class='guiPage_Settings_Overview'>" +

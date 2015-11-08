@@ -3,6 +3,7 @@ var GuiImagePlayer = {
 		newItemData : null,
 		
 		Timeout : null,
+		infoTimer : null,
 		Paused : false,
 		
 		overlayFormat : 0, // 0 - date, 1 - date:time, 2 - off 
@@ -30,7 +31,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
 	document.getElementById("guiButtonShade").style.visibility = "";
 	GuiHelper.setControlButtons("Favourite","Date/Time","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
-	setTimeout(function(){
+	this.infoTimer = setTimeout(function(){
 		GuiHelper.setControlButtons(null,null,null,null,null);
 		document.getElementById("Clock").style.visibility = "hidden";
 		document.getElementById("guiButtonShade").style.visibility = "hidden";
@@ -178,6 +179,7 @@ GuiImagePlayer.keyDown = function() {
 		case tvKey.KEY_STOP:   
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
+    		clearTimeout(this.infoTimer);
 			clearTimeout(this.Timeout);
 			this.Timeout = null;
 			this.images = [];

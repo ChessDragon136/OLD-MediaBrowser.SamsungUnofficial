@@ -45,8 +45,8 @@ GuiMainMenu.start = function() {
 	this.menuItems = Support.generateMainMenu();
 	
 	//Get user details.
-	document.getElementById("menuUserName").innerHTML = Server.getUserName();
-	document.getElementById("menuUserName").style.visibility = "";
+/*	document.getElementById("menuUserName").innerHTML = Server.getUserName();
+	document.getElementById("menuUserName").style.visibility = "";*/
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json&Fields=PrimaryImageTag";
 	var UserData = Server.getContent(userURL);
 	if (UserData == null) { return; }
@@ -78,6 +78,21 @@ GuiMainMenu.start = function() {
 	//this.menuItems.push("Log-Out_Delete");
 	//htmlToAdd += "<div id=Log-Out_Delete class='menu-item'><div id='menu-Icon' class='menu-icon' style='background-image:url(images/menu/Secure-Logout-23x19.png)'></div>Log Out and Forget</div>";	
 	document.getElementById("menuItems").innerHTML += htmlToAdd;
+	
+	//Function to generate random backdrop
+	this.backdropTimeout = setTimeout(function(){
+		var randomImageURL = Server.getItemTypeURL("&SortBy=Random&IncludeItemTypes=Series,Movie&Recursive=true&CollapseBoxSetItems=false&Limit=20");
+		var randomImageData = Server.getContent(randomImageURL);
+		if (randomImageData == null) { return; }
+		
+		for (var index = 0; index < randomImageData.Items.length; index++) {
+			if (randomImageData.Items[index ].BackdropImageTags.length > 0) {
+				var imgsrc = Server.getBackgroundImageURL(randomImageData.Items[index ].Id,"Backdrop",960,540,0,false,0,randomImageData.Items[index ].BackdropImageTags.length);
+				Support.fadeImage(imgsrc);
+				break;
+			}
+		}
+	}, 500);
 	
 	//Turn On Screensaver
 	Support.screensaverOn();
@@ -130,11 +145,11 @@ GuiMainMenu.requested = function(pageSelected, pageSelectedId, pageSelectedClass
 	}, 300, function() {
 		//animate complete.
 	});
-	$('.pageBackground').animate({
+/*	$('.pageBackground').animate({
 		left: 200
 	}, 300, function() {
 		//animate complete.
-	});
+	});*/
 
 	//Show submenu dependant on selectedMainMenuItem
 	this.updateSelectedItems();
@@ -220,6 +235,10 @@ GuiMainMenu.keyDown = function()
 }
 
 GuiMainMenu.processSelectedItems = function() {
+	//If a trailer was paused when we arrived in the menu, stop it now.
+    if (GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+	    sf.service.VideoPlayer.stop();
+	}
 	$('.menu').animate({
 		left: -200
 	}, 300, function() {
@@ -317,6 +336,15 @@ GuiMainMenu.processReturnKey = function() {
 				document.getElementById(this.pageSelectedId).className = this.pageSelectedClass;
 			}
 		}
+		
+		//If a trailer was playing, set it going again.
+	    if (GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+	    	setTimeout(function(){
+		    	sf.service.VideoPlayer.show();
+		    	sf.service.VideoPlayer.resume();
+	    	}, 300);
+		}
+		
 		document.getElementById(this.pageSelected).focus();	
 	}
 }

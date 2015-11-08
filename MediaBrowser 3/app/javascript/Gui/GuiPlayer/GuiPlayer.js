@@ -62,8 +62,9 @@ GuiPlayer.init = function() {
 
 GuiPlayer.start = function(title,url,startingPlaybackTick,playedFromPage) { 
 	if (GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED") {
-		GuiMusicPlayer.handleStopKey();
+		GuiMusicPlayer.stopPlayback();
 	}
+	
 	//Run only once in loading initial request - subsequent vids should go thru the startPlayback
 	this.startParams = [title,url,startingPlaybackTick,playedFromPage];
 	
@@ -166,7 +167,7 @@ GuiPlayer.startPlayback = function(TranscodeAlg, resumeTicksSamsung) {
 		var position = 0;
 		if (this.PlayMethod == "DirectStream") {
 			position = Math.round(resumeTicksSamsung / 1000);
-		}	
+		}
 	    this.plugin.ResumePlay(url,position); 
 	}
 };

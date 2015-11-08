@@ -13,13 +13,16 @@ var GuiPage_Photos = {
 		backdropTimeout : null
 }
 
+GuiPage_Photos.onFocus = function() {
+	GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_Photos.getMaxDisplay = function() {
 		return 15;
 }
 
 GuiPage_Photos.start = function(title,url,selectedItem,topLeftItem) {
 	alert("Page Enter : GuiPage_Photos");
-	GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -27,9 +30,9 @@ GuiPage_Photos.start = function(title,url,selectedItem,topLeftItem) {
 	alert (url);
 	
 	//Set background
-	this.backdropTimeout = setTimeout(function(){
+/*	this.backdropTimeout = setTimeout(function(){
 		Support.fadeImage("images/lensflare-960x540.jpg");
-	}, 1000);
+	}, 1000);*/
 	
 	//Reset Values
 	this.indexSeekPos = -1;

@@ -1080,8 +1080,8 @@
 .FilmListSubSingle{
 	position:relative;
 	padding-left:3px;
-	height:46px;
-	width:251px;
+	height:58px;
+	width:291px;
 	border-bottom: 1px solid grey;
 	background-repeat: no-repeat;
     background-position:right;
@@ -1089,12 +1089,12 @@
 
 .EpisodeSubListSingleImage{
 	position:relative;
-	height:46px;
-	width:84px;
+	height:58px;
+	width:105px;
 	border-bottom: 1px solid grey;
 	background-repeat: no-repeat;
     background-position:right;
-    background-color:rgba(40,40,40,0);
+    background-color:rgba(255,0,0,0);
 }
 
 .FilmListSingleImage{
@@ -1166,7 +1166,7 @@
 
 .guiTV_Episode_SubOptions{
 	position:absolute;
-	top:125px;
+	top:124px;
 	left:235px;
     max-height:235px;
     width:252px;  
@@ -1175,8 +1175,8 @@
 
 .guiTV_Episode_SubOptionImages{
 	position:relative;
-	top:125px;
-	left:405px;
+	top:124px;
+	left:425px;
     max-height:235px;
     width:82px;  
     background-color:rgba(40,40,40,0);

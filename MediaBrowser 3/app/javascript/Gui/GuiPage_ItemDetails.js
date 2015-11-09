@@ -17,11 +17,11 @@ var GuiPage_ItemDetails = {
 		selectedItem2 : 0,
 		topLeftItem2 : 0,
 		MAXCOLUMNCOUNT2 : 1,
-		MAXROWCOUNT2 : 5,
+		MAXROWCOUNT2 : 4,
 };
 
 GuiPage_ItemDetails.onFocus = function() {
-	GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Favourite","Watched",GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PLAYING || GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_BUFFERING ? "Full Screen" : null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 }
 
 GuiPage_ItemDetails.getMaxDisplay2 = function() {
@@ -635,7 +635,7 @@ GuiPage_ItemDetails.updateDisplayedItems2 = function() {
 		case "guiTV_Episode_Chapters":
 			var resumeTicksSamsung = this.subMenuItems[index].StartPositionTicks / 10000;
 			htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+this.subMenuItems[index].Name+"<br>"+Support.convertTicksToTimeSingle(resumeTicksSamsung)+"</div></div>";			
-			var imgsrc = Server.getImageURL(this.ItemData.Id,"Chapter",84,46,null,null,null,index);
+			var imgsrc = Server.getImageURL(this.ItemData.Id,"Chapter",105,58,null,null,null,index);
 			htmlToAdd2 += "<div class='EpisodeSubListSingleImage' style=background-image:url(" +imgsrc+ ")></div>";
 			break;
 		case "guiTV_Episode_Episodes":
@@ -646,7 +646,7 @@ GuiPage_ItemDetails.updateDisplayedItems2 = function() {
 			}
 			htmlToAdd +=  "</div></div>";
 			if (this.subMenuItems[index].ImageTags.Primary) {			
-				var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",84,46,0,false,0);
+				var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",105,58,0,false,0);
 				htmlToAdd2 += "<div class='EpisodeSubListSingleImage' style=background-image:url(" +imgsrc+ ")>";
 			} else {
 				htmlToAdd2 += "<div class='EpisodeSubListSingleImage'>";
@@ -663,17 +663,16 @@ GuiPage_ItemDetails.updateDisplayedItems2 = function() {
 			break;
 		case "guiTV_Episode_Cast":
 			if (this.subMenuItems[index].Type == "Actor" && this.subMenuItems[index].Role !== undefined){
-				htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+this.subMenuItems[index].Name+"<br>as "+this.subMenuItems[index].Role+"</div></div>";
+				htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:230px;'>"+this.subMenuItems[index].Name+"<br>as "+this.subMenuItems[index].Role+"</div></div>";
 			} else {
-				htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+this.subMenuItems[index].Name+"<br>"+this.subMenuItems[index].Type+"</div></div>";
+				htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:230px;'>"+this.subMenuItems[index].Name+"<br>"+this.subMenuItems[index].Type+"</div></div>";
 			}
-			var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",84,46,0,false,0);
+			var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",105,58,0,false,0);
 			htmlToAdd2 += "<div class='EpisodeSubListSingleImage' style=background-image:url(" +imgsrc+ ")></div>";
 			break;
 		case "guiTV_Episode_Suggested":
-		case "guiTV_Episode_Trailer":
-			htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+this.subMenuItems[index].Name+"</div></div>";
-			var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",84,46,0,false,0);
+			htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:240px;'>"+this.subMenuItems[index].Name+"</div></div>";
+			var imgsrc = Server.getImageURL(this.subMenuItems[index].Id,"Primary",105,58,0,false,0);
 			htmlToAdd2 += "<div class='EpisodeSubListSingleImage' style=background-image:url(" +imgsrc+ ")></div>";
 			break;
 		}

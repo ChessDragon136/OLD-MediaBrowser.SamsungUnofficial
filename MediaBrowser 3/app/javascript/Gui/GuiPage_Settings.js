@@ -90,7 +90,7 @@ GuiPage_Settings.initiateViewValues = function() {
 	FavouriteMovies = Server.getItemTypeURL("&IncludeItemTypes=Movies&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteSeries = Server.getItemTypeURL("&IncludeItemTypes=Series&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteEpisodes = Server.getItemTypeURL("&IncludeItemTypes=Episodes&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
-	SuggestedMovies = Server.getCustomURL("/Movies/Recommendations?format=json&userId="+Server.getUserID()+"&categoryLimit=6&fields=SortName&CollapseBoxSetItems=false");
+	SuggestedMovies = Server.getCustomURL("/Movies/Recommendations?format=json&userId="+Server.getUserID()+"&categoryLimit=2&fields=SortName&CollapseBoxSetItems=false");
 	MediaFolders = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
 	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
 	LatestMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=SortName&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");

@@ -11,7 +11,7 @@ var GuiDisplay_Series = {
 		selectedBannerItem : 0,
 		topLeftItem : 0,
 		MAXCOLUMNCOUNT : 9, //Default TV
-		MAXROWCOUNT : 2,
+		MAXROWCOUNT : 3,
 		
 		bannerItems : [],
 		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre", "A-Z"],

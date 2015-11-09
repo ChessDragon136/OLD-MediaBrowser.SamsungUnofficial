@@ -149,7 +149,7 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 		break;
 	}
 
-	query = query + "&Quality=80"
+	query = query + "&Quality=90";
 	
 	return query;
 }
@@ -178,7 +178,7 @@ Server.getBackgroundImageURL = function(itemId,imagetype,maxwidth,maxheight,unpl
 		break;
 	}
 	
-	query = query + "&Quality=80"
+	query = query + "&Quality=90";
 	
 	return query;
 }
@@ -534,6 +534,7 @@ Server.getContent = function(url) {
 			GuiUsers.start(true);
 			return null;
 		} else {
+			//alert(xmlHttp.responseText);
 			return JSON.parse(xmlHttp.responseText);
 		}
 	} else {

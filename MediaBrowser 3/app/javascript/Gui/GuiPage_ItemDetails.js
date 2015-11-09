@@ -21,7 +21,9 @@ var GuiPage_ItemDetails = {
 };
 
 GuiPage_ItemDetails.onFocus = function() {
-	GuiHelper.setControlButtons("Favourite","Watched",GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PLAYING || GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_BUFFERING ? "Full Screen" : null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	GuiHelper.setControlButtons("Favourite","Watched",GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
+			GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_BUFFERING ? "Full Screen" : null,GuiMusicPlayer.Status == "PLAYING" || 
+					GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 }
 
 GuiPage_ItemDetails.getMaxDisplay2 = function() {
@@ -79,7 +81,11 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem,updateBackdrop) {
 		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Resume' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>RESUME - "+Support.convertTicksToTimeSingle(this.resumeTicksSamsung)+"</div></div></div>";
 	}
 	
-	if (this.ItemData.LocationType != "Virtual") {
+	//If the item is a trailer from the trailers channel, make the main play button into a Play Trailer button instead.
+	if (this.ItemData.Type == "ChannelVideoItem" && this.ItemData.ChannelName == "Trailers" && this.trailersEnabled){
+		this.menuItems.push("guiTV_Episode_Play");
+		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Play' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
+	} else if (this.ItemData.LocationType != "Virtual") {
 		this.menuItems.push("guiTV_Episode_Play");
 		document.getElementById("guiTV_Episode_Options").innerHTML += "<div id='guiTV_Episode_Play' class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY</div></div></div>";	
 	}
@@ -162,9 +168,11 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem,updateBackdrop) {
 			var url3 = Server.getCustomURL("/Users/"+Server.getUserID()+"/Items/"+this.ItemData.Id+"/LocalTrailers?format=json");
 			this.trailerItems = Server.getContent(url3);
 			if (this.trailerItems == null) { return; }
-			
+
 			//Trailers are always transcoded. That way they can be remote streams or local files and we don't need to care.
 			this.trailerUrl = Server.getStreamUrl(this.trailerItems[0].Id,this.trailerItems[0].MediaSources[0].Id);
+		} else if (this.ItemData.Type == "ChannelVideoItem" && this.ItemData.ChannelName == "Trailers"){
+			this.trailerUrl = Server.getStreamUrl(this.ItemData.Id,this.ItemData.MediaSources[0].Id);
 		}
 		
 		//Get suggestions
@@ -439,34 +447,31 @@ GuiPage_ItemDetails.keyDown = function()
 			}
 			Support.processReturnURLHistory();
 			break;	
-/*		case tvKey.KEY_STOP:
+		case tvKey.KEY_STOP:
 			if (this.trailersEnabled){
 			    if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
 			    		this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING || 
 					    this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
 					sf.service.VideoPlayer.stop();
+					sf.service.VideoPlayer.hide();
 				}
-			    GuiHelper.setControlButtons("Favourite","Watched",null,null,"Return");
+				//Set the trailer buttn back to Play
+				if (this.ItemData.Type == "ChannelVideoItem" && this.ItemData.ChannelName == "Trailers"){
+					document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div>";
+				} else if (this.selectedItem == 0) {
+					document.getElementById("guiTV_Episode_SubOptions").innerHTML = "<div id=0 class='FilmListSingle'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
+				}
 			}
 			break;
 		case tvKey.KEY_PLAY:
-			if (this.trailersEnabled && this.trailerUrl != ""){
+			if (this.trailersEnabled){
 				if (this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
 					sf.service.VideoPlayer.resume();
-				} else if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING ||
-						this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING) {
-					sf.service.VideoPlayer.setFullScreen(true);
-				} else {
-					sf.service.VideoPlayer.play({
-						url: this.trailerUrl,
-					    fullScreen: false
-					});
-					GuiHelper.setControlButtons("Favourite","Watched","Full Screen",null,"Return");
 				}
 			}
-			break;*/
+			break;
 		case tvKey.KEY_PAUSE:
-			if (this.trailerUrl != ""){
+			if (this.trailersEnabled){
 				if (this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
 					sf.service.VideoPlayer.resume();
 				} else {
@@ -576,20 +581,43 @@ GuiPage_ItemDetails.processSelectedItem = function() {
 	switch (this.menuItems[this.selectedItem]) {
 	case "guiTV_Episode_Play":
 	case "guiTV_Episode_Resume":
-		//Stop the trailer.
-	    if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
-	    		this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING || 
-			    this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
-			sf.service.VideoPlayer.stop();
+		if (this.ItemData.Type == "ChannelVideoItem" && this.ItemData.ChannelName == "Trailers" && this.trailersEnabled){
+			//Trailer playback
+			var htmlToAdd = "";
+		    if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
+		    		this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING ||
+		    		this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+				sf.service.VideoPlayer.stop();
+				sf.service.VideoPlayer.hide();
+				//Turn on Screensaver
+				Support.screensaverOn();
+				Support.screensaver();
+				//Update buttons
+				GuiHelper.setControlButtons("Favourite","Watched",null,null,"Return");
+				document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div>";
+			} else {
+		    	this.playTrailer(this.trailerUrl);
+				//Update buttons
+				GuiHelper.setControlButtons("Favourite","Watched","Full Screen",null,"Return");
+				document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/stop.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>STOP TRAILER</div></div>";
+			}
+		} else {
+			//Feature playback
+			//Stop the trailer
+		    if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
+		    		this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING || 
+				    this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+				sf.service.VideoPlayer.stop();
+			}
+			if (this.trailerState != null) {
+				sf.service.VideoPlayer.hide();
+			}
+			Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
+			var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
+			var playbackPos = (this.menuItems[this.selectedItem] == "guiTV_Episode_Resume") ? this.ItemData.UserData.PlaybackPositionTicks / 10000 : 0;
+			alert (url);
+			GuiPlayer.start("PLAY",url,playbackPos,"GuiPage_ItemDetails");
 		}
-		if (this.trailerState != null) {
-			sf.service.VideoPlayer.hide();
-		}
-		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
-		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
-		var playbackPos = (this.menuItems[this.selectedItem] == "guiTV_Episode_Resume") ? this.ItemData.UserData.PlaybackPositionTicks / 10000 : 0;
-		alert (url);
-		GuiPlayer.start("PLAY",url,playbackPos,"GuiPage_ItemDetails");
 		break;
 	case "guiTV_Episode_Chapters":
 	case "guiTV_Episode_Episodes":
@@ -639,7 +667,13 @@ GuiPage_ItemDetails.updateDisplayedItems2 = function() {
 			htmlToAdd2 += "<div class='EpisodeSubListSingleImage' style=background-image:url(" +imgsrc+ ")></div>";
 			break;
 		case "guiTV_Episode_Episodes":
-			htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+ this.subMenuItems[index].Name;
+			var title = "";
+			if (this.subMenuItems[index].IndexNumber === undefined) {
+				title = this.subMenuItems[index].Name;
+			} else {
+				title = this.subMenuItems[index].IndexNumber + " - " + this.subMenuItems[index].Name;
+			}
+			htmlToAdd += "<div id="+index+" class='FilmListSubSingle'><div style='width:170px;'>"+ title;
 			var progress = Math.round((170 / 100) * Math.round(this.subMenuItems[index].UserData.PlayedPercentage));
 			if (progress > 1){
 				htmlToAdd += "<div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div>";
@@ -789,15 +823,21 @@ GuiPage_ItemDetails.subKeyDown = function() {
 			alert("PLAY");
 			this.playSelectedItem2();
 			break;
-		/*case tvKey.KEY_STOP:
+		case tvKey.KEY_STOP:
 			if (this.trailersEnabled){
 			    if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING || 
 			    		this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING || 
 					    this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
 					sf.service.VideoPlayer.stop();
+					sf.service.VideoPlayer.hide();
+				}
+				//If the trailer button is visible when a trailer ends, update it.
+				if (this.selectedItem == 0) { 
+					var htmlToAdd = "<div id=0 class='FilmListSingle EpisodeListSelected'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
+					document.getElementById("guiTV_Episode_SubOptions").innerHTML = htmlToAdd;
 				}
 			}
-			break;*/
+			break;
 		case tvKey.KEY_PAUSE:
 			if (this.trailersEnabled){
 				if (this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
@@ -904,11 +944,13 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 		GuiPlayer.start("PLAY",url,0,"GuiPage_ItemDetails");
 		break;
 	case "guiTV_Episode_Cast":
-		if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING ||
-				this.trailerState == sf.service.VideoPlayer.STATE_PAUSED ||
-				this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING) {
-			sf.service.VideoPlayer.stop();
-			sf.service.VideoPlayer.hide();
+		if (this.trailersEnabled){
+			if (this.trailerState == sf.service.VideoPlayer.STATE_PLAYING ||
+					this.trailerState == sf.service.VideoPlayer.STATE_PAUSED ||
+					this.trailerState == sf.service.VideoPlayer.STATE_BUFFERING) {
+				sf.service.VideoPlayer.stop();
+				sf.service.VideoPlayer.hide();
+			}
 		}
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,this.selectedItem,null,true);
 		var url = Server.getItemInfoURL(this.subMenuItems[this.selectedItem2].Id);
@@ -917,8 +959,12 @@ GuiPage_ItemDetails.processSelectedItem2 = function() {
 	}
 };
 
-GuiPage_ItemDetails.playSelectedItem2 = function() {	
-	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Chapters") {
+GuiPage_ItemDetails.playSelectedItem2 = function() {
+	if (this.menuItems[this.selectedItem] == "guiTV_Episode_Play" && this.trailersEnabled){
+		if (this.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+			sf.service.VideoPlayer.resume();
+		}
+	} else if (this.menuItems[this.selectedItem] == "guiTV_Episode_Chapters") {
 		Support.updateURLHistory("GuiPage_ItemDetails",this.startParams[0],this.startParams[1],null,null,0,null,true);
 		var url = Server.getItemInfoURL(this.ItemData.Id,"&ExcludeLocationTypes=Virtual");
 		GuiPlayer.start("PLAY",url,this.subMenuItems[this.selectedItem2].StartPositionTicks / 10000,"GuiPage_ItemDetails");
@@ -955,6 +1001,10 @@ GuiPage_ItemDetails.getTrailerEvents = function() {
 			htmlToAdd += "<div id=0 class='FilmListSingle EpisodeListSelected'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
 			document.getElementById("guiTV_Episode_SubOptions").innerHTML = htmlToAdd;
 		}
+		//Reset the Play Trailer button for channel trailers
+		if (GuiPage_ItemDetails.ItemData.Type == "ChannelVideoItem" && GuiPage_ItemDetails.ItemData.ChannelName == "Trailers" && GuiPage_ItemDetails.trailersEnabled){
+			document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div>";
+		}
 		sf.service.VideoPlayer.hide();
 		FileLog.write('Trailor: END');
 		document.getElementById("GuiPage_ItemDetails").focus();
@@ -987,16 +1037,25 @@ GuiPage_ItemDetails.setTrailerKeyHandlers = function() {
 	sf.service.VideoPlayer.setKeyHandler(sf.key.YELLOW, function () {
 		sf.service.VideoPlayer.setFullScreen(false);
 		GuiPage_ItemDetails.updateSelectedItems();
-		GuiPage_ItemDetails.updateSelectedItems2();
+		if (GuiPage_ItemDetails.ItemData.Type != "ChannelVideoItem"){
+			GuiPage_ItemDetails.updateSelectedItems2();
+		}
 		GuiPage_ItemDetails.updateDisplayedItems2();
 		document.getElementById("GuiPage_ItemDetails").focus();
 	});
 	sf.service.VideoPlayer.setKeyHandler(sf.key.RETURN, function () {
 		sf.service.VideoPlayer.setFullScreen(false);
 		GuiPage_ItemDetails.updateSelectedItems();
-		GuiPage_ItemDetails.updateSelectedItems2();
+		if (GuiPage_ItemDetails.ItemData.Type != "ChannelVideoItem"){
+			GuiPage_ItemDetails.updateSelectedItems2();
+		}
 		GuiPage_ItemDetails.updateDisplayedItems2();
 		document.getElementById("GuiPage_ItemDetails").focus();
+	});
+	sf.service.VideoPlayer.setKeyHandler(sf.key.PLAY, function () {
+		if (GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+			sf.service.VideoPlayer.resume();
+		}
 	});
 	sf.service.VideoPlayer.setKeyHandler(sf.key.STOP, function () {
 		sf.service.VideoPlayer.setFullScreen(false);
@@ -1006,14 +1065,27 @@ GuiPage_ItemDetails.setTrailerKeyHandlers = function() {
 		Support.screensaverOn();
 		Support.screensaver();
 		GuiPage_ItemDetails.updateSelectedItems();
-		GuiPage_ItemDetails.updateSelectedItems2();
+		if (GuiPage_ItemDetails.ItemData.Type != "ChannelVideoItem"){
+			GuiPage_ItemDetails.updateSelectedItems2();
+		}
 		GuiPage_ItemDetails.updateDisplayedItems2();
+		//Reset the Play Trailer button for channel trailers
+		if (GuiPage_ItemDetails.ItemData.Type == "ChannelVideoItem" && GuiPage_ItemDetails.ItemData.ChannelName == "Trailers" && GuiPage_ItemDetails.trailersEnabled){
+			document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div>";
+		}
 		document.getElementById("GuiPage_ItemDetails").focus();
-		GuiHelper.setControlButtons("Favourite","Watched",null,null,"Return");
-	});
-	sf.service.VideoPlayer.setKeyHandler(sf.key.PLAY, function () {
 	});
 	sf.service.VideoPlayer.setKeyHandler(sf.key.PAUSE, function () {
+		if (GuiPage_ItemDetails.trailerState == sf.service.VideoPlayer.STATE_PAUSED) {
+			sf.service.VideoPlayer.resume();
+		} else {
+			sf.service.VideoPlayer.pause();
+		}
+	});
+	//These button are disabled during full screen trailers. 
+	sf.service.VideoPlayer.setKeyHandler(sf.key.TOOLS, function () {
+	});
+	sf.service.VideoPlayer.setKeyHandler(sf.key.ENTER, function () {
 	});
 	sf.service.VideoPlayer.setKeyHandler(sf.key.FF, function () {
 	});
@@ -1026,6 +1098,7 @@ GuiPage_ItemDetails.playTrailer = function(trailerUrl) {
 	if (GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED") {
 		GuiMusicPlayer.stopPlayback();
 	}
+	
 	//Set the miniplayer
 	document.getElementById('sf-service-videoplayer-mini-infobar').style.display= 'none';
 	this.setTrailerStateHandlers();

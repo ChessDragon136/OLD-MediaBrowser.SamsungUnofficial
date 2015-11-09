@@ -41,7 +41,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 	
 	//Save Start Params
 	this.startParams = [title1, url1, title2, url2];
-	alert (url1)
+	alert (url1);
 	
 	//Load Data
 	this.ItemData = Server.getContent(url1);

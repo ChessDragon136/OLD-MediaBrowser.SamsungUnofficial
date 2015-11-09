@@ -286,21 +286,12 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 				default:
 					break;
 				}
-				//Add a slightly larger div as a frame that items can move up and down inside of.
-				if (File.getUserProperty("LargerView") == true) {
-					htmlToAdd += "<div class=SeriesPortraitFrameLarge id=Frame"+ Items[index].Id + ">";
-				} else {
-					htmlToAdd += "<div class=SeriesPortraitFrame id=Frame"+ Items[index].Id + ">";
-				}
-				//Normal item div goes inside the frame.
 				if (Items[index].ImageTags.Primary) {
 					var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
 					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=genreItemCount>"+itemCount+"</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-color:rgba(0,0,0,0.5);><div class=genreItemCount>"+itemCount+"</div></div>";
 				}
-				//close the frame div.
-				htmlToAdd += "</div>";
 			//----------------------------------------------------------------------------------------------
 			} else if (Items[index].Type == "Episode") {
 				var title = this.getNameFormat(Items[index].SeriesName, Items[index].ParentIndexNumber, Items[index].Name, Items[index].IndexNumber);	
@@ -373,13 +364,6 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 						htmlToAdd += "<div style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div>";				
 					}
 				} else {
-					//Add a slightly larger div as a frame that items can move up and down inside of.
-/*					if (File.getUserProperty("LargerView") == true) {
-						htmlToAdd += "<div class=SeriesPortraitFrameLarge id=Frame"+ Items[index].Id + ">";
-					} else {
-						htmlToAdd += "<div class=SeriesPortraitFrame id=Frame"+ Items[index].Id + ">";
-					}*/
-					//Normal item div goes inside the frame.
 					if (Items[index].ImageTags.Primary) {
 						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
 						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")>";
@@ -397,10 +381,6 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 					htmlToAdd += "<div class=favItem></div>";
 				}
 				htmlToAdd += "</div>";
-
-/*				if (showBackdrop != true) {
-					htmlToAdd += "</div>"; //close the frame div.
-				}*/
 			//----------------------------------------------------------------------------------------------	
 			} else if (Items[index].Type == "TvChannel") {
 				var title = Items[index].Name;		

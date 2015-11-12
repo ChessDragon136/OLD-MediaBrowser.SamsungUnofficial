@@ -12,6 +12,7 @@ var GuiMusicPlayer = {
 		
 		selectedItem : 0,
 		playedFromPage : null,
+		previousImagePlayerOverlay : 0,
 		
 		queuedItems : [],
 		
@@ -46,6 +47,11 @@ GuiMusicPlayer.init = function() {
 GuiMusicPlayer.showMusicPlayer = function(playedFromPage) {
 	if (this.Status != "STOPPED") {
 		this.playedFromPage = playedFromPage;
+		if (this.playedFromPage == "GuiImagePlayer") {
+			clearTimeout(GuiImagePlayer.infoTimer);
+			document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
+			document.getElementById("guiButtonShade").style.visibility = "";
+		}
 		document.getElementById("guiMusicPlayerDiv").style.bottom = "-60px";
 		document.getElementById("guiMusicPlayerDiv").style.visibility = "";
 		$('.guiMusicPlayerDiv').animate({
@@ -263,6 +269,10 @@ GuiMusicPlayer.keyDown = function() {
 			if (this.status == "PAUSED") {
 				this.handleStopKey();
 			} else {
+				if (this.playedFromPage == "GuiImagePlayer") {
+					document.getElementById("guiButtonShade").style.visibility = "hidden";
+					document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="";
+				}
 				//Hide the music player.
 /*				$('.guiMusicPlayerDiv').animate({
 					bottom: -60

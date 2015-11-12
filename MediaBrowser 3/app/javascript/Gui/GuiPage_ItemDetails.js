@@ -1119,8 +1119,9 @@ GuiPage_ItemDetails.playTrailer = function(trailerUrl) {
 GuiPage_ItemDetails.getMediaInfo = function() {
 	var is3D = (this.ItemData.MediaSources[0].Video3DFormat != null ? "3D" : "Not3D");
 	var container = this.ItemData.MediaSources[0].Container;
+	var res = this.ItemData.MediaSources[0].Name.split("/");
 	var videoCodec = null; var videoRatio = null; var audioCodec = null; var audioChannels = null;
-		
+	
 	var MEDIASTREAMS = this.ItemData.MediaSources[0].MediaStreams;
 	
 	var videoCount = 0; audioCount = 0;
@@ -1143,14 +1144,15 @@ GuiPage_ItemDetails.getMediaInfo = function() {
 			audioChannels  = MEDIASTREAMS[mediaStream].Channels;
 		}
 	}
-	
-	var items = [container,videoCodec, videoRatio, audioCodec, audioChannels, is3D];
+
+	var items = [container,videoCodec, videoRatio, audioCodec, audioChannels, is3D, res[0]];
 	document.getElementById("guiTV_Show_MediaAlternative").innerHTML += this.processMediaInfo(items);			
 };
 
 GuiPage_ItemDetails.processMediaInfo = function(itemsArray) {
 	var htmlToAdd = "";
 	for (var index = 0; index < itemsArray.length; index++) {
+		alert(itemsArray[index]);
 		switch (itemsArray[index]) {
 		//Container
 		case "mkv":
@@ -1239,7 +1241,19 @@ GuiPage_ItemDetails.processMediaInfo = function(itemsArray) {
 		//Specials
 		case "3D":
 			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/media_3d.png)></div>";
-			break;	
+			break;
+		case "SD":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/res_SD.png)></div>";
+			break;
+		case "480P":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/res_480.png)></div>";
+			break;
+		case "720P":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/res_720.png)></div>";
+			break;
+		case "1080P":
+			htmlToAdd += "<div class='mediaInfo' style=background-image:url(images/MediaInfo/res_1080.png)></div>";
+			break;
 		default:
 			break;
 		}

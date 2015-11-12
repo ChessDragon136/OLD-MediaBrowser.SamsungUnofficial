@@ -109,12 +109,12 @@ GuiTV_Show.start = function(title,url,selectedItem,topLeftItem) {
 				
 			//Update Selected Collection CSS
 			this.updateSelectedItems();	
-				
-			//Set Focus for Key Events
-			document.getElementById("GuiTV_Show").focus();
 			
 			//Load theme music if any
 			GuiMusicPlayer.start("Theme", null, "GuiTV_Show",null,this.ShowData.Id,this.ShowData.Id);
+				
+			//Set Focus for Key Events
+			document.getElementById("GuiTV_Show").focus();
 		} else {
 			//Set message to user
 			document.getElementById("pageContent").innerHTML = "<div id='itemContainer' class='Columns"+this.MAXCOLUMNCOUNT+" padding10'><p id='title' class=pageTitle>"+title+"</p><div id=Content></div></div>";

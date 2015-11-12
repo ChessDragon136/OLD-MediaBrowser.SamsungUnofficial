@@ -161,7 +161,7 @@
 				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Add to Playlist</div>
 				 <div id='guiPlayListExisting'></div>
 				 <div style='font-size:18px;padding-top:20px;padding-left:30px;'>Create New Playlist</div>
-				 <form style='padding-top:10px;padding-left:40px;'><input id='guiPlayListNew' style='z-index:10;' type='text' size='50' value=''/></form>
+				 <form style='padding-top:10px;padding-left:40px;'><input id='guiPlayListNew' style='z-index:10;' type='text' size='40' value=''/></form>
 				 <div id='guiPlayListResult'></div>
 				</div>
 				
@@ -197,32 +197,37 @@
 			</div>
 			<div id='guiPlayer_Versions_Playables' class='videoVersions' style='visibility:hidden'></div>
 			<div id='guiPlayer_Loading' class='videoLoading' style='visibility:hidden'>Loading</div>
-			<div id='guiPlayer_Info' class='videoInfo' style='visibility:hidden'>
-				<div id='guiPlayer_Info_Time'  class='videoInfo_Time'></div>	
-				<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'><div id='guiPlayer_Info_ProgressBar_Current'></div></div>	
-				<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
+			
+			<div id='guiPlayer_Osd' style='opacity:0'>
+				<div id='guiPlayer_Info' class='videoInfo'>
+					<div id='guiPlayer_Info_Time'  class='videoInfo_Time'></div>	
+					<div id='guiPlayer_Info_ProgressBar'  class='videoInfo_ProgressBar'><div id='guiPlayer_Info_ProgressBar_Current'></div></div>	
+					<div id='guiPlayer_Info_Details'  class='videoInfo_Details'></div>
+				</div>
+				<div id='guiPlayer_ItemDetails' class='videoItemDetails'  style='visibility:hidden'>
+					<div id='guiPlayer_ItemDetails_Title' class='videoItemDetailsTitle'></div>
+					<div id='guiPlayer_ItemDetails_SubData' class='videoItemDetailsSubData'></div>
+					<div id='guiPlayer_ItemDetails_Overview' class='videoItemDetailsSubData'></div>
+					<div id='guiPlayer_clock' class='time'></div>
+				</div>
+				<div id='guiPlayer_ItemDetails2' class='videoItemDetails'>
+					<div id='guiPlayer_ItemDetails_Title2' class='videoItemDetailsTitle'></div>
+					<div id='guiPlayer_ItemDetails_SubData2' class='videoItemDetailsSubData'></div>
+					<div id='guiPlayer_clock2' class='time'></div>
+				</div>
+				<div id='guiPlayer_DvdArt' class='videoItemDvdArt'></div>
+				<div id='guiPlayer_Ratings' class='videoItemRatings'></div>
 			</div>
-			<div id='guiPlayer_ItemDetails' class='videoItemDetails' style='visibility:hidden'>
-				<div id='guiPlayer_ItemDetails_Title' class='videoItemDetailsTitle'></div>
-				<div id='guiPlayer_ItemDetails_SubData' class='videoItemDetailsSubData'></div>
-				<div id='guiPlayer_ItemDetails_Overview' class='videoItemDetailsSubData'></div>
-				<div id='guiPlayer_clock' class='time'></div>
-			</div>
-			<div id='guiPlayer_ItemDetails2' class='videoItemDetails' style='visibility:hidden'>
-				<div id='guiPlayer_ItemDetails_Title2' class='videoItemDetailsTitle'></div>
-				<div id='guiPlayer_ItemDetails_SubData2' class='videoItemDetailsSubData'></div>
-				<div id='guiPlayer_clock2' class='time'></div>
-			</div>
-			<div id='guiPlayer_DvdArt' class='videoItemDvdArt' style='visibility:hidden'></div>
-			<div id='guiPlayer_Ratings' class='videoItemRatings' style='visibility:hidden'></div>
-			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
-			<div id='guiPlayer_Tools' class='videoTools' style='visibility:hidden'></div>
+			
+			<div id='guiPlayer_Tools' class='videoTools' style='opacity:0'></div>
 			<div id='guiPlayer_Tools_SubOptions' class='videoToolsOptions' style='visibility:hidden'></div>
 			<div id='guiPlayer_Tools_Slider' class='videoToolsSlider' style='visibility:hidden'>
 				<div id='guiPlayer_Tools_SliderBarCurrentTime' class='videoTools_SliderBarCurrentTime'></div>
 				<div id='guiPlayer_Tools_SliderBar'  class='videoTools_SliderBar'></div>
 				<div id='guiPlayer_Tools_SliderBarCurrent' class='videoTools_SliderBarCurrent'></div>
 			</div>
+			
+			<div id='guiPlayer_Subtitles' class='videoSubtitles1' style='visibility:hidden'></div>
 	
 			<!--  Menu -->
 			<div id='menu' class='menu' style='visibility:hidden'>

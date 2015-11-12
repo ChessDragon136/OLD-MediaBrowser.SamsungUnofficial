@@ -1,7 +1,7 @@
 var GuiImagePlayer_Screensaver = {	
 		ImageViewer : null,
 		newItemData : null,
-		imagesToUse : "",
+		imagesToUse : "MetaData",
 		
 		Timeout : null,
 		
@@ -19,10 +19,11 @@ GuiImagePlayer_Screensaver.kill = function() {
 }
 
 GuiImagePlayer_Screensaver.start = function() {
+	this.imagesToUse = File.getUserProperty("ScreensaverImages");
+	alert(this.imagesToUse);
 	this.images = []
 	this.overlay = []
 	this.imageIdx = 0
-	this.imagesToUse = File.getUserProperty("ScreensaverImages");
 	//alert("imagestouse - " + this.imagesToUse)
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();
@@ -104,7 +105,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
-		if (GuiImagePlayer.imagesToUse == "Media") {
+		if (GuiImagePlayer_Screensaver.imagesToUse == "Media") {
 			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
 		} else {
 			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 2);
@@ -115,7 +116,7 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {
 				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
-			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE);
+			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
 		}, File.getUserProperty("ScreensaverImageTime"));	
     });
 	

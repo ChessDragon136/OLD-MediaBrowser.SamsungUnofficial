@@ -3,6 +3,11 @@
 	src:url('fonts/Lato-Regular.ttf');
 }
 
+@font-face {
+	font-family:Lato-Bold;
+	src:url('fonts/Lato-Bold.ttf');
+}
+
 * {
 	padding: 0px;
 	margin: 0px;
@@ -87,6 +92,7 @@
 	color:#f9f9f9;	
 	text-align:left; 	
     font-size:14px;
+    /* background-color: #303030; */
 }
 
 .menu-userImage {
@@ -109,6 +115,38 @@
 	height: 32px;
 	line-height: 29px;
 	padding-left: 45px;
+	border-bottom: 1px solid grey;
+}
+
+.menu-item-underline {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 29px;
+	padding-left: 45px;
+	border-bottom: 1px solid grey;
+}
+
+.menu-seperator {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 17px;
+	line-height: 17px;
+	font-size:12px;
+	font-family:Lato-Bold;
+	padding-left: 10px;
+	border-bottom: 1px solid transparent;
+}
+
+.menu-seperator-underline {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 190px;
+	height: 3px;
+	line-height: 5px;
+	padding-left: 10px;
 	border-bottom: 1px solid grey;
 }
 
@@ -167,7 +205,7 @@
 	left:0px;
 	width:100%;
 	height:6%;
-	background-color:rgba(0,0,0,0.6);
+	background-color:rgba(0,0,0,0.9);
 	z-index:14;
 }
 
@@ -1381,6 +1419,15 @@
     height:65px;
     width:100%;
     background-color:rgba(0,0,0,0.8);
+}
+
+.videoSubtitles {
+	position:absolute;
+	bottom:20px;
+	left:0px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	text-align:center;
 }
 
 .videoSubtitles1 {

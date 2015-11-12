@@ -45,8 +45,9 @@ GuiMainMenu.start = function() {
 	this.menuItems = Support.generateMainMenu();
 	
 	//Get user details.
-/*	document.getElementById("menuUserName").innerHTML = Server.getUserName();
-	document.getElementById("menuUserName").style.visibility = "";*/
+	//document.getElementById("menuUserName").innerHTML = Server.getUserName();
+	document.getElementById("menuUserName").innerHTML = "<br>";
+	document.getElementById("menuUserName").style.visibility = "";
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json&Fields=PrimaryImageTag";
 	var UserData = Server.getContent(userURL);
 	if (UserData == null) { return; }

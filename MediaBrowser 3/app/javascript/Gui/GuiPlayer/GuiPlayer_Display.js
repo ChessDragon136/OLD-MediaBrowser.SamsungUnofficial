@@ -156,14 +156,17 @@ GuiPlayer_Display.setDisplay = function(playerdata,playingmediasource,playingtra
 
 GuiPlayer_Display.restorePreviousMenu = function() {
 	//Hide Player GUI Elements
+	if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+		$('#guiPlayer_Osd').css('opacity',1).animate({opacity:0}, 500);
+	}
+	if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+		$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+	}
 	document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
-	document.getElementById("guiPlayer_ItemDetails2").style.visibility="hidden";
-	document.getElementById("guiPlayer_Ratings").style.visibility="hidden";
-	document.getElementById("guiPlayer_Info").style.visibility="hidden";
+	document.getElementById("guiPlayer_ItemDetails2").style.visibility="";
     document.getElementById("guiPlayer_Loading").style.visibility = "hidden";
     document.getElementById("guiPlayer_Tools_Slider").style.visibility = "hidden";
-    document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";
-    document.getElementById("guiPlayer_Tools").style.visibility = "hidden";    
+    document.getElementById("guiPlayer_Tools_SubOptions").style.visibility = "hidden";  
     
     document.getElementById("pageBackgroundFade").style.visibility="";
     document.getElementById("pageBackgroundHolder").style.visibility="";
@@ -249,8 +252,10 @@ GuiPlayer_Display.keyDownTools = function() {
 		case tvKey.KEY_TOOLS:
 			widgetAPI.blockNavigation(event);
 			this.videoToolsSelectedItem = 0;
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
-		    document.getElementById("guiPlayer_Subtitles").className="videoSubtitles1";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
+			document.getElementById("guiPlayer_Subtitles").style.bottom="20px";
 			document.getElementById("GuiPlayer").focus();
 			break;	
 		case tvKey.KEY_LEFT:
@@ -300,7 +305,9 @@ GuiPlayer_Display.keyDownTools = function() {
 			}
 			break;		
 		case tvKey.KEY_PLAY:
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePlayKey();
 			break;
@@ -308,22 +315,30 @@ GuiPlayer_Display.keyDownTools = function() {
 			GuiPlayer.handleStopKey();
             break;
 		case tvKey.KEY_PAUSE:
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handlePauseKey();
 			break;
         case tvKey.KEY_FF:
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
 			document.getElementById("GuiPlayer").focus();
         	GuiPlayer.handleFFKey();      
             break;       
         case tvKey.KEY_RW:
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
 			document.getElementById("GuiPlayer").focus();
         	GuiPlayer.handleRWKey();
             break;
         case tvKey.KEY_INFO:	
-			document.getElementById("guiPlayer_Tools").style.visibility = "hidden";
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
 			document.getElementById("GuiPlayer").focus();
 			GuiPlayer.handleInfoKey();
 			break;

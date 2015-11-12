@@ -100,18 +100,18 @@ GuiImagePlayer.setNormalMode = function() {
 	sf.service.ImageViewer.setPosition({
 		left: 0,
 		top: 0,
-		width: 3000,
-		height: 3000,
+		width: 1920,
+		height: 1080,
 	});
 	
 	sf.service.ImageViewer.show();
 	
 	for (var i=0; i < this.newItemData.Items.length; i++){
-		var ImageUrl = Server.getImageURL(this.newItemData.Items[i].Id,"Primary",3000,3000,0,false,0);
+		var ImageUrl = Server.getImageURL(this.newItemData.Items[i].Id,"Primary",1920,1080,0,false,0);
 		this.photos[i] = {
 		        url: ImageUrl,
-		        width: 3000,
-		        height: 3000,
+		        width: 1920,
+		        height: 1080,
 		        filename: this.newItemData.Items[i].name,
 		        date: '2011/06/24'	
 		}
@@ -152,7 +152,7 @@ GuiImagePlayer.setSlideshowMode = function() {
 
 //Prepare next image
 GuiImagePlayer.prepImage = function(imageIdx) {
-	this.ImageViewer.prepareNext(GuiImagePlayer.images[imageIdx], this.ImageViewer.Effect.FADE1)
+	this.ImageViewer.prepareNext(GuiImagePlayer.images[imageIdx], this.ImageViewer.Effect.FADE1);
 }
 
 // Play image - only called once in slideshow!
@@ -235,9 +235,9 @@ GuiImagePlayer.keyDown = function() {
 			break;
 		case tvKey.KEY_GREEN:
 			if (this.overlayFormat == 2) {
-				this.overlayFormat = 0
+				this.overlayFormat = 0;
 			} else {
-				this.overlayFormat = this.overlayFormat + 1
+				this.overlayFormat = this.overlayFormat + 1;
 			}
 			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
 			break;

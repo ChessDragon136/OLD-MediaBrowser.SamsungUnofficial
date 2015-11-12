@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0j",
+		version : "v1.0.0k",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -98,7 +98,7 @@ Main.onLoad = function()
 	alert("initKeys returned");
 	
 	//Set Version Number & initialise clock
-	document.getElementById("menuVersion").innerHTML = this.version;
+	//document.getElementById("menuVersion").innerHTML = this.version;
 	Support.clock();
 	
 	//Set DeviceID & Device Name

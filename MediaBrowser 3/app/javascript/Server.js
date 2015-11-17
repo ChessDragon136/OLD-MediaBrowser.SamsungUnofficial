@@ -204,46 +204,21 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 	return xmlHttp;
 }
 
-Server.getPhotosFolderId = function () {
+Server.getUserViewId = function (collectionType) {
 	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			if (topFolder.Items[index].CollectionType == "photos") {
-				folderId = topFolder.Items[index].Id;
-			}
+	var userViews = Server.getUserViews();
+	for (var i = 0; i < userViews.Items.length; i++){
+		if (userViews.Items[i].CollectionType == collectionType){
+			folderId = userViews.Items[i].Id;
 		}
 	}
 	return folderId;
 }
 
-Server.getTvFolderId = function () {
-	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			if (topFolder.Items[index].CollectionType == "tvshows") {
-				folderId = topFolder.Items[index].Id;
-			}
-		}
-	}
-	return folderId;
-}
-
-Server.getHomeVideosFolderId = function () {
-	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			if (topFolder.Items[index].CollectionType == "homevideos") {
-				folderId = topFolder.Items[index].Id;
-			}
-		}
-	}
-	return folderId;
+Server.getUserViews = function () {
+	var url = this.serverAddr + "/Users/" + Server.getUserID() + "/Views?format=json&SortBy=SortName&SortOrder=Ascending";
+	var userViews = Server.getContent(url);
+	return userViews;
 }
 
 //------------------------------------------------------------
@@ -458,7 +433,7 @@ Server.testConnectionSettings = function (server,fromFile) {
 	    	}
 	       	
 	       	//Set Server.serverAddr!
-	       	Server.setServerAddr("http://" + server + "/mediabrowser");
+	       	Server.setServerAddr("http://" + server + "/emby");
 	       		
 	       	//Check Server Version
 	       	if (ServerVersion.checkServerVersion()) {

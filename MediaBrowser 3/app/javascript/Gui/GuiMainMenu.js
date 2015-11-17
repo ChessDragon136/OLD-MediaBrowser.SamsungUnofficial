@@ -24,29 +24,16 @@ GuiMainMenu.start = function() {
 	this.menuItems.length = 0;
 	this.menuItemsHomePages.length = 0;
 	
-	//Set user View Styles
-	var photosFolderId = Server.getPhotosFolderId(); //Is null when the enhanced photos view is disabled.
-	if (photosFolderId == null){
-		Main.setPhotoEnabled(false);
-	} else {
-		Main.setPhotoEnabled(true);
-	}
-	FileLog.write("Show enhanced photos view: "+Main.isPhotoEnabled());
-	var tvFolderId = Server.getTvFolderId(); //Is null when the enhanced TV view is disabled.
-	if (tvFolderId == null){
-		Main.setTvEnabled(false);
-	} else {
-		Main.setTvEnabled(true);
-	}
-	FileLog.write("Show enhanced TV view: "+Main.isTvEnabled());
-	
 	//Generate main menu items
 	this.menuItemsHomePages = Support.generateTopMenu(); 
 	this.menuItems = Support.generateMainMenu();
 	
 	//Get user details.
 	//document.getElementById("menuUserName").innerHTML = Server.getUserName();
-	document.getElementById("menuUserName").innerHTML = "<br>";
+	alert(this.menuItems.length);
+	if (this.menuItems.length < 10){
+		document.getElementById("menuUserName").innerHTML = "<br>";
+	}
 	document.getElementById("menuUserName").style.visibility = "";
 	var userURL = Server.getServerAddr() + "/Users/" + Server.getUserID() + "?format=json&Fields=PrimaryImageTag";
 	var UserData = Server.getContent(userURL);
@@ -274,25 +261,12 @@ GuiMainMenu.playSelectedItem = function() {
 		}, 300, function() {
 			//animate complete.
 		});
-		$('.pageBackground').animate({
-			left: 0
-		}, 300, function() {
-			//animate complete.
-		});
-		var photosFolderId = Server.getPhotosFolderId();
-		if (photosFolderId == null){
-			return;
-		}
-		//Get the Media Folders collection.
-		var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&CollapseBoxSetItems=false&fields=SortName");
-		var ItemData = Server.getContent(url);
-		//Find the Photos items and play start a slideshow.
-		for (var i = 0; i < ItemData.Items.length; i++){
-			if (ItemData.Items[i].Id == photosFolderId) {
-				GuiImagePlayer.start(ItemData,i,true);
+		var userViews = Server.getUserViews();
+		for (var i = 0; i < userViews.Items.length; i++){
+			if (userViews.Items[i].CollectionType == "photos"){
+				GuiImagePlayer.start(userViews,i,true);
 			}
 		}
-		
 	}
 }
 

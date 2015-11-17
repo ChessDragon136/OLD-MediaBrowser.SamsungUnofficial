@@ -303,9 +303,13 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem,updateBackdrop) {
 		//Need to add text version here!
 	}
 	
-	//Set MediaInfo Height
-	if (this.menuItems.length < 5) {
-		document.getElementById("guiTV_Show_MediaAlternative").style.bottom = "50px";
+	//Set MediaInfo Height (default is 25px)
+	if (this.menuItems.length == 5) {
+		document.getElementById("guiTV_Show_MediaAlternative").style.bottom = "45px";
+	} else if (this.menuItems.length == 4) {
+		document.getElementById("guiTV_Show_MediaAlternative").style.bottom = "70px";
+	} else if (this.menuItems.length < 4) {
+		document.getElementById("guiTV_Show_MediaAlternative").style.bottom = "90px";
 	}
 	
 	//Update Selected Item
@@ -836,6 +840,9 @@ GuiPage_ItemDetails.subKeyDown = function() {
 					var htmlToAdd = "<div id=0 class='FilmListSingle EpisodeListSelected'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
 					document.getElementById("guiTV_Episode_SubOptions").innerHTML = htmlToAdd;
 				}
+				//Turn On Screensaver
+				Support.screensaverOn();
+				Support.screensaver();
 			}
 			break;
 		case tvKey.KEY_PAUSE:
@@ -995,16 +1002,23 @@ GuiPage_ItemDetails.getTrailerEvents = function() {
 	};
 	opt.onend = function(){
 		GuiHelper.setControlButtons("Favourite","Watched",null,null,"Return");
+		
 		//If the trailer button is visible when a trailer ends, update it.
 		if (GuiPage_ItemDetails.selectedItem == 0) { 
 			var htmlToAdd = "";
 			htmlToAdd += "<div id=0 class='FilmListSingle EpisodeListSelected'><div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div></div>";
 			document.getElementById("guiTV_Episode_SubOptions").innerHTML = htmlToAdd;
 		}
+		
 		//Reset the Play Trailer button for channel trailers
 		if (GuiPage_ItemDetails.ItemData.Type == "ChannelVideoItem" && GuiPage_ItemDetails.ItemData.ChannelName == "Trailers" && GuiPage_ItemDetails.trailersEnabled){
 			document.getElementById("guiTV_Episode_Play").innerHTML = "<div class='FilmListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='ShowListSingleTitle'><div class='ShowListTextOneLineFilm'>PLAY TRAILER</div></div>";
 		}
+		
+		//Turn On Screensaver
+		Support.screensaverOn();
+		Support.screensaver();
+		
 		sf.service.VideoPlayer.hide();
 		FileLog.write('Trailor: END');
 		document.getElementById("GuiPage_ItemDetails").focus();
@@ -1098,6 +1112,9 @@ GuiPage_ItemDetails.playTrailer = function(trailerUrl) {
 	if (GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED") {
 		GuiMusicPlayer.stopPlayback();
 	}
+	
+	//Turn off Screensaver
+    Support.screensaverOff();
 	
 	//Set the miniplayer
 	document.getElementById('sf-service-videoplayer-mini-infobar').style.display= 'none';

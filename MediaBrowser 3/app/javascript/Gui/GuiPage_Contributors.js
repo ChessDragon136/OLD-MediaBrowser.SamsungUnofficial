@@ -11,6 +11,7 @@ GuiPage_Contributors.onFocus = function() {
 GuiPage_Contributors.start = function() {
 	alert("Page Enter : GuiPage_Contributors");
 	
+	document.getElementById("Counter").innerHTML = Main.version;
 	document.getElementById("guiReturnButton").style.visibility = "";
 	document.getElementById("guiReturnButton").innerHTML = "Return";
 	
@@ -95,7 +96,7 @@ GuiPage_Contributors.keyDown = function() {
 			widgetAPI.blockNavigation(event);
 			Support.processReturnURLHistory();
 			break;	
-		case tvKey.KEY_BLUE:	
+		case tvKey.KEY_BLUE:
 			GuiMusicPlayer.showMusicPlayer("GuiPage_Contributors");
 			break;	
 		case tvKey.KEY_TOOLS:

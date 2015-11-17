@@ -185,6 +185,7 @@ GuiImagePlayer.keyDown = function() {
 			this.images = [];
 			this.overlay = [];
 			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = "";
+			document.getElementById("guiButtonShade").style.visibility = "hidden";
 			document.getElementById("Clock").style.visibility = "";
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();

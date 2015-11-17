@@ -1075,8 +1075,6 @@ Support.playSelectedItem = function(page,ItemData,startParams,selectedItem,topLe
 	alert ("playSelectedItem: MediaType "+ItemData.Items[selectedItem].MediaType);
 	alert ("playSelectedItem: Type "+ItemData.Items[selectedItem].Type);
 	if (ItemData.Items[selectedItem].Type == "Folder") {
-		//Catch Folder - Do Nothing!
-		alert(page);
 		if (page == "GuiPage_Photos") {
 			Support.updateURLHistory(page,startParams[0],startParams[1],startParams[2],startParams[3],selectedItem,topLeftItem,isTop);
 			GuiImagePlayer.start(ItemData,selectedItem,true);	
@@ -1155,60 +1153,30 @@ Support.generateMainMenu = function() {
 		menuItems.push("Favourites");
 	}
 	
-	//Check TV
-	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
-	var hasTV = Server.getContent(urlTV);
-	if (hasTV == null) { return; }
-		
-	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
-		menuItems.push("TV");
-	}
-		
-	//Check Movies
-	var urlMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&Recursive=true&Limit=0");
-	var hasMovies = Server.getContent(urlMovies);
-	if (hasMovies == null) { return; }
-		
-	if (hasMovies.TotalRecordCount > 0) {
-		menuItems.push("Movies");
-	}
-	
-	//Check Music
-	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
-	var hasMusic = Server.getContent(urlMusic);
-	if (hasMusic == null) { return; }
-	
-	if (hasMusic.TotalRecordCount == 0) {
-		var urlMusic2 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&Limit=0");
-		var hasMusic2 = Server.getContent(urlMusic2);
-		if (hasMusic2 == null) { return; }
-		
-		if (hasMusic2.TotalRecordCount > 0) {
-			if (Main.isMusicEnabled()) {
-				menuItems.push("Music");
-			}	
+	var userViews = Server.getUserViews();
+	for (var i = 0; i < userViews.Items.length; i++){
+		if (userViews.Items[i].CollectionType == "tvshows" || 
+				userViews.Items[i].CollectionType == "homevideos" || 
+				userViews.Items[i].CollectionType == "boxsets" || 
+				userViews.Items[i].CollectionType == "movies" || 
+				userViews.Items[i].CollectionType == "photos" || 
+				userViews.Items[i].CollectionType == "music"){
+			var name = "";
+			if (userViews.Items[i].CollectionType == "tvshows") {
+				name = "TV";
+			} else if (userViews.Items[i].CollectionType == "homevideos") {
+				name = "Home-Movies";
+			} else if (userViews.Items[i].CollectionType == "boxsets") {
+				name = "Collections";
+			} else if (userViews.Items[i].CollectionType == "movies") {
+				name = "Movies";
+			} else if (userViews.Items[i].CollectionType == "photos") {
+				name = "Photos";
+			} else if (userViews.Items[i].CollectionType == "music") {
+				name = "Music";
+			}
+			menuItems.push(name);
 		}
-	} else {
-		if (Main.isMusicEnabled()) {
-			menuItems.push("Music");
-		}
-	}
-	
-	//Check Images
-	var urlPhotos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=PhotoAlbum&Recursive=true&Limit=0");
-	var hasPhotos = Server.getContent(urlPhotos);
-	if (hasPhotos == null) { return; }
-	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
-		menuItems.push("Photos");
-	}
-	
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
 	}
 	
 	//Check Server Playlists
@@ -1219,15 +1187,8 @@ Support.generateMainMenu = function() {
 	if (hasPlaylists.TotalRecordCount > 0) {
 		menuItems.push("Playlists");
 	}
-	
-	//Check Home Movies
-	var urlVideos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Video&Recursive=true&Limit=0");
-	var hasVideos = Server.getContent(urlVideos);
-	if (hasVideos == null) { return; }
-	if (hasVideos.TotalRecordCount > 0 && Server.getHomeVideosFolderId() != null) {
-		menuItems.push("Home-Movies");
-	}
-	
+
+	/*
 	//Check Live TV
 	var urlLiveTV = Server.getCustomURL("/LiveTV/Info?format=json");
 	var hasLiveTV = Server.getContent(urlLiveTV);
@@ -1250,7 +1211,7 @@ Support.generateMainMenu = function() {
 		if (hasChannels.Items.length > 0) {
 			menuItems.push("Channels");
 		}
-	}
+	}*/
 	
 	//Check Media Folders
 	var urlMF = Server.getItemTypeURL("&Limit=0");
@@ -1268,61 +1229,27 @@ Support.generateTopMenu = function() {
 	
 	var menuItems = [];
 	
-	//Check TV
-	var urlTV = Server.getItemTypeURL("&IncludeItemTypes=Series&Recursive=true&Limit=0");
-	var hasTV = Server.getContent(urlTV);
-	if (hasTV == null) { return; }
-		
-	if (hasTV.TotalRecordCount > 0 && Main.isTvEnabled()) {
-		menuItems.push("TV");
-	}
-		
-	//Check Movies
-	var urlMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&Recursive=true&Limit=0");
-	var hasMovies = Server.getContent(urlMovies);
-	if (hasMovies == null) { return; }
-		
-	if (hasMovies.TotalRecordCount > 0) {
-		menuItems.push("Movies");
-	}
-	
-	//Check Music
-	var urlMusic = Server.getItemTypeURL("&IncludeItemTypes=MusicArtist&Recursive=true&Limit=0");
-	var hasMusic = Server.getContent(urlMusic);
-	if (hasMusic == null) { return; }
-	
-	if (hasMusic.TotalRecordCount == 0) {
-		var urlMusic2 = Server.getItemTypeURL("&IncludeItemTypes=MusicAlbum&Recursive=true&Limit=0");
-		var hasMusic2 = Server.getContent(urlMusic2);
-		if (hasMusic2 == null) { return; }
-		
-		if (hasMusic2.TotalRecordCount > 0) {
-			if (Main.isMusicEnabled()) {
-				menuItems.push("Music");
-			}	
+	var userViews = Server.getUserViews();
+	for (var i = 0; i < userViews.Items.length; i++){
+		if (userViews.Items[i].CollectionType == "tvshows" || 
+				userViews.Items[i].CollectionType == "boxsets" || 
+				userViews.Items[i].CollectionType == "movies" || 
+				userViews.Items[i].CollectionType == "photos" || 
+				userViews.Items[i].CollectionType == "music"){
+			var name = "";
+			if (userViews.Items[i].CollectionType == "tvshows") {
+				name = "TV";
+			} else if (userViews.Items[i].CollectionType == "boxsets") {
+				name = "Collections";
+			} else if (userViews.Items[i].CollectionType == "movies") {
+				name = "Movies";
+			} else if (userViews.Items[i].CollectionType == "photos") {
+				name = "Photos";
+			} else if (userViews.Items[i].CollectionType == "music") {
+				name = "Music";
+			}
+			menuItems.push(name);
 		}
-	} else {
-		if (Main.isMusicEnabled()) {
-			menuItems.push("Music");
-		}
-	}
-	
-	//Check Images
-	var urlPhotos = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=PhotoAlbum&Recursive=true&Limit=0");
-	var hasPhotos = Server.getContent(urlPhotos);
-	if (hasPhotos == null) { return; }
-	
-	if (hasPhotos.TotalRecordCount > 0 && Main.isPhotoEnabled()) {
-		menuItems.push("Photos");
-	}
-
-	//Check Collections
-	var urlCollections = Server.getItemTypeURL("&IncludeItemTypes=BoxSet&Recursive=true&Limit=0");
-	var hasCollections = Server.getContent(urlCollections);
-	if (hasCollections == null) { return; }
-
-	if (hasCollections.TotalRecordCount > 0 && Main.isCollectionsEnabled() == true) {
-		menuItems.push("Collections");
 	}
 	
 	//Check Media Folders
@@ -1388,14 +1315,14 @@ Support.processHomePageMenu = function (menuItem) {
 		GuiDisplayOneItem.start("Playlists", url,0,0);
 		break;		
 	case "Photos":
-		var photosFolderId = Server.getPhotosFolderId();
+		var photosFolderId = Server.getUserViewId("photos");
 		if (photosFolderId != null){
 			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Fields=SortName&StartIndex=0&Limit=500&Recursive=false&IncludeItemTypes=&MediaTypes=&ParentId="+photosFolderId);
 			GuiPage_Photos.start("Photos",url,0,0);
 		}
 		break;
 	case "Home-Movies":
-		var homeVideosFolderId = Server.getHomeVideosFolderId();
+		var homeVideosFolderId = Server.getUserViewId("homevideos");
 		if (homeVideosFolderId != null){
 			var url = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&fields=PrimaryImageAspectRatio,SortName&ParentId="+homeVideosFolderId);
 			GuiDisplayOneItem.start("Home Movies",url,0,0);

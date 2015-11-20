@@ -40,6 +40,11 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 	
+	if (title == "New TV") {
+		this.isLatest = true;
+		this.ItemData.Items = this.ItemData;
+	}
+	
 	//If all user selected homepages are blank try media items
 	if (this.ItemData.Items.length == 0) {
 		title = "Media Folders"
@@ -51,10 +56,6 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData.Items.length > 0) {		
 		//Latest Page Fix
 		this.isLatest = false;
-		if (title == "New TV") {
-			this.isLatest = true;
-			this.ItemData.Items = this.ItemData;
-		}
 		
 		//If array like MoviesRecommended alter 
 		if (title == "Suggested For You") {

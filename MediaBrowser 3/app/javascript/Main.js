@@ -4,14 +4,14 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0m",
+		version : "v1.0.0n",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
 		//TV Series Version
 		modelYear : null,
 		
-		forceDeleteSettings : false,
+		forceDeleteSettings : true,
 		
 		enableMusic : true,
 		enableLiveTV : false,
@@ -111,7 +111,7 @@ Main.onLoad = function()
 	} else {
 		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
 	}
-/*	if (this.modelYear == "B"){
+	/*if (this.modelYear == "B"){
 		this.modelYear = "D";
 	}*/
 	FileLog.write("Model Year is " + this.modelYear);

@@ -61,7 +61,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Set Display Size from User settings
 	this.MAXCOLUMNCOUNT = (File.getUserProperty("LargerView") == true) ? 7 : 9;
-	this.MAXROWCOUNT = 2;
+	this.MAXROWCOUNT = (File.getUserProperty("LargerView") == true) ? 2 : 3;
 
 	//On show all items pages, there is no limit - For music there is due to speed!
 	if (title == "Latest Music" || title == "Recent Music" || title == "Frequent Music") {
@@ -81,6 +81,10 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	"<div id='SeriesSubData' style='padding-top:2px;color:#2ad;font-size:18px;'></div>" +
 	"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;font-size:15px;max-height:110px;overflow-y:hidden;'></div>" +
 	"</div>";
+	
+	if (File.getUserProperty("LargerView") == true){
+		document.getElementById("Center").style.top="70px";
+	}
 	
 	//Split Name - 1st Element = View, 2nd = Type (Collections being the odd one out!)
 	var titleArray = title.split(" ");
@@ -310,12 +314,13 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
 		htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
 	}
+	if (this.isTvOrMovies == 2) {
+		document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
+		document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
+		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+	}
 				
-	document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
-	document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
-	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
-				
-	Support.scrollingText("SeriesOverview");
+	//Support.scrollingText("SeriesOverview");
 		
 	//Background Image
 	//Blocking code to skip getting data for items where the user has just gone past it

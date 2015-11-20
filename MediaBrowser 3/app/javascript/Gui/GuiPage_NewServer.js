@@ -19,7 +19,7 @@ GuiPage_NewServer.start = function() {
 		<input id='port' type='text' size='8'  maxlength='5'/></form> \ \
 		<p style='padding-top:10px;padding-bottom:5px'>OR</p> \
 		<p style='padding-bottom:5px'>Enter your server hostname here without http:// and <br>including : and port number.</p> \
-		<form><input id='host' style='z-index:10;' type='text' size='50' value=''/></form> \
+		<form><input id='host' style='z-index:10;' type='text' size='45' value=''/></form> \
 		</div>";
 	
 	//Set Backdrop

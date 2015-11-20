@@ -1175,7 +1175,9 @@ Support.generateMainMenu = function() {
 			} else if (userViews.Items[i].CollectionType == "music") {
 				name = "Music";
 			}
-			menuItems.push(name);
+			if ($.inArray(name, menuItems) < 0) {
+				menuItems.push(name);
+			}
 		}
 	}
 	
@@ -1248,7 +1250,9 @@ Support.generateTopMenu = function() {
 			} else if (userViews.Items[i].CollectionType == "music") {
 				name = "Music";
 			}
-			menuItems.push(name);
+			if ($.inArray(name, menuItems) < 0) {
+				menuItems.push(name);
+			}
 		}
 	}
 	

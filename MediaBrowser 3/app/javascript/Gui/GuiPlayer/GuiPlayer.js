@@ -2,7 +2,7 @@
 //
 //Samsung Player accepts seconds
 //Samsung Current time works in seconds * 1000
-//MediaBrowser3 works in seconds * 10000000
+//Emby works in seconds * 10000000
 
 var GuiPlayer = {	
 		plugin : null,
@@ -621,9 +621,11 @@ GuiPlayer.handlePlayKey = function() {
 GuiPlayer.handleStopKey = function() {
     FileLog.write("Playback : Stopped by User");
     this.stopPlayback();
-    document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
-	document.getElementById("guiPlayer_ItemDetails2").style.visibility="";
-    GuiPlayer_Display.restorePreviousMenu();
+    setTimeout(function(){
+	    document.getElementById("guiPlayer_ItemDetails").style.visibility="hidden";
+		document.getElementById("guiPlayer_ItemDetails2").style.visibility="";
+	    GuiPlayer_Display.restorePreviousMenu();
+    }, 250);
 };
 
 GuiPlayer.handlePauseKey = function() {

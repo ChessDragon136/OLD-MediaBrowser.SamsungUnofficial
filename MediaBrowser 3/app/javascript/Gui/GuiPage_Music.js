@@ -15,18 +15,17 @@ var GuiPage_Music = {
 		playItems : ["Play_","Queue_","Mix_"]
 }
 
+GuiPage_Music.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_Music.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
-//------------------------------------------------------------
-//      Episode Functions
-//------------------------------------------------------------
-
 GuiPage_Music.start = function(title,url,type) { //Type is either MusicAlbum or MusicArtist
 	alert("Page Enter : GuiPage_Music");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
-	
+
 	//Save Start Params
 	this.startParams = [title,url];
 	
@@ -313,7 +312,6 @@ GuiPage_Music.processSelectedItem = function() {
 			GuiMusicPlayer.start("Album",url + "&Fields=MediaSources","GuiPage_Music",false);
 			break;	
 		}
-		GuiHelper.setControlButtons(0,0,0,"Music","Return");
 	} else {
 		switch (this.selectedItem2) {
 		case 0:
@@ -332,7 +330,7 @@ GuiPage_Music.processSelectedItem = function() {
 	}
 	
 	//Genre Instant Mix
-	//http://192.168.1.108:28067/mediabrowser/MusicGenres/Anime/InstantMix?UserId=4b4c128121aa642086bb225659a7d471&Fields=MediaSources%2CChapters&Limit=50
+	//http://192.168.1.108:28067/emby/MusicGenres/Anime/InstantMix?UserId=4b4c128121aa642086bb225659a7d471&Fields=MediaSources%2CChapters&Limit=50
 	//Artist Instant Mix
 	//Artist/NameID/InstatnMix?
 }

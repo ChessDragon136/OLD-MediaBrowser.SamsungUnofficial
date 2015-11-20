@@ -162,7 +162,7 @@ GuiPlayer_Versions.updateSelectedItems = function() {
 
 //Gets Primary Streams - Ones that would be used on first playback)
 GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) {
-	var videoStreamIfNoDefault = 0
+	var videoStreamIfNoDefault = 0;
 	var videoIndex = -1, audioIndex = -1, subtitleIndex = -1;
 	var indexOfFirstAudio = -1;
 	

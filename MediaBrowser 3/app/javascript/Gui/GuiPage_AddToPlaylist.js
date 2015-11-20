@@ -15,13 +15,16 @@ var GuiPage_AddToPlaylist = {
 		MAXROWCOUNT : 5
 }
 
+GuiPage_AddToPlaylist.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_AddToPlaylist.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiPage_AddToPlaylist.start=function(itemId, playedFromPage, mediaType) {
 	alert("Page Enter : GuiPage_AddToPlaylist");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Update page called from
 	this.playedFromPage = playedFromPage;
@@ -29,9 +32,9 @@ GuiPage_AddToPlaylist.start=function(itemId, playedFromPage, mediaType) {
 	this.selectedItem = 0;
 	this.topLeftItem = 0;
 	this.itemId = itemId;
-	
+
 	//Get data from Server
-	url = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Playlist&Recursive=true&MediaTypes=" + mediaType);
+	var url = Server.getItemTypeURL("/SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Playlist&Recursive=true&MediaTypes=" + mediaType);
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 	

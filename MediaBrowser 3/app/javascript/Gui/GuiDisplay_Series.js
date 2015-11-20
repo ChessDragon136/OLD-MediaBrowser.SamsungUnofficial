@@ -5,12 +5,13 @@ var GuiDisplay_Series = {
 		totalRecordCount : null,
 		
 		currentView : "",
+		currentMediaType : "",
 		
 		selectedItem : 0,
 		selectedBannerItem : 0,
 		topLeftItem : 0,
 		MAXCOLUMNCOUNT : 9, //Default TV
-		MAXROWCOUNT : 2,
+		MAXROWCOUNT : 3,
 		
 		bannerItems : [],
 		tvBannerItems : ["All","Unwatched","Latest","Upcoming", "Genre", "A-Z"],
@@ -26,6 +27,16 @@ var GuiDisplay_Series = {
 		
 		startParams : [],
 		isLatest : false
+}
+
+GuiDisplay_Series.onFocus = function() {
+	switch (this.currentMediaType) {
+	case "Movies":
+		GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+	break;
+	default:
+		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");	
+	}
 }
 
 GuiDisplay_Series.getMaxDisplay = function() {
@@ -50,7 +61,7 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	
 	//Set Display Size from User settings
 	this.MAXCOLUMNCOUNT = (File.getUserProperty("LargerView") == true) ? 7 : 9;
-	this.MAXROWCOUNT = 2;
+	this.MAXROWCOUNT = (File.getUserProperty("LargerView") == true) ? 2 : 3;
 
 	//On show all items pages, there is no limit - For music there is due to speed!
 	if (title == "Latest Music" || title == "Recent Music" || title == "Frequent Music") {
@@ -71,13 +82,17 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;font-size:15px;max-height:110px;overflow-y:hidden;'></div>" +
 	"</div>";
 	
+	if (File.getUserProperty("LargerView") == true){
+		document.getElementById("Center").style.top="70px";
+	}
+	
 	//Split Name - 1st Element = View, 2nd = Type (Collections being the odd one out!)
 	var titleArray = title.split(" ");
 	this.currentView = titleArray[0];
+	this.currentMediaType = titleArray[1];
 	
-	switch (titleArray[1]) {
+	switch (this.currentMediaType) {
 	case "TV":
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 0;
 		this.bannerItems = this.tvBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -86,7 +101,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Movies":
-		GuiHelper.setControlButtons("Favourite","Watched",null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = 1;
 		this.bannerItems = this.movieBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
@@ -95,7 +109,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		}
 	break;
 	case "Collections":
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.isTvOrMovies = -1;
 		if (File.getUserProperty("LargerView") == true) {
 			document.getElementById("SeriesContent").style.top="426px";
@@ -104,7 +117,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		break;
 	case "Music":
 	default:
-		GuiHelper.setControlButtons("Favourite",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 		this.MAXCOLUMNCOUNT = 7;
 		this.MAXROWCOUNT = 3;
 		this.isTvOrMovies = 2;
@@ -214,15 +226,40 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	} else {
 		if (File.getUserProperty("LargerView") == true) {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge SelectedTV","SeriesPortraitLarge","",false,this.totalRecordCount);
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortraitLarge Selected","SeriesPortraitLarge","",false,this.totalRecordCount);
 		} else {
 			Support.updateSelectedNEW(this.ItemData.Items,this.selectedItem,this.topLeftItem,
-					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait SelectedTV","SeriesPortrait","",false,this.totalRecordCount);
+					Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length),"SeriesPortrait Selected","SeriesPortrait","",false,this.totalRecordCount);
 		}
 		
 	}
 			
 	var htmlForTitle = this.ItemData.Items[this.selectedItem].Name + "<div style='display:inline-block; position:absolute; height:22px; bottom:0px'><table style='font-size:14px;padding-left:10px;'><tr>";
+	
+	var toms = this.ItemData.Items[this.selectedItem].CriticRating;
+	var stars = this.ItemData.Items[this.selectedItem].CommunityRating;
+	var tomsImage = "";
+	var starsImage = "";
+	if (toms){
+		if (toms > 59){
+			tomsImage = "images/fresh-24x24.png";
+		} else {
+			tomsImage = "images/rotten-24x24.png";
+		}
+		htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url("+tomsImage+")></td>";
+		htmlForTitle += "<td class=MetadataItemVSmall )>" + toms + "%</td>";
+	}
+	if (stars){
+    	if (stars <3.1){
+    		starsImage = "images/star_empty-24x24.png"; 
+    	} else if (stars >=3.1 && stars < 6.5) {
+    		starsImage = "images/star_half-24x24.png";
+    	} else {
+    		starsImage = "images/star_full-24x24.png";
+    	}
+    	htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url("+starsImage+")></td>";
+    	htmlForTitle += "<td class=MetadataItemVSmall>" + stars + "</td>";
+	}
 	
 	if (this.ItemData.Items[this.selectedItem].Type !== undefined
 			&& this.ItemData.Items[this.selectedItem].ProductionYear !== undefined) {
@@ -230,51 +267,40 @@ GuiDisplay_Series.updateSelectedItems = function () {
 		text =  "" + Support.SeriesRun(this.ItemData.Items[this.selectedItem].Type, this.ItemData.Items[this.selectedItem].ProductionYear, this.ItemData.Items[this.selectedItem].Status, this.ItemData.Items[this.selectedItem].EndDate);
 
 		if (text.indexOf("Present") > -1) {
-			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text
-			+ "</td>";
+			htmlForTitle += "<td class='MetadataItemSmallLong'>" + text + "</td>";
 		} else {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + text
-			+ "</td>";
+			htmlForTitle += "<td class='MetadataItemSmall'>" + text + "</td>";
 		}
-		
-		
 	}
-	if (this.ItemData.Items[this.selectedItem].CommunityRating !== undefined) {
-		htmlImage = Support.getStarRatingImage(this.ItemData.Items[this.selectedItem].CommunityRating);
-		htmlForTitle += "<td class='MetadataItemSmallLong'>" + htmlImage;
-			+ "</td>";
-	}
+	
 	if (this.ItemData.Items[this.selectedItem].OfficialRating !== undefined) {
-		htmlForTitle +="<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].OfficialRating 
-			+ "</td>";
+		htmlForTitle +="<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].OfficialRating + "</td>";
 	}
 	if (this.ItemData.Items[this.selectedItem].RecursiveItemCount !== undefined) {
 		if (this.isAllorFolder == 1) {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Items" 
-			+ "</td>";	
+			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Items</td>";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Item" 
-				+ "</td>";	
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Item</td>";	
 			}
 		}
 		if (this.isTvOrMovies == 2) {
-			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs" 
-				+ "</td>";	
+			htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Songs</td>";	
 			if (this.ItemData.Items[this.selectedItem].RecursiveItemCount == 1){
-				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song" 
-				+ "</td>";	
+				htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].RecursiveItemCount + " Song</td>";	
 			}
 		} else {
 			if (this.ItemData.Items[this.selectedItem].SeasonCount !== undefined) {
 				if (this.ItemData.Items[this.selectedItem].SeasonCount == 1){
-					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Season" 
-					+ "</td>";					
+					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Season</td>";					
 				} else {
-					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons" 
-					+ "</td>";
+					htmlForTitle += "<td class='MetadataItemSmall'>" + this.ItemData.Items[this.selectedItem].SeasonCount + " Seasons</td>";
 				}
 			}		
 		}	
+	}
+	
+	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
+		htmlForTitle += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + "</td>";
 	}
 
 	htmlForTitle += "</tr></table></div>";
@@ -288,12 +314,13 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (this.ItemData.Items[this.selectedItem].Overview !== undefined) {
 		htmlForOverview = this.ItemData.Items[this.selectedItem].Overview;
 	}
+	if (this.isTvOrMovies == 2) {
+		document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
+		document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
+		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+	}
 				
-	document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
-	document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
-	document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
-				
-	Support.scrollingText("SeriesOverview");
+	//Support.scrollingText("SeriesOverview");
 		
 	//Background Image
 	//Blocking code to skip getting data for items where the user has just gone past it
@@ -510,9 +537,7 @@ GuiDisplay_Series.processSelectedItem = function() {
 
 GuiDisplay_Series.toggleWatchedStatus = function () {
 	if (this.selectedItem > -1) {
-		alert(this.startParams[0]);
 		var titleArray = this.startParams[0].split(" ");
-		alert(titleArray[1]);
 		switch (titleArray[1]) {
 		case "Movies":
 			if (this.ItemData.Items[this.selectedItem].UserData.Played == true) {
@@ -573,7 +598,7 @@ GuiDisplay_Series.openMenu = function() {
 		}
 	} else {
 		Support.updateURLHistory("GuiDisplay_Series",this.startParams[0],this.startParams[1],null,null,this.selectedItem,this.topLeftItem,null);
-		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id,(File.getUserProperty("LargerView") == true) ? "SeriesPortraitLarge SelectedTV" : "SeriesPortrait SelectedTV");
+		GuiMainMenu.requested("GuiDisplay_Series",this.ItemData.Items[this.selectedItem].Id,(File.getUserProperty("LargerView") == true) ? "SeriesPortraitLarge Selected" : "SeriesPortrait Selected");
 	}
 }
 

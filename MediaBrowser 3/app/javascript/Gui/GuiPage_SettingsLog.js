@@ -9,13 +9,16 @@ var GuiPage_SettingsLog = {
 		bannerItems : ["User Settings","Server Settings","TV Settings","Log","About"],
 }
 
+GuiPage_SettingsLog.onFocus = function() {
+	GuiHelper.setControlButtons("Clear Log",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_SettingsLog.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiPage_SettingsLog.start = function() {
 	alert("Page Enter : GuiPage_SettingsLog");
-	GuiHelper.setControlButtons("Clear Log",null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Vars
 	this.selectedBannerItem = 3; //match Logs

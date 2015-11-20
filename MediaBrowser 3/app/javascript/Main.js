@@ -4,19 +4,17 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0f",
+		version : "v1.0.0n",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
 		//TV Series Version
 		modelYear : null,
 		
-		forceDeleteSettings : false,
+		forceDeleteSettings : true,
 		
 		enableMusic : true,
-		enableTv : false,
 		enableLiveTV : false,
-		enablePhoto : false,
 		enableCollections : true,
 		enableChannels : false,
 		
@@ -34,22 +32,6 @@ Main.isMusicEnabled = function() {
 
 Main.isLiveTVEnabled = function() {
 	return this.enableLiveTV;
-};
-
-Main.isTvEnabled = function() {
-	return this.enableTv;
-}
-
-Main.setTvEnabled = function(status) {
-	this.enableTv = status;
-}
-
-Main.isPhotoEnabled = function() {
-	return this.enablePhoto;
-};
-
-Main.setPhotoEnabled = function(status) {
-	this.enablePhoto = status;
 };
 
 Main.isCollectionsEnabled = function() {
@@ -87,29 +69,41 @@ Main.setIsScreensaverRunning = function() {
 Main.onLoad = function()
 {	
 	//Setup Logging
-	FileLog.loadFile(false); // doesnt return contents, done to ensure file exists
+	FileLog.loadFile(false); // doesn't return contents, done to ensure file exists
 	FileLog.write("---------------------------------------------------------------------");
 	FileLog.write("Emby Application Started");
 
+	document.getElementById("splashscreen_version").innerHTML = Main.version;
+	setTimeout(function(){
+		document.getElementById("splashscreen").style.visibility="hidden";
+		FileLog.write("Ready to start. Removing the splash screen.");
+	}, 2500);
+	
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
+	FileLog.write("Screensaver enabled.");
 	
 	window.onShow = Main.initKeys();
-	alert("initKeys returned");
+	FileLog.write("Key handlers initialised.");
 	
 	//Set Version Number & initialise clock
-	document.getElementById("menuVersion").innerHTML = this.version;
+	//document.getElementById("menuVersion").innerHTML = this.version;
 	Support.clock();
 	
 	//Set DeviceID & Device Name
 	var NNaviPlugin = document.getElementById("pluginObjectNNavi");
 	var pluginNetwork = document.getElementById("pluginObjectNetwork");
 	var pluginTV = document.getElementById("pluginObjectTV");
+	FileLog.write("Plugins initialised.");
 	
 	var ProductType = pluginNetwork.GetActiveType();
+	FileLog.write("Product type is "+ProductType);
 	var phyConnection = pluginNetwork.CheckPhysicalConnection(ProductType); //returns -1
+	FileLog.write("Check physical connection returned "+phyConnection);
 	var http = pluginNetwork.CheckHTTP(ProductType); //returns -1
+	FileLog.write("Check HTTP returned "+http);
 	var gateway = pluginNetwork.CheckGateway(ProductType); //returns -1
+	FileLog.write("Check gateway returned "+gateway);
 	
 	//Get the model year - Used for transcoding
 	if (pluginTV.GetProductCode(0).substring(0,2) == "HT" || pluginTV.GetProductCode(0).substring(0,2) == "BD"){
@@ -117,15 +111,17 @@ Main.onLoad = function()
 	} else {
 		this.modelYear = pluginTV.GetProductCode(0).substring(4,5);
 	}
-	
-	alert ("Model Year: " + this.modelYear);
+	/*if (this.modelYear == "B"){
+		this.modelYear = "D";
+	}*/
+	FileLog.write("Model Year is " + this.modelYear);
 	
 	if (phyConnection && http && gateway) {
 		var MAC = pluginNetwork.GetMAC(1);
 		if (MAC == false || MAC == null) { //Set mac to fake	
 			MAC = "0123456789ab" ;
 		}
-		
+		FileLog.write("MAC address is "+MAC);
 		Server.setDevice ("Samsung " + pluginTV.GetProductCode(0));
 		Server.setDeviceID(NNaviPlugin.GetDUID(MAC));
 		
@@ -154,20 +150,24 @@ Main.onLoad = function()
 	    	for (var index = 0; index < fileJson.Servers.length; index++) {
 	    		if (fileJson.Servers[index].Default == true) {
 	    			foundDefault = true;
+	    			FileLog.write("Default server found.");
 	    			File.setServerEntry(index);
 	    			Server.testConnectionSettings(fileJson.Servers[index].Path,true);    				
 	    			break;
 	    		}
 	    	}
 	    	if (foundDefault == false) {
+	    		FileLog.write("Multiple servers defined. Loading the select server page.");
 	    		GuiPage_Servers.start();
 	    	}
 	    } else if (fileJson.Servers.length == 1) {
 	    	//If 1 server auto login with that
+	    	FileLog.write("Emby server found.");
 	    	File.setServerEntry(0);
 	    	Server.testConnectionSettings(fileJson.Servers[0].Path,true); 
 	    } else {
 	    	//No Server Defined - Load GuiPage_IP
+	    	FileLog.write("No server defined. Loading the new server page.");
 	    	GuiPage_NewServer.start();
 	    }
 	} else {
@@ -175,10 +175,6 @@ Main.onLoad = function()
 	}
 	widgetAPI.sendReadyEvent();
 	Support.clock();
-	document.getElementById("splashscreen_version").innerHTML = Main.version;
-	setTimeout(function(){
-		document.getElementById("splashscreen").style.visibility="hidden";
-	}, 2500);
 };
 
 Main.initKeys = function() {

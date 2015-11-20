@@ -3,6 +3,11 @@
 	src:url('fonts/Lato-Regular.ttf');
 }
 
+@font-face {
+	font-family:Lato-Bold;
+	src:url('fonts/Lato-Bold.ttf');
+}
+
 * {
 	padding: 0px;
 	margin: 0px;
@@ -87,8 +92,7 @@
 	color:#f9f9f9;	
 	text-align:left; 	
     font-size:14px;
-	background-color: #303030;
-	border-right: 2px solid #087B26;
+    /* background-color: #303030; */
 }
 
 .menu-userImage {
@@ -111,6 +115,39 @@
 	height: 32px;
 	line-height: 29px;
 	padding-left: 45px;
+	border-bottom: 1px solid grey;
+}
+
+.menu-item-underline {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 32px;
+	line-height: 29px;
+	padding-left: 45px;
+	border-bottom: 1px solid grey;
+}
+
+.menu-seperator {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 155px;
+	height: 17px;
+	line-height: 17px;
+	font-size:12px;
+	font-family:Lato-Bold;
+	padding-left: 10px;
+	border-bottom: 1px solid transparent;
+}
+
+.menu-seperator-underline {
+	position: relative;
+	left: 0px; top: 0px;
+	width: 190px;
+	height: 3px;
+	line-height: 5px;
+	padding-left: 10px;
+	border-bottom: 1px solid grey;
 }
 
 .menu-itemSelected {
@@ -120,7 +157,8 @@
 	height: 32px;
 	line-height: 29px;
 	padding-left: 45px;
-	background-color:#444444;
+	border-bottom: 1px solid grey;
+	background-color:rgba(140,140,140,1);
 }
 
 .menu-icon {
@@ -135,10 +173,10 @@
 
 .menu-version {
 	position:absolute;
-	padding-left:75px;
+	padding-left:5px;
 	width:100%;
 	font-size:13px;
-	bottom:10px;
+	bottom:5px;
 }
 
 /*----------------------------------------------------------------------------------------------*/
@@ -167,7 +205,7 @@
 	left:0px;
 	width:100%;
 	height:6%;
-	background-color:rgba(0,0,0,0.6);
+	background-color:rgba(0,0,0,0.9);
 	z-index:14;
 }
 
@@ -401,24 +439,37 @@
 	width:430px;
 }
 
-.MetadataItemSmall {
+.MetadataItemVSmall {
+	position:relative;
 	vertical-align:middle;
-	text-align:center;
-	width:72px;
+	text-align:left;
+	width:35px;
 	height:22px;
     background-position:center;
-    background-image:url('images/metadataSmall.png');
+    background-repeat: no-repeat;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.MetadataItemSmall {
+	position:relative;
+	vertical-align:middle;
+	text-align:center;
+	width:65px;
+	height:22px;
+    background-position:left;
+    background-repeat: no-repeat;
     overflow: hidden;
     white-space: nowrap;
 }
 
 .MetadataItemSmallLong {
+	position:relative;
 	vertical-align:middle;
 	text-align:center;
-	width:100px;
+	width:90px;
 	height:22px;
     background-position:center;
-    background-image:url('images/metadataSmallLong.png');
     overflow: hidden;
     white-space: nowrap;
 }
@@ -530,7 +581,7 @@
 }
 
 .EpisodeListSelected {
-	background-color:rgba(70,70,70,0.9);
+	background-color:rgba(140,140,140,0.9);
 }
 
 .guiPage_Settings_Title{
@@ -644,42 +695,38 @@
     z-index:2;
 }
 
-.SeriesPortraitFrame {
-	position:relative;
-	top: 0px;
-	left: 0px;
-	width: 105px;
-    height:155px;
-    display:inline-block;
-}
-
 .SeriesPortrait {
-	position:absolute;
-	bottom:0px;
-	left:0px;
-	width: 98px;
-    height: 148px;
-	background-repeat: no-repeat;
-    background-position:top;
-}
-
-.SeriesPortraitFrameLarge {
-	position:relative;
-	top: 0px;
-	left: 0px;
-	width: 126px;
-    height:174px;
+	width: 90px;
+    height: 140px;
     display:inline-block;
+    position:relative; 
+
+    margin:3px;
+    border:2px solid transparent;
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-repeat: no-repeat;
+    background-position:center;
 }
 
 .SeriesPortraitLarge {
-	position:absolute;
-	bottom:0px;
-	left:0px;
 	width: 119px;
-    height: 152px;
-	background-repeat: no-repeat;
-    background-position:top;
+    height: 178px;
+    display:inline-block;
+    position:relative; 
+
+    margin:3px;
+    border:2px solid transparent;
+    
+    white-space:nowrap;
+    text-overflow:ellipsis; 
+    overflow: hidden; 
+    
+    background-repeat: no-repeat;
+    background-position:center;
 }
 
 .SelectedTV {
@@ -770,14 +817,18 @@
 
 .photoTitle {	
 	position:absolute;
+	padding-left:3px;
+	left:0px;
     bottom:0px;
-    width:100%;
+    width:99%;
     text-align:left;
     background-color:rgba(0,0,0,0.3);
 }
 
 .photoItemCount {
 	position:absolute;
+	border-radius:5px;
+	padding:3px;
 	top:1px;
 	right:1px;
 	text-align:right;
@@ -861,6 +912,30 @@
     background-position:center;
 }
 
+.moreEpisodesWatchedItem {
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:18px;
+	height:18px;
+	text-align:center;
+	background-image:url('images/watchedItemPage.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.moreEpisodesFavouriteItem {
+	position:absolute;
+	top:20px;
+	right:0px;
+	width:18px;
+	height:18px;
+	text-align:center;
+	background-image:url('images/favorite-18x17.png');
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
 .Selected {
 	border:2px solid white;
 	box-shadow: 0px 0px 15px 0px rgba(255,255,255,1);
@@ -919,7 +994,7 @@
 
 .SeriesCenter{
 	position:absolute;
-	top:40px;
+	top:45px;
 	left:0px;
 	width:960px;
 	text-align: center;
@@ -944,17 +1019,17 @@
 
 .guiTV_Show_MediaAlternative{
 	position:absolute;
-	bottom:20px;
+	bottom:25px;
 	left:20px;
 	width:210px;
 	height:100px;
-	text-align:center;	
+	text-align:center;
 }
 
 .mediaInfo {
 	display:inline-block;
-	height:45px;
-	width: 60px;
+	height:49px;
+	width: 67px;
 	background-repeat: no-repeat;
     background-position:center;
 }
@@ -962,7 +1037,7 @@
 .guiFilm_Overview {
 	font-size:15px;
 	min-height:100px;
-	max-height:145px;
+	max-height:100px;
 	overflow-y:hidden;
 }
 
@@ -1041,9 +1116,23 @@
 }
 
 .FilmListSubSingle{
-	height:46px;
-	width:170px;
+	position:relative;
+	padding-left:3px;
+	height:58px;
+	width:291px;
 	border-bottom: 1px solid grey;
+	background-repeat: no-repeat;
+    background-position:right;
+}
+
+.EpisodeSubListSingleImage{
+	position:relative;
+	height:58px;
+	width:105px;
+	border-bottom: 1px solid grey;
+	background-repeat: no-repeat;
+    background-position:right;
+    background-color:rgba(255,0,0,0);
 }
 
 .FilmListSingleImage{
@@ -1097,6 +1186,16 @@
     background-position:center;
 }
 
+.guiTV_Episode_EpisodeImage {
+	position:absolute;
+	top:20px;
+	right:20px;
+	height:180px;
+	width:300px;
+	background-repeat: no-repeat;
+    background-position:top right;
+}
+
 .guiTV_Episode_Options{
 	position:absolute;
 	top:125px;
@@ -1105,22 +1204,96 @@
 
 .guiTV_Episode_SubOptions{
 	position:absolute;
-	top:125px;
+	top:124px;
 	left:235px;
     max-height:235px;
-    width:170px;  
-    z-index:9000;
-    background-color:rgba(40,40,40,0.8);
+    width:252px;  
+    background-color:rgba(40,40,40,0);
 }
+
+.guiTV_Episode_SubOptionImages{
+	position:relative;
+	top:124px;
+	left:425px;
+    max-height:235px;
+    width:82px;  
+    background-color:rgba(40,40,40,0);
+}
+
+/*-----------------------------------------------------------------*/
+/* GuiPage_CastMember */
+
+.GuiPage_CastMember_Name {
+	font-size:24px;
+	position:absolute;
+	top:20px;
+	left:200px;
+}
+
+.GuiPage_CastMember_Details {
+	position:absolute;
+	top:70px;
+	left:200px;
+	width:200px;
+}
+
+.GuiPage_CastMember_Poster {
+	position:absolute;
+    top:20px;
+    left:20px;
+	width:160px;
+    height:240px;
+    background-repeat: no-repeat;
+    background-position:top left;
+}
+
+.GuiPage_CastMember_Bio {
+	position:absolute;
+    top:270px;
+    left:20px;
+	width:400px;
+    height:240px;
+    overflow-y:hidden;
+}
+
+.GuiPage_CastMember_List{
+	position:absolute;
+	top:20px;
+	left:440px;
+}
+
+.GuiPage_CastMember_ListSingle{
+	height:50px;
+	width:500px;
+	border-bottom: 1px solid grey;
+}
+
+.GuiPage_CastMember_ListSingleImage{	
+	display:inline-block;
+	height:50px;
+	width:90px;
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+.GuiPage_CastMember_ListSingleTitle{
+	position:absolute;
+	display:inline-block;
+	width:400px;
+	padding-top:18px;
+	padding-left:10px;
+	background-repeat: no-repeat;
+    background-position:center;
+}
+
+/*-----------------------------------------------------------------*/
 
 .guiFilm_Poster {
 	position:absolute;
     bottom:30px;
     right:20px;
-
 	width: 136px;
     height: 200px;
-
     background-repeat: no-repeat;
     background-position:center;
 }
@@ -1129,10 +1302,8 @@
 	position:absolute;
     bottom:157px;
     right:25px;
-
 	width: 126px;
     height: 126px;
-
     background-repeat: no-repeat;
     background-position:center;
 }
@@ -1141,10 +1312,8 @@
 	position:absolute;
     bottom:40px;
     left:20px;
-
 	width: 210px;
     height: 125px;
-    
     background-repeat: no-repeat;
     background-position:center;
 }
@@ -1252,27 +1421,9 @@
     background-color:rgba(0,0,0,0.8);
 }
 
-.videoSubtitles1 {
+.videoSubtitles {
 	position:absolute;
-	bottom:6px;
-	left:0px;
-	width:100%;
-	background-color:rgba(0,0,0,0);
-	text-align:center;
-}
-
-.videoSubtitles2 {
-	position:absolute;
-	top:77px;
-	left:0px;
-	width:100%;
-	background-color:rgba(0,0,0,0);
-	text-align:center;
-}
-
-.videoSubtitles3 {
-	position:absolute;
-	bottom:47px;
+	bottom:20px;
 	left:0px;
 	width:100%;
 	background-color:rgba(0,0,0,0);
@@ -1507,13 +1658,13 @@
 
 .guiMusicPlayerDiv {
 	position:absolute;
-	height:60px;
+	height:30px;
 	bottom:0px;
 	width:100%;
 	height:62px;
 	text-align:left;	
-	background-color:#303030;
-	border-top: 2px solid #087B26;
+	/* background-color:#303030;
+	border-top: 2px solid #087B26; */
 	display:inline-block;
 	vertical-align:middle;
 	z-index:20;
@@ -1521,37 +1672,37 @@
 
 .guiMusicPlayerTitle {
 	position:absolute;
-	top:7px;
+	bottom:5px;
 	left:10px;
-	width:200px;
+	width:450px;
 }
 
 .guiMusicPlayerNowPlaying {
 	position:absolute;
-	top:23px;
-	left:240px;
+	bottom:5px;
+	left:410px;
 	width:80px;
 	visibility:hidden;
 }
 
 .guiMusicPlayerScreenOff {
 	position:absolute;
-	top:23px;
-	left:320px;
+	bottom:5px;
+	left:490px;
 	width:60px;
 }
 
 .guiMusicPlayerTime {
 	position:absolute;
-	top:23px;
-	left:390px;
+	bottom:5px;
+	left:560px;
 	width:100px;
 }
 
 .guiMusicPlayerPlay {
 	position:absolute;
-	top:20px;
-	left:495px;;
+	bottom:5px;
+	left:665px;;
 	width:23px;
     height:19px;
 	background-image:url('images/musicplayer/play-23x19.png');
@@ -1561,8 +1712,8 @@
 
 .guiMusicPlayerStop {
 	position:absolute;
-	top:20px;
-	left:525px;
+	bottom:5px;
+	left:695px;
 	width:23px;
     height:19px;
 	background-image:url('images/musicplayer/stop-23x19.png');
@@ -1572,8 +1723,8 @@
 
 .guiMusicPlayerPrevious {
 	position:absolute;
-	top:20px;
-	left:555px;
+	bottom:5px;
+	left:725px;
 	width:23px;
     height:19px;
 	background-image:url('images/musicplayer/skip-previous-23x19.png');
@@ -1583,8 +1734,8 @@
 
 .guiMusicPlayerPause {
 	position:absolute;
-	top:20px;
-	left:585px;
+	bottom:5px;
+	left:755px;
 	width:23px;
     height:19px;
 	background-image:url('images/musicplayer/pause-23x19.png');
@@ -1594,8 +1745,8 @@
 
 .guiMusicPlayerNext {
 	position:absolute;
-	top:20px;
-	left:615px;
+	bottom:5px;
+	left:785px;
 	width:23px;
     height:19px;
 	background-image:url('images/musicplayer/skip-next-23x19.png');
@@ -1608,6 +1759,10 @@
 }
 
 .green {
+	color:#27a436;
+}
+
+.BannerSelected {
 	color:#27a436;
 }
 

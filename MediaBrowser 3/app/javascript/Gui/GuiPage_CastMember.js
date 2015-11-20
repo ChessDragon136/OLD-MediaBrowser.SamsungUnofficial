@@ -4,7 +4,7 @@ var GuiPage_CastMember = {
 		
 		selectedItem : 0,
 		topLeftItem : 0,
-		MAXCOLUMNCOUNT : 6,
+		MAXCOLUMNCOUNT : 9,
 		MAXROWCOUNT : 1,
 }
 
@@ -33,17 +33,44 @@ GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {
 	if (this.ItemData == null) { return; }
 	
 	document.getElementById("pageContent").className = "";	
-	document.getElementById("pageContent").innerHTML = "<div id='Title' class='EpisodesSeriesInfo'></div> \
-		<div id='guiTV_Episode_Options' class='guiTV_Episode_Options'></div>";
+	document.getElementById("pageContent").innerHTML = "<div id='GuiPage_CastMember_Name' class='GuiPage_CastMember_Name'></div> \
+		<div id='GuiPage_CastMember_Details' class='GuiPage_CastMember_Details'></div> \
+		<div id='GuiPage_CastMember_Poster' class='GuiPage_CastMember_Poster'></div> \
+		<div id='GuiPage_CastMember_Bio' class='GuiPage_CastMember_Bio'></div> \
+		<div id='GuiPage_CastMember_List' class='GuiPage_CastMember_List'></div>";
 	document.getElementById("Counter").innerHTML = "1/1";	
 	
-	document.getElementById("Title").innerHTML = this.CastData.Name;
+	//Add cast member name and image.
+	document.getElementById("GuiPage_CastMember_Name").innerHTML = this.CastData.Name;
+	var imgsrc = Server.getImageURL(this.CastData.Id,"Primary",160,240,0,false,0);
+	document.getElementById("GuiPage_CastMember_Poster").style.backgroundImage = "url("+imgsrc +")";
 	
-	if (this.CastData.ImageTags.Primary) {
-		document.getElementById("pageContent").innerHTML +=  "<div id='guiTV_Show_Poster' class='guiTV_Show_Poster'></div>";
-		var imgsrc = Server.getImageURL(this.CastData.Id,"Primary",136,200,0,false,0); 	
-		document.getElementById("guiTV_Show_Poster").style.backgroundImage = "url("+imgsrc +")";
+	var detailsHtml = "";
+	if (this.CastData.PremiereDate && Main.getModelYear() != "D"){
+		var birthday = new Date(this.CastData.PremiereDate);
+		detailsHtml += "Born: "+birthday.toDateString() + "</br></br>";
 	}
+	if (this.CastData.ProductionLocations){
+		var birthPlace = this.CastData.ProductionLocations;
+		if (birthPlace != ""){
+			detailsHtml += "Born in "+this.CastData.ProductionLocations + "</br></br>";
+		}
+	}
+	if (this.CastData.EndDate && Main.getModelYear() != "D"){
+		var deathday = new Date(this.CastData.EndDate);
+		detailsHtml += "Died: "+deathday.toDateString() + "</br></br>";
+	}
+	document.getElementById("GuiPage_CastMember_Details").innerHTML = detailsHtml;
+	
+	//Person bio
+	var bio = "";
+	if (this.CastData.Overview){
+		bio += this.CastData.Overview;
+	}
+	document.getElementById("GuiPage_CastMember_Bio").innerHTML = bio;
+	
+	//Set Overview Scroller
+	Support.scrollingText("GuiPage_CastMember_Bio");
 	
 	if (this.ItemData.Items.length > 0) {	
 		//Display first 12 series
@@ -62,17 +89,30 @@ GuiPage_CastMember.start = function(title,url,selectedItem,topLeftItem) {
 
 GuiPage_CastMember.updateDisplayedItems = function() {
 	var htmlToAdd = "";
+	var htmlToAdd2 ="";
 	for (var index = this.topLeftItem;index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++) {
-		htmlToAdd += "<div id="+this.ItemData.Items[index].Id+" class='EpisodeListSingle'><div class='EpisodeListSingleImage' style=background-image:url(images/MBS/play.png)></div><div class='EpisodeListSingleTitle'>"+this.ItemData.Items[index].Name+"</div></div>";
+		var imgsrc = "images/MBS/play.png";
+		if (this.ItemData.Items[index].Type == "Episode"){
+			if (this.ItemData.Items[index].ImageTags.Primary) {
+				imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",90,50,null,null,null,index);
+			} 
+		} else {
+			if (this.ItemData.Items[index].ImageTags.Thumb) {
+				imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Thumb",90,50,null,null,null,index);
+			} else if (this.ItemData.Items[index].ImageTags.Primary) {
+				imgsrc = Server.getImageURL(this.ItemData.Items[index].Id,"Primary",90,50,null,null,null,index);
+			}
+		}
+		htmlToAdd += "<div id="+this.ItemData.Items[index].Id+" class='GuiPage_CastMember_ListSingle'><div class='GuiPage_CastMember_ListSingleImage' style=background-image:url(" +imgsrc+ ")></div><div class='GuiPage_CastMember_ListSingleTitle'>"+this.ItemData.Items[index].Name+"</div></div>";
 	}
-	document.getElementById("guiTV_Episode_Options").innerHTML = htmlToAdd;	
+	document.getElementById("GuiPage_CastMember_List").innerHTML = htmlToAdd;
 }
 
 //Function sets CSS Properties so show which user is selected
 GuiPage_CastMember.updateSelectedItems = function () {
 	for (var index = this.topLeftItem; index < Math.min(this.topLeftItem + this.getMaxDisplay(),this.ItemData.Items.length); index++){	
 		if (index == this.selectedItem) {
-			document.getElementById(this.ItemData.Items[index].Id).className = "EpisodeListSingle EpisodeListSelected";
+			document.getElementById(this.ItemData.Items[index].Id).className = "GuiPage_CastMember_ListSingle EpisodeListSelected";
 			//Set Background based on Type:
 			switch (this.ItemData.Items[index].Type) {
 			case "Episode":
@@ -99,7 +139,7 @@ GuiPage_CastMember.updateSelectedItems = function () {
 			}
 			
 		} else {	
-			document.getElementById(this.ItemData.Items[index].Id).className = "EpisodeListSingle";		
+			document.getElementById(this.ItemData.Items[index].Id).className = "GuiPage_CastMember_ListSingle";		
 		}		
 	} 
 	document.getElementById("Counter").innerHTML = (this.selectedItem + 1) + "/" + this.ItemData.Items.length;

@@ -3,9 +3,12 @@ var GuiImagePlayer = {
 		newItemData : null,
 		
 		Timeout : null,
+		infoTimer : null,
 		Paused : false,
 		
 		overlayFormat : 0, // 0 - date, 1 - date:time, 2 - off 
+		
+		photos : [],
 		
 		images : [],
 		overlay : [],
@@ -28,7 +31,7 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	document.getElementById("GuiImagePlayer_ScreensaverOverlay").style.visibility="hidden";
 	document.getElementById("guiButtonShade").style.visibility = "";
 	GuiHelper.setControlButtons("Favourite","Date/Time","Help",GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
-	setTimeout(function(){
+	this.infoTimer = setTimeout(function(){
 		GuiHelper.setControlButtons(null,null,null,null,null);
 		document.getElementById("Clock").style.visibility = "hidden";
 		document.getElementById("guiButtonShade").style.visibility = "hidden";
@@ -40,9 +43,9 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 
 	var url = "";
 	if (isPhotoCollection) {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].Id,"&Recursive=true&SortBy=Random&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=2500");	
 	} else {
-		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=3000");	
+		url = Server.getChildItemsURL(ItemData.Items[selectedItem].ParentId,"&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Photo&fields=SortName,Overview&Limit=2500");	
 	}
 	
 	var result = Server.getContent(url);
@@ -87,13 +90,39 @@ GuiImagePlayer.start = function(ItemData,selectedItem,isPhotoCollection) {
 	//Start Slide Show
 	this.ImageViewer.show();
 	this.setSlideshowMode();
+	//this.setNormalMode();
 }
 
 // Set normal mode
 // You can play images on the area you set.
 GuiImagePlayer.setNormalMode = function() {
-	this.ImageViewer.endSlideshow();
-    playImage();
+	
+	sf.service.ImageViewer.setPosition({
+		left: 0,
+		top: 0,
+		width: 1920,
+		height: 1080,
+	});
+	
+	sf.service.ImageViewer.show();
+	
+	for (var i=0; i < this.newItemData.Items.length; i++){
+		var ImageUrl = Server.getImageURL(this.newItemData.Items[i].Id,"Primary",1920,1080,0,false,0);
+		this.photos[i] = {
+		        url: ImageUrl,
+		        width: 1920,
+		        height: 1080,
+		        filename: this.newItemData.Items[i].name,
+		        date: '2011/06/24'	
+		}
+	}
+	
+	// Draw the image in the specified area defined by "setPosition" function.
+	sf.service.ImageViewer.draw(this.photos[0]);
+	
+	
+	//this.ImageViewer.endSlideshow();
+    //playImage();
 }
 
 // Set Slideshow mode
@@ -123,7 +152,7 @@ GuiImagePlayer.setSlideshowMode = function() {
 
 //Prepare next image
 GuiImagePlayer.prepImage = function(imageIdx) {
-	this.ImageViewer.prepareNext(GuiImagePlayer.images[imageIdx], this.ImageViewer.Effect.FADE1)
+	this.ImageViewer.prepareNext(GuiImagePlayer.images[imageIdx], this.ImageViewer.Effect.FADE1);
 }
 
 // Play image - only called once in slideshow!
@@ -150,11 +179,13 @@ GuiImagePlayer.keyDown = function() {
 		case tvKey.KEY_STOP:   
 		case tvKey.KEY_RETURN:
 			alert("RETURN");
+    		clearTimeout(this.infoTimer);
 			clearTimeout(this.Timeout);
 			this.Timeout = null;
 			this.images = [];
 			this.overlay = [];
 			document.getElementById("GuiImagePlayer_ScreensaverOverlay").innerHTML = "";
+			document.getElementById("guiButtonShade").style.visibility = "hidden";
 			document.getElementById("Clock").style.visibility = "";
 			this.ImageViewer.endSlideshow();
 			this.ImageViewer.hide();
@@ -205,9 +236,9 @@ GuiImagePlayer.keyDown = function() {
 			break;
 		case tvKey.KEY_GREEN:
 			if (this.overlayFormat == 2) {
-				this.overlayFormat = 0
+				this.overlayFormat = 0;
 			} else {
-				this.overlayFormat = this.overlayFormat + 1
+				this.overlayFormat = this.overlayFormat + 1;
 			}
 			Support.setImagePlayerOverlay(this.overlay[this.imageIdx], this.overlayFormat);
 			break;

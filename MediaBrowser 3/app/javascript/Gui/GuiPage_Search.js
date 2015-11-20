@@ -11,13 +11,16 @@ var GuiPage_Search = {
 		playItems : ["Play_","View_"]
 }
 
+GuiPage_Search.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiPage_Search.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiPage_Search.start = function(title, url) {
 	alert("Page Enter : GuiPage_Search");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Reset Properties
 	this.ItemData = null;

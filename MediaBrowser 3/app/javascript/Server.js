@@ -116,7 +116,11 @@ Server.getAdjacentEpisodesURL = function(ShowID,SeasonID,EpisodeID) {
 	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&ImageTypeLimit=1&seasonId="+SeasonID+"&userId="+Server.getUserID() +"&AdjacentTo=" + EpisodeID;
 }
 
-Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,played,playedpercentage) {
+Server.getSeasonEpisodesURL = function(ShowID,SeasonID) {
+	return  Server.getServerAddr() + "/Shows/" + ShowID +  "/Episodes?format=json&ImageTypeLimit=1&seasonId="+SeasonID+"&userId="+Server.getUserID();
+}
+
+Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,played,playedpercentage,chapter) {
 	var query = "";
 	switch (imagetype) {
 	case "Primary":
@@ -140,9 +144,12 @@ Server.getImageURL = function(itemId,imagetype,maxwidth,maxheight,unplayedcount,
 	case "UsersPrimary":
 		query = Server.getServerAddr() + "/Users/" + itemId + "/Images/Primary?maxwidth="+maxwidth+"&maxheight="+maxheight;
 		break;
+	case "Chapter":
+		query = Server.getServerAddr() + "/Items/" + itemId + "/Images/Chapter/" + chapter + "?maxwidth="+maxwidth+"&maxheight="+maxheight;
+		break;
 	}
 
-	query = query + "&Quality=80"
+	query = query + "&Quality=90";
 	
 	return query;
 }
@@ -171,9 +178,15 @@ Server.getBackgroundImageURL = function(itemId,imagetype,maxwidth,maxheight,unpl
 		break;
 	}
 	
-	query = query + "&Quality=80"
+	query = query + "&Quality=90";
 	
 	return query;
+}
+
+Server.getStreamUrl = function(itemId,mediaSourceId){
+	var streamparams = '/Stream.ts?VideoCodec=h264&Profile=high&Level=41&MaxVideoBitDepth=8&MaxWidth=1280&VideoBitrate=10000000&AudioCodec=aac&audioBitrate=360000&MaxAudioChannels=6&MediaSourceId='+mediaSourceId + '&api_key=' + Server.getAuthToken();	
+	var streamUrl = Server.getServerAddr() + '/Videos/' + itemId + streamparams + '&DeviceId='+Server.getDeviceID();
+	return streamUrl;
 }
 
 
@@ -191,48 +204,21 @@ Server.setRequestHeaders = function (xmlHttp,UserId) {
 	return xmlHttp;
 }
 
-Server.getPhotosFolderId = function () {
+Server.getUserViewId = function (collectionType) {
 	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			if (topFolder.Items[index].CollectionType == "photos") {
-				folderId = topFolder.Items[index].Id;
-			}
+	var userViews = Server.getUserViews();
+	for (var i = 0; i < userViews.Items.length; i++){
+		if (userViews.Items[i].CollectionType == collectionType){
+			folderId = userViews.Items[i].Id;
 		}
 	}
 	return folderId;
 }
 
-Server.getTvFolderId = function () {
-	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			alert(topFolder.Items[index].CollectionType);
-			if (topFolder.Items[index].CollectionType == "tvshows") {
-				folderId = topFolder.Items[index].Id;
-			}
-		}
-	}
-	return folderId;
-}
-
-Server.getHomeVideosFolderId = function () {
-	var folderId = null;
-	var topFolderUrl = Server.getItemTypeURL("");
-	var topFolder = Server.getContent(topFolderUrl);
-	for (var index = 0; index < topFolder.Items.length; index++) {
-		if (topFolder.Items[index].Type == "CollectionFolder"){
-			alert(topFolder.Items[index].CollectionType);
-			if (topFolder.Items[index].CollectionType == "homevideos") {
-				folderId = topFolder.Items[index].Id;
-			}
-		}
-	}
-	return folderId;
+Server.getUserViews = function () {
+	var url = this.serverAddr + "/Users/" + Server.getUserID() + "/Views?format=json&SortBy=SortName&SortOrder=Ascending";
+	var userViews = Server.getContent(url);
+	return userViews;
 }
 
 //------------------------------------------------------------
@@ -427,7 +413,7 @@ Server.testConnectionSettings = function (server,fromFile) {
 	xmlHttp = new XMLHttpRequest();
 	if (xmlHttp) {
 		//xmlHttp.open("GET", ("http://" + server + "/mediabrowser/System/Info?format=json") , false); //must be false
-		xmlHttp.open("GET", ("http://" + server + "/mediabrowser/System/Info/Public?format=json") , false); //must be false
+		xmlHttp.open("GET", ("http://" + server + "/emby/System/Info/Public?format=json") , false); //must be false
 		xmlHttp.setRequestHeader("Content-Type", 'application/json');
 		xmlHttp.send(null);
 		
@@ -447,7 +433,7 @@ Server.testConnectionSettings = function (server,fromFile) {
 	    	}
 	       	
 	       	//Set Server.serverAddr!
-	       	Server.setServerAddr("http://" + server + "/mediabrowser");
+	       	Server.setServerAddr("http://" + server + "/emby");
 	       		
 	       	//Check Server Version
 	       	if (ServerVersion.checkServerVersion()) {
@@ -523,6 +509,7 @@ Server.getContent = function(url) {
 			GuiUsers.start(true);
 			return null;
 		} else {
+			//alert(xmlHttp.responseText);
 			return JSON.parse(xmlHttp.responseText);
 		}
 	} else {

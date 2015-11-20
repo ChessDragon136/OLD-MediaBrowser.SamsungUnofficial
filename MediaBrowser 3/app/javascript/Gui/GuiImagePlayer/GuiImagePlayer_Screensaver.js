@@ -1,7 +1,7 @@
 var GuiImagePlayer_Screensaver = {	
 		ImageViewer : null,
 		newItemData : null,
-		imagesToUse : "",
+		imagesToUse : "MetaData",
 		
 		Timeout : null,
 		
@@ -19,16 +19,23 @@ GuiImagePlayer_Screensaver.kill = function() {
 }
 
 GuiImagePlayer_Screensaver.start = function() {
+	this.imagesToUse = File.getUserProperty("ScreensaverImages");
+	alert(this.imagesToUse);
 	this.images = []
 	this.overlay = []
 	this.imageIdx = 0
-	this.imagesToUse = File.getUserProperty("ScreensaverImages");
 	//alert("imagestouse - " + this.imagesToUse)
 	//Update Main.js isScreensaverRunning - Sets to True
 	Main.setIsScreensaverRunning();
 	
 	//Hide helper page if shown
 	GuiHelper.keyDown();
+	
+	//Hide the trailer PiP window if shown
+	if (Main.getModelYear() != "D") {
+		sf.service.VideoPlayer.stop();
+		sf.service.VideoPlayer.hide();
+	}
 	
 	Support.styleSubtitles("GuiImagePlayer_ScreensaverOverlay")
 	
@@ -98,23 +105,18 @@ GuiImagePlayer_Screensaver.setSlideshowMode = function() {
 		});
 	this.ImageViewer.setOnRenderingComplete(function(){
 		clearTimeout(GuiImagePlayer_Screensaver.Timeout);
-		if (GuiImagePlayer.imagesToUse == "Media") {
+		if (GuiImagePlayer_Screensaver.imagesToUse == "Media") {
 			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
 		} else {
-			if (GuiImagePlayer.overlayFormat == 2) {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer.overlayFormat);
-			} else {
-				Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 1);
-			}
-		}
-			
+			Support.setImagePlayerOverlay(GuiImagePlayer_Screensaver.overlay[GuiImagePlayer_Screensaver.imageIdx], 2);
+		} 
 		
 		GuiImagePlayer_Screensaver.Timeout = setTimeout(function(){
 			GuiImagePlayer_Screensaver.imageIdx = GuiImagePlayer_Screensaver.imageIdx+1;
 			if (GuiImagePlayer_Screensaver.imageIdx >= GuiImagePlayer_Screensaver.images.length ) {
 				GuiImagePlayer_Screensaver.imageIdx = 0;
 			}		
-			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE);
+			GuiImagePlayer_Screensaver.ImageViewer.prepareNext(GuiImagePlayer_Screensaver.images[GuiImagePlayer_Screensaver.imageIdx], GuiImagePlayer_Screensaver.ImageViewer.Effect.FADE1);
 		}, File.getUserProperty("ScreensaverImageTime"));	
     });
 	

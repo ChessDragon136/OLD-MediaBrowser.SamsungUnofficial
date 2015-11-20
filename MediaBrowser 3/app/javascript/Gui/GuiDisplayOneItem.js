@@ -16,13 +16,16 @@ var GuiDisplayOneItem = {
 		backdropTimeout : null
 }
 
+GuiDisplayOneItem.onFocus = function() {
+	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
+}
+
 GuiDisplayOneItem.getMaxDisplay = function() {
 	return this.MAXCOLUMNCOUNT * this.MAXROWCOUNT;
 }
 
 GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	alert("Page Enter : GuiDisplayOneItem");
-	GuiHelper.setControlButtons(null,null,null,GuiMusicPlayer.Status == "PLAYING" || GuiMusicPlayer.Status == "PAUSED" ? "Music" : null,"Return");
 	
 	//Save Start Params	
 	this.startParams = [title,url];
@@ -30,9 +33,9 @@ GuiDisplayOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	alert (url);
 	
 	//Set background
-	this.backdropTimeout = setTimeout(function(){
+/*	this.backdropTimeout = setTimeout(function(){
 		Support.fadeImage("images/lensflare2-960x540.jpg");
-	}, 1000);
+	}, 1000);*/
 	
 	//Reset Values
 	this.indexSeekPos = -1;

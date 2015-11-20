@@ -318,6 +318,9 @@ GuiDisplay_Series.updateSelectedItems = function () {
 		document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
 		document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+	} else {
+		document.getElementById("SeriesContent").style.top = "488px";
+		document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
 	}
 				
 	//Support.scrollingText("SeriesOverview");

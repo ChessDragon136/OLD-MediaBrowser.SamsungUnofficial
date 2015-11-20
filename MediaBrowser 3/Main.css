@@ -699,9 +699,13 @@
 	width: 90px;
     height: 140px;
     display:inline-block;
+    vertical-align: top;
     position:relative; 
 
-    margin:3px;
+    margin-top: 0px;
+    margin-bottom: 2px;
+    margin-right: 3px;
+    margin-left: 3px;
     border:2px solid transparent;
     
     white-space:nowrap;
@@ -729,9 +733,9 @@
     background-position:center;
 }
 
-.SelectedTV {
+/* .SelectedTV {
 	bottom:13px;
-}
+} */
 
 .Music {
 	width: 112px;
@@ -983,7 +987,7 @@
 .SeriesContent {
 	position:absolute;
 	top:350px;
-	left:30px;
+	left:34px;
 	width:900px;
 }
 

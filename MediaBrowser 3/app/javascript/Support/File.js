@@ -160,7 +160,7 @@ File.addUser = function (UserId, Name, Password, rememberPassword) {
 			view1 = Server.getServerAddr() + "/Users/"+UserId+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable&Limit=12&Recursive=true&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1";
 			view2 = Server.getServerAddr() + "/Shows/NextUp?format=json&IncludeItemTypes=Episode&UserId="+UserId+"&ExcludeLocationTypes=Virtual&fields=SortName&ImageTypeLimit=1"
 			
-			fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name.toLowerCase(),"Password":Password,"RememberPassword":rememberPassword,"Default":false,"View1":view1,View1Name:"Resume All Items","View2":view2,View2Name:"TV Next Up"};
+			fileJson.Servers[this.ServerEntry].Users[this.UserEntry] = {"UserId":UserId,"UserName":Name.toLowerCase(),"Password":Password,"RememberPassword":rememberPassword,"Default":false,"View1":view1,View1Name:"Continue Watching","View2":view2,View2Name:"TV Next Up"};
 			
 		}
 		

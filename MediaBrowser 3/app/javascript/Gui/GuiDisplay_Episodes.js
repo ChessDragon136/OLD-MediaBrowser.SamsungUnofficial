@@ -60,7 +60,7 @@ GuiDisplay_Episodes.start = function(title,url,selectedItem,topLeftItem) {
 		
 		
 		//Set backdrop
-		if (this.ItemData.Items[0].ParentBackdropImageTags.length > 0){
+		if (this.ItemData.Items[0].ParentBackdropImageTags){
 			var imgsrc = Server.getBackgroundImageURL(this.ItemData.Items[0].ParentBackdropItemId,"Backdrop",960,540,0,false,0,this.ItemData.Items[0].ParentBackdropImageTags.length);
 			Support.fadeImage(imgsrc);
 		}

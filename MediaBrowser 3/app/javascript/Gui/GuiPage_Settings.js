@@ -52,8 +52,8 @@ var GuiPage_Settings = {
 		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
 		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
 		
-		SubtitleColourOptions: ["White","Red","Green","Blue"],
-		SubtitleColourValues: ["white","red","green","blue"],
+		SubtitleColourOptions: ["White","Red","Green","Blue","Yellow"],
+		SubtitleColourValues: ["white","red","green","blue","yellow"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],

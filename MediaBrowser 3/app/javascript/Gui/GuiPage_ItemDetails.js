@@ -358,8 +358,19 @@ GuiPage_ItemDetails.updateSelectedItems = function () {
 			document.getElementById("guiTV_Episode_SubOptions").style.display="";
 			document.getElementById("guiTV_Episode_SubOptionImages").style.display="";
 			this.subMenuItems = this.EpisodeData.Items;
-			this.selectedItem2 = 0;
-			this.topLeftItem2 = 0;
+			//Set the previous episode at the top of the More Episodes list.
+			if (this.ItemData.IndexNumber) {
+				this.selectedItem2 = this.ItemData.IndexNumber -1;
+			} else {
+				this.selectedItem2 = 0;
+			}
+			if (this.EpisodeData.Items){
+				this.topLeftItem2 = Math.min(Math.max(this.ItemData.IndexNumber -2,0), this.EpisodeData.Items.length -4);
+			} else {
+				this.topLeftItem2 = 0;
+			}
+				
+			
 			this.updateDisplayedItems2();
 	} else if (this.menuItems[this.selectedItem] == "guiTV_Episode_Cast") {
 		document.getElementById("guiTV_Episode_SubOptions").style.display="";

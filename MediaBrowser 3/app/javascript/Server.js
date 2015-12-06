@@ -494,7 +494,7 @@ Server.Logout = function() {
 //      Get Content - JSON REQUESTS
 //------------------------------------------------------------
 Server.getContent = function(url) {
-	xmlHttp = new XMLHttpRequest();
+	var xmlHttp = new XMLHttpRequest();
 	if (xmlHttp) {
 		xmlHttp.open("GET", url , false); //must be false
 		xmlHttp = this.setRequestHeaders(xmlHttp);

@@ -1704,6 +1704,7 @@ Support.setImagePlayerOverlay = function(string, format) {
 Support.styleSubtitles = function (element) {
 	document.getElementById(element).style.color = File.getUserProperty("SubtitleColour");
 	document.getElementById(element).style.fontSize = File.getUserProperty("SubtitleSize");
+	document.getElementById(element).style.textShadow = "0px 0px 5px rgba(0, 0, 0, 1)";
 }
 
 Support.getStarRatingImage = function(rating) {

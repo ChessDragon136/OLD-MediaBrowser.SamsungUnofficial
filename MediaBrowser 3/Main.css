@@ -722,7 +722,10 @@
     display:inline-block;
     position:relative; 
 
-    margin:3px;
+    margin-top: 0px;
+    margin-bottom: 2px;
+    margin-right: 3px;
+    margin-left: 3px;
     border:2px solid transparent;
     
     white-space:nowrap;

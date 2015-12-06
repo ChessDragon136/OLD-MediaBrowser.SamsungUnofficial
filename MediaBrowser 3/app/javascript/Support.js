@@ -1274,11 +1274,19 @@ Support.processHomePageMenu = function (menuItem) {
 	case "Home":
 		Support.removeAllURLs();
 		
-		//Load Home Page
-		var url1 = File.getUserProperty("View1");
-		var title1 = File.getUserProperty("View1Name");
-		var url2 = File.getUserProperty("View2");
-		var title2 = File.getUserProperty("View2Name");
+		var url = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&MediaTypes=Video&Filters=IsResumable&Limit=10&Recursive=true&Fields=PrimaryImageAspectRatio,SyncInfo&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&ImageTypeLimit=1&EnableImageTypes=Primary,Backdrop,Banner,Thumb";
+		resumeItems = Server.getContent(url);
+		if (resumeItems.TotalRecordCount > 0 && File.getUserProperty("ContinueWatching") == true){
+			var url1 = url;
+			var title1 = "Continue Watching";
+			var url2 = File.getUserProperty("View1");
+			var title2 = File.getUserProperty("View1Name");
+		} else {
+			var url1 = File.getUserProperty("View1");
+			var title1 = File.getUserProperty("View1Name");
+			var url2 = File.getUserProperty("View2");
+			var title2 = File.getUserProperty("View2Name");
+		}
 		
 		if (url2 != null) {
 			GuiPage_HomeTwoItems.start(title1,url1,title2,url2,0,0,true);

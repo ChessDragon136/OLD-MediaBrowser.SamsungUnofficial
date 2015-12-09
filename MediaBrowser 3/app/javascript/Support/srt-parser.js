@@ -17,7 +17,7 @@ var parser = (function() {
     pItems.fromSrt = function(data, ms) {
         var useMs = ms ? true : false;
 
-        var regex = /(\d+)(\r?\n|\r)(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/g;
+        var regex = /(\d+)(\r?\n|\r)(\d{2}:\d{2}:\d{2},\d+) --> (\d{2}:\d{2}:\d{2},\d+)/g;
         data = data.split(regex);
         data.shift();
 

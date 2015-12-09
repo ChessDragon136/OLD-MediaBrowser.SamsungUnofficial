@@ -209,6 +209,11 @@ GuiDisplay_Episodes.updateSelectedItems = function () {
 			htmlSubData += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) 
 				+ "</td>";
 		}
+		
+		if (this.ItemData.Items[this.selectedItem].HasSubtitles) {
+			htmlSubData += "<td class=MetadataItemVSmall style=background-image:url(images/cc-25x20.png)></td>";
+		}
+		
 		htmlSubData += "</tr></table>";
 									
 		htmlForOverview = "";

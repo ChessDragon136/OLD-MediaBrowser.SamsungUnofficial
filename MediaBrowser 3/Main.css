@@ -440,6 +440,7 @@
 }
 
 .MetadataItemVSmall {
+	font-size:16px;
 	position:relative;
 	vertical-align:middle;
 	text-align:left;
@@ -452,6 +453,7 @@
 }
 
 .MetadataItemSmall {
+	font-size:16px;
 	position:relative;
 	vertical-align:middle;
 	text-align:center;
@@ -464,6 +466,7 @@
 }
 
 .MetadataItemSmallLong {
+	font-size:16px;
 	position:relative;
 	vertical-align:middle;
 	text-align:center;

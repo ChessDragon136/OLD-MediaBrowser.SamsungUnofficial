@@ -301,6 +301,10 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
 		htmlForTitle += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + "</td>";
 	}
+	
+	if (this.ItemData.Items[this.selectedItem].HasSubtitles) {
+		htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url(images/cc-25x20.png)></td>";
+	}
 
 	htmlForTitle += "</tr></table></div>";
 			

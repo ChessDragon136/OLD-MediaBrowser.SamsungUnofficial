@@ -290,6 +290,10 @@ GuiPage_ItemDetails.start = function(title,url,selectedItem,updateBackdrop) {
 		htmlForMetaData += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.RunTimeTicks/10000) + "</td>";
 	}
 	
+	if (this.ItemData.HasSubtitles) {
+		htmlForMetaData += "<td class=MetadataItemVSmall style=background-image:url(images/cc-25x20.png)></td>";
+	}
+	
 	htmlForMetaData += "</tr></table>";
 	document.getElementById("guiTV_Show_Metadata").innerHTML = htmlForMetaData;
 	

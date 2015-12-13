@@ -235,7 +235,7 @@ GuiPlayer_Versions.getMainStreamIndex = function(MediaSource, MediaSourceIndex) 
 			}
 		}
 	}
-	FileLog.write("Video : Audio language " + (MediaStreams[audioIndex].Language == null ? "unknown, defaulting to " + AudioLanguagePreferenece : MediaStreams[audioIndex].Language));
+	FileLog.write("Video : Audio language " + (MediaStreams[audioIndex].Language === undefined ? "unknown, defaulting to " + AudioLanguagePreferenece : MediaStreams[audioIndex].Language));
 	
 	//---------------------------------------------------------------------------
 	

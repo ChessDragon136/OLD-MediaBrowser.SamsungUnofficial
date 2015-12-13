@@ -365,7 +365,7 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 					}
 				} else {
 					if (Items[index].ImageTags.Primary) {
-						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",119,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
+						var imgsrc = (File.getUserProperty("LargerView") == true) ? Server.getImageURL(Items[index].Id,"Primary",121,178,0,false,0) : Server.getImageURL(Items[index].Id,"Primary",96,140,0,false,0); 
 						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")>";
 					} else {
 						htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style='background-color:rgba(0,0,0,0.5);'><div class=menuItem>"+ title + "</div>";				
@@ -1130,12 +1130,12 @@ Support.scrollingText = function(divToScroll) {
 		    	clearInterval(Support.scroller);
 		    	Support.resetToTop = setTimeout(function(){	
 		    		Support.scrollingText(divToScroll);
-				}, 2000);
+				}, 10000); //Length of pause at the bottom
 		    } else {
 		    	Support.scrollpos = pos;
 		    }	    
-		}, 350);
-	}, 10000);	
+		}, 325); //Scrolling speed
+	}, 10000);	//Intial delay
 }
 
 Support.generateMainMenu = function() {
@@ -1274,11 +1274,19 @@ Support.processHomePageMenu = function (menuItem) {
 	case "Home":
 		Support.removeAllURLs();
 		
-		//Load Home Page
-		var url1 = File.getUserProperty("View1");
-		var title1 = File.getUserProperty("View1Name");
-		var url2 = File.getUserProperty("View2");
-		var title2 = File.getUserProperty("View2Name");
+		var url = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&MediaTypes=Video&Filters=IsResumable&Limit=10&Recursive=true&Fields=PrimaryImageAspectRatio,SyncInfo&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&ImageTypeLimit=1&EnableImageTypes=Primary,Backdrop,Banner,Thumb";
+		resumeItems = Server.getContent(url);
+		if (resumeItems.TotalRecordCount > 0 && File.getUserProperty("ContinueWatching") == true){
+			var url1 = url;
+			var title1 = "Continue Watching";
+			var url2 = File.getUserProperty("View1");
+			var title2 = File.getUserProperty("View1Name");
+		} else {
+			var url1 = File.getUserProperty("View1");
+			var title1 = File.getUserProperty("View1Name");
+			var url2 = File.getUserProperty("View2");
+			var title2 = File.getUserProperty("View2Name");
+		}
 		
 		if (url2 != null) {
 			GuiPage_HomeTwoItems.start(title1,url1,title2,url2,0,0,true);
@@ -1696,6 +1704,7 @@ Support.setImagePlayerOverlay = function(string, format) {
 Support.styleSubtitles = function (element) {
 	document.getElementById(element).style.color = File.getUserProperty("SubtitleColour");
 	document.getElementById(element).style.fontSize = File.getUserProperty("SubtitleSize");
+	document.getElementById(element).style.textShadow = "0px 0px 5px rgba(0, 0, 0, 1)";
 }
 
 Support.getStarRatingImage = function(rating) {

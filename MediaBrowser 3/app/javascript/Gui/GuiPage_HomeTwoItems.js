@@ -65,10 +65,10 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 	}
 	
 	//Latest Page Fix
-	if (title1 == "New TV") {
+	if (title1 == "Latest TV") {
 		this.ItemData.Items = this.ItemData;
 	}
-	if (title2 == "New TV") {
+	if (title2 == "Latest TV") {
 		this.ItemData2.Items = this.ItemData2;
 	}
 	
@@ -100,7 +100,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 				"</div>";
 	
 		//Set isResume based on title - used in UpdateDisplayedItems
-		this.isResume = (title1 == "Resume" ||  title1 == "Resume All Items" ) ? true : false;
+		this.isResume = (title1 == "Resume" ||  title1 == "Continue Watching" ) ? true : false;
 		
 		//If to determine positioning of content
 		document.getElementById("Center").style.top = "70px";
@@ -127,7 +127,7 @@ GuiPage_HomeTwoItems.start = function(title1, url1, title2, url2,selectedItem,to
 		this.updateSelectedItems(updateCounter);	
 
 		//Set isResume based on title - used in UpdateDisplayedItems
-		this.isResume2 = (title2 == "Resume" ||  title2 == "Resume All Items" ) ? true : false;
+		this.isResume2 = (title2 == "Resume" ||  title2 == "Continue Watching" ) ? true : false;
 		
 		//Display first XX series
 		this.updateDisplayedItems2();

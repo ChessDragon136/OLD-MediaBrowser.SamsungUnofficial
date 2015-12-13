@@ -82,10 +82,6 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 	"<div id='SeriesOverview' style='margin-top:6px;padding-right:10px;font-size:15px;max-height:110px;overflow-y:hidden;'></div>" +
 	"</div>";
 	
-	if (File.getUserProperty("LargerView") == true){
-		document.getElementById("Center").style.top="70px";
-	}
-	
 	//Split Name - 1st Element = View, 2nd = Type (Collections being the odd one out!)
 	var titleArray = title.split(" ");
 	this.currentView = titleArray[0];
@@ -96,23 +92,26 @@ GuiDisplay_Series.start = function(title,url,selectedItem,topLeftItem) {
 		this.isTvOrMovies = 0;
 		this.bannerItems = this.tvBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
-			document.getElementById("SeriesContent").style.top="426px";
-			document.getElementById("SeriesOverview").style.height="0px";
+			document.getElementById("Center").style.top = "40px";
+			document.getElementById("SeriesContent").style.top="410px";
+			document.getElementById("SeriesOverview").style.height="73px";
 		}
 	break;
 	case "Movies":
 		this.isTvOrMovies = 1;
 		this.bannerItems = this.movieBannerItems;
 		if (File.getUserProperty("LargerView") == true) {
-			document.getElementById("SeriesContent").style.top="426px";
-			document.getElementById("SeriesOverview").style.height="0px";
+			document.getElementById("Center").style.top = "40px";
+			document.getElementById("SeriesContent").style.top="410px";
+			document.getElementById("SeriesOverview").style.height="73px";
 		}
 	break;
 	case "Collections":
 		this.isTvOrMovies = -1;
 		if (File.getUserProperty("LargerView") == true) {
-			document.getElementById("SeriesContent").style.top="426px";
-			document.getElementById("SeriesOverview").style.height="0px";
+			document.getElementById("Center").style.top = "40px";
+			document.getElementById("SeriesContent").style.top="410px";
+			document.getElementById("SeriesOverview").style.height="73px";
 		}
 		break;
 	case "Music":
@@ -302,6 +301,10 @@ GuiDisplay_Series.updateSelectedItems = function () {
 	if (this.ItemData.Items[this.selectedItem].RunTimeTicks !== undefined) {
 		htmlForTitle += "<td class='MetadataItemSmall'>" + Support.convertTicksToMinutes(this.ItemData.Items[this.selectedItem].RunTimeTicks/10000) + "</td>";
 	}
+	
+	if (this.ItemData.Items[this.selectedItem].HasSubtitles) {
+		htmlForTitle += "<td class=MetadataItemVSmall style=background-image:url(images/cc-25x20.png)></td>";
+	}
 
 	htmlForTitle += "</tr></table></div>";
 			
@@ -318,9 +321,17 @@ GuiDisplay_Series.updateSelectedItems = function () {
 		document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
 		document.getElementById("SeriesSubData").innerHTML = htmlForSubData;
 		document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+		Support.scrollingText("SeriesOverview");
+	} else {
+		if (File.getUserProperty("LargerView") == true){
+			document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
+			document.getElementById("SeriesOverview").innerHTML = htmlForOverview;
+			Support.scrollingText("SeriesOverview");
+		} else {
+			document.getElementById("SeriesContent").style.top = "488px";
+			document.getElementById("SeriesTitle").innerHTML = htmlForTitle;
+		}
 	}
-				
-	//Support.scrollingText("SeriesOverview");
 		
 	//Background Image
 	//Blocking code to skip getting data for items where the user has just gone past it

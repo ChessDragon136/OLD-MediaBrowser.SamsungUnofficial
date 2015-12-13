@@ -40,7 +40,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 	this.ItemData = Server.getContent(url);
 	if (this.ItemData == null) { return; }
 	
-	if (title == "New TV") {
+	if (title == "Latest TV") {
 		this.isLatest = true;
 		this.ItemData.Items = this.ItemData;
 	}
@@ -69,7 +69,7 @@ GuiPage_HomeOneItem.start = function(title,url,selectedItem,topLeftItem) {
 		document.getElementById("pageContent").innerHTML = "<div id=bannerSelection class='guiDisplay_Series-Banner'></div><div id=Center class='HomeOneCenter'><p id='title' style='font-size:18px'>"+title+"</p><div id=Content></div></div>";			
 
 		//Set isResume based on title - used in UpdateDisplayedItems
-		this.isResume = (title == "Resume" ||  title == "Resume All Items" ) ? true : false;
+		this.isResume = (title == "Resume" ||  title == "Continue Watching" ) ? true : false;
 		
 		//If to determine positioning of content
 		document.getElementById("Center").style.top = (this.ItemData.Items.length <= this.MAXCOLUMNCOUNT) ? "130px" : "90px";

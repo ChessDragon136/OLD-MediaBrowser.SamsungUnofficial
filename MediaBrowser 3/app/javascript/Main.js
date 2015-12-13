@@ -4,7 +4,7 @@ var tvKey = new Common.API.TVKeyValue();
 	
 var Main =
 {
-		version : "v1.0.0n",
+		version : "v1.0.0",
 		requiredServerVersion : "3.0.5211",
 		requiredDevServerVersion : "3.0.5507.2131",
 		
@@ -74,10 +74,6 @@ Main.onLoad = function()
 	FileLog.write("Emby Application Started");
 
 	document.getElementById("splashscreen_version").innerHTML = Main.version;
-	setTimeout(function(){
-		document.getElementById("splashscreen").style.visibility="hidden";
-		FileLog.write("Ready to start. Removing the splash screen.");
-	}, 2500);
 	
 	//Turn ON screensaver
 	pluginAPI.setOnScreenSaver();
@@ -175,6 +171,11 @@ Main.onLoad = function()
 	}
 	widgetAPI.sendReadyEvent();
 	Support.clock();
+	
+	setTimeout(function(){
+		document.getElementById("splashscreen").style.visibility="hidden";
+		FileLog.write("Ready to start. Removing the splash screen.");
+	}, 2500);
 };
 
 Main.initKeys = function() {

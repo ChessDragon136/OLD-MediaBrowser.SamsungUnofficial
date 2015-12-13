@@ -499,6 +499,7 @@ GuiPlayer.keyDown = function() {
 			this.handleLeftKey();
 			break;		
 		case tvKey.KEY_PLAY:
+		case tvKey.KEY_UP:
 			this.handlePlayKey();
 			break;
 		case tvKey.KEY_STOP:
@@ -518,9 +519,10 @@ GuiPlayer.keyDown = function() {
 			break;
         case tvKey.KEY_3D:	
         	GuiPlayer.setupThreeDConfiguration();
-			break;	
-		case tvKey.KEY_TOOLS:
-			widgetAPI.blockNavigation(event);
+			break;
+        case tvKey.KEY_TOOLS:
+        case tvKey.KEY_DOWN:
+        	widgetAPI.blockNavigation(event);
     		if (this.infoTimer != null){
     			clearTimeout(this.infoTimer);
     		}
@@ -556,6 +558,8 @@ GuiPlayer.handleRightKey = function() {
 			this.PlayerIndex--;
 			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
 		}
+	} else {
+		GuiPlayer.handleFFKey();
 	}
 };
 
@@ -571,6 +575,8 @@ GuiPlayer.handleLeftKey = function() {
 			this.PlayerIndex++;
 			this.PlayerData = this.VideoData.Items[this.PlayerIndex];
 		}
+	} else {
+		GuiPlayer.handleRWKey();
 	}
 };
 

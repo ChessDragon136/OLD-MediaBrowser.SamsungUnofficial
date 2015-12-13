@@ -261,6 +261,19 @@ GuiPlayer_Display.keyDownTools = function() {
 			}, 500);
 			document.getElementById("GuiPlayer").focus();
 			break;	
+		case tvKey.KEY_UP:
+			widgetAPI.blockNavigation(event);
+			this.videoToolsSelectedItem = 0;
+			if (document.getElementById("guiPlayer_Tools").style.opacity != 0) {
+    			$('#guiPlayer_Tools').css('opacity',1).animate({opacity:0}, 500);
+    		}
+			setTimeout(function(){
+				document.getElementById("guiPlayer_Subtitles").style.top="none";
+				document.getElementById("guiPlayer_Subtitles").style.bottom="20px";
+			}, 500);
+			GuiPlayer.handlePlayKey();
+			document.getElementById("GuiPlayer").focus();
+			break;	
 		case tvKey.KEY_LEFT:
 			if (this.videoToolsSelectedItem > 0) {
 				this.videoToolsSelectedItem--;

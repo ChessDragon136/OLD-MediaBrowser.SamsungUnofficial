@@ -87,16 +87,7 @@ GuiMainMenu.start = function() {
 	Support.screensaver();
 	
 	//Load Home Page
-	var url1 = File.getUserProperty("View1");
-	var title1 = File.getUserProperty("View1Name");
-	var url2 = File.getUserProperty("View2");
-	var title2 = File.getUserProperty("View2Name");
-	
-	if (url2 != null) {
-		GuiPage_HomeTwoItems.start(title1,url1,title2,url2,0,0,true);
-	} else {
-		GuiPage_HomeOneItem.start(title1,url1,0,0);
-	}
+	Support.processHomePageMenu("Home");
 }
 
 //Entry Point when called from any page displaying the menu

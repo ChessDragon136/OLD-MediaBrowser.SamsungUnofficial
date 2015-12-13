@@ -17,18 +17,17 @@ var parser = (function() {
     pItems.fromSrt = function(data, ms) {
         var useMs = ms ? true : false;
 
-        data = data.replace(/\r/g, '');
-        var regex = /(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/g;
+        var regex = /(\d+)(\r?\n|\r)(\d{2}:\d{2}:\d{2},\d+) --> (\d{2}:\d{2}:\d{2},\d+)/g;
         data = data.split(regex);
         data.shift();
 
         var items = [];
-        for (var i = 0; i < data.length; i += 4) {
+        for (var i = 0; i < data.length; i += 5) {
             items.push({
                 id: data[i],
-                startTime: useMs ? timeMs(data[i + 1]) : data[i + 1],
-                endTime: useMs ? timeMs(data[i + 2]) : data[i + 2],
-                text: data[i + 3]
+                startTime: useMs ? timeMs(data[i + 2]) : data[i + 2],
+                endTime: useMs ? timeMs(data[i + 3]) : data[i + 3],
+                text: data[i + 4].replace(/\r?\n$|\r$/,'')
             });
         }
 

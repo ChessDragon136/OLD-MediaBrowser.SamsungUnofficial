@@ -21,9 +21,9 @@ var GuiPage_Settings = {
 		CurrentSettingValue : null,
 		
 		//Per Setting Type List of settings, names & defaults
-		Settings : ["Default","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime","ForgetSavedPassword"],
-		SettingsName : ["Default User: ","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: ", "Forget Password at Log Out:"],
-		SettingsDefaults : [false,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000,false],
+		Settings : ["Default","ContinueWatching","View1","View2","LargerView","AudioTheme", "SkipShow","SeasonLabel","AutoPlay","ShowDisc","SubtitleSize","SubtitleColour","ImagePlayerImageTime","ScreensaverImages","ScreensaverTimeout","ScreensaverImageTime","ForgetSavedPassword"],
+		SettingsName : ["Default User: ","Continue Watching:","Home View 1: ","Home View 2: ","Show Larger Icons: ", "Play Audio Themes: ", "Skip TV Show Page: ","Use Alternate Season Label: ","Auto Play Next Episode: ","Show Disc Art: ","Subtitle Text Size: ","Subtitle Text Colour: ","Image Player Rotate Speed: ", "Screensaver Image Source: ", "Screensaver Timeout: ", "Screensaver Rotate Speed: ", "Forget Password at Log Out:"],
+		SettingsDefaults : [false,true,"ddddd","aaaaa",false,false,false,false,false,false,"30px","white",10000,"Media",300000,10000,false],
 		
 		TVSettings : ["Bitrate","Dolby","DTS","AACtoDolby","TranscodeDSeries","ItemPaging","ClockOffset"],
 		TVSettingsName : ["Max Bitrate: ","Enable Dolby Digital Playback: ","Enable DTS Playback: ","Enable AAC Transcoding to Dolby: ","Enable Transcoding on D Series","Item Paging: ","Clock Offset: "],
@@ -52,8 +52,8 @@ var GuiPage_Settings = {
 		SubtitleSizeOptions: ["36px","34px","32px","30px","28px","26px"],
 		SubtitleSizeValues: ["36px","34px","32px","30px","28px","26px"],
 		
-		SubtitleColourOptions: ["White","Red","Green","Blue"],
-		SubtitleColourValues: ["white","red","green","blue"],
+		SubtitleColourOptions: ["White","Red","Green","Blue","Yellow"],
+		SubtitleColourValues: ["white","red","green","blue","yellow"],
 		
 		ScreensaverImagesOptions : ["Photos from Media Folders","Images from TVs or Movies"],
 		ScreensaverImagesValues : ["Media","Metadata"],
@@ -84,7 +84,7 @@ GuiPage_Settings.getMaxDisplay = function() {
 }
 
 GuiPage_Settings.initiateViewValues = function() {
- 	ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&MediaTypes=Video&Filters=IsResumable&Limit=10&Recursive=true&Fields=PrimaryImageAspectRatio,SyncInfo&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&ImageTypeLimit=1&EnableImageTypes=Primary,Backdrop,Banner,Thumb";
+ 	//ResumeAllItemsURL = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=DatePlayed&SortOrder=Descending&MediaTypes=Video&Filters=IsResumable&Limit=10&Recursive=true&Fields=PrimaryImageAspectRatio,SyncInfo&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&ImageTypeLimit=1&EnableImageTypes=Primary,Backdrop,Banner,Thumb";
 	TVNextUp = Server.getServerAddr() + "/Shows/NextUp?format=json&UserId="+Server.getUserID()+"&IncludeItemTypes=Episode&ExcludeLocationTypes=Virtual&Limit=24&Fields=PrimaryImageAspectRatio,SeriesInfo,DateCreated,SyncInfo,SortName&ImageTypeLimit=1&EnableImageTypes=Primary,Backdrop,Banner,Thumb";
 	Favourites = Server.getItemTypeURL("&SortBy=SortName&SortOrder=Ascending&Filters=IsFavorite&fields=SortName&recursive=true");
 	FavouriteMovies = Server.getServerAddr() + "/Users/"+Server.getUserID()+"/Items?format=json&SortBy=SortName&SortOrder=Ascending&IncludeItemTypes=Movie&Filters=IsFavorite&Limit=10&Recursive=true&Fields=PrimaryImageAspectRatio,SyncInfo&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual";
@@ -95,13 +95,13 @@ GuiPage_Settings.initiateViewValues = function() {
 	LatestTV = Server.getCustomURL("/Users/" + Server.getUserID() + "/Items/Latest?format=json&IncludeItemTypes=Episode&isPlayed=false&IsFolder=false&fields=SortName,Overview,Genres,RunTimeTicks");
 	LatestMovies = Server.getItemTypeURL("&IncludeItemTypes=Movie&SortBy=DateCreated&SortOrder=Descending&fields=SortName&CollapseBoxSetItems=false&ExcludeLocationTypes=Virtual&recursive=true&Filters=IsUnplayed");
 
-	this.View1Options = ["Resume All Items","TV Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View1Values = [ResumeAllItemsURL,TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
-	this.View2Options = ["None","Resume All Items","TV Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","New TV","New Movies"];
-	this.View2Values = [null,ResumeAllItemsURL,TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
+	this.View1Options = ["Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","Latest TV","Latest Movies"];
+	this.View1Values = [TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
+	this.View2Options = ["None","Next Up","All Favourites","Favourite Movies","Favourite Series","Favourite Episodes","Suggested For You","Media Folders","Latest TV","Latest Movies"];
+	this.View2Values = [null,TVNextUp,Favourites,FavouriteMovies,FavouriteSeries,FavouriteEpisodes,SuggestedMovies,MediaFolders,LatestTV,LatestMovies];
 	
-	this.SettingsDefaults[1] = ResumeAllItemsURL;
 	this.SettingsDefaults[2] = TVNextUp;
+	this.SettingsDefaults[3] = LatestMovies;
 }
 
 GuiPage_Settings.start = function(viewToDisplay) {	
@@ -224,6 +224,7 @@ GuiPage_Settings.updateDisplayedItems = function() {
 		var Setting = "";
 		switch (this.currentViewSettings[index]) {
 		case "Default":
+		case "ContinueWatching":
 		case "AudioTheme":
 		case "SkipShow":
 		case "SeasonLabel":
@@ -497,6 +498,7 @@ GuiPage_Settings.processSelectedItem = function() {
 		
 		switch (this.currentViewSettings[this.selectedItem]) {
 		case "Default":
+		case "ContinueWatching":
 		case "AudioTheme":
 		case "SkipShow":	
 		case "SeasonLabel":	
@@ -743,6 +745,7 @@ GuiPage_Settings.processSelectedSubItem = function() {
 			File.updateServerSettings(fileJson.Servers[File.getServerEntry()]);
 		}
 		break;
+	case "ContinueWatching":
 	case "AudioTheme":
 	case "SkipShow":	
 	case "SeasonLabel":	
@@ -964,16 +967,21 @@ GuiPage_Settings.setOverview = function() {
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Setting the default user to True allows for the app to sign in the user automatically." +
 					"<br><br>Changing this setting to True will change all other users to False";
 			break;
+		case "ContinueWatching":
+			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Continue Watching";
+			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Show partially watched items on the home page." +
+					"<br><br>If you have any partially watched programs they will be shown on the home page instead of the second home page view.";
+			break;
 		case "View1":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Home View 1";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Sets the content of the first view of the Home page" +
-					"<br><br>Available Choices<ul style='padding-left:22px'><li>Resume All Items</li><li>TV Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
+					"<br><br>Available Choices<ul style='padding-left:22px'><li>Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>Latest TV</li><li>Latest Movies</li></ul>" +
 					"<br><br>Setting Home View 2 to None will show more content of this view";
 			break; 
 		case "View2":
 			document.getElementById("guiPage_Settings_Overview_Title").innerHTML = "Home View 2";
 			document.getElementById("guiPage_Settings_Overview_Content").innerHTML = "Sets the content of the first view of the Home page" +
-					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Resume All Items</li><li>TV Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>New TV</li><li>New Movies</li></ul>" +
+					"<br><br>Available Choices<ul style='padding-left:22px'><li>None</li><li>Next Up</li><li>All Favourites</li><li>Favourite Movies</li><li>Favourite Series</li><li>Favourite Episodes</li><li>Suggested For You</li><li>Media Folders</li><li>Latest TV</li><li>Latest Movies</li></ul>" +
 					"<br><br>Setting this to None will show more content from Home View 1";
 			break;	
 		case "LargerView":	

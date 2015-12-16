@@ -267,6 +267,9 @@ Support.updateDisplayedItems = function(Items,selectedItemID,startPos,endPos,Div
 				} else if (Items[index].BackdropImageTags.length > 0) {	
 					var imgsrc = Server.getImageURL(Items[index].Id,"Backdrop",220,125,Items[index].UserData.PlayCount,Items[index].UserData.Played);
 					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";	
+				} else if (Items[index].ImageTags.Primary) {		
+					var imgsrc = Server.getImageURL(Items[index].Id,"Primary",220,125,0,false,0);
+					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(" +imgsrc+ ")><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";	
 				} else {
 					htmlToAdd += "<div id="+ DivIdPrepend + Items[index].Id + " style=background-image:url(images/collection.png)><div class=menuProgressBar></div><div class=menuProgressBar_Current style='width:"+progress+"px;'></div><div class=menuItemWithProgress>"+ title + "</div></div>";
 				}
